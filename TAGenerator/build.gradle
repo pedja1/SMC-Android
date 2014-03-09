@@ -1,0 +1,9 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+sourceCompatibility = 1.6
+
+dependencies {
+    compile files('gdx-tools.jar')
+    compile files('../app/libs/gdx-tools.jar')
+    compile files('gdx-tools-source.jar')
+}

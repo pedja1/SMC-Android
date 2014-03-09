@@ -1,0 +1,55 @@
+apply plugin: 'android'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19"
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 19
+    }
+
+    signingConfigs {
+        release {
+              // storeFile = file(System.getenv("KEYSTORE_PATH"))
+              // storePassword = System.getenv("KEYSTORE_PWD")
+              // keyAlias = System.getenv("KEYSTORE_ALIAS")
+              // keyPassword = System.getenv("KEYSTORE_ALIAS_PWD")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        debug {
+            packageNameSuffix ".debug"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'com/badlogic/gdx.gwt.xml'
+        exclude 'com/esotericsoftware/TableLayout.gwt.xml'
+        exclude 'com/badlogic/gdx/graphics/g3d/shaders/default.fragment.glsl'
+        exclude 'com/badlogic/gdx/graphics/g3d/shaders/default.vertex.glsl'
+        exclude 'com/badlogic/gdx/utils/arial-15.fnt'
+        exclude 'com/badlogic/gdx/utils/arial-15.png'
+    }
+
+}
+
+dependencies {
+    compile files('libs/gdx-freetype-natives.jar')
+    compile files('libs/gdx.jar')
+    compile files('libs/gdx-backend-android-sources.jar')
+    compile files('libs/gdx-freetype.jar')
+    compile files('libs/gdx-sources.jar')
+    compile files('libs/gdx-freetype-sources.jar')
+    compile files('libs/gdx-backend-android.jar')
+}

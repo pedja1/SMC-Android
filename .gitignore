@@ -1,0 +1,14 @@
+bin/
+gen/
+.idea/
+app/build
+*.iml
+.gradle/
+out/
+*.obb
+*.ipr
+*.iws
+TAGenerator/.gradle
+TAGenerator/gradle
+TAGenerator/build
+
