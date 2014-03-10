@@ -164,7 +164,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //batch.draw(quit, quitR.x, quitR.y, quitR.width, quitR.height);
 
         batch.end();
-		System.out.println("MMS : show() end");
+		System.out.println("MMS : render() end");
     }
 	
 	private void drawSprites()
@@ -210,8 +210,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         batch.dispose();
         bgr1.dispose();
         bgr2.dispose();
-        gameLogo.dispose();
-        batch.dispose();
     }
 
     @Override
