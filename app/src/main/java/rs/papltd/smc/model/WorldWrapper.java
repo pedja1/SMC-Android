@@ -14,9 +14,9 @@ public class WorldWrapper
 {
 
 	World world = new World(new Vector2(0, Constants.GRAVITY), true);
-	
+
 	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-	
+
     /**
      * Our player controlled hero *
      */
@@ -62,19 +62,22 @@ public class WorldWrapper
         // its x and y could be outside of the world while rest of the sprite is in bounds, this will cause
         // sprite to suddenly disappear
         // this can be solved by checking if any part of the sprite is in view, not just x and y
+
+		//TODO Issue fixed, not tested, test and remove todos
         List<Sprite> sprites = new ArrayList<Sprite>();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
-        float wX2 = wX + Constants.CAMERA_WIDTH + 1;
-        float wY2 = wY + Constants.CAMERA_HEIGHT + 1;
-        for(Sprite sprite : level.getSprites())
+        float wW = Constants.CAMERA_WIDTH + 1;
+        float wH = Constants.CAMERA_HEIGHT + 1;
+		Rectangle worldBounds = new Rectangle(wX, wY, wW, wH);
+        for (Sprite sprite : level.getSprites())
         {
-            Vector2 position = sprite.getPosition();
-            if(position.x >= wX && position.x <= wX2 && position.y >= wY && position.y <= wY2)
+			Rectangle bounds = sprite.getBounds();
+            if (bounds.overlaps(worldBounds))
             {
-                if(getFront)
+                if (getFront)
                 {
-                    if(sprite.isFront())
+                    if (sprite.isFront())
                     {
                         sprites.add(sprite);
                     }
@@ -92,7 +95,8 @@ public class WorldWrapper
     public WorldWrapper()
     {
         createWorld();
-		world.setContactListener(new ContactListener(){
+		world.setContactListener(new ContactListener()
+			{
 
 				@Override
 				public void beginContact(Contact contact)

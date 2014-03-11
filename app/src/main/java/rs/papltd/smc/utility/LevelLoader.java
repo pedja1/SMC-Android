@@ -30,11 +30,20 @@ public class LevelLoader
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, atlases, atlas_path,
         regions
     }
+	
+	private enum DATA_KEY
+	{
+		txt, atl
+	}
 
-    public LevelLoader(String jsonString, World world)
+    public LevelLoader()
     {
         level = new Level();
-        JSONObject jLevel;
+    }
+	
+	public void parseLevel(String jsonString, World world)
+	{
+		JSONObject jLevel;
         try
         {
             jLevel = new JSONObject(jsonString);
@@ -48,7 +57,44 @@ public class LevelLoader
             e.printStackTrace();
             throw new RuntimeException("Unable to load level! " + e.getMessage());
         }
-    }
+	}
+	
+	public Array<String[]> parseLeveData(String levelData)
+	{
+		Array<String[]> data = new Array<String[]>();
+		String[] lines = levelData.split("\n");
+		for(String line : lines)
+		{
+			if(line.startsWith("#"))continue;//skip coments
+			String[] item = line.split(":");
+			if(item[0] == null || item[1] == null)
+			{
+				throw new IllegalArgumentException("failed to read data, null");
+			}
+			else if(!isDataKeyValid(item[0]))
+			{
+				throw new IllegalArgumentException("invalid key found in data: " + item[0]);
+		 	}
+			else if(item[1].trim().isEmpty())
+			{
+				throw new IllegalArgumentException("value with key:" + item[0] + "is invalid.");
+			}
+			data.add(item);
+		}
+		return data;
+	}
+	
+	private boolean isDataKeyValid(String key)
+	{
+		for(DATA_KEY dk : DATA_KEY.values())
+		{
+			if(key.equals(dk.toString()))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
     private void parseInfo(JSONObject jLevel) throws JSONException
     {

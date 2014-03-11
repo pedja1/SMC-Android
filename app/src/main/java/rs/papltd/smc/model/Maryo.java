@@ -16,12 +16,12 @@ public class Maryo
     public enum WorldState
     {
         IDLE, WALKING, JUMPING, DYING, DUCKING
-		}
+	}
 
     public enum MarioState
     {
-        SMALL, BIG
-		}
+        SMALL, BIG, FIRE, ICE, GHOST, FLYING
+    }
 
     public static final float HEIGHT = 0.85f;
     public static final float WIDTH = 0.75f;
@@ -51,16 +51,12 @@ public class Maryo
 
 	private Body createBody(World world, Vector2 position)
 	{
-		// First we create a body definition
 		BodyDef bodyDef = new BodyDef();
-        // We set our body to dynamic, for something like ground which doesn't move we would set it to StaticBody
-		bodyDef.type = BodyDef.BodyType.DynamicBody;
-        // set our body's starting position in the world
-		bodyDef.position.set(position.x + bounds.width / 2, position.y + bounds.height / 2);
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.x + bounds.width / 2, position.y + bounds.height / 2);
         bodyDef.fixedRotation = true;
 
-        // Create our body in the world using our body definition
-		Body body = world.createBody(bodyDef);
+        Body body = world.createBody(bodyDef);
 
         MassData massData = new MassData();
         massData.mass = 90;
@@ -80,16 +76,14 @@ public class Maryo
         vertices[7] = new Vector2((WIDTH * -0.4f)/2, (HEIGHT * 0.8f)/2);
         polygonShape.set(vertices);
 
-        // Create a fixture definition to apply our shape to
-		FixtureDef fixtureDef = new FixtureDef();
+        FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygonShape;
 		fixtureDef.density = 10.0f;
 		fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.5f;
 		//fixtureDef.restitution = 1;
 
-        // Create our fixture and attach it to the body
-		body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef);
 
         polygonShape = new PolygonShape();
         //polygonShape.setAsBox(bounds.width/4, .1f);
@@ -103,9 +97,7 @@ public class Maryo
 
         body.setBullet(true);
 
-        // Remember to dispose of any shapes after you're done with them!
-		// BodyDef and FixtureDef don't need disposing, but shapes do.
-		polygonShape.dispose();
+        polygonShape.dispose();
 		return body;
 	}
 
