@@ -61,21 +61,31 @@ public class LevelLoader
 	
 	public Array<String[]> parseLeveData(String levelData)
 	{
+		if(levelData == null)
+		{
+			throw new IllegalArgumentException("levelData cannot be null");
+		}
+		levelData = levelData.trim();//clean spaces and new lines from start and end
+		if(levelData.isEmpty())
+		{
+			throw new IllegalArgumentException("levelData cannot be empty");
+		}
+			
 		Array<String[]> data = new Array<String[]>();
 		String[] lines = levelData.split("\n");
 		for(String line : lines)
 		{
 			if(line.startsWith("#"))continue;//skip coments
 			String[] item = line.split(":");
-			if(item[0] == null || item[1] == null)
+			if(item[0] == null || item[1] == null)// both value and key must not be null
 			{
 				throw new IllegalArgumentException("failed to read data, null");
 			}
-			else if(!isDataKeyValid(item[0]))
+			else if(!isDataKeyValid(item[0]))// check if we recognize key
 			{
 				throw new IllegalArgumentException("invalid key found in data: " + item[0]);
 		 	}
-			else if(item[1].trim().isEmpty())
+			else if(item[1].trim().isEmpty())//check if value is empty string
 			{
 				throw new IllegalArgumentException("value with key:" + item[0] + "is invalid.");
 			}
@@ -140,6 +150,10 @@ public class LevelLoader
             Sprite sprite = new Sprite(position, (float) jSprite.getDouble(KEYS.width.toString()), (float) jSprite.getDouble(KEYS.height.toString()));
 
             sprite.setTextureName(jSprite.getString(KEYS.texture_name.toString()));
+			if(sprite.getTextureName() == null || sprite.getTextureName().isEmpty())
+			{
+				throw new IllegalArgumentException("texture name is invalid: \"" + sprite.getTextureName() + "\"");
+			}
             if (jSprite.has(KEYS.is_front.toString()))
             {
                 sprite.setFront(jSprite.getBoolean(KEYS.is_front.toString()));
@@ -150,15 +164,15 @@ public class LevelLoader
             if (jSprite.has(KEYS.texture_atlas.toString()))
             {
                 sprite.setTextureAtlas(jSprite.getString(KEYS.texture_atlas.toString()));
-                /*if (Assets.loadedAtlases.get(sprite.getTextureAtlas()) == null)
-                {
-                    atlas = new TextureAtlas(Gdx.files.absolute(Assets.mountedObbPath + sprite.getTextureAtlas()));
-                    Assets.loadedAtlases.put(sprite.getTextureAtlas(), atlas);
-                }
-                else
-                {
-                    atlas = Assets.loadedAtlases.get(sprite.getTextureAtlas());
-                }*/
+				if(Assets.manager.containsAsset(sprite.getTextureAtlas()))
+				{
+                	atlas = Assets.manager.get(sprite.getTextureAtlas());
+				}
+				else
+				{
+					throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used" 
+					  						+ "in [level].smclvl must also be included in [level].data");
+				}
             }
             boolean hasFlipData = jSprite.has(KEYS.flip_data.toString());
 
@@ -188,7 +202,15 @@ public class LevelLoader
                     {
                         if (atlas == null)
                         {
-                            orig = new TextureRegion(new Texture(Gdx.files.absolute(Assets.mountedObbPath + sprite.getTextureName())));
+							if(Assets.manager.containsAsset(sprite.getTextureName()))
+							{
+								orig = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
+							}
+							else
+							{
+								throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
+																   + "in [level].smclvl must also be included in [level].data");
+							}
                         }
                         else
                         {
@@ -213,7 +235,15 @@ public class LevelLoader
                     TextureRegion textureRegion;
                     if (atlas == null)
                     {
-                        textureRegion = new TextureRegion(new Texture(Gdx.files.absolute(Assets.mountedObbPath + sprite.getTextureName())));
+                        if(Assets.manager.containsAsset(sprite.getTextureName()))
+						{
+							textureRegion = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
+						}
+						else
+						{
+							throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
+															   + "in [level].smclvl must also be included in [level].data");
+						}
                     }
                     else
                     {
