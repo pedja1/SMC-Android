@@ -28,7 +28,7 @@ public class LevelLoader
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, atlases, atlas_path,
-        regions
+        regions, background, r_1, r_2, g_1, g_2, b_1, b_2
     }
 	
 	private enum DATA_KEY
@@ -115,18 +115,42 @@ public class LevelLoader
         level.setHeight(height);
     }
 
-    private void parseBg(JSONObject jLevel)
+    private void parseBg(JSONObject jLevel) throws JSONException
     {
-        //TODO implement this method
-        Texture bgTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/game/background/green-junglehills.png"));
-        Background bg = new Background(new Vector2(0, 0), bgTexture);
-        level.setBg1(bg);
-        bg = new Background(new Vector2(Background.WIDTH, 0), bgTexture);
-        level.setBg2(bg);
-        BackgroundColor bgColor = new BackgroundColor();
-        bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
-        bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);
-        level.setBgColor(bgColor);
+		if(jLevel.has(KEYS.background.toString()))
+		{
+			JSONObject jBg = jLevel.getJSONObject(KEYS.background.toString());
+			String textureName = jBg.getString(KEYS.texture_name.toString());
+			if(Assets.manager.containsAsset(textureName))
+			{
+				Texture bgTexture = Assets.manager.get(textureName);
+				Background bg = new Background(new Vector2(0, 0), bgTexture);
+				level.setBg1(bg);
+				bg = new Background(new Vector2(Background.WIDTH, 0), bgTexture);
+				level.setBg2(bg);
+				//TODO this is stupid, we should dinamically repeat background
+			}
+			else
+			{
+				throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
+												   + "in [level].smclvl must also be included in [level].data");
+			}
+			float r1 = (float) jBg.getDouble(KEYS.r_1.toString());
+			float r2 = (float) jBg.getDouble(KEYS.r_2.toString());
+			float g1 = (float) jBg.getDouble(KEYS.g_1.toString());
+			float g2 = (float) jBg.getDouble(KEYS.g_2.toString());
+			float b1 = (float) jBg.getDouble(KEYS.b_1.toString());
+			float b2 = (float) jBg.getDouble(KEYS.b_2.toString());
+			
+			BackgroundColor bgColor = new BackgroundColor();
+			bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
+			bgColor.color2 = new Color(r2, g2, b2, 0f);
+			level.setBgColor(bgColor);
+		}
+		else
+		{
+			throw new IllegalStateException("level must have \"background\" object");
+		}
     }
 
     private void parsePlayer(JSONObject jLevel) throws JSONException
@@ -267,23 +291,18 @@ public class LevelLoader
 
     public Body createBody(World world, Vector2 position, float width, float height)
     {
-        // Create our body definition
         BodyDef groundBodyDef = new BodyDef();
-        // Set its world position
         groundBodyDef.position.set(position.x + width / 2, position.y + height / 2);
 
-        // Create a body from the defintion and add it to the world
-        Body body = world.createBody(groundBodyDef);
-        // Create a polygon shape
-        PolygonShape groundBox = new PolygonShape();
-        // Set the polygon shape as a box which is twice the size of our view port and 20 high
-        // (setAsBox takes half-width and half-height as arguments)
-        groundBox.setAsBox(width / 2, height / 2);
-        // Create a fixture from our polygon shape and add it to our ground body
-
-        body.createFixture(groundBox, 0.0f);
-        // Clean up after ourselves
-        groundBox.dispose();
+		Body body = world.createBody(groundBodyDef);
+        
+		PolygonShape groundBox = new PolygonShape();
+        
+		groundBox.setAsBox(width / 2, height / 2);
+        
+		body.createFixture(groundBox, 0.0f);
+        
+		groundBox.dispose();
         return body;
     }
 
