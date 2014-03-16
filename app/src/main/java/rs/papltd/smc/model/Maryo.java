@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 
 import rs.papltd.smc.Assets;
 
@@ -20,16 +21,47 @@ public class Maryo
 
     public enum MarioState
     {
-        SMALL, BIG, FIRE, ICE, GHOST, FLYING
+        small, big, fire, ice, ghost, flying
     }
 
-    public static final float HEIGHT = 0.85f;
-    public static final float WIDTH = 0.75f;
+    enum TKey
+    {
+        stand_right("stand-right"),
+        walk_right_1("walk-right-1"),
+        walk_right_2("walk-right-2"),
+        stand_left("stand-left"),
+        jump_right("jump-right"),
+        jump_left("jump-left"),
+        fall_right("fall-right"),
+        fall_left("fall-left"),
+        dead_right("dead-right"),
+        dead_left("dead-left"),
+        duck_right("duck-right"),
+        duck_left("duck-left");
+
+        String mValue;
+        TKey(String value)
+        {
+            mValue = value;
+        }
+
+        @Override
+        public String toString()
+        {
+            return mValue;
+        }
+    }
+
+    enum AKey
+    {
+        walk_left, walk_right
+    }
+
     private static final float RUNNING_FRAME_DURATION = 0.06f;
 
     Rectangle bounds = new Rectangle();
     WorldState worldState = WorldState.IDLE;
-    MarioState marioState = MarioState.SMALL;
+    MarioState marioState = MarioState.small;
     boolean facingLeft = true;
     boolean longJump = false;
 	float stateTime;
@@ -37,20 +69,22 @@ public class Maryo
 	Body body;
     Fixture sensorFixture;
 
-    TextureHolder textureHolder;
+    Array<MarioState> usedStates = new Array<MarioState>();
 
-    public Maryo(Vector2 position, World world)
+    public Maryo(Vector2 position, Vector2 size, World world, Array<MarioState> usedStates)
     {
+        this.usedStates = usedStates;
         this.bounds.x = position.x;
         this.bounds.y = position.y;
-        this.bounds.height = HEIGHT;
-        this.bounds.width = WIDTH;
+        this.bounds.height = size.y;
+        this.bounds.width = size.x;
 		body = createBody(world, position);
         loadTextures();
     }
 
 	private Body createBody(World world, Vector2 position)
 	{
+        //TODO body should be resized dynamically depending on maryo's state
 		BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(position.x + bounds.width / 2, position.y + bounds.height / 2);
@@ -66,14 +100,14 @@ public class Maryo
 
 		PolygonShape polygonShape = new PolygonShape();
         Vector2[] vertices = new Vector2[8];
-        vertices[0] = new Vector2((WIDTH * -0.4f)/2, (HEIGHT * -0.65f)/2);
-        vertices[1] = new Vector2((WIDTH * -0.15f)/2, (HEIGHT * -0.875f)/2);
-        vertices[2] = new Vector2((WIDTH * 0.15f)/2, (HEIGHT * -0.875f)/2);
-        vertices[3] = new Vector2((WIDTH * 0.4f)/2, (HEIGHT * -0.65f)/2);
-        vertices[4] = new Vector2((WIDTH * 0.4f)/2, (HEIGHT * 0.8f)/2);
-        vertices[5] = new Vector2((WIDTH * 0.3f)/2, (HEIGHT * 0.875f)/2);
-        vertices[6] = new Vector2((WIDTH * -0.3f)/2, (HEIGHT * 0.875f)/2);
-        vertices[7] = new Vector2((WIDTH * -0.4f)/2, (HEIGHT * 0.8f)/2);
+        vertices[0] = new Vector2((bounds.width * -0.4f)/2, (bounds.height * -0.65f)/2);
+        vertices[1] = new Vector2((bounds.width * -0.15f)/2, (bounds.height * -0.875f)/2);
+        vertices[2] = new Vector2((bounds.width * 0.15f)/2, (bounds.height * -0.875f)/2);
+        vertices[3] = new Vector2((bounds.width * 0.4f)/2, (bounds.height * -0.65f)/2);
+        vertices[4] = new Vector2((bounds.width * 0.4f)/2, (bounds.height * 0.8f)/2);
+        vertices[5] = new Vector2((bounds.width * 0.3f)/2, (bounds.height * 0.875f)/2);
+        vertices[6] = new Vector2((bounds.width * -0.3f)/2, (bounds.height * 0.875f)/2);
+        vertices[7] = new Vector2((bounds.width * -0.4f)/2, (bounds.height * 0.8f)/2);
         polygonShape.set(vertices);
 
         FixtureDef fixtureDef = new FixtureDef();
@@ -88,10 +122,10 @@ public class Maryo
         polygonShape = new PolygonShape();
         //polygonShape.setAsBox(bounds.width/4, .1f);
         vertices = new Vector2[4];
-        vertices[0] = new Vector2((WIDTH * -0.3f)/2, (HEIGHT * -0.65f)/2);
-        vertices[1] = new Vector2((WIDTH * -0.3f)/2, (-HEIGHT)/2);
-        vertices[2] = new Vector2((WIDTH * 0.3f)/2, (-HEIGHT)/2);
-        vertices[3] = new Vector2((WIDTH * 0.3f)/2, (HEIGHT * -0.65f)/2);
+        vertices[0] = new Vector2((bounds.width * -0.3f)/2, (bounds.height * -0.65f)/2);
+        vertices[1] = new Vector2((bounds.width * -0.3f)/2, (-bounds.height)/2);
+        vertices[2] = new Vector2((bounds.width * 0.3f)/2, (-bounds.height)/2);
+        vertices[3] = new Vector2((bounds.width * 0.3f)/2, (bounds.height * -0.65f)/2);
         polygonShape.set(vertices);
         sensorFixture = body.createFixture(polygonShape, 0);
 
@@ -103,106 +137,79 @@ public class Maryo
 
     private void loadTextures()
     {
-        textureHolder = new TextureHolder();
-        loadTexturesSmall();
-        loadTexturesBig();
+        for(MarioState ms : usedStates)
+        {
+            loadTextures(ms.toString());
+        }
     }
 
-    private void loadTexturesSmall()
+    private void loadTextures(String state)
     {
-        TextureAtlas marioAtlasSmall = new TextureAtlas(Gdx.files.absolute(Assets.mountedObbPath + "/maryo/small.pack"));
-        textureHolder.idleRightSmall = marioAtlasSmall.findRegion("stand-right");
-        textureHolder.idleLeftSmall = new TextureRegion(textureHolder.idleRightSmall);
-        textureHolder.idleLeftSmall.flip(true, false);
+        TextureAtlas atlas = Assets.manager.get("/maryo/" + state + ".pack");
 
-        TextureRegion[] walkRightFramesSmall = new TextureRegion[3];
-        walkRightFramesSmall[0] = textureHolder.idleRightSmall;
-        walkRightFramesSmall[1] = marioAtlasSmall.findRegion("walk-right-1");
-        walkRightFramesSmall[2] = marioAtlasSmall.findRegion("walk-right-2");
-        textureHolder.walkRightAnimationSmall = new Animation(RUNNING_FRAME_DURATION, walkRightFramesSmall);
+        Assets.loadedRegions.put(TKey.stand_right + ":" + state, atlas.findRegion(TKey.stand_right.toString()));
+        TextureRegion tmp = new TextureRegion(Assets.loadedRegions.get(TKey.stand_right + ":" + state));
+        tmp.flip(true, false);
+        Assets.loadedRegions.put(TKey.stand_left + ":" + state, tmp);
 
-        TextureRegion[] walkLeftFramesSmall = new TextureRegion[3];
+        TextureRegion[] walkRightFrames = new TextureRegion[3];
+        walkRightFrames[0] = Assets.loadedRegions.get(TKey.stand_right + ":" + state);
+        walkRightFrames[1] = atlas.findRegion(TKey.walk_right_1 + "");
+        walkRightFrames[2] = atlas.findRegion(TKey.walk_right_1 + "");
+        Assets.animations.put(AKey.walk_right + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkRightFrames));
+
+        TextureRegion[] walkLeftFrames = new TextureRegion[3];
         for (int i = 0; i < 3; i++)
         {
-            walkLeftFramesSmall[i] = new TextureRegion(walkRightFramesSmall[i]);
-            walkLeftFramesSmall[i].flip(true, false);
+            walkLeftFrames[i] = new TextureRegion(walkRightFrames[i]);
+            walkLeftFrames[i].flip(true, false);
         }
-        textureHolder.walkLeftAnimationSmall = new Animation(RUNNING_FRAME_DURATION, walkLeftFramesSmall);
+        Assets.animations.put(AKey.walk_left + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkLeftFrames));
 
-        textureHolder.jumpRightSmall = marioAtlasSmall.findRegion("jump-right");
-        textureHolder.jumpLeftSmall = new TextureRegion(textureHolder.jumpRightSmall);
-        textureHolder.jumpLeftSmall.flip(true, false);
+        Assets.loadedRegions.put(TKey.jump_right + ":" + state, atlas.findRegion(TKey.jump_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.jump_right.toString()));
+        tmp.flip(true, false);
+        Assets.loadedRegions.put(TKey.jump_left + ":" + state, tmp);
 
-        textureHolder.fallRightSmall = marioAtlasSmall.findRegion("fall-right");
-        textureHolder.fallLeftSmall = new TextureRegion(textureHolder.fallRightSmall);
-        textureHolder.fallLeftSmall.flip(true, false);
+        Assets.loadedRegions.put(TKey.fall_right + ":" + state, atlas.findRegion(TKey.fall_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.fall_right.toString()));
+        tmp.flip(true, false);
+        Assets.loadedRegions.put(TKey.fall_left + ":" + state, tmp);
 
-        textureHolder.deadRightSmall = marioAtlasSmall.findRegion("dead-right");
-        textureHolder.deadLeftSmall = new TextureRegion(textureHolder.deadRightSmall);
-        textureHolder.deadLeftSmall.flip(true, false);
+        Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString()));
+        tmp.flip(true, false);
+        Assets.loadedRegions.put(TKey.dead_left + ":" + state, tmp);
 
-        textureHolder.duckRightSmall = marioAtlasSmall.findRegion("duck-right");
-        textureHolder.duckLeftSmall = new TextureRegion(textureHolder.duckRightSmall);
-        textureHolder.duckLeftSmall.flip(true, false);
-    }
-
-    private void loadTexturesBig()
-    {
-        TextureAtlas marioAtlasBig = new TextureAtlas(Gdx.files.absolute(Assets.mountedObbPath + "/maryo/big.pack"));
-        textureHolder.idleRightBig = marioAtlasBig.findRegion("stand-right");
-        textureHolder.idleLeftBig = new TextureRegion(textureHolder.idleRightBig);
-        textureHolder.idleLeftBig.flip(true, false);
-
-        TextureRegion[] walkRightFramesBig = new TextureRegion[3];
-        walkRightFramesBig[0] = textureHolder.idleRightBig;
-        walkRightFramesBig[1] = marioAtlasBig.findRegion("walk-right-1");
-        walkRightFramesBig[2] = marioAtlasBig.findRegion("walk-right-2");
-        textureHolder.walkRightAnimationBig = new Animation(RUNNING_FRAME_DURATION, walkRightFramesBig);
-
-        TextureRegion[] walkLeftFramesBig = new TextureRegion[3];
-        for (int i = 0; i < 3; i++)
-        {
-            walkLeftFramesBig[i] = new TextureRegion(walkRightFramesBig[i]);
-            walkLeftFramesBig[i].flip(true, false);
-        }
-        textureHolder.walkLeftAnimationBig = new Animation(RUNNING_FRAME_DURATION, walkLeftFramesBig);
-
-        textureHolder.jumpRightBig = marioAtlasBig.findRegion("jump-right");
-        textureHolder.jumpLeftBig = new TextureRegion(textureHolder.jumpRightBig);
-        textureHolder.jumpLeftBig.flip(true, false);
-
-        textureHolder.fallRightBig = marioAtlasBig.findRegion("fall-right");
-        textureHolder.fallLeftBig = new TextureRegion(textureHolder.fallRightBig);
-        textureHolder.fallLeftBig.flip(true, false);
-
-        textureHolder.duckRightBig = marioAtlasBig.findRegion("duck-right");
-        textureHolder.duckLeftBig = new TextureRegion(textureHolder.duckRightBig);
-        textureHolder.duckLeftBig.flip(true, false);
+        Assets.loadedRegions.put(TKey.duck_right + ":" + state, atlas.findRegion(TKey.duck_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.duck_right.toString()));
+        tmp.flip(true, false);
+        Assets.loadedRegions.put(TKey.duck_left + ":" + state, tmp);
     }
 
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion marioFrame = isFacingLeft() ? textureHolder.getIdleLeft() : textureHolder.getIdleRight();
+        TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + marioState) : Assets.loadedRegions.get(TKey.stand_right + ":" + marioState);
         if (worldState.equals(WorldState.WALKING))
         {
-            marioFrame = isFacingLeft() ? textureHolder.getWalkLeftAnimation().getKeyFrame(getStateTime(), true) : textureHolder.getWalkRightAnimation().getKeyFrame(getStateTime(), true);
+            marioFrame = isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + marioState).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + marioState).getKeyFrame(getStateTime(), true);
         }
         else if(worldState == WorldState.DUCKING)
         {
-            marioFrame = isFacingLeft() ? textureHolder.getDuckLeft() : textureHolder.getDuckRight();
+            marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.duck_left + ":" + marioState) : Assets.loadedRegions.get(TKey.duck_right + ":" + marioState);
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (getBody().getLinearVelocity().y > 0)
             {
-                marioFrame = isFacingLeft() ? textureHolder.getJumpLeft() : textureHolder.getJumpRight();
+                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + marioState) : Assets.loadedRegions.get(TKey.jump_right + ":" + marioState);
             }
             else
             {
-                marioFrame = isFacingLeft() ? textureHolder.getFallLeft() : textureHolder.getFallRight();
+                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
             }
         }
-        spriteBatch.draw(marioFrame, getBody().getPosition().x - getBounds().width/2, getBody().getPosition().y - getBounds().height/2, WIDTH, HEIGHT);
+        spriteBatch.draw(marioFrame, getBody().getPosition().x - getBounds().width/2, getBody().getPosition().y - getBounds().height/2, bounds.width, bounds.height);
     }
 
     public void update(float delta)
@@ -281,149 +288,6 @@ public class Maryo
     public Fixture getSensorFixture()
     {
         return sensorFixture;
-    }
-
-    class TextureHolder
-    {
-        private TextureRegion idleLeftSmall, idleLeftBig;
-        private TextureRegion jumpLeftSmall, jumpLeftBig;
-        private TextureRegion fallLeftSmall, fallLeftBig;
-        private TextureRegion deadLeftSmall;
-        private TextureRegion duckLeftSmall, duckLeftBig;
-
-        private TextureRegion idleRightSmall, idleRightBig;
-        private TextureRegion jumpRightSmall, jumpRightBig;
-        private TextureRegion fallRightSmall, fallRightBig;
-        private TextureRegion deadRightSmall;
-        private TextureRegion duckRightSmall, duckRightBig;
-
-        /**
-         * Animations *
-         */
-        private Animation walkLeftAnimationSmall;
-        private Animation walkRightAnimationSmall;
-        private Animation walkLeftAnimationBig;
-        private Animation walkRightAnimationBig;
-
-        public TextureRegion getIdleLeft()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return idleLeftSmall;
-                case BIG:
-                    return idleLeftBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getIdleRight()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return idleRightSmall;
-                case BIG:
-                    return idleRightBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getFallRight()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return fallRightSmall;
-                case BIG:
-                    return fallRightBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getFallLeft()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return fallLeftSmall;
-                case BIG:
-                    return fallLeftBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getJumpRight()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return jumpRightSmall;
-                case BIG:
-                    return jumpRightBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getJumpLeft()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return jumpLeftSmall;
-                case BIG:
-                    return jumpLeftBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getDuckRight()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return duckRightSmall;
-                case BIG:
-                    return duckRightBig;
-            }
-            return null;
-        }
-
-        public TextureRegion getDuckLeft()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return duckLeftSmall;
-                case BIG:
-                    return duckLeftBig;
-            }
-            return null;
-        }
-
-        public Animation getWalkLeftAnimation()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return walkLeftAnimationSmall;
-                case BIG:
-                    return walkLeftAnimationBig;
-            }
-            return null;
-        }
-
-        public Animation getWalkRightAnimation()
-        {
-            switch (marioState)
-            {
-                case SMALL:
-                    return walkRightAnimationSmall;
-                case BIG:
-                    return walkRightAnimationBig;
-            }
-            return null;
-        }
     }
 
 }

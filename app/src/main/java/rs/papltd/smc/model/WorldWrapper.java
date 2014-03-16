@@ -128,9 +128,9 @@ public class WorldWrapper
 
     private void createWorld()//TODO needs to be done differently, level loading will also load all textures for each object and it should be done on different screen and asynchronously
     {
-        LevelLoader levelLoader = new LevelLoader(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.smclvl").readString(), world);
+        /*LevelLoader levelLoader = new LevelLoader(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.smclvl").readString(), world);
         level = levelLoader.getLevel();//LevelLoader.loadLevel(1);
-        mario = new Maryo(level.getSpanPosition(), world);
+        mario = new Maryo(level.getSpanPosition(), world);*/
     }
 
 }

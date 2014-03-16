@@ -1,7 +1,9 @@
 package rs.papltd.smc;
 
+
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.HashMap;
@@ -17,6 +19,7 @@ public class Assets
 {
 	public static AssetManager manager = new AssetManager(new AbsoluteFileHandleResolver());
     public static HashMap<String, TextureRegion> loadedRegions = new HashMap<String, TextureRegion>();
+    public static HashMap<String, Animation> animations = new HashMap<String, Animation>();
     public static String mountedObbPath = null;
 
     public static void dispose()
