@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
@@ -25,7 +26,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     MaryoGame game;
 	Background bgr1, bgr2;
 	BackgroundColor bgColor;
-	Array<Sprite> sprites = new Array<Sprite>();
+    LevelLoader loader;
+    World world;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -36,25 +38,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         cam.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
         cam.update();
 		System.out.println("MMS : const");
-		/*loadAssets(new ProgressListener(){
-
-				@Override
-				public void onProgressUpdate(int progress)
-				{
-					// TODO: Implement this method
-				}
-
-				@Override
-				public void onLoadingFinished()
-				{
-					// TODO: Implement this method
-				}
-			});*/
+        loader = new LevelLoader();
+        world = new World(new Vector2(0, Constants.GRAVITY), true);
     }
 	
 	private void generateSprites()
 	{
-		TextureAtlas pipesAtlas = Assets.manager.get("/pipes/orange/orange.pack");
+		/*TextureAtlas pipesAtlas = Assets.manager.get("/pipes/orange/orange.pack");
         TextureAtlas sliderAtlas = Assets.manager.get("/ground/jungle-1/slider/green.pack");
 
 		TextureRegion green_3_top = new TextureRegion(Assets.manager.get("/ground/green-3/ground/top/1.png", Texture.class));
@@ -126,7 +116,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         sprite = new Sprite(new Vector2(2.5f, 3.8f), 0.25f, 0.35f);
         sprite.setTextureName("/ground/jungle-1/slider/green.pack:1-green-left-flipx");
-        sprites.add(sprite);
+        sprites.add(sprite);*/
 
 	}
 
@@ -169,7 +159,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	
 	private void drawSprites()
     {
-        for (Sprite sprite : sprites)
+        for (Sprite sprite : loader.getLevel().getSprites())
         {
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
             batch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
@@ -204,7 +194,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void dispose()
     {
         Gdx.input.setInputProcessor(null);
-        sprites.clear();
         Assets.dispose();
         bgColor.dispose();
         batch.dispose();
@@ -215,20 +204,19 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
+        Array<String[]> data = loader.parseLeveData(Gdx.files.absolute(Assets.mountedObbPath + "/level/main_menu.data").readString());
+
+        for(String[] s : data)
+        {
+            Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
+        }
         Assets.manager.load("/menu/menu.pack", TextureAtlas.class);
-        Assets.manager.load("/game/background/more-hills.png", Texture.class);
-        Assets.manager.load("/game/logo/smc-big-1.png", Texture.class);
-        Assets.manager.load("/game/logo/libgdx.png", Texture.class);
-        Assets.manager.load("/pipes/orange/orange.pack", TextureAtlas.class);
-        Assets.manager.load("/ground/jungle-1/slider/green.pack", TextureAtlas.class);
-        Assets.manager.load("/ground/green-3/ground/top/1.png", Texture.class);
-        Assets.manager.load("/ground/green-1/hedges/wild-medium.png", Texture.class);
-        Assets.manager.load("/ground/jungle-1/big-plant-1.png", Texture.class);
     }
 
     @Override
     public void afterLoadAssets()
     {
+        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/level/main_menu.data").readString(), world);
         TextureAtlas menuAtlas = Assets.manager.get("/menu/menu.pack");
         start = menuAtlas.findRegion("start");
         startR = new Rectangle(4.4f, 3.5f, 1.2f, 0.6f);
@@ -245,7 +233,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //quit = menuAtlas.findRegion("quit");
         //quitR = new Rectangle(4.4f, 1.3f, 1.2f, 0.6f);
 
-        Texture bgTexture = Assets.manager.get("/game/background/more-hills.png");
+        /*Texture bgTexture = Assets.manager.get("/game/background/more-hills.png");
         bgr1 = new Background(new Vector2(0, 0), bgTexture);
         bgr1.width = 7f;
         bgr1.height = 4.5f;
@@ -256,12 +244,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         bgColor = new BackgroundColor();
         bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
-        bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);
+        bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);*/
 
         gameLogo = Assets.manager.get("/game/logo/smc-big-1.png");
         gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
 
-        generateSprites();
+        //generateSprites();
     }
 
     @Override

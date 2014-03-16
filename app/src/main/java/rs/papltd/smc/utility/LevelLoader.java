@@ -310,4 +310,20 @@ public class LevelLoader
     {
         return level;
     }
+
+    public static Class<?> getTextureClassForKey(String key)
+    {
+        if(key.equals(DATA_KEY.txt.toString()))
+        {
+            return Texture.class;
+        }
+        else if(key.equals(DATA_KEY.atl.toString()))
+        {
+            return TextureAtlas.class;
+        }
+        else
+        {
+            throw new IllegalArgumentException("Key: " + key + " is invalid!");
+        }
+    }
 }
