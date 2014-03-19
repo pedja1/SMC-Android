@@ -14,7 +14,7 @@
     },
     "player": {
         "posx": "2",
-        "posy": "4",
+        "posy": "4"
     },
     "collision_bodies": [
         {
@@ -37,39 +37,6 @@
         }
     ],
     "sprites": [
-        {
-            "posx": "1.8",
-            "posy": "1",
-            "width": "0.25",
-            "height": "0.25",
-            "texture_name": "/ground/green-1/plant-r.png",
-            "flip_data": {
-                "flip_x": "true",
-                "flip_y": "false"
-            }
-        },
-        {
-            "posx": "3.2",
-            "posy": "1",
-            "width": "2.4",
-            "height": "0.6",
-            "texture_name": "/ground/green-1/hedges/medium-2.png"
-        },
-        {
-            "posx": "6.5",
-            "posy": "1",
-            "width": "2",
-            "height": "0.5",
-            "texture_name": "/ground/green-1/hedges/small-1.png",
-            "is_front": "true"
-        },
-        {
-            "posx": "9",
-            "posy": "1",
-            "width": "4",
-            "height": "1.8",
-            "texture_name": "/ground/green-1/hedges/big-1.png"
-        },
         {
             "posx": "0",
             "posy": "0",
@@ -107,7 +74,7 @@
         },
         {
             "posx": "5",
-			"posy": "0",
+            "posy": "0",
             "width": "1",
             "height": "1",
             "texture_name": "/ground/green-3/ground/top/1.png"
@@ -163,6 +130,6 @@
             "height": "0.6",
             "texture_atlas": "/pipes/orange/orange.pack",
             "texture_name": "/pipes/orange/orange.pack:up"
-        },
+        }
     ]
 }

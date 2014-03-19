@@ -232,7 +232,7 @@ public class LevelLoader
 							}
 							else
 							{
-								throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
+								throw new IllegalArgumentException("Texture(" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used" 
 																   + "in [level].smclvl must also be included in [level].data");
 							}
                         }
@@ -265,7 +265,7 @@ public class LevelLoader
 						}
 						else
 						{
-							throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
+							throw new IllegalArgumentException("Texture (" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used" 
 															   + "in [level].smclvl must also be included in [level].data");
 						}
                     }

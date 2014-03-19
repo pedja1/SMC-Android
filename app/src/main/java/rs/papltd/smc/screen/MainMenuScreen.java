@@ -204,7 +204,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLeveData(Gdx.files.absolute(Assets.mountedObbPath + "/level/main_menu.data").readString());
+        Array<String[]> data = loader.parseLeveData(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.data").readString());
 
         for(String[] s : data)
         {
@@ -216,7 +216,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/level/main_menu.data").readString(), world);
+        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.smclvl").readString(), world);
         TextureAtlas menuAtlas = Assets.manager.get("/menu/menu.pack");
         start = menuAtlas.findRegion("start");
         startR = new Rectangle(4.4f, 3.5f, 1.2f, 0.6f);
