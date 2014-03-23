@@ -3,13 +3,19 @@ package rs.papltd.smc.utility;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import java.io.File;
 import java.util.Vector;
+
+import rs.papltd.smc.Assets;
 
 /**
  * Created by pedja on 2/27/14.
@@ -94,5 +100,50 @@ public class Utility
     public static void showToast(Context context, int resId)
     {
         Toast.makeText(context, resId, Toast.LENGTH_LONG).show();
+    }
+
+    public static float getHeight(float width, TextureRegion region)
+    {
+        return width*region.getRegionHeight()/region.getRegionWidth();
+    }
+
+    public static float getHeight(float width, Texture texture)
+    {
+        return width*texture.getHeight()/texture.getWidth();
+    }
+
+    public static float getHeight(float newWidth, float origWidth, float origHeight)
+    {
+        return newWidth * origHeight / origWidth;
+    }
+
+    public enum PrefsKey
+    {
+        sound, music
+    }
+
+    /**Checks current sound state(on/off) and toggles it
+     * @return new state of the sound(true = on, false = off)*/
+    public static boolean toggleSound()
+    {
+        boolean currentState = Assets.prefs.getBoolean(PrefsKey.sound.toString(), true);
+        SharedPreferences.Editor editor = Assets.prefs.edit();
+        editor.putBoolean(PrefsKey.sound.toString(), !currentState);
+        editor.apply();//apply will make changes to memory immediately, and write to disk asynchronously
+        Assets.playSounds = !currentState;
+        return !currentState;
+    }
+
+
+    /**Checks current music state(on/off) and toggles it
+     * @return new state of the music(true = on, false = off)*/
+    public static boolean toggleMusic()
+    {
+        boolean currentState = Assets.prefs.getBoolean(PrefsKey.music.toString(), true);
+        SharedPreferences.Editor editor = Assets.prefs.edit();
+        editor.putBoolean(PrefsKey.music.toString(), !currentState);
+        editor.apply();//apply will make changes to memory immediately, and write to disk asynchronously
+        Assets.playMusic = !currentState;
+        return !currentState;
     }
 }

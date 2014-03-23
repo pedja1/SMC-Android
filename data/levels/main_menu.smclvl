@@ -1,7 +1,11 @@
 {
     "info": {
         "level_width": "10",
-        "level_height": "7"
+        "level_height": "7",
+        "level_music":
+            [
+                "/music/game/menu.ogg"
+            ]
     },
     "background": {
         "r_1": "0.117",
@@ -110,7 +114,7 @@
         {
             "posx": "7.5",
             "posy": "1",
-            "width": "1",
+            "width": "1.2",
             "height": "0.6",
             "texture_atlas": "/pipes/orange/orange.pack",
             "texture_name": "/pipes/orange/orange.pack:ver"
@@ -130,6 +134,64 @@
             "height": "0.6",
             "texture_atlas": "/pipes/orange/orange.pack",
             "texture_name": "/pipes/orange/orange.pack:up"
+        },
+        {
+            "posx": "7.55",
+            "posy": "2.5",
+            "width": "1.15",
+            "height": "0.3",
+            "texture_name": "/ground/green-1/hedges/wild-medium.png"
+        },
+        {
+            "posx": "1",
+            "posy": "1",
+            "width": "2.4",
+            "height": "3.4",
+            "texture_name": "/ground/jungle-1/big-plant-1.png"
+        },
+        {
+            "posx": "1.5",
+            "posy": "3.2",
+            "width": "0.25",
+            "height": "0.35",
+            "texture_atlas": "/ground/jungle-1/slider/green.pack",
+            "texture_name": "/ground/jungle-1/slider/green.pack:1-green-left",
+             "flip_data": {
+                 "flip_x": "true",
+                 "flip_y": "false"
+             }
+        },
+        {
+            "posx": "1.75",
+            "posy": "3.2",
+            "width": "0.25",
+            "height": "0.35",
+            "texture_atlas": "/ground/jungle-1/slider/green.pack",
+            "texture_name": "/ground/jungle-1/slider/green.pack:1-green-middle"
+        },
+        {
+            "posx": "2",
+            "posy": "3.2",
+            "width": "0.25",
+            "height": "0.35",
+            "texture_atlas": "/ground/jungle-1/slider/green.pack",
+            "texture_name": "/ground/jungle-1/slider/green.pack:1-green-middle"
+        },
+        {
+            "posx": "2.25",
+            "posy": "3.2",
+            "width": "0.25",
+            "height": "0.35",
+            "texture_atlas": "/ground/jungle-1/slider/green.pack",
+            "texture_name": "/ground/jungle-1/slider/green.pack:1-green-middle"
+        },
+        {
+            "posx": "2.5",
+            "posy": "3.2",
+            "width": "0.25",
+            "height": "0.35",
+            "texture_atlas": "/ground/jungle-1/slider/green.pack",
+            "texture_name": "/ground/jungle-1/slider/green.pack:1-green-left"
         }
     ]
 }

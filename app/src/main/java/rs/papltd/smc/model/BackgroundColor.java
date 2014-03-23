@@ -15,7 +15,6 @@ public class BackgroundColor
 	
 	public void render(Camera cam)
 	{
-		System.out.println("bg_color" + color1 + "" + color2);
 		renderer.setProjectionMatrix(cam.combined);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.rect(cam.position.x - Constants.CAMERA_WIDTH / 2, cam.position.y - Constants.CAMERA_HEIGHT / 2,

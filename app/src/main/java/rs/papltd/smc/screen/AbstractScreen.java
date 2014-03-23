@@ -3,6 +3,10 @@ package rs.papltd.smc.screen;
 import android.app.ProgressDialog;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import rs.papltd.smc.*;
 
 /**
@@ -31,6 +35,16 @@ public abstract class AbstractScreen implements Screen
     @Override
     public void dispose()
 	{
+    }
+
+    protected void draw(SpriteBatch batch, Texture texture, float x, float y, float width)
+    {
+        batch.draw(texture, x, y, width, width*texture.getHeight()/ texture.getWidth());
+    }
+
+    protected void draw(SpriteBatch batch, TextureRegion region, float x, float y, float width)
+    {
+        batch.draw(region, x, y, width, width*region.getRegionHeight()/region.getRegionWidth());
     }
 	
 	public abstract void loadAssets();

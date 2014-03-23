@@ -86,4 +86,9 @@ public class Sprite
         this.isFront = isFront;
     }
 
+    @Override
+    public String toString()
+    {
+        return textureName;
+    }
 }

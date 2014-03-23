@@ -1,6 +1,6 @@
 package rs.papltd.smc.utility;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,16 +24,16 @@ public class LevelLoader
 {
     Level level;
 
-    private enum KEYS
+    private enum KEY
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
-        level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, atlases, atlas_path,
-        regions, background, r_1, r_2, g_1, g_2, b_1, b_2
+        level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
+        g_1, g_2, b_1, b_2, level_music
     }
 	
 	private enum DATA_KEY
 	{
-		txt, atl
+		txt, atl, mus
 	}
 
     public LevelLoader()
@@ -59,7 +59,7 @@ public class LevelLoader
         }
 	}
 	
-	public Array<String[]> parseLeveData(String levelData)
+	public Array<String[]> parseLevelData(String levelData)
 	{
 		if(levelData == null)
 		{
@@ -75,7 +75,7 @@ public class LevelLoader
 		String[] lines = levelData.split("\n");
 		for(String line : lines)
 		{
-			if(line.startsWith("#"))continue;//skip coments
+			if(line.startsWith("#"))continue;//skip comments
 			String[] item = line.split(":");
 			if(item[0] == null || item[1] == null)// both value and key must not be null
 			{
@@ -108,20 +108,30 @@ public class LevelLoader
 
     private void parseInfo(JSONObject jLevel) throws JSONException
     {
-        JSONObject jInfo = jLevel.getJSONObject(KEYS.info.toString());
-        float width = (float) jInfo.getDouble(KEYS.level_width.toString());
-        float height = (float) jInfo.getDouble(KEYS.level_height.toString());
+        JSONObject jInfo = jLevel.getJSONObject(KEY.info.toString());
+        float width = (float) jInfo.getDouble(KEY.level_width.toString());
+        float height = (float) jInfo.getDouble(KEY.level_height.toString());
         level.setWidth(width);
         level.setHeight(height);
+        if(jInfo.has(KEY.level_music.toString()))
+        {
+            JSONArray jMusic = jInfo.getJSONArray(KEY.level_music.toString());
+            Array<String> music = new Array<String>();
+            for(int i = 0; i < jMusic.length(); i++)
+            {
+                music.add(jMusic.getString(i));
+            }
+            level.setMusic(music);
+        }
     }
 
     private void parseBg(JSONObject jLevel) throws JSONException
     {
-		if(jLevel.has(KEYS.background.toString()))
+		if(jLevel.has(KEY.background.toString()))
 		{
-			JSONObject jBg = jLevel.getJSONObject(KEYS.background.toString());
-			String textureName = jBg.getString(KEYS.texture_name.toString());
-			if(Assets.manager.containsAsset(textureName))
+			JSONObject jBg = jLevel.getJSONObject(KEY.background.toString());
+			String textureName = jBg.getString(KEY.texture_name.toString());
+			if(Assets.manager.isLoaded(textureName))
 			{
 				Texture bgTexture = Assets.manager.get(textureName);
 				Background bg = new Background(new Vector2(0, 0), bgTexture);
@@ -135,12 +145,12 @@ public class LevelLoader
 				throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
 												   + "in [level].smclvl must also be included in [level].data");
 			}
-			float r1 = (float) jBg.getDouble(KEYS.r_1.toString());
-			float r2 = (float) jBg.getDouble(KEYS.r_2.toString());
-			float g1 = (float) jBg.getDouble(KEYS.g_1.toString());
-			float g2 = (float) jBg.getDouble(KEYS.g_2.toString());
-			float b1 = (float) jBg.getDouble(KEYS.b_1.toString());
-			float b2 = (float) jBg.getDouble(KEYS.b_2.toString());
+			float r1 = (float) jBg.getDouble(KEY.r_1.toString());
+			float r2 = (float) jBg.getDouble(KEY.r_2.toString());
+			float g1 = (float) jBg.getDouble(KEY.g_1.toString());
+			float g2 = (float) jBg.getDouble(KEY.g_2.toString());
+			float b1 = (float) jBg.getDouble(KEY.b_1.toString());
+			float b2 = (float) jBg.getDouble(KEY.b_2.toString());
 			
 			BackgroundColor bgColor = new BackgroundColor();
 			bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
@@ -155,40 +165,40 @@ public class LevelLoader
 
     private void parsePlayer(JSONObject jLevel) throws JSONException
     {
-        JSONObject jPlayer = jLevel.getJSONObject(KEYS.player.toString());
-        float x = (float) jPlayer.getDouble(KEYS.posx.toString());
-        float y = (float) jPlayer.getDouble(KEYS.posy.toString());
+        JSONObject jPlayer = jLevel.getJSONObject(KEY.player.toString());
+        float x = (float) jPlayer.getDouble(KEY.posx.toString());
+        float y = (float) jPlayer.getDouble(KEY.posy.toString());
         level.setSpanPosition(new Vector2(x, y));
     }
 
     private void parseSprites(JSONObject jLevel, World world) throws JSONException
     {
-        JSONArray jSprites = jLevel.getJSONArray(KEYS.sprites.toString());
+        JSONArray jSprites = jLevel.getJSONArray(KEY.sprites.toString());
         Array<Sprite> sprites = new Array<Sprite>();
 
         for (int i = 0; i < jSprites.length(); i++)
         {
             JSONObject jSprite = jSprites.getJSONObject(i);
-            Vector2 position = new Vector2((float) jSprite.getDouble(KEYS.posx.toString()), (float) jSprite.getDouble(KEYS.posy.toString()));
+            Vector2 position = new Vector2((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()));
 
-            Sprite sprite = new Sprite(position, (float) jSprite.getDouble(KEYS.width.toString()), (float) jSprite.getDouble(KEYS.height.toString()));
+            Sprite sprite = new Sprite(position, (float) jSprite.getDouble(KEY.width.toString()), (float) jSprite.getDouble(KEY.height.toString()));
 
-            sprite.setTextureName(jSprite.getString(KEYS.texture_name.toString()));
+            sprite.setTextureName(jSprite.getString(KEY.texture_name.toString()));
 			if(sprite.getTextureName() == null || sprite.getTextureName().isEmpty())
 			{
 				throw new IllegalArgumentException("texture name is invalid: \"" + sprite.getTextureName() + "\"");
 			}
-            if (jSprite.has(KEYS.is_front.toString()))
+            if (jSprite.has(KEY.is_front.toString()))
             {
-                sprite.setFront(jSprite.getBoolean(KEYS.is_front.toString()));
+                sprite.setFront(jSprite.getBoolean(KEY.is_front.toString()));
             }
 
             //load all assets
             TextureAtlas atlas = null;
-            if (jSprite.has(KEYS.texture_atlas.toString()))
+            if (jSprite.has(KEY.texture_atlas.toString()))
             {
-                sprite.setTextureAtlas(jSprite.getString(KEYS.texture_atlas.toString()));
-				if(Assets.manager.containsAsset(sprite.getTextureAtlas()))
+                sprite.setTextureAtlas(jSprite.getString(KEY.texture_atlas.toString()));
+				if(Assets.manager.isLoaded(sprite.getTextureAtlas()))
 				{
                 	atlas = Assets.manager.get(sprite.getTextureAtlas());
 				}
@@ -198,13 +208,13 @@ public class LevelLoader
 					  						+ "in [level].smclvl must also be included in [level].data");
 				}
             }
-            boolean hasFlipData = jSprite.has(KEYS.flip_data.toString());
+            boolean hasFlipData = jSprite.has(KEY.flip_data.toString());
 
             if (hasFlipData)
             {
-                JSONObject flipData = jSprite.getJSONObject(KEYS.flip_data.toString());
-                boolean flipX = flipData.getBoolean(KEYS.flip_x.toString());
-                boolean flipY = flipData.getBoolean(KEYS.flip_y.toString());
+                JSONObject flipData = jSprite.getJSONObject(KEY.flip_data.toString());
+                boolean flipX = flipData.getBoolean(KEY.flip_x.toString());
+                boolean flipY = flipData.getBoolean(KEY.flip_y.toString());
                 String newTextureName = null;
                 if (flipX && !flipY)
                 {
@@ -226,7 +236,7 @@ public class LevelLoader
                     {
                         if (atlas == null)
                         {
-							if(Assets.manager.containsAsset(sprite.getTextureName()))
+							if(Assets.manager.isLoaded(sprite.getTextureName()))
 							{
 								orig = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
 							}
@@ -259,13 +269,13 @@ public class LevelLoader
                     TextureRegion textureRegion;
                     if (atlas == null)
                     {
-                        if(Assets.manager.containsAsset(sprite.getTextureName()))
+                        if(Assets.manager.isLoaded(sprite.getTextureName()))
 						{
 							textureRegion = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
 						}
 						else
 						{
-							throw new IllegalArgumentException("Texture (" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used" 
+							throw new IllegalArgumentException("Texture (" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used"
 															   + "in [level].smclvl must also be included in [level].data");
 						}
                     }
@@ -280,12 +290,12 @@ public class LevelLoader
             sprites.add(sprite);
         }
         level.setSprites(sprites);
-        JSONArray jCollisionBodies = jLevel.getJSONArray(KEYS.collision_bodies.toString());
+        JSONArray jCollisionBodies = jLevel.getJSONArray(KEY.collision_bodies.toString());
         for (int i = 0; i < jCollisionBodies.length(); i++)
         {
             JSONObject jBody = jCollisionBodies.getJSONObject(i);
-            Vector2 position = new Vector2((float) jBody.getDouble(KEYS.posx.toString()), (float) jBody.getDouble(KEYS.posy.toString()));
-            createBody(world, position, (float) jBody.getDouble(KEYS.width.toString()), (float) jBody.getDouble(KEYS.height.toString()));
+            Vector2 position = new Vector2((float) jBody.getDouble(KEY.posx.toString()), (float) jBody.getDouble(KEY.posy.toString()));
+            createBody(world, position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()));
         }
     }
 
@@ -311,7 +321,7 @@ public class LevelLoader
         return level;
     }
 
-    public static Class<?> getTextureClassForKey(String key)
+    public static Class getTextureClassForKey(String key)
     {
         if(key.equals(DATA_KEY.txt.toString()))
         {
@@ -321,9 +331,18 @@ public class LevelLoader
         {
             return TextureAtlas.class;
         }
+        else if(key.equals(DATA_KEY.mus.toString()))
+        {
+            return Music.class;
+        }
         else
         {
             throw new IllegalArgumentException("Key: " + key + " is invalid!");
         }
+    }
+
+    public static boolean isTexture(String key)
+    {
+        return key.equals(DATA_KEY.txt.toString());
     }
 }

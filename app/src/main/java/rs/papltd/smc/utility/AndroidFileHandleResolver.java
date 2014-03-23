@@ -9,7 +9,7 @@ import rs.papltd.smc.Assets;
 /**
  * Created by pedja on 3/8/14.
  */
-public class AbsoluteFileHandleResolver implements FileHandleResolver
+public class AndroidFileHandleResolver implements FileHandleResolver
 {
     @Override
     public FileHandle resolve(String fileName)

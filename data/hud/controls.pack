@@ -1,0 +1,187 @@
+
+controls.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dpad-down
+  rotate: false
+  xy: 166, 108
+  size: 61, 75
+  orig: 61, 75
+  offset: 0, 0
+  index: -1
+dpad-down-pressed
+  rotate: false
+  xy: 398, 171
+  size: 61, 75
+  orig: 61, 75
+  offset: 0, 0
+  index: -1
+dpad-left
+  rotate: false
+  xy: 166, 185
+  size: 76, 61
+  orig: 76, 61
+  offset: 0, 0
+  index: -1
+dpad-left-pressed
+  rotate: false
+  xy: 84, 103
+  size: 76, 61
+  orig: 76, 61
+  offset: 0, 0
+  index: -1
+dpad-right
+  rotate: false
+  xy: 321, 185
+  size: 75, 61
+  orig: 75, 61
+  offset: 0, 0
+  index: -1
+dpad-right-pressed
+  rotate: false
+  xy: 244, 185
+  size: 75, 61
+  orig: 75, 61
+  offset: 0, 0
+  index: -1
+dpad-up
+  rotate: false
+  xy: 147, 25
+  size: 61, 76
+  orig: 61, 76
+  offset: 0, 0
+  index: -1
+dpad-up-pressed
+  rotate: false
+  xy: 84, 25
+  size: 61, 76
+  orig: 61, 76
+  offset: 0, 0
+  index: -1
+fire
+  rotate: false
+  xy: 2, 84
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+fire-pressed
+  rotate: false
+  xy: 2, 166
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 2, 2
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+jump-pressed
+  rotate: false
+  xy: 84, 166
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+music-off
+  rotate: false
+  xy: 229, 135
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+music-off-pressed
+  rotate: false
+  xy: 461, 198
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+music-on
+  rotate: false
+  xy: 329, 135
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+music-on-pressed
+  rotate: false
+  xy: 279, 135
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 229, 85
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+pause-pressed
+  rotate: false
+  xy: 461, 148
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 329, 85
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+play-pressed
+  rotate: false
+  xy: 279, 85
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 379, 71
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+settings-pressed
+  rotate: false
+  xy: 379, 121
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+sound-off
+  rotate: false
+  xy: 260, 35
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+sound-off-pressed
+  rotate: false
+  xy: 210, 35
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+sound-on
+  rotate: false
+  xy: 429, 98
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+sound-on-pressed
+  rotate: false
+  xy: 310, 35
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1

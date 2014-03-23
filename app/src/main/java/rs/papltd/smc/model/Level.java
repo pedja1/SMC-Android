@@ -15,6 +15,7 @@ public class Level
 	private Background bg1;
 	private Background bg2;
     private BackgroundColor bgColor;
+    private Array<String> music;
 
 	public void setBg1(Background bg1)
 	{
@@ -66,11 +67,6 @@ public class Level
         this.sprites = sprites;
     }
 
-    public Level()
-    {
-        //loadDemoLevel();
-    }
-
     public Vector2 getSpanPosition()
     {
         return spanPosition;
@@ -89,5 +85,15 @@ public class Level
     public void setBgColor(BackgroundColor bgColor)
     {
         this.bgColor = bgColor;
+    }
+
+    public Array<String> getMusic()
+    {
+        return music;
+    }
+
+    public void setMusic(Array<String> music)
+    {
+        this.music = music;
     }
 }
