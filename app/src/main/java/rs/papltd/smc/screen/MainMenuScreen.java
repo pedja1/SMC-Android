@@ -21,7 +21,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     Texture gameLogo;
     Texture gdxLogo;
     TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
-    Rectangle playR, musicR, soundR;
+    Rectangle playR, musicR, soundR, viewport;
     OrthographicCamera cam;
     OrthographicCamera debugCam;
     SpriteBatch batch;
@@ -65,6 +65,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void render(float delta)
     {
+        // set viewport
+        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y,
+                (int) viewport.width, (int) viewport.height);
 		Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -117,7 +120,28 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void resize(int width, int height)
     {
+        // calculate new viewport
+        float aspectRatio = (float)width/(float)height;
+        float scale = 1f;
+        Vector2 crop = new Vector2(0f, 0f);
+        if(aspectRatio > Constants.ASPECT_RATIO)
+        {
+            scale = (float)height/(float)Constants.CAMERA_HEIGHT;
+            crop.x = (width - Constants.CAMERA_WIDTH*scale)/2f;
+        }
+        else if(aspectRatio < Constants.ASPECT_RATIO)
+        {
+            scale = (float)width/(float)Constants.CAMERA_WIDTH;
+            crop.y = (height - Constants.CAMERA_HEIGHT*scale)/2f;
+        }
+        else
+        {
+            scale = (float)width/(float)Constants.CAMERA_WIDTH;
+        }
 
+        float w = (float)Constants.CAMERA_WIDTH*scale;
+        float h = (float)Constants.CAMERA_HEIGHT*scale;
+        viewport = new Rectangle(crop.x, crop.y, w, h);
     }
 
     @Override

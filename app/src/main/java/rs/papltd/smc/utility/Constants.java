@@ -10,6 +10,7 @@ public class Constants
 
     public static final float CAMERA_WIDTH = 10f;
     public static final float CAMERA_HEIGHT = 7f;
+    public static final float ASPECT_RATIO = CAMERA_WIDTH/CAMERA_HEIGHT;
     public static final float BACKGROUND_SCROLL_SPEED = 0.12f;
     public static final int GRAVITY = -20;
 }
