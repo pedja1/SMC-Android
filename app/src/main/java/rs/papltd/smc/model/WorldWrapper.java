@@ -54,6 +54,21 @@ public class WorldWrapper
         return level;
     }
 
+    public void setWorld(World world)
+    {
+        this.world = world;
+    }
+
+    public void setMario(Maryo mario)
+    {
+        this.mario = mario;
+    }
+
+    public void setLevel(Level level)
+    {
+        this.level = level;
+    }
+
     /**
      * Return only the blocks that need to be drawn *
      */
@@ -95,7 +110,6 @@ public class WorldWrapper
     // --------------------
     public WorldWrapper()
     {
-        createWorld();
         world.setContactListener(new ContactListener()
         {
 
@@ -125,13 +139,6 @@ public class WorldWrapper
                 // TODO: Implement this method
             }
         });
-    }
-
-    private void createWorld()//TODO needs to be done differently, level loading will also load all textures for each object and it should be done on different screen and asynchronously
-    {
-        /*LevelLoader levelLoader = new LevelLoader(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.smclvl").readString(), world);
-        level = levelLoader.getLevel();//LevelLoader.loadLevel(1);
-        mario = new Maryo(level.getSpanPosition(), world);*/
     }
 
 }

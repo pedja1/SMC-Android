@@ -79,7 +79,6 @@ public class Maryo
         this.bounds.height = size.y;
         this.bounds.width = size.x;
 		body = createBody(world, position);
-        loadTextures();
     }
 
 	private Body createBody(World world, Vector2 position)
@@ -135,7 +134,7 @@ public class Maryo
 		return body;
 	}
 
-    private void loadTextures()
+    public void loadTextures()
     {
         for(MarioState ms : usedStates)
         {
@@ -155,7 +154,7 @@ public class Maryo
         TextureRegion[] walkRightFrames = new TextureRegion[3];
         walkRightFrames[0] = Assets.loadedRegions.get(TKey.stand_right + ":" + state);
         walkRightFrames[1] = atlas.findRegion(TKey.walk_right_1 + "");
-        walkRightFrames[2] = atlas.findRegion(TKey.walk_right_1 + "");
+        walkRightFrames[2] = atlas.findRegion(TKey.walk_right_2 + "");
         Assets.animations.put(AKey.walk_right + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkRightFrames));
 
         TextureRegion[] walkLeftFrames = new TextureRegion[3];
@@ -167,22 +166,22 @@ public class Maryo
         Assets.animations.put(AKey.walk_left + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkLeftFrames));
 
         Assets.loadedRegions.put(TKey.jump_right + ":" + state, atlas.findRegion(TKey.jump_right.toString()));
-        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.jump_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.jump_right.toString() + ":" + state));
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.jump_left + ":" + state, tmp);
 
         Assets.loadedRegions.put(TKey.fall_right + ":" + state, atlas.findRegion(TKey.fall_right.toString()));
-        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.fall_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.fall_right.toString() + ":" + state));
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.fall_left + ":" + state, tmp);
 
         Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
-        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString() + ":" + state));
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.dead_left + ":" + state, tmp);
 
         Assets.loadedRegions.put(TKey.duck_right + ":" + state, atlas.findRegion(TKey.duck_right.toString()));
-        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.duck_right.toString()));
+        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.duck_right.toString() + ":" + state));
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.duck_left + ":" + state, tmp);
     }

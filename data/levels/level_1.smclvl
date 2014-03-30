@@ -10,11 +10,11 @@
         "r_2": "0",
         "g_2": "0.392",
         "b_2": "0.039",
-        "texture_name": "/data/background/green_junglehills.png"
+        "texture_name": "/game/background/green-junglehills.png"
     },
     "player": {
         "posx": "2",
-        "posy": "3",
+        "posy": "3"
 		
     },
     "collision_bodies": [

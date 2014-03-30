@@ -21,7 +21,7 @@ public class MarioController
     private static final float MAX_VEL = 2f;
 
     private WorldWrapper world;
-    private Maryo mario;
+    private Maryo maryo;
     private long jumpPressedTime;
     private boolean jumpingPressed;
     private boolean grounded = false;
@@ -41,7 +41,7 @@ public class MarioController
     public MarioController(WorldWrapper world)
     {
         this.world = world;
-        this.mario = world.getMario();
+        this.maryo = world.getMario();
         /*rbg = new ParallaxBackground(new ParallaxLayer[]{
                 new ParallaxLayer(new TextureRegion(new Texture(Gdx.files.internal("data/background/green_junglehills.png"))), new Vector2(), new Vector2(0, 0))
         }, 10, 7, new Vector2(150, 0));*/
@@ -118,16 +118,15 @@ public class MarioController
         grounded = isPlayerGrounded();
 		if(!grounded)
 		{
-			mario.setWorldState(Maryo.WorldState.JUMPING);
+			maryo.setWorldState(Maryo.WorldState.JUMPING);
 		}
-        System.out.println("grounded: " + grounded);
         processInput();
-        if (grounded && mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+        if (grounded && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
         {
-            mario.setWorldState(Maryo.WorldState.IDLE);
+            maryo.setWorldState(Maryo.WorldState.IDLE);
         }
         // simply updates the state time
-        mario.update(delta);
+        maryo.update(delta);
         //world.getLevel().getPb().moveX(delta);
 		
     }
@@ -137,16 +136,16 @@ public class MarioController
      */
     private boolean processInput()
     {
-        Vector2 vel = mario.getBody().getLinearVelocity();
-        Vector2 pos = mario.getBody().getPosition();
+        Vector2 vel = maryo.getBody().getLinearVelocity();
+        Vector2 pos = maryo.getBody().getPosition();
         if (keys.get(Keys.JUMP))
         {
-            if (!mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 jumpingPressed = true;
                 jumpPressedTime = System.currentTimeMillis();
-                mario.setWorldState(Maryo.WorldState.JUMPING);
-                //mario.getVelocity().y = MAX_JUMP_SPEED;
+                maryo.setWorldState(Maryo.WorldState.JUMPING);
+                //maryo.getVelocity().y = MAX_JUMP_SPEED;
                 grounded = false;
             }
             else
@@ -159,9 +158,9 @@ public class MarioController
                 {
                     if (jumpingPressed && vel.y < MAX_JUMP_SPEED)
                     {
-                        //mario.getVelocity().y = MAX_JUMP_SPEED;
-                        mario.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
-                        mario.getBody().setLinearVelocity(vel.x, vel.y = +10f);
+                        //maryo.getVelocity().y = MAX_JUMP_SPEED;
+                        maryo.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
+                        maryo.getBody().setLinearVelocity(vel.x, vel.y = +10f);
                     }
                 }
             }
@@ -169,46 +168,46 @@ public class MarioController
         if (keys.get(Keys.LEFT))
         {
             // left is pressed
-            mario.setFacingLeft(true);
-            if (!mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+            maryo.setFacingLeft(true);
+            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
-                mario.setWorldState(Maryo.WorldState.WALKING);
+                maryo.setWorldState(Maryo.WorldState.WALKING);
             }
             //if (vel.x > -MAX_VEL)
             //{
-                //mario.getBody().applyLinearImpulse(-1.2f, 0, 0, 0, true);
-                mario.getBody().setLinearVelocity(vel.x = -4f, vel.y);
+                //maryo.getBody().applyLinearImpulse(-1.2f, 0, 0, 0, true);
+                maryo.getBody().setLinearVelocity(vel.x = -4f, vel.y);
             //}
         }
         else if (keys.get(Keys.RIGHT))
         {
             // left is pressed
-            mario.setFacingLeft(false);
-            if (!mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+            maryo.setFacingLeft(false);
+            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
-                mario.setWorldState(Maryo.WorldState.WALKING);
+                maryo.setWorldState(Maryo.WorldState.WALKING);
             }
             //if (vel.x < MAX_VEL)
             //{
-                //mario.getBody().applyLinearImpulse(1.2f, 0, 0, 0, true);
-                mario.getBody().setLinearVelocity(vel.x = +4f, vel.y);
+                //maryo.getBody().applyLinearImpulse(1.2f, 0, 0, 0, true);
+                maryo.getBody().setLinearVelocity(vel.x = +4f, vel.y);
             //}
         }
         else if (keys.get(Keys.DOWN))
         {
-            if (!mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
-                mario.setWorldState(Maryo.WorldState.DUCKING);
+                maryo.setWorldState(Maryo.WorldState.DUCKING);
             }
         }
         else
         {
-            if (!mario.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
-                mario.setWorldState(Maryo.WorldState.IDLE);
+                maryo.setWorldState(Maryo.WorldState.IDLE);
             }
             //slowly decrease linear velocity on x axes
-            mario.getBody().setLinearVelocity(vel.x * 0.7f, vel.y);
+            maryo.getBody().setLinearVelocity(vel.x * 0.7f, vel.y);
         }
         return false;
     }
@@ -220,9 +219,9 @@ public class MarioController
         {
             Contact contact = contactList.get(i);
             if (contact.isTouching()
-                    && (contact.getFixtureA() == mario.getSensorFixture() || contact.getFixtureB() == mario.getSensorFixture()))
+                    && (contact.getFixtureA() == maryo.getSensorFixture() || contact.getFixtureB() == maryo.getSensorFixture()))
             {
-                /*Vector2 pos = mario.getBody().getPosition();
+                /*Vector2 pos = maryo.getBody().getPosition();
                 WorldManifold manifold = contact.getWorldManifold();
                 boolean below = true;
                 for (int j = 0; j < manifold.getNumberOfContactPoints(); j++)
@@ -237,4 +236,8 @@ public class MarioController
         return false;
     }
 
+    public void setMaryo(Maryo mario)
+    {
+        this.maryo = mario;
+    }
 }

@@ -58,12 +58,12 @@ public class WorldRenderer
 
     public WorldRenderer(GameScreen gameScreen, boolean debug)
     {
-        this.world = gameScreen.getWorld();
+        this.world = gameScreen.getWorldWrapper();
         this.width = gameScreen.getWidth();
         this.height = gameScreen.getHeight();
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.setToOrtho(false,Constants.CAMERA_WIDTH,Constants.CAMERA_HEIGHT);
-        this.cam.position.set(world.getMario().getPosition().x, world.getMario().getPosition().y, 0);
+        //this.cam.position.set(world.getMario().getPosition().x, world.getMario().getPosition().y, 0);
         this.cam.update();
 
         pCamera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
@@ -104,7 +104,6 @@ public class WorldRenderer
         leafEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         leafEffect.start();
     }
-
 
     public void render(float delta)
     {

@@ -1,7 +1,7 @@
 {
     "info": {
-        "level_width": "10",
-        "level_height": "6",
+        "level_width": "13",
+        "level_height": "7",
         "level_music":
             [
                 "/music/game/menu.ogg"
@@ -24,7 +24,7 @@
         {
             "posx": "0",
             "posy": "-1",
-            "width": "10",
+            "width": "13",
             "height": "1"
         },
         {
@@ -112,7 +112,28 @@
             "texture_name": "/ground/green-3/ground/top/1.png"
         },
         {
-            "posx": "7.5",
+            "posx": "10",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "11",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "12",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "9.5",
             "posy": "1",
             "width": "1.2",
             "height": "0.6",
@@ -120,7 +141,7 @@
             "texture_name": "/pipes/orange/orange.pack:ver"
         },
         {
-            "posx": "7.5",
+            "posx": "9.5",
             "posy": "1.6",
             "width": "1.2",
             "height": "0.6",
@@ -128,7 +149,7 @@
             "texture_name": "/pipes/orange/orange.pack:ver"
         },
         {
-            "posx": "7.5",
+            "posx": "9.5",
             "posy": "2.2",
             "width": "1.2",
             "height": "0.6",
@@ -136,7 +157,7 @@
             "texture_name": "/pipes/orange/orange.pack:up"
         },
         {
-            "posx": "7.55",
+            "posx": "9.55",
             "posy": "2.5",
             "width": "1.15",
             "height": "0.3",

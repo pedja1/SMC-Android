@@ -37,14 +37,14 @@ public abstract class AbstractScreen implements Screen
 	{
     }
 
-    protected void draw(SpriteBatch batch, Texture texture, float x, float y, float width)
+    protected void draw(SpriteBatch batch, Texture texture, float x, float y, float height)
     {
-        batch.draw(texture, x, y, width, width*texture.getHeight()/ texture.getWidth());
+        batch.draw(texture, x, y, height * texture.getWidth()/texture.getHeight(), height);
     }
 
-    protected void draw(SpriteBatch batch, TextureRegion region, float x, float y, float width)
+    protected void draw(SpriteBatch batch, TextureRegion region, float x, float y, float height)
     {
-        batch.draw(region, x, y, width, width*region.getRegionHeight()/region.getRegionWidth());
+        batch.draw(region, x, y, height * region.getRegionWidth()/region.getRegionHeight(), height);
     }
 	
 	public abstract void loadAssets();

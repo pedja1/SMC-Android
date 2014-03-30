@@ -21,12 +21,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     Texture gameLogo;
     Texture gdxLogo;
     TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
-    Rectangle playR, musicR, soundR, viewport;
-    OrthographicCamera cam;
-    OrthographicCamera debugCam;
+    Rectangle playR, musicR, soundR;
+    OrthographicCamera drawCam, debugCam, hudCam;
     SpriteBatch batch;
     MaryoGame game;
-	Background bgr1;
+	Background bgr1, bgr2;
 	BackgroundColor bgColor;
     LevelLoader loader;
     World world;
@@ -42,12 +41,16 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		super(game);
         this.game = game;
         batch = new SpriteBatch();
-        cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        cam.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
-        cam.update();
+        drawCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        drawCam.position.set(Constants.CAMERA_WIDTH/2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT/2, 0);
+        drawCam.update();
         debugCam = new OrthographicCamera(1280, 720);
         debugCam.position.set(1280/2, 720/2, 0);
         debugCam.update();
+        hudCam = new OrthographicCamera(screenWidth, screenHeight);
+        hudCam.position.set(screenWidth/2, screenHeight/2, 0);
+        hudCam.update();
+
         loader = new LevelLoader();
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         debugFont = new BitmapFont();
@@ -65,27 +68,32 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void render(float delta)
     {
-        // set viewport
-        Gdx.gl.glViewport((int) viewport.x, (int) viewport.y,
-                (int) viewport.width, (int) viewport.height);
 		Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		bgColor.render(cam);
+		bgColor.render(drawCam);
 
-        batch.setProjectionMatrix(cam.combined);
+        batch.setProjectionMatrix(drawCam.combined);
         batch.begin();
 
 		bgr1.render(batch);
+        bgr2.render(batch);
 
 		drawSprites();
 
-        draw(batch, gameLogo, 2f, 5f, 6f);
-        draw(batch, gdxLogo, 0.2f, 0.1f, 1.2f);
+        draw(batch, gameLogo, 2f, 5f, 2f);
 
-        draw(batch, playT ? playP : play, playR.x, playR.y, playR.width);
-        draw(batch, musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width);
-        draw(batch, soundT ? soundOnP : soundOn, soundR.x, soundR.y, soundR.width);
+        draw(batch, musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.height);
+
+        batch.end();
+
+        batch.setProjectionMatrix(hudCam.combined);
+        batch.begin();
+
+        batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
+        batch.draw(soundT ? soundOnP : soundOn, soundR.x, soundR.y,soundR.width, soundR.height);
+        batch.draw(gdxLogo, (screenWidth/100*2), (screenHeight/100*2),
+                screenWidth/10f, (screenWidth/10f)/4);
 
         batch.end();
 
@@ -113,35 +121,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
             region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            draw(batch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width);
+            draw(batch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
         }
     }
 
     @Override
     public void resize(int width, int height)
     {
-        // calculate new viewport
-        float aspectRatio = (float)width/(float)height;
-        float scale = 1f;
-        Vector2 crop = new Vector2(0f, 0f);
-        if(aspectRatio > Constants.ASPECT_RATIO)
-        {
-            scale = (float)height/(float)Constants.CAMERA_HEIGHT;
-            crop.x = (width - Constants.CAMERA_WIDTH*scale)/2f;
-        }
-        else if(aspectRatio < Constants.ASPECT_RATIO)
-        {
-            scale = (float)width/(float)Constants.CAMERA_WIDTH;
-            crop.y = (height - Constants.CAMERA_HEIGHT*scale)/2f;
-        }
-        else
-        {
-            scale = (float)width/(float)Constants.CAMERA_WIDTH;
-        }
-
-        float w = (float)Constants.CAMERA_WIDTH*scale;
-        float h = (float)Constants.CAMERA_HEIGHT*scale;
-        viewport = new Rectangle(crop.x, crop.y, w, h);
     }
 
     @Override
@@ -197,25 +183,29 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         TextureAtlas controlsAtlas = Assets.manager.get("/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
         playP = controlsAtlas.findRegion("play-pressed");
-        playR = new Rectangle(4.5f, 3f, 1f, 1f);
+        playR = new Rectangle(screenWidth/2f - (screenWidth/10f) / 2,
+                screenHeight/2f - (screenWidth/10f) / 2, screenWidth/10f, screenWidth/10f);
 
         musicOn = controlsAtlas.findRegion("music-on");
         musicOnP = controlsAtlas.findRegion("music-on-pressed");
         musicOff = controlsAtlas.findRegion("music-off");
         musicOffP = controlsAtlas.findRegion("music-off-pressed");
-        musicR = new Rectangle(9.25f, 0.15f, 0.5f, 0.5f);
+        musicR = new Rectangle(11.7f, 0.15f, 0.5f, 0.5f);
 
         soundOn = controlsAtlas.findRegion("sound-on");
         soundOnP = controlsAtlas.findRegion("sound-on-pressed");
         soundOff = controlsAtlas.findRegion("sound-off");
         soundOffP = controlsAtlas.findRegion("sound-off-pressed");
-        soundR = new Rectangle(8.675f, 0.15f, 0.5f, 0.5f);
+        soundR = new Rectangle(screenWidth - screenWidth/18f - (screenWidth/18f),
+                (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
 
         Texture bgTexture = Assets.manager.get("/game/background/more-hills.png");
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         bgr1 = new Background(new Vector2(0, 0), bgTexture);
-        bgr1.width = 7f;
+        bgr1.width = 8.7f;
         bgr1.height = 4.5f;
+        bgr2 = new Background(bgr1);
+        bgr2.position = new Vector2(bgr1.width, 0);
 
         bgColor = new BackgroundColor();
         bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
@@ -233,7 +223,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         if(keycode == Input.Keys.ENTER)
         {
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new LoadingScreen(new GameScreen(game)));
         }
         else if(keycode == Input.Keys.D)
         {
@@ -285,7 +275,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             playT = false;
             music.stop();
-            game.setScreen(new GameScreen(game));
+            game.setScreen(new LoadingScreen(new GameScreen(game)));
         }
         if(musicR.contains(x, y))
         {

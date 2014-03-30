@@ -76,9 +76,9 @@ public class HUD
         downR = new Rectangle(x, y, width, height);
     }
 
-    private void loadAssets()
+    public void loadAssets()
 	{
-		TextureAtlas atlas = new TextureAtlas(Gdx.files.absolute(Assets.mountedObbPath + "/hud/controls2.pack"));
+		TextureAtlas atlas = Assets.manager.get("/hud/controls.pack", TextureAtlas.class);
 		pause = atlas.findRegion("pause");
 		pauseP = atlas.findRegion("pause-pressed");
 		fire = atlas.findRegion("fire");

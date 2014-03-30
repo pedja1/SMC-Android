@@ -2,21 +2,26 @@ package rs.papltd.smc.screen;
 
 import android.util.*;
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
+
 import javax.microedition.khronos.opengles.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.controller.*;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.utility.LevelLoader;
 import rs.papltd.smc.view.*;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
 
-    private WorldWrapper world;
+    private WorldWrapper worldWrapper;
     private WorldRenderer renderer;
     private MarioController controller;
-    DPad dPad;
-    BtnJump jump;
+    //DPad dPad;
+    //BtnJump jump;
     HUD hud;
 
     private int width, height;
@@ -35,6 +40,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private SparseArray<TouchInfo> touches = new SparseArray<TouchInfo>();
     boolean update = false;
+    LevelLoader loader;
 
     public GameScreen(MaryoGame game)
     {
@@ -42,18 +48,19 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        world = new WorldWrapper();
+        worldWrapper = new WorldWrapper();
         hud = new HUD();
-        dPad = new DPad(0.3f * width);
-        jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
+        //dPad = new DPad(0.3f * width);
+        //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
         renderer = new WorldRenderer(this, true);
-        controller = new MarioController(world);
+        controller = new MarioController(worldWrapper);
         Gdx.input.setInputProcessor(this);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
         {
             touches.put(i, new TouchInfo());
         }
+        loader = new LevelLoader();
         //Gdx.graphics.setContinuousRendering(false);
     }
 
@@ -142,13 +149,36 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
+        Array<String[]> data = loader.parseLevelData(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.data").readString());
+
+        for(String[] s : data)
+        {
+            if(LevelLoader.isTexture(s[0]))
+            {
+                Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
+            }
+            else
+            {
+                Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
+            }
+        }
+        Assets.manager.load("/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
 
     }
 
     @Override
     public void afterLoadAssets()
     {
-
+        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.smclvl").readString(), worldWrapper.getWorld());
+        hud.loadAssets();
+        Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
+        states.add(Maryo.MarioState.small);//TODO load from level
+        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);
+        maryo.loadTextures();
+        worldWrapper.setMario(maryo);
+        worldWrapper.setLevel(loader.getLevel());
+        controller.setMaryo(maryo);
     }
 
     // * InputProcessor methods ***************************//
@@ -247,33 +277,33 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_RIGHT, x, y))//is right
             {
                 controller.rightPressed();
-                dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
+                //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_RIGHT;
             }
             if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_LEFT, x, y))//is left
             {
                 controller.leftPressed();
-                dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
+                //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_LEFT;
             }
             if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_TOP, x, y))//is top
             {
                 controller.upPressed();
-                dPad.setClickedArea(DPad.CLICKED_AREA.TOP);
+                //dPad.setClickedArea(DPad.CLICKED_AREA.TOP);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_TOP;
             }
             if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_BOTTOM, x, y))//is bottom
             {
                 controller.downPressed();//not implemented yet
-                dPad.setClickedArea(DPad.CLICKED_AREA.BOTTOM);
+                //dPad.setClickedArea(DPad.CLICKED_AREA.BOTTOM);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_BOTTOM;
             }
-            if (jump.getBounds().contains(x, height - y))
+            /*if (jump.getBounds().contains(x, height - y))
             {
                 controller.jumpPressed();
                 jump.setClicked(true);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.JUMP;
-            }
+            }*/
         }
 
         return true;
@@ -303,11 +333,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     break;
                 case JUMP:
                     controller.jumpReleased();
-                    jump.setClicked(false);
+                    //jump.setClicked(false);
                     break;
             }
             touches.get(pointer).clickArea = CONTROL_CLICK_AREA.NONE;
-            dPad.setClickedArea(DPad.CLICKED_AREA.NONE);
+            //dPad.setClickedArea(DPad.CLICKED_AREA.NONE);
         }
         return true;
     }
@@ -335,9 +365,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private boolean isTouchInBounds(CONTROL_CLICK_AREA area, int x, int y)
     {
-        float wh = dPad.getBounds().width;//width and height, they are the same
-        float dPadXPos = dPad.getPosition().x;
-        float dPadYPos = height - (dPad.getPosition().y + wh);
+        float wh = 0;//dPad.getBounds().width;//width and height, they are the same
+        float dPadXPos = 0;//dPad.getPosition().x;
+        float dPadYPos = height - 0;//(dPad.getPosition().y + wh);
 
         float bX = wh / 2, bY = dPadYPos + wh / 2; //b is always center
         float aX = 0, aY = 0;
@@ -379,17 +409,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return ABP + APC + PBC == ABC;
     }
 
-    public WorldWrapper getWorld()
+    public WorldWrapper getWorldWrapper()
     {
-        return world;
+        return worldWrapper;
     }
 
-    public void setWorld(WorldWrapper world)
+    public void setWorldWrapper(WorldWrapper worldWrapper)
     {
-        this.world = world;
+        this.worldWrapper = worldWrapper;
     }
 
-    public DPad getdPad()
+    /*public DPad getdPad()
     {
         return dPad;
     }
@@ -407,7 +437,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void setJump(BtnJump jump)
     {
         this.jump = jump;
-    }
+    }*/
 
     public int getWidth()
     {
