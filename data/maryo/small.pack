@@ -1,7 +1,7 @@
 
 small.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 climb-left
   rotate: false
@@ -69,7 +69,7 @@ stand-right-holding
 
 small2.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 stand-right
   rotate: false

@@ -52,4 +52,12 @@ public abstract class AbstractScreen implements Screen
     /**
      * Called after after all assets has been loaded, use it to find regions from atlases for example*/
     public abstract void afterLoadAssets();
+
+    /**
+     * Return true for default action(exit app)
+     * */
+    public boolean onBackPressed()
+    {
+        return true;
+    }
 }

@@ -37,7 +37,6 @@ public class HUD
 		cam.update();
 		batch = new SpriteBatch();
         setBounds();
-		loadAssets();
 	}
 
     private void setBounds()

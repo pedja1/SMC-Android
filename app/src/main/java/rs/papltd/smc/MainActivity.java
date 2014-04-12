@@ -10,6 +10,8 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
  */
 public class MainActivity extends AndroidApplication
 {
+    MaryoGame game;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -20,6 +22,16 @@ public class MainActivity extends AndroidApplication
         config.useCompass = false;
         config.useWakelock = true;
         config.useGL20 = true;
-        initialize(new MaryoGame(), config);
+        game = new MaryoGame();
+        initialize(game, config);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if(game.onBackPressed())
+        {
+            super.onBackPressed();
+        }
     }
 }

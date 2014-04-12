@@ -19,4 +19,9 @@ public class MaryoGame extends Game
         super.dispose();
         Assets.dispose();
     }
+
+    public boolean onBackPressed()
+    {
+        return ((AbstractScreen)getScreen()).onBackPressed();
+    }
 }

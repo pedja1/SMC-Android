@@ -2,6 +2,7 @@ package rs.papltd.smc.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
@@ -28,13 +29,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	Background bgr1, bgr2;
 	BackgroundColor bgColor;
     LevelLoader loader;
-    World world;
     private BitmapFont debugFont;
     private boolean playT = false, musicT = false, soundT = false, renderFps = false, playMusic, playSound;
 
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
     Music music;
+    Sound audioOn;
+    WorldWrapper worldWrapper;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -52,10 +54,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         hudCam.update();
 
         loader = new LevelLoader();
-        world = new World(new Vector2(0, Constants.GRAVITY), true);
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
+        worldWrapper = new WorldWrapper();
     }
 
     @Override
@@ -82,8 +84,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		drawSprites();
 
         draw(batch, gameLogo, 2f, 5f, 2f);
-
-        draw(batch, musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.height);
+        worldWrapper.getMario().render(batch);
 
         batch.end();
 
@@ -92,6 +93,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
         batch.draw(soundT ? soundOnP : soundOn, soundR.x, soundR.y,soundR.width, soundR.height);
+        batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
         batch.draw(gdxLogo, (screenWidth/100*2), (screenHeight/100*2),
                 screenWidth/10f, (screenWidth/10f)/4);
 
@@ -173,12 +175,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             }
         }
         Assets.manager.load("/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("/maryo/small.pack", TextureAtlas.class);
     }
 
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.smclvl").readString(), world);
+        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.smclvl").readString(), worldWrapper.getWorld());
 
         TextureAtlas controlsAtlas = Assets.manager.get("/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
@@ -190,13 +193,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         musicOnP = controlsAtlas.findRegion("music-on-pressed");
         musicOff = controlsAtlas.findRegion("music-off");
         musicOffP = controlsAtlas.findRegion("music-off-pressed");
-        musicR = new Rectangle(11.7f, 0.15f, 0.5f, 0.5f);
+        musicR = new Rectangle(screenWidth - (screenWidth/18f) * 1.25f,
+                (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
 
         soundOn = controlsAtlas.findRegion("sound-on");
         soundOnP = controlsAtlas.findRegion("sound-on-pressed");
         soundOff = controlsAtlas.findRegion("sound-off");
         soundOffP = controlsAtlas.findRegion("sound-off-pressed");
-        soundR = new Rectangle(screenWidth - screenWidth/18f - (screenWidth/18f),
+        soundR = new Rectangle(screenWidth - (screenWidth/18f) * 2.5f,
                 (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
 
         Texture bgTexture = Assets.manager.get("/game/background/more-hills.png");
@@ -215,6 +219,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
+        states.add(Maryo.MarioState.small);
+        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);
+        maryo.loadTextures();
+        worldWrapper.setMario(maryo);
+        worldWrapper.setLevel(loader.getLevel());
+
+        audioOn = Assets.manager.get("/sounds/audio_on.ogg", Sound.class);
 
     }
 
@@ -247,8 +259,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        float x = screenX / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = Constants.CAMERA_HEIGHT - (screenY / (screenHeight / Constants.CAMERA_HEIGHT));
+        float x = screenX;//screenX / (screenWidth / Constants.CAMERA_WIDTH);
+        float y = screenHeight - screenY;
 
         if(playR.contains(x, y))
         {
@@ -268,8 +280,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        float x = screenX / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = Constants.CAMERA_HEIGHT - (screenY / (screenHeight / Constants.CAMERA_HEIGHT));
+        float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
+        float y = screenHeight - screenY;
 
         if(playR.contains(x, y))
         {
@@ -285,7 +297,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         if(soundR.contains(x, y))
         {
             soundT = false;
-            Utility.toggleSound();
+            if(Utility.toggleSound())
+            {
+                audioOn.play();
+            }
         }
         return false;
     }
@@ -293,8 +308,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        float x = screenX / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = Constants.CAMERA_HEIGHT - (screenY / (screenHeight / Constants.CAMERA_HEIGHT));
+        float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
+        float y = screenHeight - screenY;
 
         playT = playR.contains(x, y);
         musicT = musicR.contains(x, y);

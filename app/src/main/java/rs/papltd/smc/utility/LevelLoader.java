@@ -1,6 +1,7 @@
 package rs.papltd.smc.utility;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -33,7 +34,7 @@ public class LevelLoader
 	
 	private enum DATA_KEY
 	{
-		txt, atl, mus
+		txt, atl, mus, snd
 	}
 
     public LevelLoader()
@@ -334,6 +335,10 @@ public class LevelLoader
         else if(key.equals(DATA_KEY.mus.toString()))
         {
             return Music.class;
+        }
+        else if(key.equals(DATA_KEY.snd.toString()))
+        {
+            return Sound.class;
         }
         else
         {
