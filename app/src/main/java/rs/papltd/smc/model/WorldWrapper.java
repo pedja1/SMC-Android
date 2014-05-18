@@ -117,7 +117,7 @@ public class WorldWrapper
             public void beginContact(Contact contact)
             {
                 // TODO: Implement this method
-                System.out.println(contact.toString());
+                //System.out.println(contact.toString());
                 //throw new RuntimeException();
             }
 

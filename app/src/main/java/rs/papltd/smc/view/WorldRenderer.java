@@ -37,8 +37,6 @@ public class WorldRenderer
     private int height;
 
     private BitmapFont debugFont;
-    private BitmapFont guiFont;
-    private BitmapFont guiFontBold;
 
     public void setSize(int w, int h)
     {
@@ -56,7 +54,7 @@ public class WorldRenderer
         this.debug = debug;
     }
 
-    public WorldRenderer(GameScreen gameScreen, boolean debug)
+    public WorldRenderer(GameScreen gameScreen)
     {
         this.world = gameScreen.getWorldWrapper();
         this.width = gameScreen.getWidth();
@@ -80,17 +78,16 @@ public class WorldRenderer
         bgCam.position.set(cam.position.x, cam.position.y, 0);
         bgCam.update();
 
-        this.debug = debug;
         spriteBatch = new SpriteBatch();
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
 
-        guiFont = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
+        BitmapFont guiFont = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
         guiFont.setColor(Color.WHITE);
         guiFont.setScale(1f);
 
-        guiFontBold = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
+        BitmapFont guiFontBold = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
         guiFontBold.setColor(Color.WHITE);
         guiFontBold.setScale(1f);
 
@@ -175,7 +172,8 @@ public class WorldRenderer
         for (Sprite sprite : world.getDrawableSprites(cam.position.x, cam.position.y, front))
         {
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
-            spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
+            //spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
+            Utility.draw(spriteBatch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
         }
     }
 

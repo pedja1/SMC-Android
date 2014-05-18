@@ -26,16 +26,16 @@ public class MarioController
     private boolean jumpingPressed;
     private boolean grounded = false;
 
-    static Map<Keys, Boolean> keys = new HashMap<MarioController.Keys, Boolean>();
+    static Set<Keys> keys = new HashSet<Keys>();
 
     static
     {
-        keys.put(Keys.LEFT, false);
-        keys.put(Keys.RIGHT, false);
-        keys.put(Keys.JUMP, false);
-        keys.put(Keys.FIRE, false);
-        keys.put(Keys.UP, false);
-        keys.put(Keys.DOWN, false);
+        keys.add(Keys.LEFT);
+        keys.add(Keys.RIGHT);
+        keys.add(Keys.JUMP);
+        keys.add(Keys.FIRE);
+        keys.add(Keys.UP);
+        keys.add(Keys.DOWN);
     }
 
     public MarioController(WorldWrapper world)
@@ -51,63 +51,63 @@ public class MarioController
 
     public void leftPressed()
     {
-        keys.put(Keys.LEFT, true);
+        keys.add(Keys.LEFT);
     }
 
     public void rightPressed()
     {
-        keys.put(Keys.RIGHT, true);
+        keys.add(Keys.RIGHT);
     }
 
     public void upPressed()
     {
-        keys.put(Keys.UP, true);
+        keys.add(Keys.UP);
     }
 
     public void downPressed()
     {
-        keys.put(Keys.DOWN, true);
+        keys.add(Keys.DOWN);
     }
 
     public void jumpPressed()
     {
-        keys.put(Keys.JUMP, true);
+        keys.add(Keys.JUMP);
     }
 
     public void firePressed()
     {
-        keys.put(Keys.FIRE, false);
+        keys.add(Keys.FIRE);
     }
 
     public void leftReleased()
     {
-        keys.put(Keys.LEFT, false);
+        keys.remove(Keys.LEFT);
     }
 
     public void rightReleased()
     {
-        keys.put(Keys.RIGHT, false);
+        keys.remove(Keys.RIGHT);
     }
 
     public void upReleased()
     {
-        keys.put(Keys.UP, false);
+        keys.remove(Keys.UP);
     }
 
     public void downReleased()
     {
-        keys.put(Keys.DOWN, false);
+        keys.remove(Keys.DOWN);
     }
 
     public void jumpReleased()
     {
-        keys.put(Keys.JUMP, false);
+        keys.remove(Keys.JUMP);
         jumpingPressed = false;
     }
 
     public void fireReleased()
     {
-        keys.put(Keys.FIRE, false);
+        keys.remove(Keys.FIRE);
     }
 
     /**
@@ -126,7 +126,7 @@ public class MarioController
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
         // simply updates the state time
-        maryo.update(delta);
+        maryo.updateStateTime(delta);
         //world.getLevel().getPb().moveX(delta);
 		
     }
@@ -138,8 +138,9 @@ public class MarioController
     {
         Vector2 vel = maryo.getBody().getLinearVelocity();
         Vector2 pos = maryo.getBody().getPosition();
-        if (keys.get(Keys.JUMP))
+        if (keys.contains(Keys.JUMP))
         {
+            System.out.println("jump");
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 jumpingPressed = true;
@@ -165,8 +166,9 @@ public class MarioController
                 }
             }
         }
-        if (keys.get(Keys.LEFT))
+        if (keys.contains(Keys.LEFT))
         {
+            System.out.println("left");
             // left is pressed
             maryo.setFacingLeft(true);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
@@ -179,9 +181,10 @@ public class MarioController
                 maryo.getBody().setLinearVelocity(vel.x = -4f, vel.y);
             //}
         }
-        else if (keys.get(Keys.RIGHT))
+        else if (keys.contains(Keys.RIGHT))
         {
-            // left is pressed
+            System.out.println("right");
+            // right is pressed
             maryo.setFacingLeft(false);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
@@ -193,8 +196,9 @@ public class MarioController
                 maryo.getBody().setLinearVelocity(vel.x = +4f, vel.y);
             //}
         }
-        else if (keys.get(Keys.DOWN))
+        else if (keys.contains(Keys.DOWN))
         {
+            System.out.println("down");
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.DUCKING);

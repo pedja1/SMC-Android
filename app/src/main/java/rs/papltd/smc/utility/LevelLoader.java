@@ -13,6 +13,7 @@ import org.json.*;
 
 import rs.papltd.smc.Assets;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.model.enemy.Enemy;
 
 /**
  * Created by pedja on 2/2/14.
@@ -29,7 +30,7 @@ public class LevelLoader
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
-        g_1, g_2, b_1, b_2, level_music
+        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class
     }
 	
 	private enum DATA_KEY
@@ -50,6 +51,7 @@ public class LevelLoader
             jLevel = new JSONObject(jsonString);
             parseInfo(jLevel);
             parseSprites(jLevel, world);
+            parseEnemies(jLevel, world);
             parsePlayer(jLevel);
             parseBg(jLevel);
         }
@@ -350,4 +352,39 @@ public class LevelLoader
     {
         return key.equals(DATA_KEY.txt.toString());
     }
+
+    private void parseEnemies(JSONObject jLevel, World world) throws JSONException
+    {
+        if(!jLevel.has(KEY.enemies.toString()))
+        {
+            return;
+        }
+        JSONArray jEnemies = jLevel.getJSONArray(KEY.enemies.toString());
+        Array<Enemy> enemies = new Array<Enemy>();
+
+        for (int i = 0; i < jEnemies.length(); i++)
+        {
+            JSONObject jEnemy = jEnemies.getJSONObject(i);
+            Vector2 position = new Vector2((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()));
+
+            Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), world, position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
+
+            if (jEnemy.has(KEY.texture_atlas.toString()))
+            {
+                enemy.setTextureAtlas(jEnemy.getString(KEY.texture_atlas.toString()));
+                if(Assets.manager.isLoaded(enemy.getTextureAtlas()))
+                {
+                    enemy.loadTextures();
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                            + "in [level].smclvl must also be included in [level].data");
+                }
+            }
+            enemies.add(enemy);
+        }
+        level.setEnemies(enemies);
+    }
+
 }

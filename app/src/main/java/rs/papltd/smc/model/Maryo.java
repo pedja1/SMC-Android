@@ -12,59 +12,20 @@ import com.badlogic.gdx.utils.Array;
 
 import rs.papltd.smc.Assets;
 
-public class Maryo
+public class Maryo extends GameObject
 {
-    public enum WorldState
-    {
-        IDLE, WALKING, JUMPING, DYING, DUCKING
-	}
-
     public enum MarioState
     {
         small, big, fire, ice, ghost, flying
     }
 
-    enum TKey
-    {
-        stand_right("stand-right"),
-        walk_right_1("walk-right-1"),
-        walk_right_2("walk-right-2"),
-        stand_left("stand-left"),
-        jump_right("jump-right"),
-        jump_left("jump-left"),
-        fall_right("fall-right"),
-        fall_left("fall-left"),
-        dead_right("dead-right"),
-        dead_left("dead-left"),
-        duck_right("duck-right"),
-        duck_left("duck-left");
-
-        String mValue;
-        TKey(String value)
-        {
-            mValue = value;
-        }
-
-        @Override
-        public String toString()
-        {
-            return mValue;
-        }
-    }
-
-    enum AKey
-    {
-        walk_left, walk_right
-    }
-
-    private static final float RUNNING_FRAME_DURATION = 0.06f;
+    private static final float RUNNING_FRAME_DURATION = 0.08f;
 
     Rectangle bounds = new Rectangle();
     WorldState worldState = WorldState.IDLE;
     MarioState marioState = MarioState.small;
-    boolean facingLeft = true;
+    boolean facingLeft = false;
     boolean longJump = false;
-	float stateTime;
 
 	Body body;
     Fixture sensorFixture;
@@ -111,8 +72,8 @@ public class Maryo
 
         FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygonShape;
-		fixtureDef.density = 10.0f;
-		fixtureDef.friction = 0.5f;
+		fixtureDef.density = 1062;
+		fixtureDef.friction = /*0.5f*/0;
         fixtureDef.restitution = 0.5f;
 		//fixtureDef.restitution = 1;
 
@@ -151,14 +112,15 @@ public class Maryo
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.stand_left + ":" + state, tmp);
 
-        TextureRegion[] walkRightFrames = new TextureRegion[3];
+        TextureRegion[] walkRightFrames = new TextureRegion[4];
         walkRightFrames[0] = Assets.loadedRegions.get(TKey.stand_right + ":" + state);
         walkRightFrames[1] = atlas.findRegion(TKey.walk_right_1 + "");
         walkRightFrames[2] = atlas.findRegion(TKey.walk_right_2 + "");
+        walkRightFrames[3] = walkRightFrames[1];
         Assets.animations.put(AKey.walk_right + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkRightFrames));
 
-        TextureRegion[] walkLeftFrames = new TextureRegion[3];
-        for (int i = 0; i < 3; i++)
+        TextureRegion[] walkLeftFrames = new TextureRegion[4];
+        for (int i = 0; i < 4; i++)
         {
             walkLeftFrames[i] = new TextureRegion(walkRightFrames[i]);
             walkLeftFrames[i].flip(true, false);
@@ -211,10 +173,6 @@ public class Maryo
         spriteBatch.draw(marioFrame, getBody().getPosition().x - getBounds().width/2, getBody().getPosition().y - getBounds().height/2, bounds.width, bounds.height);
     }
 
-    public void update(float delta)
-    {
-        stateTime += delta;
-    }
 
     public boolean isFacingLeft()
     {

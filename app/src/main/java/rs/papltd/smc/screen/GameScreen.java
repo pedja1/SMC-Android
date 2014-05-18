@@ -11,6 +11,7 @@ import javax.microedition.khronos.opengles.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.controller.*;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.utility.Constants;
 import rs.papltd.smc.utility.LevelLoader;
 import rs.papltd.smc.view.*;
 
@@ -52,7 +53,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud = new HUD();
         //dPad = new DPad(0.3f * width);
         //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
-        renderer = new WorldRenderer(this, true);
+        renderer = new WorldRenderer(this);
         controller = new MarioController(worldWrapper);
         Gdx.input.setInputProcessor(this);
 
@@ -269,44 +270,70 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public boolean touchDown(int x, int y, int pointer, int button)
     {
         update = true;
-        System.out.println(x + " " + y);
+        System.out.println("Touch point: " + x + "x" + y);
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
+        //float gameX = convertTouchPointToGamePoint(x, true);
+        //float gameY = convertTouchPointToGamePoint(y, false);
+        //System.out.println("Game point: " + gameX + "x" + gameY);
+        //System.out.println("Is touching right: " + Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))));
         if (pointer < 5)
         {
-            if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_RIGHT, x, y))//is right
+            if (Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_RIGHT, x, y)*/)//is right
             {
                 controller.rightPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_RIGHT;
+                hud.rightPressed();
             }
-            if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_LEFT, x, y))//is left
+            if (Intersector.isPointInPolygon(hud.leftPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_LEFT, x, y)*/)//is left
             {
                 controller.leftPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_LEFT;
+                hud.leftPressed();
             }
-            if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_TOP, x, y))//is top
+            if (Intersector.isPointInPolygon(hud.upPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_TOP, x, y)*/)//is top
             {
                 controller.upPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.TOP);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_TOP;
+                hud.upPressed();
             }
-            if (isTouchInBounds(CONTROL_CLICK_AREA.DPAD_BOTTOM, x, y))//is bottom
+            if (Intersector.isPointInPolygon(hud.downPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_BOTTOM, x, y)*/)//is bottom
             {
                 controller.downPressed();//not implemented yet
                 //dPad.setClickedArea(DPad.CLICKED_AREA.BOTTOM);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_BOTTOM;
+                hud.downPressed();
             }
-            /*if (jump.getBounds().contains(x, height - y))
+            if (hud.jumpR.contains(x, invertY(y)))
             {
                 controller.jumpPressed();
-                jump.setClicked(true);
+                //jump.setClicked(true);
                 touches.get(pointer).clickArea = CONTROL_CLICK_AREA.JUMP;
-            }*/
+                hud.jumpPressed();
+            }
         }
 
         return true;
+    }
+
+    private float invertY(int y)
+    {
+        return height - y;
+    }
+
+    private float convertTouchPointToGamePoint(int val, boolean isX)
+    {
+        if(isX)
+        {
+            return val / ((float)width / Constants.CAMERA_WIDTH);
+        }
+        else
+        {
+            return (height - val) / ((float)height / Constants.CAMERA_HEIGHT);
+        }
     }
 
     @Override
@@ -321,19 +348,24 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 case DPAD_RIGHT:
                     controller.rightReleased();
+                    hud.rightReleased();
                     break;
                 case DPAD_LEFT:
                     controller.leftReleased();
+                    hud.leftReleased();
                     break;
                 case DPAD_TOP:
                     controller.upReleased();
+                    hud.upReleased();
                     break;
                 case DPAD_BOTTOM:
                     controller.downReleased();
+                    hud.downReleased();
                     break;
                 case JUMP:
                     controller.jumpReleased();
                     //jump.setClicked(false);
+                    hud.jumpReleased();
                     break;
             }
             touches.get(pointer).clickArea = CONTROL_CLICK_AREA.NONE;

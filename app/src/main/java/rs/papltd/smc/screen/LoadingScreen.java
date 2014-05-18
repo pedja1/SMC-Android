@@ -3,6 +3,7 @@ package rs.papltd.smc.screen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -21,10 +22,9 @@ public class LoadingScreen extends AbstractScreen
 
     BitmapFont font;
     SpriteBatch batch;
-    NinePatch empty;
-    NinePatch full;
     OrthographicCamera cam;
-    //DistanceFieldShader fontShader;
+
+    private Sprite bgSprite;
 
     private AbstractScreen screenToLoadAfter;
 
@@ -37,12 +37,11 @@ public class LoadingScreen extends AbstractScreen
     @Override
     public void show()
     {
-        cam = new OrthographicCamera(800, 480);
-        cam.position.set(new Vector2(400, 240), 0);
-        cam.update();
-
-        //fontShader = new DistanceFieldShader();
-        //fontShader.setSmoothing(0.125f);
+        int width = Gdx.graphics.getWidth();
+        int height = Gdx.graphics.getHeight();
+        float camWidth = 800;
+        float camHeight = height/(width/camWidth);
+        cam = new OrthographicCamera(camWidth, camHeight);
 
         Texture fontTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/dejavu_sans.png"));
         fontTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -50,8 +49,13 @@ public class LoadingScreen extends AbstractScreen
         font.setColor(Color.WHITE);
         font.setScale(0.25f);
         batch = new SpriteBatch();
-        empty = new NinePatch(new TextureRegion(new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/loading/empty.png")), 24, 24), 8, 8, 8, 8);
-        full = new NinePatch(new TextureRegion(new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/loading/full.png")), 24, 24), 8, 8, 8, 8);
+        Texture bgTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/loading/loading_bg.jpg"));
+        bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+        bgSprite = new Sprite(bgTexture);
+        bgSprite.setSize(camWidth, bgSprite.getHeight() / (bgSprite.getWidth() / camWidth));
+        bgSprite.setOrigin(bgSprite.getWidth()/2, bgSprite.getHeight()/2);
+        bgSprite.setPosition(-bgSprite.getWidth()/2, -bgSprite.getHeight()/2);
         screenToLoadAfter.loadAssets();
     }
 
@@ -79,12 +83,9 @@ public class LoadingScreen extends AbstractScreen
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
-        empty.draw(batch, 140, 228, 520, 24);
-        full.draw(batch, 140, 228, percent * 520, 24);
+        bgSprite.draw(batch);
 
-        //batch.setShader(fontShader);
-        font.drawMultiLine(batch, (int) (percent * 100) + "% loaded", 400, 247 - 8 * 0.25f, 0, BitmapFont.HAlignment.CENTER);
-        //batch.setShader(null);
+        font.drawMultiLine(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth/2+(0.07f * cam.viewportWidth), -cam.viewportHeight/2+(0.08f * cam.viewportHeight), 0, BitmapFont.HAlignment.LEFT);
 
         batch.end();
     }
@@ -114,7 +115,8 @@ public class LoadingScreen extends AbstractScreen
     {
         font.dispose();
         batch.dispose();
-        empty.getTexture().dispose();
-        full.getTexture().dispose();
+        bgSprite.getTexture().dispose();
+        //empty.getTexture().dispose();
+        //full.getTexture().dispose();
     }
 }

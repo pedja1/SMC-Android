@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.widget.Toast;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.io.File;
@@ -145,5 +146,15 @@ public class Utility
         editor.apply();//apply will make changes to memory immediately, and write to disk asynchronously
         Assets.playMusic = !currentState;
         return !currentState;
+    }
+
+    public static void draw(SpriteBatch batch, Texture texture, float x, float y, float height)
+    {
+        batch.draw(texture, x, y, height * texture.getWidth()/texture.getHeight(), height);
+    }
+
+    public static void draw(SpriteBatch batch, TextureRegion region, float x, float y, float height)
+    {
+        batch.draw(region, x, y, height * region.getRegionWidth()/region.getRegionHeight(), height);
     }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.utility.*;
 
 import rs.papltd.smc.model.Sprite;
@@ -37,6 +38,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     Music music;
     Sound audioOn;
     WorldWrapper worldWrapper;
+    private ParticleEffect cloudsPEffect;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -81,9 +83,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		bgr1.render(batch);
         bgr2.render(batch);
 
-		drawSprites();
+        cloudsPEffect.draw(batch, delta);
 
-        draw(batch, gameLogo, 2f, 5f, 2f);
+		drawSprites();
+        drawEnemies(delta);
+
+        Utility.draw(batch, gameLogo, 2f, 5f, 2f);
         worldWrapper.getMario().render(batch);
 
         batch.end();
@@ -123,7 +128,15 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
             region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            draw(batch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
+            Utility.draw(batch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
+        }
+    }
+
+    private void drawEnemies(float deltaTime)
+    {
+        for (Enemy enemy : loader.getLevel().getEnemies())
+        {
+            enemy.render(batch, deltaTime);
         }
     }
 
@@ -176,6 +189,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
         Assets.manager.load("/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("/maryo/small.pack", TextureAtlas.class);
+        cloudsPEffect = new ParticleEffect();
+        cloudsPEffect.load(Gdx.files.absolute(Assets.mountedObbPath + "/animation/particles/clouds_emitter.p"), Gdx.files.absolute(Assets.mountedObbPath + "/clouds/default-1/"));
+        cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
+        cloudsPEffect.start();
     }
 
     @Override
@@ -222,6 +239,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);
         Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);
+        maryo.setFacingLeft(false);
         maryo.loadTextures();
         worldWrapper.setMario(maryo);
         worldWrapper.setLevel(loader.getLevel());

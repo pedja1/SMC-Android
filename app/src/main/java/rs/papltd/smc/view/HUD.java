@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.*;
 import rs.papltd.smc.Assets;
 import rs.papltd.smc.utility.*;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Array;
+
 import java.util.*;
 
 public class HUD
@@ -16,6 +18,10 @@ public class HUD
 		left, pauseP, fireP, jumpP, upP, downP, leftP, 
 		rightP;
     public Rectangle pauseR, fireR, jumpR, upR, downR, rightR, leftR;
+    public Array<Vector2> leftPolygon = new Array<Vector2>(5);
+    public Array<Vector2> rightPolygon = new Array<Vector2>(5);
+    public Array<Vector2> upPolygon = new Array<Vector2>(5);
+    public Array<Vector2> downPolygon = new Array<Vector2>(5);
 	
 	OrthographicCamera cam;
 	SpriteBatch batch;
@@ -61,18 +67,39 @@ public class HUD
         y = height*1.5f;
         width = width * 1.24f;
         leftR = new Rectangle(x, y, width, height);
+        leftPolygon.add(new Vector2(x, y + height));
+        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
+        leftPolygon.add(new Vector2(x + width, y + height / 2));
+        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y));
+        leftPolygon.add(new Vector2(x, y));
 
         x = x + width + width/4f;
         rightR = new Rectangle(x, y, width, height);
+        rightPolygon.add(new Vector2(x, y + height / 2));
+        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
+        rightPolygon.add(new Vector2(x + width, y + height));
+        rightPolygon.add(new Vector2(x + width, y));
+        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));
 
         width = C_H/7f;
         height = width*1.24f;
         x = x - width/2f - width/8f;
         y = y + height/2f;
         upR = new Rectangle(x, y, width, height);
+        upPolygon.add(new Vector2(x, y + height));
+        upPolygon.add(new Vector2(x + width, y + height));
+        upPolygon.add(new Vector2(x + width, y + y / 100 * 23.25f));
+        upPolygon.add(new Vector2(x + width / 2, y));
+        upPolygon.add(new Vector2(x, y + y / 100 * 23.25f));
 
         y = y - height - height/4f;
         downR = new Rectangle(x, y, width, height);
+        downPolygon.add(new Vector2(x + width / 2, y + width));
+        downPolygon.add(new Vector2(x + width, y + height - y / 100 * 23.25f));
+        downPolygon.add(new Vector2(x + width, y));
+        downPolygon.add(new Vector2(x, y));
+        downPolygon.add(new Vector2(x, y + height - y / 100 * 23.25f));
+
     }
 
     public void loadAssets()

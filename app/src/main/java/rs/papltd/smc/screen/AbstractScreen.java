@@ -36,16 +36,6 @@ public abstract class AbstractScreen implements Screen
     public void dispose()
 	{
     }
-
-    protected void draw(SpriteBatch batch, Texture texture, float x, float y, float height)
-    {
-        batch.draw(texture, x, y, height * texture.getWidth()/texture.getHeight(), height);
-    }
-
-    protected void draw(SpriteBatch batch, TextureRegion region, float x, float y, float height)
-    {
-        batch.draw(region, x, y, height * region.getRegionWidth()/region.getRegionHeight(), height);
-    }
 	
 	public abstract void loadAssets();
 

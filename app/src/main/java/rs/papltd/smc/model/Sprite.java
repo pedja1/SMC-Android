@@ -2,12 +2,12 @@ package rs.papltd.smc.model;
 
 import com.badlogic.gdx.math.*;
 
-public class Sprite
+public class Sprite extends GameObject
 {
-    private Rectangle bounds = new Rectangle();
-    private String textureAtlas;
+    protected Rectangle bounds = new Rectangle();
+    protected String textureAtlas;
     private String textureName;//name of texture from pack
-    private TYPE type = null;
+    protected TYPE type = null;
     private Vector2 position;
     boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
 

@@ -22,7 +22,7 @@
     },
     "player": {
         "posx": "2",
-        "posy": "4"
+        "posy": "4.35"
     },
     "collision_bodies": [
         {
@@ -217,6 +217,45 @@
             "height": "0.35",
             "texture_atlas": "/ground/jungle-1/slider/green.pack",
             "texture_name": "/ground/jungle-1/slider/green.pack:1-green-left"
+        },
+        {
+            "posx": "4",
+            "posy": "1",
+            "width": "1",
+            "height": "0.5",
+            "texture_name": "/ground/jungle-1/grass/2.png"
+        },
+        {
+            "posx": "8",
+            "posy": "1",
+            "width": "1",
+            "height": "0.5",
+            "texture_name": "/ground/jungle-1/grass/2.png"
+        },
+        {
+            "posx": "6",
+            "posy": "1",
+            "width": "1",
+            "height": "0.5",
+            "texture_name": "/ground/jungle-1/grass/3.png"
+        },
+        {
+            "posx": "11",
+            "posy": "1",
+            "width": "0.7",
+            "height": "1.4",
+            "texture_name": "/ground/jungle-1/big-plant-2.png"
+        }
+    ],
+    "enemies":
+    [
+        {
+            "posx": "3.2",
+            "posy": "1",
+            "width": "0.5",
+            "height": "0.5",
+            "texture_atlas": "/enemy/eato/brown.pack",
+            "enemy_class": "eato"
         }
     ]
 }
