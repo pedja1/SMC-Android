@@ -28,16 +28,6 @@ public class MarioController
 
     static Set<Keys> keys = new HashSet<Keys>();
 
-    static
-    {
-        keys.add(Keys.LEFT);
-        keys.add(Keys.RIGHT);
-        keys.add(Keys.JUMP);
-        keys.add(Keys.FIRE);
-        keys.add(Keys.UP);
-        keys.add(Keys.DOWN);
-    }
-
     public MarioController(WorldWrapper world)
     {
         this.world = world;
