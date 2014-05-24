@@ -256,6 +256,14 @@
             "height": "0.5",
             "texture_atlas": "/enemy/eato/brown.pack",
             "enemy_class": "eato"
+        },
+        {
+            "posx": "10",
+            "posy": "1",
+            "width": "0.6",
+            "height": "0.6",
+            "texture_atlas": "/enemy/flyon/orange.pack",
+            "enemy_class": "flyon"
         }
     ]
 }

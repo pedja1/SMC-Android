@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
@@ -31,7 +30,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	BackgroundColor bgColor;
     LevelLoader loader;
     private BitmapFont debugFont;
-    private boolean playT = false, musicT = false, soundT = false, renderFps = false, playMusic, playSound;
+    private boolean playT = false, musicT = false, soundT = false, debug = false, playMusic, playSound;
 
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
@@ -104,12 +103,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         batch.end();
 
-        if (renderFps)
+        if (debug)
         {
             batch.setProjectionMatrix(debugCam.combined);
             batch.begin();
             debugFont.drawMultiLine(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 50f, 670f);
             batch.end();
+            if(debug)worldWrapper.getDebugRenderer().render(worldWrapper.getWorld(), drawCam.combined);
         }
         if(Assets.playMusic)
         {
@@ -119,7 +119,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             music.pause();
         }
-
+        worldWrapper.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
 	private void drawSprites()
@@ -257,7 +257,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
         else if(keycode == Input.Keys.D)
         {
-            renderFps = !renderFps;
+            debug = !debug;
         }
         return false;
     }

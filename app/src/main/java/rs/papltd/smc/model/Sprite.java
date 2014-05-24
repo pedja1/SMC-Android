@@ -8,7 +8,7 @@ public class Sprite extends GameObject
     protected String textureAtlas;
     private String textureName;//name of texture from pack
     protected TYPE type = null;
-    private Vector2 position;
+    protected Vector2 position;
     boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
 
     /**

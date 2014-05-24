@@ -20,34 +20,50 @@ import rs.papltd.smc.model.Sprite;
  */
 public abstract class Enemy extends Sprite
 {
+    protected Vector2 velocity;
     enum CLASS
     {
-        eato
+        eato, flyon
     }
 
     WorldState worldState = WorldState.IDLE;
     protected Body body;
+    protected World world;
 
     protected Enemy(World world, Vector2 position, float width, float height)
     {
         super(position, width, height);
+        this.world = world;
+        velocity = new Vector2();
         body = createBody(world, position, width, height);
     }
 
     public Body createBody(World world, Vector2 position, float width, float height)
     {
-        BodyDef groundBodyDef = new BodyDef();
-        groundBodyDef.position.set(position.x + width / 2, position.y + height / 2);
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(position.x + width / 2, position.y + height / 2);
 
-        Body body = world.createBody(groundBodyDef);
+        Body body = world.createBody(bodyDef);
 
-        PolygonShape groundBox = new PolygonShape();
+        /*MassData massData = new MassData();
+        massData.mass = 0.0000001f;
+        body.setMassData(massData);
+        body.setUserData(this);*/
 
-        groundBox.setAsBox(width / 2, height / 2);
+        PolygonShape polygonShape = new PolygonShape();
 
-        body.createFixture(groundBox, 0.0f);
+        polygonShape.setAsBox(width / 2, height / 2);
 
-        groundBox.dispose();
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = polygonShape;
+        fixtureDef.density = 1062;
+        fixtureDef.friction = /*0.5f*/0;
+        fixtureDef.restitution = 0.5f;
+
+        body.createFixture(fixtureDef);
+
+        polygonShape.dispose();
         return body;
     }
 
@@ -62,6 +78,9 @@ public abstract class Enemy extends Sprite
         {
             case eato:
                 enemy = new Eato(world, position, width, height);
+                break;
+            case flyon:
+                enemy = new Flyon(world, position, width, height);
                 break;
         }
         return enemy;

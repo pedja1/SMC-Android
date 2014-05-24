@@ -74,12 +74,6 @@ public class WorldWrapper
      */
     public List<Sprite> getDrawableSprites(float camX, float camY, boolean getFront)
     {
-        //TODO we only check if x and y of the sprite is in the world, but if sprite is large enough
-        // its x and y could be outside of the world while rest of the sprite is in bounds, this will cause
-        // sprite to suddenly disappear
-        // this can be solved by checking if any part of the sprite is in view, not just x and y
-
-        //TODO Issue fixed, not tested, test and remove todos
         List<Sprite> sprites = new ArrayList<Sprite>();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
