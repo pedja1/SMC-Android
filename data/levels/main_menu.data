@@ -3,13 +3,14 @@ atl:/ground/jungle-1/slider/green.pack
 atl:/menu/menu.pack
 atl:/enemy/eato/brown.pack
 atl:/enemy/flyon/orange.pack
+atl:/game/items/goldpiece/yellow.pack
 txt:/ground/green-3/ground/top/1.png
 txt:/ground/green-1/hedges/wild-medium.png
 txt:/ground/jungle-1/big-plant-1.png
 txt:/ground/jungle-1/big-plant-2.png
 txt:/game/background/more-hills.png
 txt:/game/logo/smc-big-1.png
-txt:/game/logo/libgdx.png
+#txt:/game/logo/libgdx.png
 txt:/ground/jungle-1/grass/2.png
 txt:/ground/jungle-1/grass/3.png
 mus:/music/game/menu.ogg

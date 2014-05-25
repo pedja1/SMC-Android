@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.model.custom_objects.CustomObject;
 import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.utility.*;
 
@@ -20,7 +21,7 @@ import rs.papltd.smc.model.Sprite;
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
     Texture gameLogo;
-    Texture gdxLogo;
+    //Texture gdxLogo;
     TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
     Rectangle playR, musicR, soundR;
     OrthographicCamera drawCam, debugCam, hudCam;
@@ -84,8 +85,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         cloudsPEffect.draw(batch, delta);
 
-		drawSprites();
         drawEnemies(delta);
+		drawSprites();
+        drawObjects(delta);
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
         worldWrapper.getMario().render(batch);
@@ -98,8 +100,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
         batch.draw(soundT ? soundOnP : soundOn, soundR.x, soundR.y,soundR.width, soundR.height);
         batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
-        batch.draw(gdxLogo, (screenWidth/100*2), (screenHeight/100*2),
-                screenWidth/10f, (screenWidth/10f)/4);
+        /*batch.draw(gdxLogo, (screenWidth/100*2), (screenHeight/100*2),
+                screenWidth/10f, (screenWidth/10f)/4);*/
 
         batch.end();
 
@@ -137,6 +139,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         for (Enemy enemy : loader.getLevel().getEnemies())
         {
             enemy.render(batch, deltaTime);
+        }
+    }
+
+    private void drawObjects(float deltaTime)
+    {
+        for (CustomObject customObject : loader.getLevel().getObjects())
+        {
+            customObject.render(batch, deltaTime);
         }
     }
 
@@ -234,8 +244,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         gameLogo = Assets.manager.get("/game/logo/smc-big-1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
-        gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
+        //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);
         Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);

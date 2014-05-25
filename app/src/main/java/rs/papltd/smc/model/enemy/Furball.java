@@ -1,6 +1,5 @@
 package rs.papltd.smc.model.enemy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,28 +15,22 @@ import rs.papltd.smc.utility.Utility;
 /**
  * Created by pedja on 18.5.14..
  */
-public class Flyon extends Enemy
+public class Furball extends Enemy
 {
-    public static final float FLYON_VELOCITY = 3f;
-    private boolean goingUp = true, topReached, bottomReached;
-    private long maxPositionReachedTs = 0;
-    private long minPositionReachedTs = 0;
-    private static final long STAY_TOP_TIME = 300;//2 seconds
-    private static final long STAY_BOTTOM_TIME = 2500;//3 seconds
+    public static final float VELOCITY = 3f;
 
-    public Flyon(World world, Vector2 position, float width, float height)
+    public Furball(World world, Vector2 position, float width, float height)
     {
         super(world, position, width, height);
-        body.setGravityScale(0);
-        velocity.set(0, FLYON_VELOCITY);
+        velocity.set(0, VELOCITY);
     }
 
     @Override
     public void loadTextures()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
-        //frames.add(atlas.findRegion(TKey.two.toString()));
+        Array<TextureAtlas.AtlasRegion> frames = new Array<TextureAtlas.AtlasRegion>();
+
 
         Assets.animations.put(textureAtlas, new Animation(0.25f, frames));
     }
@@ -59,10 +52,9 @@ public class Flyon extends Enemy
         Vector2 position = body.getPosition();
         Vector2 velocity = body.getLinearVelocity();
 
-        long timeNow = System.currentTimeMillis();
+        /*long timeNow = System.currentTimeMillis();
         if((topReached && timeNow - maxPositionReachedTs < STAY_TOP_TIME))
         {
-            //body.applyForceToCenter(0, /*+world.getGravity().y*/20, true);
             body.setLinearVelocity(0, 0);
             return;
         }
@@ -107,7 +99,7 @@ public class Flyon extends Enemy
         {
             //body.setLinearDamping(5);
             body.setLinearVelocity(velocity.x, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
-        }
+        }*/
 
     }
 }

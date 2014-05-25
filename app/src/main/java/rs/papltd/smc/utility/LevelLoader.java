@@ -13,6 +13,7 @@ import org.json.*;
 
 import rs.papltd.smc.Assets;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.model.custom_objects.CustomObject;
 import rs.papltd.smc.model.enemy.Enemy;
 
 /**
@@ -30,7 +31,7 @@ public class LevelLoader
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
-        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class
+        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class
     }
 	
 	private enum DATA_KEY
@@ -50,7 +51,8 @@ public class LevelLoader
         {
             jLevel = new JSONObject(jsonString);
             parseInfo(jLevel);
-            parseSprites(jLevel, world);
+            parseSprites(jLevel, world);//not movable objects
+            parseObjects(jLevel, world);//movable/animated objects(have their own class)
             parseEnemies(jLevel, world);
             parsePlayer(jLevel);
             parseBg(jLevel);
@@ -386,5 +388,40 @@ public class LevelLoader
         }
         level.setEnemies(enemies);
     }
+
+    private void parseObjects(JSONObject jLevel, World world) throws JSONException
+    {
+        if(!jLevel.has(KEY.objects.toString()))
+        {
+            return;
+        }
+        JSONArray jObjects = jLevel.getJSONArray(KEY.objects.toString());
+        Array<CustomObject> objects = new Array<CustomObject>();
+
+        for (int i = 0; i < jObjects.length(); i++)
+        {
+            JSONObject jObject = jObjects.getJSONObject(i);
+            Vector2 position = new Vector2((float) jObject.getDouble(KEY.posx.toString()), (float) jObject.getDouble(KEY.posy.toString()));
+
+            CustomObject object = CustomObject.initObject(jObject.getString(KEY.object_class.toString()), world, position, (float) jObject.getDouble(KEY.width.toString()), (float) jObject.getDouble(KEY.height.toString()));
+
+            if (jObject.has(KEY.texture_atlas.toString()))
+            {
+                object.setTextureAtlas(jObject.getString(KEY.texture_atlas.toString()));
+                if(Assets.manager.isLoaded(object.getTextureAtlas()))
+                {
+                    object.loadTextures();
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                            + "in [level].smclvl must also be included in [level].data");
+                }
+            }
+            objects.add(object);
+        }
+        level.setObjects(objects);
+    }
+
 
 }

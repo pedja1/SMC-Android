@@ -3,6 +3,7 @@ package rs.papltd.smc.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import rs.papltd.smc.model.custom_objects.CustomObject;
 import rs.papltd.smc.model.enemy.Enemy;
 
 /**
@@ -13,6 +14,7 @@ public class Level
     private float width;
     private float height;
     private Array<Sprite> sprites;
+    private Array<CustomObject> objects;
     private Array<Enemy> enemies;
     private Vector2 spanPosition;//i think its a camera position
 	private Background bg1;
@@ -108,5 +110,15 @@ public class Level
     public void setEnemies(Array<Enemy> enemies)
     {
         this.enemies = enemies;
+    }
+
+    public Array<CustomObject> getObjects()
+    {
+        return objects;
+    }
+
+    public void setObjects(Array<CustomObject> objects)
+    {
+        this.objects = objects;
     }
 }
