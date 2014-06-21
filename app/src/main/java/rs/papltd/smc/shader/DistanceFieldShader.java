@@ -13,7 +13,7 @@ public class DistanceFieldShader extends ShaderProgram
 {
     public DistanceFieldShader()
     {
-        super(Gdx.files.absolute(Assets.mountedObbPath + "/shaders/distancefield.vert"), Gdx.files.absolute(Assets.mountedObbPath + "/shaders/distancefield.frag"));
+        super(Gdx.files.internal("data/shaders/distancefield.vert"), Gdx.files.internal("data/shaders/distancefield.frag"));
         if (!isCompiled())
         {
             throw new RuntimeException("Shader compilation failed:\n" + getLog());

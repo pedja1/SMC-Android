@@ -43,13 +43,13 @@ public class LoadingScreen extends AbstractScreen
         float camHeight = height/(width/camWidth);
         cam = new OrthographicCamera(camWidth, camHeight);
 
-        Texture fontTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/dejavu_sans.png"));
+        Texture fontTexture = new Texture(Gdx.files.internal("data/fonts/dejavu_sans.png"));
         fontTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        font = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/dejavu_sans.fnt"), new TextureRegion(fontTexture), false);
+        font = new BitmapFont(Gdx.files.internal("data/fonts/dejavu_sans.fnt"), new TextureRegion(fontTexture), false);
         font.setColor(Color.WHITE);
         font.setScale(0.25f);
         batch = new SpriteBatch();
-        Texture bgTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/loading/loading_bg.jpg"));
+        Texture bgTexture = new Texture(Gdx.files.internal("data/loading/loading_bg.jpg"));
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         bgSprite = new Sprite(bgTexture);

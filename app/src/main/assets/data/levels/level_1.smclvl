@@ -1,0 +1,555 @@
+{
+    "info": {
+        "level_width": "62",
+        "level_height": "20"
+    },
+    "background": {
+        "r_1": "0.117",
+        "g_1": "0.705",
+        "b_1": "0.05",
+        "r_2": "0",
+        "g_2": "0.392",
+        "b_2": "0.039",
+        "texture_name": "data/game/background/green-junglehills.png"
+    },
+    "player": {
+        "posx": "2",
+        "posy": "3"
+		
+    },
+    "collision_bodies": [
+        {
+            "posx": "0",
+            "posy": "-1",
+            "width": "62",
+            "height": "1"
+        },
+        {
+            "posx": "0",
+            "posy": "21",
+            "width": "62",
+            "height": "1"
+        },
+        {
+            "posx": "-1",
+            "posy": "0",
+            "width": "1",
+            "height": "20"
+        },
+        {
+            "posx": "62",
+            "posy": "-0",
+            "width": "1",
+            "height": "20"
+        },
+        {
+            "posx": "0",
+            "posy": "0",
+            "width": "37",
+            "height": "1"
+        },
+        {
+            "posx": "38",
+            "posy": "0",
+            "width": "24",
+            "height": "1"
+        },
+        {
+            "posx": "2",
+            "posy": "1",
+            "width": "1",
+            "height": "1.8"
+        }
+    ],
+    "sprites": [
+        {
+            "posx": "1.8",
+            "posy": "1",
+            "width": "0.25",
+            "height": "0.25",
+            "texture_name": "data/ground/green-1/plant-r.png",
+            "flip_data": {
+                "flip_x": "true",
+                "flip_y": "false"
+            }
+        },
+        {
+            "posx": "3.2",
+            "posy": "1",
+            "width": "2.4",
+            "height": "0.6",
+            "texture_name": "data/ground/green-1/hedges/medium-2.png"
+        },
+        {
+            "posx": "6.5",
+            "posy": "1",
+            "width": "2",
+            "height": "0.5",
+            "texture_name": "data/ground/green-1/hedges/small-1.png",
+            "is_front": "true"
+        },
+        {
+            "posx": "9",
+            "posy": "1",
+            "width": "4",
+            "height": "1.8",
+            "texture_name": "data/ground/green-1/hedges/big-1.png"
+        },
+        {
+            "posx": "0",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "2",
+            "posy": "1",
+            "width": "1",
+            "height": "0.6",
+            "texture_atlas": "data/pipes/green/green.pack",
+            "texture_name": "data/pipes/green/green.pack:ver"
+        },
+        {
+            "posx": "2",
+            "posy": "1.6",
+            "width": "1",
+            "height": "0.6",
+            "texture_atlas": "data/pipes/green/green.pack",
+            "texture_name": "data/pipes/green/green.pack:ver"
+        },
+        {
+            "posx": "2",
+            "posy": "2.2",
+            "width": "1",
+            "height": "0.6",
+            "texture_atlas": "data/pipes/green/green.pack",
+            "texture_name": "data/pipes/green/green.pack:up"
+        },
+        {
+            "posx": "1",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "2",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "3",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "4",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "5",
+			"posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "6",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "7",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "8",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "9",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "10",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "11",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "12",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "13",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "14",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "15",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "16",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "17",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "18",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "19",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "20",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "21",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "22",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "23",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "24",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "25",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "26",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "27",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "28",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "29",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "30",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "31",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "32",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "33",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "34",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "35",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "38",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/left.png",
+            "flip_data": {
+                "flip_x": "true",
+                "flip_y": "false"
+            }
+        },
+        {
+            "posx": "36",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/left.png"
+        },
+        {
+            "posx": "39",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "40",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "41",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "42",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "43",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "44",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "45",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "46",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "47",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "48",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "49",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "50",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "51",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "52",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "53",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "54",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "55",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "56",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "57",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "58",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "59",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },
+        {
+            "posx": "60",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        },      
+
+        {
+            "posx": "61",
+            "posy": "0",
+            "width": "1",
+            "height": "1",
+            "texture_name": "data/ground/green-3/ground/top/1.png"
+        }
+    ]
+}

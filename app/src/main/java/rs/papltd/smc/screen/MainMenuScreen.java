@@ -184,7 +184,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.data").readString());
+        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/main_menu.data").readString());
 
         for(String[] s : data)
         {
@@ -197,10 +197,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
             }
         }
-        Assets.manager.load("/hud/controls.pack", TextureAtlas.class);
-        Assets.manager.load("/maryo/small.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(Gdx.files.absolute(Assets.mountedObbPath + "/animation/particles/clouds_emitter.p"), Gdx.files.absolute(Assets.mountedObbPath + "/clouds/default-1/"));
+        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default-1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         cloudsPEffect.start();
     }
@@ -208,9 +208,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/main_menu.smclvl").readString(), worldWrapper.getWorld());
+        loader.parseLevel(Gdx.files.internal("data/levels/main_menu.smclvl").readString(), worldWrapper.getWorld());
 
-        TextureAtlas controlsAtlas = Assets.manager.get("/hud/controls.pack");
+        TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
         playP = controlsAtlas.findRegion("play-pressed");
         playR = new Rectangle(screenWidth/2f - (screenWidth/10f) / 2,
@@ -230,7 +230,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundR = new Rectangle(screenWidth - (screenWidth/18f) * 2.5f,
                 (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
 
-        Texture bgTexture = Assets.manager.get("/game/background/more-hills.png");
+        Texture bgTexture = Assets.manager.get("data/game/background/more-hills.png");
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         bgr1 = new Background(new Vector2(0, 0), bgTexture);
         bgr1.width = 8.7f;
@@ -242,7 +242,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
         bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);
 
-        gameLogo = Assets.manager.get("/game/logo/smc-big-1.png");
+        gameLogo = Assets.manager.get("data/game/logo/smc-big-1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -254,7 +254,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         worldWrapper.setMario(maryo);
         worldWrapper.setLevel(loader.getLevel());
 
-        audioOn = Assets.manager.get("/sounds/audio_on.ogg", Sound.class);
+        audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 
     }
 

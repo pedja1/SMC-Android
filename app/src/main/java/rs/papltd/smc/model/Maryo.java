@@ -105,7 +105,7 @@ public class Maryo extends GameObject
 
     private void loadTextures(String state)
     {
-        TextureAtlas atlas = Assets.manager.get("/maryo/" + state + ".pack");
+        TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");
 
         Assets.loadedRegions.put(TKey.stand_right + ":" + state, atlas.findRegion(TKey.stand_right.toString()));
         TextureRegion tmp = new TextureRegion(Assets.loadedRegions.get(TKey.stand_right + ":" + state));

@@ -83,11 +83,11 @@ public class WorldRenderer
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
 
-        BitmapFont guiFont = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
+        BitmapFont guiFont = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
         guiFont.setColor(Color.WHITE);
         guiFont.setScale(1f);
 
-        BitmapFont guiFontBold = new BitmapFont(Gdx.files.absolute(Assets.mountedObbPath + "/fonts/default.fnt"));
+        BitmapFont guiFontBold = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
         guiFontBold.setColor(Color.WHITE);
         guiFontBold.setScale(1f);
 
@@ -97,7 +97,7 @@ public class WorldRenderer
     private void loadTextures()
     {
         leafEffect = new ParticleEffect();
-        leafEffect.load(Gdx.files.absolute(Assets.mountedObbPath + "/animation/particles/leaf_emitter.p"), Gdx.files.absolute(Assets.mountedObbPath + "/animation/particles"));
+        leafEffect.load(Gdx.files.internal("data/animation/particles/leaf_emitter.p"), Gdx.files.internal("data/animation/particles"));
         leafEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         leafEffect.start();
     }

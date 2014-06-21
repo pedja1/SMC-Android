@@ -14,6 +14,7 @@ public class AndroidFileHandleResolver implements FileHandleResolver
     @Override
     public FileHandle resolve(String fileName)
     {
-        return Gdx.files.absolute(Assets.mountedObbPath + fileName);
+        //return Gdx.files.absolute(Assets.mountedObbPath + fileName);
+        return Gdx.files.internal(fileName);
     }
 }

@@ -1,0 +1,10 @@
+#level 1 comment
+atl:data/maryo/small.pack
+txt:data/game/background/green-junglehills.png
+txt:data/ground/green-1/plant-r.png
+txt:data/ground/green-1/hedges/medium-2.png
+txt:data/ground/green-1/hedges/small-1.png
+txt:data/ground/green-1/hedges/big-1.png
+txt:data/ground/green-3/ground/top/1.png
+txt:data/ground/green-3/ground/top/left.png
+atl:data/pipes/green/green.pack

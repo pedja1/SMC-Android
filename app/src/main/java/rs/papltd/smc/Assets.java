@@ -31,7 +31,6 @@ public class Assets
     public static TextureLoader.TextureParameter textureParameter;
     public static HashMap<String, TextureRegion> loadedRegions;
     public static HashMap<String, Animation> animations;
-    public static String mountedObbPath = null;
     public static boolean playMusic;
     public static boolean playSounds;
 

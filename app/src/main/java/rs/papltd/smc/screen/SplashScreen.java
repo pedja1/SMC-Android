@@ -41,10 +41,10 @@ public class SplashScreen implements Screen
         batch = new SpriteBatch();
         bgRenderer = new ShapeRenderer();
 
-        libgdxSplashTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/game/logo/libgdx.jpg"));
+        libgdxSplashTexture = new Texture(Gdx.files.internal("data/game/logo/libgdx.jpg"));
         libgdxSplashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        gameSplashTexture = new Texture(Gdx.files.absolute(Assets.mountedObbPath + "/game/logo/smc-big-1.png"));
+        gameSplashTexture = new Texture(Gdx.files.internal("data/game/logo/smc-big-1.png"));
         gameSplashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         libgdxSplashSprite = new Sprite( new TextureRegion(libgdxSplashTexture));

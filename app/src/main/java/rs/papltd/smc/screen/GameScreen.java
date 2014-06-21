@@ -150,7 +150,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.data").readString());
+        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/level_1.data").readString());
 
         for(String[] s : data)
         {
@@ -163,15 +163,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
             }
         }
-        Assets.manager.load("/hud/controls.pack", TextureAtlas.class);
-        Assets.manager.load("/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
+        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
 
     }
 
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.absolute(Assets.mountedObbPath + "/levels/level_1.smclvl").readString(), worldWrapper.getWorld());
+        loader.parseLevel(Gdx.files.internal("data/levels/level_1.smclvl").readString(), worldWrapper.getWorld());
         hud.loadAssets();
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);//TODO load from level

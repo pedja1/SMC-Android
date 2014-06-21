@@ -104,7 +104,7 @@ public class HUD
 
     public void loadAssets()
 	{
-		TextureAtlas atlas = Assets.manager.get("/hud/controls.pack", TextureAtlas.class);
+		TextureAtlas atlas = Assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		pause = atlas.findRegion("pause");
 		pauseP = atlas.findRegion("pause-pressed");
 		fire = atlas.findRegion("fire");
