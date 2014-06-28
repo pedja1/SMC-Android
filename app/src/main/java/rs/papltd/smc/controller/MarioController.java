@@ -130,7 +130,7 @@ public class MarioController
         Vector2 pos = maryo.getBody().getPosition();
         if (keys.contains(Keys.JUMP))
         {
-            System.out.println("jump");
+            //System.out.println("jump");
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 jumpingPressed = true;
@@ -158,7 +158,7 @@ public class MarioController
         }
         if (keys.contains(Keys.LEFT))
         {
-            System.out.println("left");
+            //System.out.println("left");
             // left is pressed
             maryo.setFacingLeft(true);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
@@ -173,7 +173,7 @@ public class MarioController
         }
         else if (keys.contains(Keys.RIGHT))
         {
-            System.out.println("right");
+            //System.out.println("right");
             // right is pressed
             maryo.setFacingLeft(false);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
@@ -188,7 +188,7 @@ public class MarioController
         }
         else if (keys.contains(Keys.DOWN))
         {
-            System.out.println("down");
+            //System.out.println("down");
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.DUCKING);

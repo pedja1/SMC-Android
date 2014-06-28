@@ -18,7 +18,7 @@
         "r_2": "0",
         "g_2": "0.392",
         "b_2": "0.039",
-        "texture_name": "data/game/background/more-hills.png"
+        "texture_name": "data/game/background/more_hills.png"
     },
     "player": {
         "posx": "2",
@@ -50,91 +50,91 @@
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "1",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "2",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "3",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "4",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "5",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "6",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "7",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "8",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "9",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "10",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "11",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "12",
             "posy": "0",
             "width": "1",
             "height": "1",
-            "texture_name": "data/ground/green-3/ground/top/1.png"
+            "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
             "posx": "9.5",
@@ -165,22 +165,22 @@
             "posy": "2.5",
             "width": "1.15",
             "height": "0.3",
-            "texture_name": "data/ground/green-1/hedges/wild-medium.png"
+            "texture_name": "data/ground/green_1/hedges/wild_medium.png"
         },
         {
             "posx": "1",
             "posy": "1",
             "width": "2.4",
             "height": "3.4",
-            "texture_name": "data/ground/jungle-1/big-plant-1.png"
+            "texture_name": "data/ground/jungle_1/big_plant_1.png"
         },
         {
             "posx": "1.5",
             "posy": "4.0",
             "width": "0.25",
             "height": "0.35",
-            "texture_atlas": "data/ground/jungle-1/slider/green.pack",
-            "texture_name": "data/ground/jungle-1/slider/green.pack:1-green-left",
+            "texture_atlas": "data/ground/jungle_1/slider/green.pack",
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-left",
              "flip_data": {
                  "flip_x": "true",
                  "flip_y": "false"
@@ -191,60 +191,60 @@
             "posy": "4.0",
             "width": "0.25",
             "height": "0.35",
-            "texture_atlas": "data/ground/jungle-1/slider/green.pack",
-            "texture_name": "data/ground/jungle-1/slider/green.pack:1-green-middle"
+            "texture_atlas": "data/ground/jungle_1/slider/green.pack",
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
         },
         {
             "posx": "2.20",
             "posy": "4.0",
             "width": "0.25",
             "height": "0.35",
-            "texture_atlas": "data/ground/jungle-1/slider/green.pack",
-            "texture_name": "data/ground/jungle-1/slider/green.pack:1-green-middle"
+            "texture_atlas": "data/ground/jungle_1/slider/green.pack",
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
         },
         {
             "posx": "2.55",
             "posy": "4.0",
             "width": "0.25",
             "height": "0.35",
-            "texture_atlas": "data/ground/jungle-1/slider/green.pack",
-            "texture_name": "data/ground/jungle-1/slider/green.pack:1-green-middle"
+            "texture_atlas": "data/ground/jungle_1/slider/green.pack",
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
         },
         {
             "posx": "2.9",
             "posy": "4.0",
             "width": "0.25",
             "height": "0.35",
-            "texture_atlas": "data/ground/jungle-1/slider/green.pack",
-            "texture_name": "data/ground/jungle-1/slider/green.pack:1-green-left"
+            "texture_atlas": "data/ground/jungle_1/slider/green.pack",
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-left"
         },
         {
             "posx": "4",
             "posy": "1",
             "width": "1",
             "height": "0.5",
-            "texture_name": "data/ground/jungle-1/grass/2.png"
+            "texture_name": "data/ground/jungle_1/grass/2.png"
         },
         {
             "posx": "8",
             "posy": "1",
             "width": "1",
             "height": "0.5",
-            "texture_name": "data/ground/jungle-1/grass/2.png"
+            "texture_name": "data/ground/jungle_1/grass/2.png"
         },
         {
             "posx": "6",
             "posy": "1",
             "width": "1",
             "height": "0.5",
-            "texture_name": "data/ground/jungle-1/grass/3.png"
+            "texture_name": "data/ground/jungle_1/grass/3.png"
         },
         {
             "posx": "11",
             "posy": "1",
             "width": "0.7",
             "height": "1.4",
-            "texture_name": "data/ground/jungle-1/big-plant-2.png"
+            "texture_name": "data/ground/jungle_1/big_plant_2.png"
         }
     ],
     "objects":[

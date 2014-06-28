@@ -148,7 +148,7 @@ public class LevelLoader
 			else
 			{
 				throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
-												   + "in [level].smclvl must also be included in [level].data");
+												   + "in [level].smclvl must also be included in [level].data (" + textureName + ")");
 			}
 			float r1 = (float) jBg.getDouble(KEY.r_1.toString());
 			float r2 = (float) jBg.getDouble(KEY.r_2.toString());
@@ -210,7 +210,8 @@ public class LevelLoader
 				else
 				{
 					throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used" 
-					  						+ "in [level].smclvl must also be included in [level].data");
+					  						+ "in [level].smclvl must also be included in [level].data ("
+                            + sprite.getTextureAtlas() + ")");
 				}
             }
             boolean hasFlipData = jSprite.has(KEY.flip_data.toString());
@@ -248,7 +249,7 @@ public class LevelLoader
 							else
 							{
 								throw new IllegalArgumentException("Texture(" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used" 
-																   + "in [level].smclvl must also be included in [level].data");
+																   + "in [level].smclvl must also be included in [level].data (" + sprite.getTextureName() + ")");
 							}
                         }
                         else
@@ -281,7 +282,7 @@ public class LevelLoader
 						else
 						{
 							throw new IllegalArgumentException("Texture (" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used"
-															   + "in [level].smclvl must also be included in [level].data");
+															   + "in [level].smclvl must also be included in [level].data ( " + sprite.getTextureName() + " )");
 						}
                     }
                     else
@@ -370,7 +371,7 @@ public class LevelLoader
             Vector2 position = new Vector2((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()));
 
             Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), world, position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
-
+            if(enemy == null)continue;//TODO this has to go aways after levels are fixed
             if (jEnemy.has(KEY.texture_atlas.toString()))
             {
                 enemy.setTextureAtlas(jEnemy.getString(KEY.texture_atlas.toString()));
@@ -381,7 +382,7 @@ public class LevelLoader
                 else
                 {
                     throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data");
+                            + "in [level].smclvl must also be included in [level].data (" + enemy.getTextureAtlas() + ")");
                 }
             }
             enemies.add(enemy);
@@ -415,7 +416,7 @@ public class LevelLoader
                 else
                 {
                     throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data");
+                            + "in [level].smclvl must also be included in [level].data (" + object.getTextureAtlas() + ")");
                 }
             }
             objects.add(object);

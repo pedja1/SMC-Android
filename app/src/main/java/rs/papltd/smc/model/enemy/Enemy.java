@@ -23,7 +23,7 @@ public abstract class Enemy extends Sprite
     protected Vector2 velocity;
     enum CLASS
     {
-        eato, flyon
+        eato, flyon, furball, turtle
     }
 
     WorldState worldState = WorldState.IDLE;

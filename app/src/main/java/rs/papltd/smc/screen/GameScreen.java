@@ -150,7 +150,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/level_1.data").readString());
+        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/test_lvl.data").readString());
 
         for(String[] s : data)
         {
@@ -171,7 +171,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.internal("data/levels/level_1.smclvl").readString(), worldWrapper.getWorld());
+        loader.parseLevel(Gdx.files.internal("data/levels/test_lvl.smclvl").readString(), worldWrapper.getWorld());
         hud.loadAssets();
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);//TODO load from level
@@ -270,7 +270,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public boolean touchDown(int x, int y, int pointer, int button)
     {
         update = true;
-        System.out.println("Touch point: " + x + "x" + y);
+        //System.out.println("Touch point: " + x + "x" + y);
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
         //float gameX = convertTouchPointToGamePoint(x, true);

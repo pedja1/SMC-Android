@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
+import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.screen.*;
 import rs.papltd.smc.utility.*;
 
@@ -108,6 +109,7 @@ public class WorldRenderer
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
+        drawEnemies(delta);
         drawSprites(false);
         world.getMario().render(spriteBatch);
         drawSprites(true);
@@ -174,6 +176,14 @@ public class WorldRenderer
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
             //spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
             Utility.draw(spriteBatch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
+        }
+    }
+
+    private void drawEnemies(float deltaTime)
+    {
+        for (Enemy enemy : world.getLevel().getEnemies())
+        {
+            enemy.render(spriteBatch, deltaTime);
         }
     }
 

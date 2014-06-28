@@ -200,7 +200,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default-1/"));
+        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         cloudsPEffect.start();
     }
@@ -230,7 +230,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundR = new Rectangle(screenWidth - (screenWidth/18f) * 2.5f,
                 (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
 
-        Texture bgTexture = Assets.manager.get("data/game/background/more-hills.png");
+        Texture bgTexture = Assets.manager.get("data/game/background/more_hills.png");
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         bgr1 = new Background(new Vector2(0, 0), bgTexture);
         bgr1.width = 8.7f;
@@ -242,7 +242,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
         bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);
 
-        gameLogo = Assets.manager.get("data/game/logo/smc-big-1.png");
+        gameLogo = Assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

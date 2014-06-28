@@ -1,0 +1,25 @@
+#level 1 comment
+atl:data/maryo/small.pack
+txt:data/game/background/green_junglehills.png
+txt:data/ground/green_1/plant_r.png
+txt:data/ground/green_1/plant_m.png
+txt:data/ground/green_1/hedges/medium_1.png
+txt:data/ground/green_1/hedges/medium_2.png
+txt:data/ground/green_1/hedges/small_1.png
+txt:data/ground/green_1/hedges/small_2.png
+txt:data/ground/green_1/hedges/big_1.png
+txt:data/ground/green_2/hedges/small_2.png
+txt:data/ground/green_3/ground/top/1.png
+txt:data/ground/green_3/ground/top/left.png
+txt:data/ground/green_3/ground/middle/left.png
+txt:data/ground/green_3/ground/middle/1.png
+txt:data/clouds/default_1/1_middle.png
+txt:data/game/level/door_yellow_1.png
+txt:data/ground/green_2/hedges/cactus_1.png
+atl:data/pipes/green/green.pack
+txt:data/game/box/brown1_1.png
+atl:data/pipes/yellow/yellow.pack
+txt:data/ground/jungle_1/beanstalk_2.png
+txt:data/blocks/wood/1.png
+txt:data/ground/green_3/ground/middle/left_top.png
+txt:data/signs/default_1/1_ending.png

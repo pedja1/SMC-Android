@@ -1,4 +1,4 @@
-package rs.papltd.smc.ta_generator;
+package rs.papltd.smc.smc_level_converter;
 
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 

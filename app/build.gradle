@@ -44,6 +44,11 @@ android {
         // exclude 'com/badlogic/gdx/utils/arial-15.png'
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
 }
 
 dependencies {

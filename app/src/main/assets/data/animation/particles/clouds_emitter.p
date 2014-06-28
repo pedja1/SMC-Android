@@ -127,7 +127,7 @@ aligned: false
 additive: false
 behind: false
 - Image Path -
-1-middle.png
+1_middle.png
 
 
 clouds_right2left
@@ -255,4 +255,4 @@ aligned: false
 additive: false
 behind: false
 - Image Path -
-1-middle.png
+1_middle.png
