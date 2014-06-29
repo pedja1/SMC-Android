@@ -5,6 +5,7 @@ package rs.papltd.smc.smc_level_converter;
  */
 public class Item
 {
-    public String type, color, texture_atlas;
+    public String type, color, texture_atlas, texture_name;
     public float posx, posy, width, height;
+    public int mushroom_type;
 }

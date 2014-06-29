@@ -4,7 +4,7 @@
     <information >
         <property name="game_version" value="2.0.0" />
         <property name="engine_version" value="40" />
-        <property name="save_time" value="1295242128" />
+        <property name="save_time" value="1404045548" />
     </information>
     <settings >
         <property name="lvl_author" value="SMC Team and Yuki" />
@@ -40,8 +40,8 @@
         <property name="const_vely" value="0" />
     </background>
     <player >
-        <property name="posx" value="128" />
-        <property name="posy" value="-260" />
+        <property name="posx" value="8140" />
+        <property name="posy" value="-188" />
         <property name="direction" value="right" />
     </player>
     <particle_emitter >
@@ -3103,4 +3103,126 @@
         <property name="useable_count" value="-1" />
         <property name="text" value="          ---   Savegames   ---&lt;br/&gt;&lt;br/&gt;You can always save on the world but in a level you need 3000 points.&lt;br/&gt;&lt;br/&gt;Save before running into difficult passages.&lt;br/&gt;&lt;br/&gt;If you need more points find all the Waffles, Powerups and the secret areas.&lt;br/&gt;" />
     </box>
+    <box >
+        <property name="posx" value="3911" />
+        <property name="posy" value="-385" />
+        <property name="type" value="bonus" />
+        <property name="animation" value="Bonus" />
+        <property name="item" value="39" />
+        <property name="invisible" value="0" />
+        <property name="useable_count" value="1" />
+        <property name="force_best_item" value="0" />
+    </box>
+    <box >
+        <property name="posx" value="4094" />
+        <property name="posy" value="-396" />
+        <property name="type" value="bonus" />
+        <property name="animation" value="Bonus" />
+        <property name="item" value="52" />
+        <property name="invisible" value="0" />
+        <property name="useable_count" value="1" />
+        <property name="force_best_item" value="0" />
+    </box>
+    <box >
+        <property name="posx" value="4039" />
+        <property name="posy" value="-341" />
+        <property name="type" value="spin" />
+        <property name="invisible" value="0" />
+        <property name="useable_count" value="-1" />
+    </box>
+    <enemy >
+        <property name="type" value="turtleboss" />
+        <property name="posx" value="4001" />
+        <property name="posy" value="-257" />
+        <property name="color" value="red" />
+        <property name="direction" value="right" />
+        <property name="max_hit_count" value="3" />
+        <property name="max_downgrade_count" value="3" />
+        <property name="shell_time" value="2.5" />
+        <property name="level_ends_if_killed" value="1" />
+    </enemy>
+    <enemystopper >
+        <property name="posx" value="465" />
+        <property name="posy" value="-369" />
+    </enemystopper>
+    <moving_platform >
+        <property name="posx" value="341" />
+        <property name="posy" value="-322" />
+        <property name="move_type" value="0" />
+        <property name="massive_type" value="halfmassive" />
+        <property name="direction" value="right" />
+        <property name="max_distance" value="150" />
+        <property name="speed" value="3" />
+        <property name="touch_time" value="0" />
+        <property name="shake_time" value="16" />
+        <property name="touch_move_time" value="0" />
+        <property name="middle_img_count" value="4" />
+        <property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+        <property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+        <property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
+    </moving_platform>
+    <path >
+        <property name="posx" value="225" />
+        <property name="posy" value="-253" />
+        <property name="identifier" value="" />
+        <property name="show_line" value="3" />
+        <property name="rewind" value="0" />
+        <property name="segment_0_x1" value="0" />
+        <property name="segment_0_y1" value="0" />
+        <property name="segment_0_x2" value="0" />
+        <property name="segment_0_y2" value="200" />
+        <property name="segment_1_x1" value="0" />
+        <property name="segment_1_y1" value="200" />
+        <property name="segment_1_x2" value="500" />
+        <property name="segment_1_y2" value="200" />
+        <property name="segment_2_x1" value="500" />
+        <property name="segment_2_y1" value="200" />
+        <property name="segment_2_x2" value="500" />
+        <property name="segment_2_y2" value="0" />
+    </path>
+    <item >
+        <property name="type" value="mushroom" />
+        <property name="mushroom_type" value="35" />
+        <property name="posx" value="388" />
+        <property name="posy" value="-274" />
+    </item>
+    <item >
+        <property name="type" value="mushroom" />
+        <property name="mushroom_type" value="25" />
+        <property name="posx" value="333" />
+        <property name="posy" value="-208" />
+    </item>
+    <item >
+        <property name="type" value="mushroom" />
+        <property name="mushroom_type" value="51" />
+        <property name="posx" value="297" />
+        <property name="posy" value="-267" />
+    </item>
+    <item >
+        <property name="type" value="mushroom" />
+        <property name="mushroom_type" value="52" />
+        <property name="posx" value="443" />
+        <property name="posy" value="-217" />
+    </item>
+    <item >
+        <property name="type" value="fireplant" />
+        <property name="posx" value="495" />
+        <property name="posy" value="-280" />
+    </item>
+    <item >
+        <property name="type" value="mushroom" />
+        <property name="mushroom_type" value="49" />
+        <property name="posx" value="273" />
+        <property name="posy" value="-199" />
+    </item>
+    <item >
+        <property name="type" value="jstar" />
+        <property name="posx" value="505" />
+        <property name="posy" value="-207" />
+    </item>
+    <item >
+        <property name="type" value="moon" />
+        <property name="posx" value="542" />
+        <property name="posy" value="-148" />
+    </item>
 </level>

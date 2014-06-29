@@ -10,24 +10,27 @@ public class Level
 {
     public Settings settings;
     public List<Background> backgrounds;
-    public List<Box> boxes;
-    public List<Enemy> enemies;
-    public List<EnemyStopper> enemyStoppers;
-    public List<Item> items;
-    public List<LelveExit> lelveExits;
-    public Player player;
-    public List<Sprite> sprites;
+    //public List<Box> boxes;
+    //public List<Enemy> enemies;
+    //public List<EnemyStopper> enemyStoppers;
+   // public List<Item> items;
+    //public List<LevelExit> levelExits;
+    //public Player player;
+    //public List<Sprite> sprites;
+
+    public List<Object> objects;
 
     public Level()
     {
         settings = new Settings();
         backgrounds = new ArrayList<Background>();
-        boxes = new ArrayList<Box>();
-        enemies = new ArrayList<Enemy>();
-        enemyStoppers = new ArrayList<EnemyStopper>();
-        items= new ArrayList<Item>();
-        lelveExits = new ArrayList<LelveExit>();
-        player = new Player();
-        sprites = new ArrayList<Sprite>();
+        //boxes = new ArrayList<Box>();
+        //enemies = new ArrayList<Enemy>();
+        //enemyStoppers = new ArrayList<EnemyStopper>();
+        //items= new ArrayList<Item>();
+        //levelExits = new ArrayList<LevelExit>();
+        //player = new Player();
+        //sprites = new ArrayList<Sprite>();
+        objects = new ArrayList<>();
     }
 }

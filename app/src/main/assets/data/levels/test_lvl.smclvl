@@ -1,98 +1,4 @@
 {
-    "enemies": [
-        {
-            "height": 0.671875,
-            "posy": 0.84375,
-            "width": 0.671875,
-            "posx": 28.15625,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        },
-        {
-            "height": 0.671875,
-            "posy": 0.796875,
-            "width": 0.671875,
-            "posx": 71.15625,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        },
-        {
-            "height": 0.671875,
-            "posy": 3.65625,
-            "width": 0.671875,
-            "posx": 76.78125,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        },
-        {
-            "height": 0.671875,
-            "posy": 8.59375,
-            "width": 0.671875,
-            "posx": 83.484375,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        },
-        {
-            "height": 1.171875,
-            "posy": 5.765625,
-            "width": 0.9375,
-            "posx": 92.671875,
-            "texture_atlas": "data/enemy/turtle/red.pack",
-            "enemy_class": "turtle"
-        },
-        {
-            "height": 0.671875,
-            "posy": 0.8125,
-            "width": 0.671875,
-            "posx": 104.921875,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        },
-        {
-            "height": 0.703125,
-            "posy": 1.234375,
-            "width": 0.703125,
-            "posx": 21.0625,
-            "texture_atlas": "data/enemy/flyon/orange.pack",
-            "enemy_class": "flyon"
-        },
-        {
-            "height": 0.703125,
-            "posy": 1.34375,
-            "width": 0.703125,
-            "posx": 51.171875,
-            "texture_atlas": "data/enemy/flyon/orange.pack",
-            "enemy_class": "flyon"
-        },
-        {
-            "height": 0.703125,
-            "posy": 1.375,
-            "width": 0.703125,
-            "posx": 99.453125,
-            "texture_atlas": "data/enemy/flyon/orange.pack",
-            "enemy_class": "flyon"
-        },
-        {
-            "height": 0.5625,
-            "posy": 0.734375,
-            "width": 0.5625,
-            "posx": 112.65625,
-            "texture_atlas": "data/enemy/eato/brown.pack",
-            "enemy_class": "eato"
-        },
-        {
-            "height": 0.671875,
-            "posy": 2.03125,
-            "width": 0.671875,
-            "posx": 121.28125,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "enemy_class": "furball"
-        }
-    ],
-    "player": {
-        "posy": 3.0625,
-        "posx": 2
-    },
     "collision_bodies": [
         {
             "height": 1,
@@ -128,12 +34,18 @@
         "b_2": 0,
         "texture_name": "data/game/background/green_junglehills.png"
     },
-    "sprites": [
+    "objects": [
+        {
+            "posy": 1.9375,
+            "posx": 127.1875,
+            "obj_class": "player"
+        },
         {
             "height": 0.671875,
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 55.1875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -141,6 +53,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 48.5,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -148,6 +61,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 48.5,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -155,6 +69,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 48.5,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -162,6 +77,7 @@
             "posy": 3.40625,
             "width": 0.671875,
             "posx": 48.5,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -169,6 +85,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 48.5,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -176,6 +93,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 47.828125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -183,6 +101,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 47.15625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -190,6 +109,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 46.484375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -197,6 +117,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 45.8125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -204,6 +125,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 47.828125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -211,6 +133,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 47.15625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -218,6 +141,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 46.484375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -225,6 +149,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 45.8125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -232,6 +157,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 45.140625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -239,6 +165,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 44.46875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -246,6 +173,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 43.796875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -253,6 +181,7 @@
             "posy": 0.71875,
             "width": 0.671875,
             "posx": 43.125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -260,6 +189,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 47.828125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -267,6 +197,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 47.15625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -274,6 +205,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 46.484375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -281,6 +213,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 45.8125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -288,6 +221,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 45.140625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -295,6 +229,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 44.46875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -302,6 +237,7 @@
             "posy": 1.390625,
             "width": 0.671875,
             "posx": 43.796875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -309,6 +245,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 47.828125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -316,6 +253,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 47.15625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -323,6 +261,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 46.484375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -330,6 +269,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 45.8125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -337,6 +277,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 45.140625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -344,6 +285,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 44.46875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -351,6 +293,7 @@
             "posy": 3.40625,
             "width": 0.671875,
             "posx": 47.828125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -358,6 +301,7 @@
             "posy": 3.40625,
             "width": 0.671875,
             "posx": 47.15625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -365,6 +309,7 @@
             "posy": 2.0625,
             "width": 0.671875,
             "posx": 49.171875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -372,6 +317,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 55.859375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -379,6 +325,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 56.53125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -386,6 +333,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 57.203125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -393,6 +341,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 57.875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -400,6 +349,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 58.546875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -407,6 +357,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 59.21875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -414,6 +365,7 @@
             "posy": 0.734375,
             "width": 0.671875,
             "posx": 59.890625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -421,6 +373,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 55.1875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -428,6 +381,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 55.1875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -435,6 +389,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 55.1875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -442,6 +397,7 @@
             "posy": 3.421875,
             "width": 0.671875,
             "posx": 55.1875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -449,6 +405,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 55.859375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -456,6 +413,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 56.53125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -463,6 +421,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 57.203125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -470,6 +429,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 57.875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -477,6 +437,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 58.546875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -484,6 +445,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 59.21875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -491,6 +453,7 @@
             "posy": 1.40625,
             "width": 0.671875,
             "posx": 59.890625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -498,6 +461,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 55.859375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -505,6 +469,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 56.53125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -512,6 +477,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 57.203125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -519,6 +485,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 57.875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -526,6 +493,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 58.546875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -533,6 +501,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 59.21875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -540,6 +509,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 55.859375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -547,6 +517,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 56.53125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -554,6 +525,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 57.203125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -561,6 +533,7 @@
             "posy": 3.421875,
             "width": 0.671875,
             "posx": 55.859375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -568,6 +541,7 @@
             "posy": 3.421875,
             "width": 0.671875,
             "posx": 56.53125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -575,6 +549,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 57.875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -582,6 +557,7 @@
             "posy": 2.078125,
             "width": 0.671875,
             "posx": 54.515625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -590,6 +566,7 @@
             "width": 1.5625,
             "posx": 1.703125,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:up"
         },
         {
@@ -598,6 +575,7 @@
             "width": 1.5625,
             "posx": 1.703125,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -606,6 +584,7 @@
             "width": 1.5625,
             "posx": 1.703125,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -614,6 +593,7 @@
             "width": 1.5625,
             "posx": 50.734375,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -622,6 +602,7 @@
             "width": 1.5625,
             "posx": 50.734375,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:up"
         },
         {
@@ -630,6 +611,7 @@
             "width": 1.5625,
             "posx": 99.015625,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -638,6 +620,7 @@
             "width": 1.5625,
             "posx": 99.015625,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:up"
         },
         {
@@ -646,6 +629,7 @@
             "width": 1.5625,
             "posx": 109.71875,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -654,6 +638,7 @@
             "width": 1.5625,
             "posx": 109.71875,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:ver"
         },
         {
@@ -662,6 +647,7 @@
             "width": 1.5625,
             "posx": 109.71875,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:up"
         },
         {
@@ -670,6 +656,7 @@
             "width": 1.5625,
             "posx": 111.203125,
             "texture_atlas": "data/pipes/green/green.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/green/green.pack:up"
         },
         {
@@ -678,6 +665,7 @@
             "width": 1.5625,
             "posx": 16.015625,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:ver"
         },
         {
@@ -686,6 +674,7 @@
             "width": 1.5625,
             "posx": 16.015625,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:up"
         },
         {
@@ -694,6 +683,7 @@
             "width": 1.5625,
             "posx": 20.609375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:ver"
         },
         {
@@ -702,6 +692,7 @@
             "width": 1.5625,
             "posx": 20.609375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:up"
         },
         {
@@ -710,6 +701,7 @@
             "width": 1.5625,
             "posx": 34.234375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:ver"
         },
         {
@@ -718,6 +710,7 @@
             "width": 1.5625,
             "posx": 34.234375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:up"
         },
         {
@@ -726,6 +719,7 @@
             "width": 1.5625,
             "posx": 74.5625,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:ver"
         },
         {
@@ -734,6 +728,7 @@
             "width": 1.5625,
             "posx": 74.5625,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:up"
         },
         {
@@ -741,6 +736,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": -0.328125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -748,6 +744,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 0.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -755,6 +752,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 1.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -762,6 +760,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 2.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -769,6 +768,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 3.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -776,6 +776,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 4.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -783,6 +784,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 5.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -790,6 +792,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 6.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -797,6 +800,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 7.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -804,6 +808,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 8.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -811,6 +816,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 9.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -818,6 +824,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 10.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -825,6 +832,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 11.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -832,6 +840,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 12.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -839,6 +848,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 13.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -846,6 +856,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 14.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -853,6 +864,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 15.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -860,6 +872,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 16.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -867,6 +880,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 17.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -874,6 +888,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 18.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -881,6 +896,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 19.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -888,6 +904,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 20.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -895,6 +912,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 21.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -902,6 +920,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 22.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -909,6 +928,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 23.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -916,6 +936,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 24.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -923,6 +944,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 25.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -930,6 +952,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 26.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -937,6 +960,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 27.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -944,6 +968,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 28.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -951,6 +976,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 29.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -958,6 +984,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 30.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -965,6 +992,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 31.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -972,6 +1000,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 32.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -979,6 +1008,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 33.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -986,6 +1016,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 34.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -993,6 +1024,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 35.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1000,6 +1032,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 36.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1007,6 +1040,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 37.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1014,6 +1048,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 38.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1021,6 +1056,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 39.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1028,6 +1064,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 40.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1035,6 +1072,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 41.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1042,6 +1080,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 42.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1049,6 +1088,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 43.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1056,6 +1096,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 44.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1063,6 +1104,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 45.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1070,6 +1112,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 46.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1077,6 +1120,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 47.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1084,6 +1128,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 58.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1091,6 +1136,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 59.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1098,6 +1144,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 60.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1105,6 +1152,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 61.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1112,6 +1160,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 62.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1119,6 +1168,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 63.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1126,6 +1176,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 64.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1133,6 +1184,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 65.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1140,6 +1192,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 66.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1147,6 +1200,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 67.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1154,6 +1208,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 68.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1161,6 +1216,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 69.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1168,6 +1224,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 70.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1175,6 +1232,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 71.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1182,6 +1240,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 72.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1189,6 +1248,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 73.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1196,6 +1256,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 74.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1203,6 +1264,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 75.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1210,6 +1272,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 76.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1217,6 +1280,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 77.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1224,6 +1288,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 78.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1231,6 +1296,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 79.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1238,6 +1304,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 80.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1245,6 +1312,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 81.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1256,6 +1324,7 @@
             "posy": 0.71875,
             "width": 0,
             "posx": 115.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -1263,6 +1332,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 114.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1270,6 +1340,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 113.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1277,6 +1348,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 112.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1284,6 +1356,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 111.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1291,6 +1364,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 110.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1298,6 +1372,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 109.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1305,6 +1380,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 108.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1312,6 +1388,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 107.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1319,6 +1396,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 106.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1326,6 +1404,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 105.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1333,6 +1412,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 104.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1340,6 +1420,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 103.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1347,6 +1428,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 102.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1354,6 +1436,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 101.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1361,6 +1444,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 100.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1368,6 +1452,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 99.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1375,6 +1460,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 98.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1382,6 +1468,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 97.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1389,6 +1476,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 96.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1396,6 +1484,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 95.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1403,6 +1492,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 94.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1410,6 +1500,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 93.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1417,6 +1508,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 92.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1424,6 +1516,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 91.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1431,6 +1524,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 90.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1438,6 +1532,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 89.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1445,6 +1540,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 117.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -1452,6 +1548,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 118.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1459,6 +1556,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 117.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -1466,6 +1564,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 119.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1473,6 +1572,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 120.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1480,6 +1580,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 121.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1487,6 +1588,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 122.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1494,6 +1596,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 123.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -1501,6 +1604,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1512,6 +1616,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 17.78125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1519,6 +1624,7 @@
             "posy": 0.71875,
             "width": 4.9375,
             "posx": 9.5,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/big_1.png"
         },
         {
@@ -1526,6 +1632,7 @@
             "posy": 0.703125,
             "width": 2.75,
             "posx": 3.46875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/medium_2.png"
         },
         {
@@ -1533,6 +1640,7 @@
             "posy": 8.546875,
             "width": 1.9375,
             "posx": 1.71875,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1540,6 +1648,7 @@
             "posy": 10.21875,
             "width": 1.9375,
             "posx": 5.78125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1547,6 +1656,7 @@
             "posy": 8.453125,
             "width": 1.9375,
             "posx": 9.640625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1554,6 +1664,7 @@
             "posy": 8.125,
             "width": 1.9375,
             "posx": 13.46875,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1561,6 +1672,7 @@
             "posy": 7.875,
             "width": 1.9375,
             "posx": 19.375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1568,6 +1680,7 @@
             "posy": 12.09375,
             "width": 1.9375,
             "posx": 10.859375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1575,6 +1688,7 @@
             "posy": 18.5625,
             "width": 1.9375,
             "posx": 12.03125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1582,6 +1696,7 @@
             "posy": 21.859375,
             "width": 1.9375,
             "posx": 13.4375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1589,6 +1704,7 @@
             "posy": 23.984375,
             "width": 1.9375,
             "posx": 16.625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1596,6 +1712,7 @@
             "posy": 21.234375,
             "width": 1.9375,
             "posx": 19.984375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1603,6 +1720,7 @@
             "posy": 18.296875,
             "width": 1.9375,
             "posx": 21.65625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1610,6 +1728,7 @@
             "posy": 14.0625,
             "width": 1.9375,
             "posx": 21.578125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1617,6 +1736,7 @@
             "posy": 0.703125,
             "width": 2.015625,
             "posx": 30.484375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_1.png"
         },
         {
@@ -1628,6 +1748,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 22.6875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1639,6 +1760,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 26.40625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1646,6 +1768,7 @@
             "posy": 0.703125,
             "width": 2.8125,
             "posx": 35.96875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/medium_1.png"
         },
         {
@@ -1653,6 +1776,7 @@
             "posy": 7.921875,
             "width": 1.9375,
             "posx": 27.90625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1660,6 +1784,7 @@
             "posy": 6.90625,
             "width": 1.9375,
             "posx": 34.25,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1667,6 +1792,7 @@
             "posy": 8.578125,
             "width": 1.9375,
             "posx": 40.3125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1674,6 +1800,7 @@
             "posy": 7.53125,
             "width": 1.9375,
             "posx": 44.828125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1681,6 +1808,7 @@
             "posy": 8.3125,
             "width": 1.9375,
             "posx": 51.65625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1688,6 +1816,7 @@
             "posy": 6.34375,
             "width": 1.9375,
             "posx": 63.390625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1695,6 +1824,7 @@
             "posy": 7.765625,
             "width": 1.9375,
             "posx": 71.15625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1702,6 +1832,7 @@
             "posy": 8.1875,
             "width": 1.9375,
             "posx": 57.65625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1709,6 +1840,7 @@
             "posy": 10.71875,
             "width": 1.9375,
             "posx": 54.125,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1716,6 +1848,7 @@
             "posy": 0.71875,
             "width": 2.015625,
             "posx": 63.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_1.png"
         },
         {
@@ -1727,6 +1860,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 42.5625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1738,6 +1872,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 69.296875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1749,6 +1884,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 61.484375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1756,6 +1892,7 @@
             "posy": 5.71875,
             "width": 2.015625,
             "posx": 90.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_1.png"
         },
         {
@@ -1763,6 +1900,7 @@
             "posy": 11.296875,
             "width": 1.9375,
             "posx": 77.21875,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1770,6 +1908,7 @@
             "posy": 10.640625,
             "width": 1.9375,
             "posx": 88.40625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1777,6 +1916,7 @@
             "posy": 8.859375,
             "width": 1.9375,
             "posx": 99.15625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1784,6 +1924,7 @@
             "posy": 0.71875,
             "width": 2.8125,
             "posx": 105.90625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/medium_1.png"
         },
         {
@@ -1791,6 +1932,7 @@
             "posy": 5.9375,
             "width": 1.9375,
             "posx": 108.515625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1798,6 +1940,7 @@
             "posy": 7.015625,
             "width": 1.9375,
             "posx": 116.625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1805,6 +1948,7 @@
             "posy": 6.09375,
             "width": 1.9375,
             "posx": 121.84375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1812,6 +1956,7 @@
             "posy": 1.9375,
             "width": 1.875,
             "posx": 119.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_2.png"
         },
         {
@@ -1819,6 +1964,7 @@
             "posy": 1.921875,
             "width": 0.78125,
             "posx": 129.234375,
+            "obj_class": "sprite",
             "texture_name": "data/game/level/door_yellow_1.png"
         },
         {
@@ -1826,6 +1972,7 @@
             "posy": 11.421875,
             "width": 1.9375,
             "posx": 95.359375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -1833,6 +1980,7 @@
             "posy": 0.734375,
             "width": 0.328125,
             "posx": 34.125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1840,6 +1988,7 @@
             "posy": 0.734375,
             "width": 0.5,
             "posx": 19.71875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_m.png"
         },
         {
@@ -1851,6 +2000,7 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 1.359375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1858,6 +2008,7 @@
             "posy": 0.734375,
             "width": 0.5,
             "posx": 49.640625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_m.png"
         },
         {
@@ -1865,6 +2016,7 @@
             "posy": 0.6875,
             "width": 0.328125,
             "posx": 102.328125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1872,6 +2024,7 @@
             "posy": 1.9375,
             "width": 0.5,
             "posx": 124.34375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_m.png"
         },
         {
@@ -1879,6 +2032,7 @@
             "posy": 0.734375,
             "width": 2.015625,
             "posx": 7.203125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_1.png"
         },
         {
@@ -1886,6 +2040,7 @@
             "posy": 0.703125,
             "width": 0.5,
             "posx": 114.90625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_m.png"
         },
         {
@@ -1897,6 +2052,7 @@
             "posy": 2.1875,
             "width": 0,
             "posx": 122.171875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -1904,6 +2060,7 @@
             "posy": 0.71875,
             "width": 1.953125,
             "posx": 52.359375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/jungle_1/beanstalk_2.png"
         },
         {
@@ -1915,6 +2072,7 @@
             "posy": 7.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -1922,6 +2080,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 78.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1929,6 +2088,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 77.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1936,6 +2096,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 76.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1943,6 +2104,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 75.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1950,6 +2112,7 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 75.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1957,6 +2120,7 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 76.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1964,6 +2128,7 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 77.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1971,6 +2136,7 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 78.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -1978,6 +2144,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 74.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -1985,6 +2152,7 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 74.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -1992,6 +2160,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2003,6 +2172,7 @@
             "posy": 6.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2014,6 +2184,7 @@
             "posy": 5.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2025,6 +2196,7 @@
             "posy": 4.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2036,6 +2208,7 @@
             "posy": 3.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2047,6 +2220,7 @@
             "posy": 2.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2058,6 +2232,7 @@
             "posy": 1.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2065,6 +2240,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2072,6 +2248,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2079,6 +2256,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2086,6 +2264,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2093,6 +2272,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2100,6 +2280,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2107,6 +2288,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2114,6 +2296,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2121,6 +2304,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2128,6 +2312,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2135,6 +2320,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2142,6 +2328,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2149,6 +2336,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2156,6 +2344,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2163,6 +2352,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2170,6 +2360,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2177,6 +2368,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2184,6 +2376,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2191,6 +2384,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2198,6 +2392,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2205,6 +2400,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2212,6 +2408,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2219,6 +2416,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2226,6 +2424,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2233,6 +2432,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2240,6 +2440,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2247,6 +2448,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2254,6 +2456,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2261,6 +2464,7 @@
             "posy": 4.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2268,6 +2472,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2275,6 +2480,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2282,6 +2488,7 @@
             "posy": 3.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2289,6 +2496,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2296,6 +2504,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2303,6 +2512,7 @@
             "posy": 2.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2310,6 +2520,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2317,6 +2528,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2324,6 +2536,7 @@
             "posy": 1.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2331,6 +2544,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2338,6 +2552,7 @@
             "posy": 0.703125,
             "width": 0.328125,
             "posx": 88.515625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -2345,6 +2560,7 @@
             "posy": 0.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2352,6 +2568,7 @@
             "posy": 6.5,
             "width": 1,
             "posx": 80.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2359,6 +2576,7 @@
             "posy": 5.5,
             "width": 1,
             "posx": 80.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2366,6 +2584,7 @@
             "posy": 0.734375,
             "width": 0.5,
             "posx": 76.578125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_2/hedges/small_2.png"
         },
         {
@@ -2373,6 +2592,7 @@
             "posy": 3.546875,
             "width": 1.875,
             "posx": 75.21875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_2.png"
         },
         {
@@ -2380,6 +2600,7 @@
             "posy": 8.484375,
             "width": 1.875,
             "posx": 84.21875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/small_2.png"
         },
         {
@@ -2387,6 +2608,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 89.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2394,6 +2616,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 89.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2401,6 +2624,7 @@
             "posy": 1.71875,
             "width": 1,
             "posx": 89.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2408,6 +2632,7 @@
             "posy": 0.71875,
             "width": 1,
             "posx": 89.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2419,6 +2644,7 @@
             "posy": 4.703125,
             "width": 0,
             "posx": 96.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2430,6 +2656,7 @@
             "posy": 3.703125,
             "width": 0,
             "posx": 96.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2441,6 +2668,7 @@
             "posy": 2.703125,
             "width": 0,
             "posx": 96.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2452,6 +2680,7 @@
             "posy": 1.703125,
             "width": 0,
             "posx": 96.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2459,6 +2688,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 94.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2466,6 +2696,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 93.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2473,6 +2704,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 94.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2480,6 +2712,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 93.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2487,6 +2720,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 92.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2494,6 +2728,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 92.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2501,6 +2736,7 @@
             "posy": 1.71875,
             "width": 1,
             "posx": 92.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2508,6 +2744,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 91.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2515,6 +2752,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 91.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2522,6 +2760,7 @@
             "posy": 1.71875,
             "width": 1,
             "posx": 91.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2529,6 +2768,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 90.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2536,6 +2776,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 90.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2543,6 +2784,7 @@
             "posy": 1.71875,
             "width": 1,
             "posx": 90.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2550,6 +2792,7 @@
             "posy": 0.71875,
             "width": 1,
             "posx": 92.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2557,6 +2800,7 @@
             "posy": 0.71875,
             "width": 1,
             "posx": 90.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2564,6 +2808,7 @@
             "posy": 0.71875,
             "width": 1,
             "posx": 91.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2571,6 +2816,7 @@
             "posy": 3.71875,
             "width": 1,
             "posx": 95.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2578,6 +2824,7 @@
             "posy": 2.71875,
             "width": 1,
             "posx": 95.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2585,6 +2832,7 @@
             "posy": 1.71875,
             "width": 1,
             "posx": 95.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2592,6 +2840,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 122.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2599,6 +2848,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 121.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2606,6 +2856,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 120.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2613,6 +2864,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 119.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2620,6 +2872,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 118.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2627,6 +2880,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 123.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2634,6 +2888,7 @@
             "posy": 0.71875,
             "width": 0.5,
             "posx": 90.84375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_2/hedges/cactus_1.png"
         },
         {
@@ -2641,6 +2896,7 @@
             "posy": 3.578125,
             "width": 1,
             "posx": 79.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2652,6 +2908,7 @@
             "posy": 4.5625,
             "width": 0,
             "posx": 80.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2663,6 +2920,7 @@
             "posy": 3.5625,
             "width": 0,
             "posx": 80.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2674,6 +2932,7 @@
             "posy": 2.5625,
             "width": 0,
             "posx": 80.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2685,6 +2944,7 @@
             "posy": 1.5625,
             "width": 0,
             "posx": 80.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
         },
         {
@@ -2692,6 +2952,7 @@
             "posy": 1.578125,
             "width": 1,
             "posx": 79.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -2699,20 +2960,173 @@
             "posy": 0.578125,
             "width": 1,
             "posx": 79.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
+        },
+        {
+            "height": 0.671875,
+            "posy": 0.84375,
+            "width": 0.671875,
+            "posx": 28.15625,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
+        },
+        {
+            "height": 0.671875,
+            "posy": 0.796875,
+            "width": 0.671875,
+            "posx": 71.15625,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
+        },
+        {
+            "height": 0.671875,
+            "posy": 3.65625,
+            "width": 0.671875,
+            "posx": 76.78125,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
+        },
+        {
+            "height": 0.671875,
+            "posy": 8.59375,
+            "width": 0.671875,
+            "posx": 83.484375,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
+        },
+        {
+            "height": 1.171875,
+            "posy": 5.765625,
+            "width": 0.9375,
+            "posx": 92.671875,
+            "texture_atlas": "data/enemy/turtle/red.pack",
+            "obj_class": "enemy",
+            "enemy_class": "turtle"
+        },
+        {
+            "height": 0.671875,
+            "posy": 0.8125,
+            "width": 0.671875,
+            "posx": 104.921875,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
+        },
+        {
+            "height": 0.703125,
+            "posy": 1.234375,
+            "width": 0.703125,
+            "posx": 21.0625,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
+        },
+        {
+            "height": 0.703125,
+            "posy": 1.34375,
+            "width": 0.703125,
+            "posx": 51.171875,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
+        },
+        {
+            "height": 0.703125,
+            "posy": 1.375,
+            "width": 0.703125,
+            "posx": 99.453125,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
         },
         {
             "height": 0.671875,
             "posy": 9.046875,
             "width": 0.671875,
             "posx": 16.453125,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 3.703125,
+            "width": 0.59375,
+            "posx": 15.53125,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 3.765625,
+            "width": 0.59375,
+            "posx": 10.390625,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 4.953125,
+            "width": 0.59375,
+            "posx": 11.578125,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 4.953125,
+            "width": 0.59375,
+            "posx": 14.46875,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 3.734375,
+            "item": 8,
+            "posx": 31.25,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "force_best_item": 0,
+            "animation": "Bonus",
+            "invisible": 0,
+            "posy": 5.1875,
+            "item": 24,
+            "posx": 16.453125,
+            "useable_count": 1,
+            "type": "bonus",
+            "texture_atlas": "data/game/box/yellow/bonus.pack",
+            "obj_class": "box"
         },
         {
             "height": 0.671875,
             "posy": 11.640625,
             "width": 0.671875,
             "posx": 16.453125,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
         },
         {
@@ -2720,6 +3134,7 @@
             "posy": 14.296875,
             "width": 0.671875,
             "posx": 16.453125,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
         },
         {
@@ -2727,7 +3142,185 @@
             "posy": 14.296875,
             "width": 0.671875,
             "posx": 18.46875,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 17.78125,
+            "width": 0.59375,
+            "posx": 17.140625,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 16.8125,
+            "width": 0.59375,
+            "posx": 17.140625,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 15.84375,
+            "width": 0.59375,
+            "posx": 17.140625,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "gold_color": "red",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 6.5,
+            "item": 8,
+            "posx": 31.25,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 6.5,
+            "item": 8,
+            "posx": 76.46875,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 6.5,
+            "item": 8,
+            "posx": 75.390625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "height": 0.30000001192092896,
+            "posy": -144,
+            "width": 0.12999999523162842,
+            "posx": 8290,
+            "camera_motion": 1,
+            "type": 0,
+            "obj_class": "level_exit"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -561,
+            "width": 0.20000000298023224,
+            "posx": 5634,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -381,
+            "width": 0.20000000298023224,
+            "posx": 6229,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -380,
+            "width": 0.20000000298023224,
+            "posx": 5700,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "force_best_item": 0,
+            "animation": "Bonus",
+            "invisible": 0,
+            "posy": 8.40625,
+            "item": 24,
+            "posx": 95.0625,
+            "useable_count": 1,
+            "type": "bonus",
+            "texture_atlas": "data/game/box/yellow/bonus.pack",
+            "obj_class": "box"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 8,
+            "posx": 105.15625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 8,
+            "posx": 104.40625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 8,
+            "posx": 105.890625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "gold_color": "yellow",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 8,
+            "posx": 106.625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "red",
+            "posy": 5.609375,
+            "width": 0.59375,
+            "posx": 13.046875,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/red.pack",
+            "obj_class": "item"
         },
         {
             "flip_data": {
@@ -2738,6 +3331,7 @@
             "posy": 8.484375,
             "width": 0,
             "posx": 87.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2745,6 +3339,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 86.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2752,6 +3347,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 85.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2759,6 +3355,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 84.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2766,6 +3363,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 83.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2773,6 +3371,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 82.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2780,6 +3379,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 81.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2787,6 +3387,7 @@
             "posy": 7.5,
             "width": 1,
             "posx": 80.078125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2794,6 +3395,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 74.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2801,6 +3403,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 75.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2808,6 +3411,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 76.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2815,6 +3419,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 77.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2822,6 +3427,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 78.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2829,6 +3435,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 89.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2836,6 +3443,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 90.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2843,6 +3451,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 91.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2850,6 +3459,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 92.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2857,6 +3467,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 93.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2864,6 +3475,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 94.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2871,6 +3483,7 @@
             "posy": 4.71875,
             "width": 1,
             "posx": 95.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2882,6 +3495,7 @@
             "posy": 5.703125,
             "width": 0,
             "posx": 96.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2889,6 +3503,7 @@
             "posy": 2.578125,
             "width": 1,
             "posx": 79.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left_top.png"
         },
         {
@@ -2896,6 +3511,7 @@
             "posy": 4.578125,
             "width": 1,
             "posx": 79.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
         },
         {
@@ -2907,13 +3523,36 @@
             "posy": 5.5625,
             "width": 0,
             "posx": 80.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -559,
+            "width": 0.20000000298023224,
+            "posx": 5110,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -245,
+            "width": 0.20000000298023224,
+            "posx": 4746,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -244,
+            "width": 0.20000000298023224,
+            "posx": 5121,
+            "obj_class": "enemy_stopper"
         },
         {
             "height": 1,
             "posy": -0.265625,
             "width": 1,
             "posx": 48.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2921,6 +3560,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 49.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2928,6 +3568,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 50.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2935,6 +3576,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 51.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2942,6 +3584,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 57.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2949,6 +3592,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 56.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2956,6 +3600,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 55.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2963,6 +3608,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 52.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2970,6 +3616,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 53.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2977,6 +3624,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 54.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -2988,13 +3636,25 @@
             "posy": 0.984375,
             "width": 0,
             "posx": 80.28125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
+        },
+        {
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 0,
+            "posx": 95.34375,
+            "useable_count": -1,
+            "type": "spin",
+            "obj_class": "box"
         },
         {
             "height": 0.671875,
             "posy": 14.296875,
             "width": 0.671875,
             "posx": 17.796875,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
         },
         {
@@ -3002,6 +3662,7 @@
             "posy": 14.296875,
             "width": 0.671875,
             "posx": 17.125,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
         },
         {
@@ -3009,13 +3670,81 @@
             "posy": 14.296875,
             "width": 0.671875,
             "posx": 19.140625,
+            "obj_class": "sprite",
             "texture_name": "data/blocks/wood/1.png"
         },
         {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 17.78125,
+            "width": 0.59375,
+            "posx": 17.84375,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 15.84375,
+            "width": 0.59375,
+            "posx": 17.84375,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 17.78125,
+            "width": 0.59375,
+            "posx": 18.546875,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 16.8125,
+            "width": 0.59375,
+            "posx": 18.546875,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "yellow",
+            "posy": 15.84375,
+            "width": 0.59375,
+            "posx": 18.546875,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/yellow.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0.59375,
+            "color": "red",
+            "posy": 16.8125,
+            "width": 0.59375,
+            "posx": 17.84375,
+            "type": "goldpiece",
+            "texture_atlas": "data/game/items/goldpiece/red.pack",
+            "obj_class": "item"
+        },
+        {
             "height": 1,
             "posy": 0.9375,
             "width": 1,
             "posx": 124.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3023,6 +3752,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 124.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3030,6 +3760,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 125.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3037,6 +3768,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 125.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3044,6 +3776,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 126.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3051,6 +3784,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 126.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3058,6 +3792,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 127.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3065,6 +3800,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 127.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3072,6 +3808,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 128.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3079,6 +3816,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 128.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3086,6 +3824,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 129.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3093,6 +3832,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 129.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3100,6 +3840,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 130.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3107,6 +3848,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 130.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3114,6 +3856,7 @@
             "posy": 0.9375,
             "width": 1,
             "posx": 131.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3121,6 +3864,7 @@
             "posy": -0.0625,
             "width": 1,
             "posx": 131.984375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3129,6 +3873,7 @@
             "width": 1.5625,
             "posx": 125.484375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:up"
         },
         {
@@ -3137,13 +3882,40 @@
             "width": 1.5625,
             "posx": 125.484375,
             "texture_atlas": "data/pipes/yellow/yellow.pack",
+            "obj_class": "sprite",
             "texture_name": "data/pipes/yellow/yellow.pack:ver"
+        },
+        {
+            "height": 0.5625,
+            "posy": 0.734375,
+            "width": 0.5625,
+            "posx": 112.65625,
+            "texture_atlas": "data/enemy/eato/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "eato"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -141,
+            "width": 0.20000000298023224,
+            "posx": 7537,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "height": 0.671875,
+            "posy": 2.03125,
+            "width": 0.671875,
+            "posx": 121.28125,
+            "texture_atlas": "data/enemy/furball/brown.pack",
+            "obj_class": "enemy",
+            "enemy_class": "furball"
         },
         {
             "height": 0.96875,
             "posy": 6.90625,
             "width": 1.9375,
             "posx": 127.046875,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -3155,6 +3927,7 @@
             "posy": 2.1875,
             "width": 0,
             "posx": 131.765625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
         },
         {
@@ -3162,13 +3935,34 @@
             "posy": 1.9375,
             "width": 0.5,
             "posx": 127.03125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_m.png"
+        },
+        {
+            "level_name": "lvl_1_sub_1",
+            "height": 0.30000001192092896,
+            "direction": "down",
+            "posy": -237,
+            "entry": "main",
+            "width": 0.12999999523162842,
+            "posx": 8074,
+            "camera_motion": 2,
+            "type": 1,
+            "obj_class": "level_exit"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -61,
+            "width": 0.20000000298023224,
+            "posx": 7468,
+            "obj_class": "enemy_stopper"
         },
         {
             "height": 1,
             "posy": 1.71875,
             "width": 1,
             "posx": 93.3125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/1.png"
         },
         {
@@ -3176,6 +3970,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 88.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3183,6 +3978,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 87.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3190,6 +3986,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 86.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3197,6 +3994,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 85.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3204,6 +4002,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 84.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3211,6 +4010,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 83.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3218,6 +4018,7 @@
             "posy": -0.265625,
             "width": 1,
             "posx": 82.671875,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/1.png"
         },
         {
@@ -3225,6 +4026,7 @@
             "posy": 2.734375,
             "width": 0.671875,
             "posx": 45.140625,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -3232,6 +4034,7 @@
             "posy": 3.40625,
             "width": 0.671875,
             "posx": 46.484375,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -3239,6 +4042,7 @@
             "posy": 2.75,
             "width": 0.671875,
             "posx": 58.546875,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
         },
         {
@@ -3246,13 +4050,50 @@
             "posy": 3.421875,
             "width": 0.671875,
             "posx": 57.203125,
+            "obj_class": "sprite",
             "texture_name": "data/game/box/brown1_1.png"
+        },
+        {
+            "text": "            ---    Enemies   ---<br/><br/>Most enemies can be hit through jumping on their head like the hairy Furball on the ground but not the plant which jumps out of the pipe.<br/>",
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 3.734375,
+            "item": 0,
+            "posx": 25.390625,
+            "useable_count": -1,
+            "type": "text",
+            "obj_class": "box"
+        },
+        {
+            "text": "            ---    High Jump   ---<br/><br/>To overcome large spaces press the Run key all the time and jump on the last moment.<br/><br/>If you want to stop the jump early release the jump button.<br/><br/>",
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 6.71875,
+            "item": 0,
+            "posx": 47.390625,
+            "useable_count": -1,
+            "type": "text",
+            "obj_class": "box"
+        },
+        {
+            "gold_color": "red",
+            "force_best_item": 0,
+            "animation": "Default",
+            "invisible": 0,
+            "posy": 0.734375,
+            "item": 8,
+            "posx": 60.5625,
+            "useable_count": 1,
+            "type": "bonus",
+            "obj_class": "box",
+            "texture_name": "data/game/box/yellow/default.png"
         },
         {
             "height": 0.6875,
             "posy": 0.71875,
             "width": 2.75,
             "posx": 71.640625,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/medium_2.png"
         },
         {
@@ -3260,6 +4101,7 @@
             "posy": 12.828125,
             "width": 1.9375,
             "posx": 83.34375,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -3267,6 +4109,7 @@
             "posy": 7.59375,
             "width": 1.9375,
             "posx": 130.65625,
+            "obj_class": "sprite",
             "texture_name": "data/clouds/default_1/1_middle.png"
         },
         {
@@ -3274,6 +4117,7 @@
             "posy": 1.921875,
             "width": 1,
             "posx": 127.6875,
+            "obj_class": "sprite",
             "texture_name": "data/signs/default_1/1_ending.png"
         },
         {
@@ -3285,6 +4129,7 @@
             "posy": 2.90625,
             "width": 0,
             "posx": 130.46875,
+            "obj_class": "sprite",
             "texture_name": "data/signs/default_1/1_ending.png"
         },
         {
@@ -3292,6 +4137,7 @@
             "posy": 0.71875,
             "width": 4.9375,
             "posx": 92.453125,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/hedges/big_1.png"
         },
         {
@@ -3303,7 +4149,184 @@
             "posy": 0.96875,
             "width": 0,
             "posx": 95.34375,
+            "obj_class": "sprite",
             "texture_name": "data/ground/green_1/plant_r.png"
+        },
+        {
+            "direction": "up",
+            "posy": -228,
+            "name": "1",
+            "posx": 8074,
+            "type": 1,
+            "obj_class": "level_entry"
+        },
+        {
+            "text": "What happened ?<br/><br/>Monsters are everywhere but luckily they seem to have missed me.<br/><br/>I should find out what happened...<br/>",
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 5.359375,
+            "item": 0,
+            "posx": 2.203125,
+            "useable_count": -1,
+            "type": "text",
+            "obj_class": "box"
+        },
+        {
+            "text": "          ---   Savegames   ---<br/><br/>You can always save on the world but in a level you need 3000 points.<br/><br/>Save before running into difficult passages.<br/><br/>If you need more points find all the Waffles, Powerups and the secret areas.<br/>",
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 3.171875,
+            "item": 0,
+            "posx": 114.328125,
+            "useable_count": -1,
+            "type": "text",
+            "obj_class": "box"
+        },
+        {
+            "force_best_item": 0,
+            "animation": "Bonus",
+            "invisible": 0,
+            "posy": 5.34375,
+            "item": 39,
+            "posx": 61.109375,
+            "useable_count": 1,
+            "type": "bonus",
+            "texture_atlas": "data/game/box/yellow/bonus.pack",
+            "obj_class": "box"
+        },
+        {
+            "force_best_item": 0,
+            "animation": "Bonus",
+            "invisible": 0,
+            "posy": 5.515625,
+            "item": 52,
+            "posx": 63.96875,
+            "useable_count": 1,
+            "type": "bonus",
+            "texture_atlas": "data/game/box/yellow/bonus.pack",
+            "obj_class": "box"
+        },
+        {
+            "force_best_item": 0,
+            "invisible": 0,
+            "posy": 4.65625,
+            "item": 0,
+            "posx": 63.109375,
+            "useable_count": -1,
+            "type": "spin",
+            "obj_class": "box"
+        },
+        {
+            "height": 0,
+            "posy": -257,
+            "width": 0,
+            "posx": 4001,
+            "obj_class": "enemy",
+            "enemy_class": "turtleboss"
+        },
+        {
+            "height": 0.20000000298023224,
+            "posy": -369,
+            "width": 0.20000000298023224,
+            "posx": 465,
+            "obj_class": "enemy_stopper"
+        },
+        {
+            "middle_img_count": 4,
+            "touch_time": 0,
+            "speed": 3,
+            "direction": "right",
+            "posy": 4.75,
+            "touch_move_time": 0,
+            "posx": 5.328125,
+            "width": 0.28125,
+            "max_distance": 150,
+            "texture_atlas": "data/ground/green_1/slider/brown.pack",
+            "obj_class": "moving_platform",
+            "move_type": 0,
+            "shake_time": 16,
+            "height": 1.6875,
+            "massive_type": "halfmassive"
+        },
+        {
+            "mushroom_type": 35,
+            "height": 0,
+            "posy": 4.28125,
+            "width": 0,
+            "posx": 6.0625,
+            "type": "mushroom",
+            "obj_class": "item",
+            "texture_name": "data/game/item/mushroom_green.png"
+        },
+        {
+            "mushroom_type": 25,
+            "height": 0,
+            "posy": 3.25,
+            "width": 0,
+            "posx": 5.203125,
+            "type": "mushroom",
+            "obj_class": "item",
+            "texture_name": "data/game/item/mushroom_red.png"
+        },
+        {
+            "mushroom_type": 51,
+            "height": 0,
+            "posy": 4.171875,
+            "width": 0,
+            "posx": 4.640625,
+            "type": "mushroom",
+            "obj_class": "item",
+            "texture_name": "data/game/item/mushroom_blue.png"
+        },
+        {
+            "mushroom_type": 52,
+            "height": 0,
+            "posy": 3.390625,
+            "width": 0,
+            "posx": 6.921875,
+            "type": "mushroom",
+            "obj_class": "item",
+            "texture_name": "data/game/item/mushroom_ghost.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0,
+            "posy": 4.375,
+            "width": 0,
+            "posx": 7.734375,
+            "type": "fireplant",
+            "texture_atlas": "data/game/item/fireplant.pack",
+            "obj_class": "item"
+        },
+        {
+            "mushroom_type": 49,
+            "height": 0,
+            "posy": 3.109375,
+            "width": 0,
+            "posx": 4.265625,
+            "type": "mushroom",
+            "obj_class": "item",
+            "texture_name": "data/game/item/mushroom_poison.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0,
+            "posy": 3.234375,
+            "width": 0,
+            "posx": 7.890625,
+            "type": "jstar",
+            "obj_class": "item",
+            "texture_name": "data/game/item/star.png"
+        },
+        {
+            "mushroom_type": 0,
+            "height": 0,
+            "posy": 2.3125,
+            "width": 0,
+            "posx": 8.46875,
+            "type": "moon",
+            "obj_class": "item",
+            "texture_name": "data/game/item/moon.pack"
         }
     ],
     "info": {
