@@ -1,13 +1,11 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.*;
 
 import java.util.*;
 
-import rs.papltd.smc.Assets;
+import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.utility.*;
 
 
@@ -71,31 +69,33 @@ public class WorldWrapper
 
     /**
      * Return only the blocks that need to be drawn *
+     * All Enemies are always returned
      */
-    public List<Sprite> getDrawableSprites(float camX, float camY, boolean getFront)
+    public List<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
     {
-        List<Sprite> sprites = new ArrayList<Sprite>();
+        List<GameObject> sprites = new ArrayList<>();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
         float wH = Constants.CAMERA_HEIGHT + 1;
         Rectangle worldBounds = new Rectangle(wX, wY, wW, wH);
-        for (Sprite sprite : level.getSprites())
+        for (GameObject object : level.getGameObjects())
         {
-            Rectangle bounds = sprite.getBounds();
-            if (bounds.overlaps(worldBounds))
+            Rectangle bounds = object.getBounds();
+            if (bounds.overlaps(worldBounds) || object instanceof Enemy)
             {
-                if (getFront)
+                sprites.add(object);
+                /*if (getFront)
                 {
-                    if (sprite.isFront())
+                    if (object.isFront())
                     {
-                        sprites.add(sprite);
+                        sprites.add(object);
                     }
                 }
                 else
                 {
-                    sprites.add(sprite);
-                }
+                    sprites.add(object);
+                }*/
             }
         }
         return sprites;

@@ -17,6 +17,7 @@ import rs.papltd.smc.utility.Utility;
  */
 public class Coin extends CustomObject
 {
+
     public Coin(World world, Vector2 position, float width, float height)
     {
         super(world, position, width, height);
@@ -34,9 +35,8 @@ public class Coin extends CustomObject
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch, float deltaTime)
+    public void render(SpriteBatch spriteBatch)
     {
-        updateStateTime(deltaTime);
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);

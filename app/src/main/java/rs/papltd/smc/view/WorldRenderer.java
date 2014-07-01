@@ -5,13 +5,10 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
-import rs.papltd.smc.*;
+
 import rs.papltd.smc.model.*;
-import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.screen.*;
 import rs.papltd.smc.utility.*;
-
-import rs.papltd.smc.model.Sprite;
 
 public class WorldRenderer
 {
@@ -109,10 +106,8 @@ public class WorldRenderer
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
-        drawEnemies(delta);
-        drawSprites(false);
+        drawObjects(delta);
         world.getMario().render(spriteBatch);
-        drawSprites(true);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(pCamera.combined);
@@ -169,21 +164,12 @@ public class WorldRenderer
         cam.update();
     }
 
-    private void drawSprites(boolean front)
+    private void drawObjects(/*boolean front, */float delta)
     {
-        for (Sprite sprite : world.getDrawableSprites(cam.position.x, cam.position.y, front))
+        for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
         {
-            TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
-            //spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
-            Utility.draw(spriteBatch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
-        }
-    }
-
-    private void drawEnemies(float deltaTime)
-    {
-        for (Enemy enemy : world.getLevel().getEnemies())
-        {
-            enemy.render(spriteBatch, deltaTime);
+            object.update(delta);
+            object.render(spriteBatch);
         }
     }
 

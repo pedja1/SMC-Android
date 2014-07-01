@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import rs.papltd.smc.Assets;
-import rs.papltd.smc.utility.Constants;
 import rs.papltd.smc.utility.Utility;
 
 /**
@@ -36,17 +35,15 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch, float deltaTime)
+    public void render(SpriteBatch spriteBatch)
     {
-        update(deltaTime);
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, body.getPosition().x - getBounds().width / 2, body.getPosition().y - getBounds().height / 2, bounds.height);
-        updateStateTime(deltaTime);
+        Utility.draw(spriteBatch, frame, body.getPosition().x - bounds.width / 2, body.getPosition().y - bounds.height / 2, bounds.height);
     }
 
-    private void update(float deltaTime)
+    public void update(float deltaTime)
     {
         stateTime += deltaTime;
         Vector2 position = body.getPosition();

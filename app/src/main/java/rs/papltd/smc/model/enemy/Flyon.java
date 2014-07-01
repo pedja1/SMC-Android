@@ -1,6 +1,5 @@
 package rs.papltd.smc.model.enemy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -43,17 +42,15 @@ public class Flyon extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch, float deltaTime)
+    public void render(SpriteBatch spriteBatch)
     {
-        update(deltaTime);
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, body.getPosition().x - getBounds().width / 2, body.getPosition().y - getBounds().height / 2, bounds.height);
-        updateStateTime(deltaTime);
+        Utility.draw(spriteBatch, frame, body.getPosition().x - bounds.width / 2, body.getPosition().y - bounds.height / 2, bounds.height);
     }
 
-    private void update(float deltaTime)
+    public void update(float deltaTime)
     {
         stateTime += deltaTime;
         Vector2 position = body.getPosition();

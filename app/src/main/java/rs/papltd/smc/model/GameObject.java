@@ -1,11 +1,15 @@
 package rs.papltd.smc.model;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+
 /**
  * Created by pedja on 18.5.14..
  */
-public class GameObject
+public abstract class GameObject
 {
-    protected float stateTime;
+    protected Rectangle bounds = new Rectangle();
+    boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
     public enum WorldState
     {
         IDLE, WALKING, JUMPING, DYING, DUCKING
@@ -47,8 +51,32 @@ public class GameObject
         walk_left, walk_right
     }
 
-    public void updateStateTime(float delta)
+    public GameObject(Rectangle bounds)
     {
-        stateTime += delta;
+        this.bounds = bounds;
     }
+
+    public Rectangle getBounds()
+    {
+        return bounds;
+    }
+
+    public void setBounds(Rectangle bounds)
+    {
+        this.bounds = bounds;
+    }
+
+    public boolean isFront()
+    {
+        return isFront;
+    }
+
+    public void setFront(boolean isFront)
+    {
+        this.isFront = isFront;
+    }
+
+    public abstract void render(SpriteBatch spriteBatch);
+    public abstract void update(float delta);
+    public abstract void loadTextures();
 }

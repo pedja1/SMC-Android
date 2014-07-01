@@ -1,23 +1,20 @@
 package rs.papltd.smc.model.custom_objects;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import rs.papltd.smc.model.Coin;
 import rs.papltd.smc.model.Sprite;
-import rs.papltd.smc.model.enemy.Eato;
-import rs.papltd.smc.model.enemy.Flyon;
 
 /**
  * Created by pedja on 24.5.14..
  */
 public abstract class CustomObject extends Sprite
 {
+    protected float stateTime;
     enum CLASS
     {
         coin
@@ -66,7 +63,9 @@ public abstract class CustomObject extends Sprite
         return object;
     }
 
-    public abstract void loadTextures();
-    public abstract void render(SpriteBatch spriteBatch, float deltaTime);
-
+    @Override
+    public void update(float delta)
+    {
+        stateTime += delta;
+    }
 }

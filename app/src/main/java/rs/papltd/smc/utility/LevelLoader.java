@@ -295,7 +295,7 @@ public class LevelLoader
 
             sprites.add(sprite);
         }
-        level.setSprites(sprites);
+        level.setGameObjects(sprites);
         JSONArray jCollisionBodies = jLevel.getJSONArray(KEY.collision_bodies.toString());
         for (int i = 0; i < jCollisionBodies.length(); i++)
         {

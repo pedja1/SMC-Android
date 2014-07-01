@@ -1,15 +1,32 @@
 package rs.papltd.smc.model;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.*;
 
 public class Sprite extends GameObject
 {
-    protected Rectangle bounds = new Rectangle();
     protected String textureAtlas;
     private String textureName;//name of texture from pack
     protected TYPE type = null;
     protected Vector2 position;
-    boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
+
+    @Override
+    public void render(SpriteBatch spriteBatch)
+    {
+
+    }
+
+    @Override
+    public void update(float delta)
+    {
+
+    }
+
+    @Override
+    public void loadTextures()
+    {
+
+    }
 
     /**
      * Type of the block
@@ -24,11 +41,8 @@ public class Sprite extends GameObject
 
     public Sprite(Vector2 position, float width, float height)
     {
+        super(new Rectangle(position.x, position.y, width, height));
         this.position = position;
-        bounds.x = position.x;
-        bounds.y = position.y;
-        bounds.width = width;
-        bounds.height = height;
     }
 
     public Vector2 getPosition()
@@ -74,16 +88,6 @@ public class Sprite extends GameObject
     public void setType(TYPE type)
     {
         this.type = type;
-    }
-
-    public boolean isFront()
-    {
-        return isFront;
-    }
-
-    public void setFront(boolean isFront)
-    {
-        this.isFront = isFront;
     }
 
     @Override

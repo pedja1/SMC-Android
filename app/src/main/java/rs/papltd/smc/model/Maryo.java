@@ -1,19 +1,26 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.MassData;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import rs.papltd.smc.Assets;
 
 public class Maryo extends GameObject
 {
+    protected float stateTime;
+
     public enum MarioState
     {
         small, big, fire, ice, ghost, flying
@@ -21,7 +28,6 @@ public class Maryo extends GameObject
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
 
-    Rectangle bounds = new Rectangle();
     WorldState worldState = WorldState.IDLE;
     MarioState marioState = MarioState.small;
     boolean facingLeft = false;
@@ -34,11 +40,8 @@ public class Maryo extends GameObject
 
     public Maryo(Vector2 position, Vector2 size, World world, Array<MarioState> usedStates)
     {
+        super(new Rectangle(position.x, position.y, size.x, size.y));
         this.usedStates = usedStates;
-        this.bounds.x = position.x;
-        this.bounds.y = position.y;
-        this.bounds.height = size.y;
-        this.bounds.width = size.x;
 		body = createBody(world, position);
     }
 
@@ -171,6 +174,12 @@ public class Maryo extends GameObject
             }
         }
         spriteBatch.draw(marioFrame, getBody().getPosition().x - getBounds().width/2, getBody().getPosition().y - getBounds().height/2, bounds.width, bounds.height);
+    }
+
+    @Override
+    public void update(float delta)
+    {
+        stateTime += delta;
     }
 
 

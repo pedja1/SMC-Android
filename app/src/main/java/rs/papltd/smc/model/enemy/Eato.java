@@ -32,12 +32,11 @@ public class Eato extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch, float deltaTime)
+    public void render(SpriteBatch spriteBatch)
     {
-        updateStateTime(deltaTime);
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, body.getPosition().x - getBounds().width / 2, body.getPosition().y - getBounds().height / 2, bounds.height);
+        Utility.draw(spriteBatch, frame, body.getPosition().x - bounds.width / 2, body.getPosition().y - bounds.height / 2, bounds.height);
     }
 }

@@ -12,3 +12,4 @@ TAGenerator/.gradle
 TAGenerator/gradle
 TAGenerator/build
 
+/.nb-gradle/profiles/private/

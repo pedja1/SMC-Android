@@ -1,26 +1,25 @@
 package rs.papltd.smc.model.enemy;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.MassData;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import rs.papltd.smc.Assets;
-import rs.papltd.smc.model.Sprite;
+import rs.papltd.smc.model.GameObject;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public abstract class Enemy extends Sprite
+public abstract class Enemy extends GameObject
 {
+    protected float stateTime;
     protected Vector2 velocity;
+    protected String textureAtlas;
+    private String textureName;//name of texture from pack
+    protected Vector2 position;
     enum CLASS
     {
         eato, flyon, furball, turtle
@@ -32,7 +31,8 @@ public abstract class Enemy extends Sprite
 
     protected Enemy(World world, Vector2 position, float width, float height)
     {
-        super(position, width, height);
+        super(new Rectangle(position.x, position.y, width, height));
+        this.position = position;
         this.world = world;
         velocity = new Vector2();
         body = createBody(world, position, width, height);
@@ -67,9 +67,6 @@ public abstract class Enemy extends Sprite
         return body;
     }
 
-    public abstract void loadTextures();
-    public abstract void render(SpriteBatch spriteBatch, float deltaTime);
-
     public static Enemy initEnemy(String enemyClassString, World world, Vector2 position, float width, float height)
     {
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
@@ -86,4 +83,9 @@ public abstract class Enemy extends Sprite
         return enemy;
     }
 
+    @Override
+    public void update(float delta)
+    {
+        stateTime += delta;
+    }
 }

@@ -3,9 +3,6 @@ package rs.papltd.smc.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import rs.papltd.smc.model.custom_objects.CustomObject;
-import rs.papltd.smc.model.enemy.Enemy;
-
 /**
  * Created by pedja on 1/31/14.
  */
@@ -13,9 +10,7 @@ public class Level
 {
     private float width;
     private float height;
-    private Array<Sprite> sprites;
-    private Array<CustomObject> objects;
-    private Array<Enemy> enemies;
+    private Array<GameObject> gameObjects;
     private Vector2 spanPosition;//i think its a camera position
 	private Background bg1;
 	private Background bg2;
@@ -62,14 +57,14 @@ public class Level
         this.height = height;
     }
 
-    public Array<Sprite> getSprites()
+    public Array<GameObject> getGameObjects()
     {
-        return sprites;
+        return gameObjects;
     }
 
-    public void setSprites(Array<Sprite> sprites)
+    public void setGameObjects(Array<GameObject> gameObjects)
     {
-        this.sprites = sprites;
+        this.gameObjects = gameObjects;
     }
 
     public Vector2 getSpanPosition()
@@ -100,25 +95,5 @@ public class Level
     public void setMusic(Array<String> music)
     {
         this.music = music;
-    }
-
-    public Array<Enemy> getEnemies()
-    {
-        return enemies;
-    }
-
-    public void setEnemies(Array<Enemy> enemies)
-    {
-        this.enemies = enemies;
-    }
-
-    public Array<CustomObject> getObjects()
-    {
-        return objects;
-    }
-
-    public void setObjects(Array<CustomObject> objects)
-    {
-        this.objects = objects;
     }
 }

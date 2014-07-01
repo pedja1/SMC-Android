@@ -126,7 +126,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 	private void drawSprites()
     {
-        for (Sprite sprite : loader.getLevel().getSprites())
+        for (Sprite sprite : loader.getLevel().getGameObjects())
         {
             TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
             region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
