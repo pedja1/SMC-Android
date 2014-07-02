@@ -8,7 +8,7 @@ import rs.papltd.smc.utility.*;
 public class Sprite extends GameObject
 {
     protected String textureAtlas;
-    private String textureName;//name of texture from pack
+    private String textureName;//name of texture from pack or png
     protected TYPE type = null;
     protected Vector2 position;
 
@@ -16,6 +16,10 @@ public class Sprite extends GameObject
     public void render(SpriteBatch spriteBatch)
     {
 		TextureRegion region = Assets.loadedRegions.get(textureName);
+		if(textureName.contains("flip"))
+		{
+			//System.out.println("flip");
+		}
 		//spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
 		Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
         

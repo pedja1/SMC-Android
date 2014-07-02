@@ -93,7 +93,7 @@ public class LevelLoader
 			switch (ObjectClass.valueOf(jObject.getString(KEY.obj_class.toString())))
 			{
 				case sprite:
-					parseSprite(jObject, world);
+					parseSprite(jObject);
 					break;
 				case player:
 					parsePlayer(jObject);
@@ -213,7 +213,7 @@ public class LevelLoader
         level.setSpanPosition(new Vector2(x, y));
     }
 
-    private void parseSprite(JSONObject jSprite, World world) throws JSONException
+    private void parseSprite(JSONObject jSprite) throws JSONException
     {
 		Vector2 position = new Vector2((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()));
 
@@ -265,8 +265,9 @@ public class LevelLoader
 			{
 				newTextureName = sprite.getTextureName() + "-flip_xy";
 			}
+			System.out.println("flip_data" + newTextureName);
 
-			if (newTextureName != null && Assets.loadedRegions.get(newTextureName) == null)
+			if(newTextureName != null)if (Assets.loadedRegions.get(newTextureName) == null)
 			{
 				TextureRegion orig;
 				if (Assets.loadedRegions.get(sprite.getTextureName()) == null)
@@ -294,9 +295,14 @@ public class LevelLoader
 					orig = Assets.loadedRegions.get(sprite.getTextureName());
 				}
 				TextureRegion flipped = new TextureRegion(orig);
-				orig.flip(flipX, flipY);
+				flipped.flip(flipX, flipY);
 				sprite.setTextureName(newTextureName);
 				Assets.loadedRegions.put(newTextureName, flipped);
+				
+			}
+			else
+			{
+				sprite.setTextureName(newTextureName);
 			}
 		}
 		else
