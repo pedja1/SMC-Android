@@ -841,13 +841,13 @@ public class SAXXMLHandler extends DefaultHandler
             }
         }
         sprite.posy = convertY(sprite.posy, origHeight);
-        System.out.println("");
     }
 
     private String readFileContents(File file)
     {
-        try(BufferedReader br = new BufferedReader(new FileReader(file)))
+        try
         {
+			BufferedReader br = new BufferedReader(new FileReader(file));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
