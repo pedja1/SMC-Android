@@ -1320,9 +1320,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 0.71875,
-            "width": 0,
+            "width": 1,
             "posx": 115.671875,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
@@ -2068,9 +2068,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 7.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2168,9 +2168,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 6.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2180,9 +2180,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 5.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2192,9 +2192,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 4.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2204,9 +2204,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 3.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2216,9 +2216,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 2.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2228,9 +2228,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 1.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2640,9 +2640,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 4.703125,
-            "width": 0,
+            "width": 1,
             "posx": 96.3125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2652,9 +2652,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 3.703125,
-            "width": 0,
+            "width": 1,
             "posx": 96.3125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2664,9 +2664,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 2.703125,
-            "width": 0,
+            "width": 1,
             "posx": 96.3125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2676,9 +2676,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 1.703125,
-            "width": 0,
+            "width": 1,
             "posx": 96.3125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2904,9 +2904,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 4.5625,
-            "width": 0,
+            "width": 1,
             "posx": 80.453125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2916,9 +2916,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 3.5625,
-            "width": 0,
+            "width": 1,
             "posx": 80.453125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2928,9 +2928,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 2.5625,
-            "width": 0,
+            "width": 1,
             "posx": 80.453125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -2940,9 +2940,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 1.5625,
-            "width": 0,
+            "width": 1,
             "posx": 80.453125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/middle/left.png"
@@ -3327,9 +3327,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 8.484375,
-            "width": 0,
+            "width": 1,
             "posx": 87.078125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
@@ -3491,9 +3491,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 5.703125,
-            "width": 0,
+            "width": 1,
             "posx": 96.3125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
@@ -3519,9 +3519,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 5.5625,
-            "width": 0,
+            "width": 1,
             "posx": 80.453125,
             "obj_class": "sprite",
             "texture_name": "data/ground/green_3/ground/top/left.png"
@@ -4125,9 +4125,9 @@
                 "flip_x": true,
                 "flip_y": false
             },
-            "height": 0,
+            "height": 1,
             "posy": 2.90625,
-            "width": 0,
+            "width": 1,
             "posx": 130.46875,
             "obj_class": "sprite",
             "texture_name": "data/signs/default_1/1_ending.png"

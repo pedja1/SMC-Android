@@ -85,8 +85,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         cloudsPEffect.draw(batch, delta);
 
-        drawEnemies(delta);
-		drawSprites();
         drawObjects(delta);
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
@@ -124,29 +122,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         worldWrapper.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
-	private void drawSprites()
-    {
-        for (Sprite sprite : loader.getLevel().getGameObjects())
-        {
-            TextureRegion region = Assets.loadedRegions.get(sprite.getTextureName());
-            region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            Utility.draw(batch, region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().height);
-        }
-    }
-
-    private void drawEnemies(float deltaTime)
-    {
-        for (Enemy enemy : loader.getLevel().getEnemies())
-        {
-            enemy.render(batch, deltaTime);
-        }
-    }
-
     private void drawObjects(float deltaTime)
     {
-        for (CustomObject customObject : loader.getLevel().getObjects())
+        for (GameObject gameObject : loader.getLevel().getGameObjects())
         {
-            customObject.render(batch, deltaTime);
+			gameObject.update(deltaTime);
+            gameObject.render(batch);
         }
     }
 

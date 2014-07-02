@@ -30,7 +30,7 @@ public class WorldRenderer
     private ParticleEffect leafEffect;
 
     private SpriteBatch spriteBatch;
-    private boolean debug = false;
+    private boolean debug = true;
     private int width;
     private int height;
 

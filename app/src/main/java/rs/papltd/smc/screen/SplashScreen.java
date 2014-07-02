@@ -63,7 +63,7 @@ public class SplashScreen implements Screen
     public void render(float delta)
     {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.setProjectionMatrix(camera.combined);
         bgRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -84,7 +84,7 @@ public class SplashScreen implements Screen
         }
         else
         {
-            marioGame.setScreen(new LoadingScreen(new MainMenuScreen(marioGame)));
+            marioGame.setScreen(new LoadingScreen(new /*MainMenu*/GameScreen(marioGame)));
         }
 
         batch.end();

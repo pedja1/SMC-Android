@@ -20,6 +20,26 @@ public abstract class Enemy extends GameObject
     protected String textureAtlas;
     private String textureName;//name of texture from pack
     protected Vector2 position;
+
+	public void setTextureAtlas(String textureAtlas)
+	{
+		this.textureAtlas = textureAtlas;
+	}
+
+	public String getTextureAtlas()
+	{
+		return textureAtlas;
+	}
+
+	public void setTextureName(String textureName)
+	{
+		this.textureName = textureName;
+	}
+
+	public String getTextureName()
+	{
+		return textureName;
+	}
     enum CLASS
     {
         eato, flyon, furball, turtle

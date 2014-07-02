@@ -69,7 +69,7 @@ public class LoadingScreen extends AbstractScreen
     public void render(float delta)
     {
         // Clear the screen
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (Assets.manager.update())
         {

@@ -17,6 +17,11 @@ public class Level
     private BackgroundColor bgColor;
     private Array<String> music;
 
+	public Level()
+	{
+		this.gameObjects = new Array<>();
+	}
+	
 	public void setBg1(Background bg1)
 	{
 		this.bg1 = bg1;

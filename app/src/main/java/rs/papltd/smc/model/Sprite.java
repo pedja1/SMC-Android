@@ -1,7 +1,9 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+import rs.papltd.smc.*;
+import rs.papltd.smc.utility.*;
 
 public class Sprite extends GameObject
 {
@@ -13,7 +15,10 @@ public class Sprite extends GameObject
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-
+		TextureRegion region = Assets.loadedRegions.get(textureName);
+		//spriteBatch.draw(region, sprite.getPosition().x, sprite.getPosition().y, sprite.getBounds().width, sprite.getBounds().height);
+		Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
+        
     }
 
     @Override

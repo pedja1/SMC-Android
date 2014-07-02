@@ -116,7 +116,7 @@ public class MarioController
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
         // simply updates the state time
-        maryo.updateStateTime(delta);
+        maryo.update(delta);
         //world.getLevel().getPb().moveX(delta);
 		
     }
