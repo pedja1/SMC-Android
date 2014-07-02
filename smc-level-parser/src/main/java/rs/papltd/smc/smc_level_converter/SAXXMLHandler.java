@@ -797,19 +797,22 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if(sprite.image.contains("plant_l"))
         {
-            sprite.texture_name = "data/" + sprite.image.replace("plant_l", "plant_r");
+			sprite.image = sprite.image.replace("plant_l", "plant_r");
+            sprite.texture_name = "data/" + sprite.image;
             sprite.hasFlipData = true;
             sprite.flipX = true;
         }
         else if(sprite.image.contains("top/right") || sprite.image.contains("middle/right"))
         {
-            sprite.texture_name = "data/" + sprite.image.replace("right", "left");
+			sprite.image = sprite.image.replace("right", "left");
+            sprite.texture_name = "data/" + sprite.image;
             sprite.hasFlipData = true;
             sprite.flipX = true;
         }
         else if(sprite.image.contains("1_ending_left"))
         {
-            sprite.texture_name = "data/" + sprite.image.replace("_left", "");
+			sprite.image = sprite.image.replace("_left", "");
+            sprite.texture_name = "data/" + sprite.image;
             sprite.hasFlipData = true;
             sprite.flipX = true;
         }
