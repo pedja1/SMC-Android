@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by pedja on 11/1/13.
@@ -29,6 +28,7 @@ public class SAXXMLHandler extends DefaultHandler
     private Settings tmpSettings;
     private Sprite tmpSprite;
     private MovingPlatform tmpPlatform;
+    private Information tmpInformation;
 
     public SAXXMLHandler()
     {
@@ -42,6 +42,9 @@ public class SAXXMLHandler extends DefaultHandler
         {
             case "background":
                 tmpBackground = new Background();
+                break;
+            case "information":
+                tmpInformation = new Information();
                 break;
             case "box":
                 tmpBox = new Box();
@@ -73,13 +76,14 @@ public class SAXXMLHandler extends DefaultHandler
             case "moving_platform":
                 tmpPlatform = new MovingPlatform();
                 break;
+            case "Property":
             case "property":
                 setPropertyToElement(attributes);
                 break;
             case "level":
                 //do nothing, level is our main tag
-            case "information":
             case "particle_emitter":
+            case "global_effect":
             case "path":
                 //we don't need this elements
                 break;
@@ -133,6 +137,10 @@ public class SAXXMLHandler extends DefaultHandler
         else if(tmpPlatform != null)
         {
             setPlatformAttributes(attributes);
+        }
+        else if(tmpInformation != null)
+        {
+            setInformationAttributes(attributes);
         }
         else
         {
@@ -396,6 +404,28 @@ public class SAXXMLHandler extends DefaultHandler
         }
     }
 
+    private void setInformationAttributes(Attributes attributes)
+    {
+        String name = attributes.getValue("name");
+        String value = attributes.getValue("value");
+        if("engine_version".equals(name))
+        {
+            if(value.contains("."))
+            {
+                tmpInformation.engine_version = (int) (Float.parseFloat(value) * 10);
+            }
+            else
+            {
+                tmpInformation.engine_version = Integer.parseInt(value);
+            }
+            if(tmpInformation.engine_version < 35)
+            {
+                tmpInformation.yOffset = -600;
+            }
+        }
+    }
+
+
     private void setSettingsAttributes(Attributes attributes)
     {
         String name = attributes.getValue("name");
@@ -541,6 +571,10 @@ public class SAXXMLHandler extends DefaultHandler
                 fixPlayer(tmpPlayer);
                 level.objects.add(tmpPlayer);
                 tmpPlayer = null;
+                break;
+            case "information":
+                level.information = tmpInformation;
+                tmpInformation = null;
                 break;
             case "settings":
                 tmpSettings.height = Math.abs(tmpSettings.height / 64);
@@ -816,6 +850,33 @@ public class SAXXMLHandler extends DefaultHandler
             sprite.hasFlipData = true;
             sprite.flipX = true;
         }
+        else if(sprite.image.contains("green_1/slider"))
+        {
+            sprite.texture_atlas = "data/ground/green_1/slider/brown.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+        }
+        else if(sprite.image.contains("jungle_1/slider"))
+        {
+            if(sprite.image.contains("brown"))
+            {
+                sprite.texture_atlas = "data/ground/jungle_1/slider/brown.pack";
+            }
+            else if(sprite.image.contains("blue"))
+            {
+                sprite.texture_atlas = "data/ground/jungle_1/slider/blue.pack";
+            }
+            else if(sprite.image.contains("green"))
+            {
+                sprite.texture_atlas = "data/ground/jungle_1/slider/green.pack";
+            }
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            if(sprite.texture_name.endsWith("-right"))
+            {
+                sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
+                sprite.hasFlipData = true;
+                sprite.flipX = true;
+            }
+        }
         else
         {
             sprite.texture_name = "data/" + sprite.image;
@@ -869,8 +930,9 @@ public class SAXXMLHandler extends DefaultHandler
         return null;
     }
 
-    private static float convertY(float posy, float height)
+    private float convertY(float posy, float height)
     {
+        posy = posy + level.information.yOffset;
         return (Math.abs(posy) - height) / 64f;
     }
 

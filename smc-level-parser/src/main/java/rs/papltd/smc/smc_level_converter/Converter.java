@@ -1,21 +1,30 @@
 package rs.papltd.smc.smc_level_converter;
 
-import java.io.*;
-import javax.xml.parsers.*;
-import org.json.*;
-import org.xml.sax.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Created by pedja on 22.6.14..
  */
 public class Converter
 {
-    public static final String dataRoot = "/sdcard/AppProjects/smc/smc/data/pixmaps/";
+    public static final String dataRoot = "/home/pedja/workspace/smc/smc/data/pixmaps/";
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File("/sdcard/AppProjects/SMC-Android/app/src/main/assets/data/levels/lvl_1.smclvl");
+            File fXmlFile = new File("/home/pedja/workspace/smc/smc/data/levels/menu_green_1.smclvl");
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
             // create a SAXXMLHandler
@@ -28,7 +37,7 @@ public class Converter
 
             String levelJson = convertToJson(level);
             //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter("/sdcard/AppProjects/SMC-Android/app/src/main/assets/data/levels/test_lvl.smclvl", "UTF-8");
+			PrintWriter writer = new PrintWriter("/home/pedja/workspace/.smc/app/src/main/assets/data/levels/main_menu.smclvl", "UTF-8");
 			writer.print(levelJson);
 			writer.close();
 

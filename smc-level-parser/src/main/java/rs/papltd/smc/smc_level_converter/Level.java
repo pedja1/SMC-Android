@@ -9,6 +9,7 @@ import java.util.List;
 public class Level
 {
     public Settings settings;
+    public Information information;
     public List<Background> backgrounds;
     //public List<Box> boxes;
     //public List<Enemy> enemies;
