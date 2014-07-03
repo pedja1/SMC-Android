@@ -1,7 +1,7 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 public abstract class GameObject
 {
     protected Rectangle bounds = new Rectangle();
+	protected Vector3 position;
     boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
     public enum WorldState
     {
@@ -51,9 +52,10 @@ public abstract class GameObject
         walk_left, walk_right
     }
 
-    public GameObject(Rectangle bounds)
+    public GameObject(Rectangle bounds, Vector3 position)
     {
         this.bounds = bounds;
+		this.position = position;
     }
 
     public Rectangle getBounds()
@@ -74,6 +76,11 @@ public abstract class GameObject
     public void setFront(boolean isFront)
     {
         this.isFront = isFront;
+    }
+	
+	public Vector3 getPosition()
+    {
+        return position;
     }
 
     public abstract void render(SpriteBatch spriteBatch);

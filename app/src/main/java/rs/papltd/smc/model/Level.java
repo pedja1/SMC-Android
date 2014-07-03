@@ -1,7 +1,7 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.*;
 
 /**
  * Created by pedja on 1/31/14.
@@ -11,7 +11,7 @@ public class Level
     private float width;
     private float height;
     private Array<GameObject> gameObjects;
-    private Vector2 spanPosition;//i think its a camera position
+    private Vector3 spanPosition;//i think its a camera position
 	private Background bg1;
 	private Background bg2;
     private BackgroundColor bgColor;
@@ -72,12 +72,12 @@ public class Level
         this.gameObjects = gameObjects;
     }
 
-    public Vector2 getSpanPosition()
+    public Vector3 getSpanPosition()
     {
         return spanPosition;
     }
 
-    public void setSpanPosition(Vector2 spanPosition)
+    public void setSpanPosition(Vector3 spanPosition)
     {
         this.spanPosition = spanPosition;
     }

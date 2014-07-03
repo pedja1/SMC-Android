@@ -1,16 +1,11 @@
 package rs.papltd.smc.model.enemy;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-
-import rs.papltd.smc.Assets;
-import rs.papltd.smc.utility.Constants;
-import rs.papltd.smc.utility.Utility;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.*;
+import rs.papltd.smc.*;
+import rs.papltd.smc.utility.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -24,7 +19,7 @@ public class Flyon extends Enemy
     private static final long STAY_TOP_TIME = 300;//2 seconds
     private static final long STAY_BOTTOM_TIME = 2500;//3 seconds
 
-    public Flyon(World world, Vector2 position, float width, float height)
+    public Flyon(World world, Vector3 position, float width, float height)
     {
         super(world, position, width, height);
         body.setGravityScale(0);

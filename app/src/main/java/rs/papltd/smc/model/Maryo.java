@@ -1,21 +1,10 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.MassData;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-
-import rs.papltd.smc.Assets;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.*;
+import rs.papltd.smc.*;
 
 public class Maryo extends GameObject
 {
@@ -38,14 +27,14 @@ public class Maryo extends GameObject
 
     Array<MarioState> usedStates = new Array<MarioState>();
 
-    public Maryo(Vector2 position, Vector2 size, World world, Array<MarioState> usedStates)
+    public Maryo(Vector3 position, Vector2 size, World world, Array<MarioState> usedStates)
     {
-        super(new Rectangle(position.x, position.y, size.x, size.y));
+        super(new Rectangle(position.x, position.y, size.x, size.y), position);
         this.usedStates = usedStates;
 		body = createBody(world, position);
     }
 
-	private Body createBody(World world, Vector2 position)
+	private Body createBody(World world, Vector3 position)
 	{
         //TODO body should be resized dynamically depending on maryo's state
 		BodyDef bodyDef = new BodyDef();
@@ -191,16 +180,6 @@ public class Maryo extends GameObject
     public void setFacingLeft(boolean facingLeft)
     {
         this.facingLeft = facingLeft;
-    }
-
-    public Vector2 getPosition()
-    {
-        return body.getPosition();
-    }
-
-    public Rectangle getBounds()
-    {
-        return bounds;
     }
 
     public WorldState getWorldState()

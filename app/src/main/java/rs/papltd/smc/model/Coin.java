@@ -1,16 +1,12 @@
 package rs.papltd.smc.model;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-
-import rs.papltd.smc.Assets;
-import rs.papltd.smc.model.custom_objects.CustomObject;
-import rs.papltd.smc.utility.Utility;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.*;
+import rs.papltd.smc.*;
+import rs.papltd.smc.model.custom_objects.*;
+import rs.papltd.smc.utility.*;
 
 /**
  * Created by pedja on 24.5.14..
@@ -18,7 +14,7 @@ import rs.papltd.smc.utility.Utility;
 public class Coin extends CustomObject
 {
 
-    public Coin(World world, Vector2 position, float width, float height)
+    public Coin(World world, Vector3 position, float width, float height)
     {
         super(world, position, width, height);
     }

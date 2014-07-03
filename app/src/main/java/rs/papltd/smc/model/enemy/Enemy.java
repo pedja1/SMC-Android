@@ -1,14 +1,8 @@
 package rs.papltd.smc.model.enemy;
 
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-
-import rs.papltd.smc.model.GameObject;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
+import rs.papltd.smc.model.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -19,7 +13,6 @@ public abstract class Enemy extends GameObject
     protected Vector2 velocity;
     protected String textureAtlas;
     private String textureName;//name of texture from pack
-    protected Vector2 position;
 
 	public void setTextureAtlas(String textureAtlas)
 	{
@@ -49,16 +42,15 @@ public abstract class Enemy extends GameObject
     protected Body body;
     protected World world;
 
-    protected Enemy(World world, Vector2 position, float width, float height)
+    protected Enemy(World world, Vector3 position, float width, float height)
     {
-        super(new Rectangle(position.x, position.y, width, height));
-        this.position = position;
+        super(new Rectangle(position.x, position.y, width, height), position);
         this.world = world;
         velocity = new Vector2();
         body = createBody(world, position, width, height);
     }
 
-    public Body createBody(World world, Vector2 position, float width, float height)
+    public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -87,7 +79,7 @@ public abstract class Enemy extends GameObject
         return body;
     }
 
-    public static Enemy initEnemy(String enemyClassString, World world, Vector2 position, float width, float height)
+    public static Enemy initEnemy(String enemyClassString, World world, Vector3 position, float width, float height)
     {
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;

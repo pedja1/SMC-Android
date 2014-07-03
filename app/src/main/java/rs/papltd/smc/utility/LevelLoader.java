@@ -1,20 +1,19 @@
 package rs.papltd.smc.utility;
 
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.Array;
-
+import com.badlogic.gdx.utils.*;
+import java.util.*;
 import org.json.*;
-
-import rs.papltd.smc.Assets;
+import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
-import rs.papltd.smc.model.custom_objects.CustomObject;
-import rs.papltd.smc.model.enemy.Enemy;
+import rs.papltd.smc.model.custom_objects.*;
+import rs.papltd.smc.model.enemy.*;
+
+import rs.papltd.smc.model.Sprite;
 
 /**
  * Created by pedja on 2/2/14.
@@ -32,17 +31,28 @@ public class LevelLoader
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
-        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class
-		}
+        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
+		massive_type
+	}
 
 	private enum DATA_KEY
 	{
 		txt, atl, mus, snd
-		}
+	}
 
 	private enum ObjectClass
 	{
 		sprite, item, box, player, enemy, moving_platform, enemy_stopper, level_entry, level_exit,
+	}
+	
+	private static final float m_pos_z_passive_start = 0.01f;
+	private static final  float m_pos_z_massive_start = 0.08f;
+	private static final  float m_pos_z_front_passive_start = 0.1f;
+	private static final  float m_pos_z_halfmassive_start = 0.04f;
+	
+	private enum SpriteType
+	{
+		massive, passive, front_passive, halfmassive, climbable
 	}
 
     public LevelLoader()
@@ -100,6 +110,7 @@ public class LevelLoader
 					break;
 			}
 		}
+		this.level.getGameObjects().sort(new ZSpriteComparator());
 	}
 
 	public Array<String[]> parseLevelData(String levelData)
@@ -210,12 +221,38 @@ public class LevelLoader
     {
         float x = (float) jPlayer.getDouble(KEY.posx.toString());
         float y = (float) jPlayer.getDouble(KEY.posy.toString());
-        level.setSpanPosition(new Vector2(x, y));
+        level.setSpanPosition(new Vector3(x, y, 0));
     }
 
     private void parseSprite(JSONObject jSprite) throws JSONException
     {
-		Vector2 position = new Vector2((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()));
+		
+		Vector3 position = new Vector3((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()), 0);
+		if(jSprite.has(KEY.massive_type.toString()))
+		{
+		switch(SpriteType.valueOf(jSprite.getString(KEY.massive_type.toString())))
+		{
+			case massive:
+				position.z = m_pos_z_massive_start;
+				break;
+			case passive:
+				position.z = m_pos_z_passive_start;
+				break;
+			case halfmassive:
+				position.z = m_pos_z_halfmassive_start;
+				break;
+			case front_passive:
+				position.z = m_pos_z_front_passive_start;
+				break;
+			case climbable:
+				position.z = m_pos_z_halfmassive_start;
+				break;
+		}
+		}
+		else
+		{
+			position.z = m_pos_z_front_passive_start;
+		}
 
 		Sprite sprite = new Sprite(position, (float) jSprite.getDouble(KEY.width.toString()), (float) jSprite.getDouble(KEY.height.toString()));
 
@@ -397,7 +434,7 @@ public class LevelLoader
         for (int i = 0; i < jEnemies.length(); i++)
         {
             JSONObject jEnemy = jEnemies.getJSONObject(i);
-            Vector2 position = new Vector2((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()));
+            Vector3 position = new Vector3((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()), 0);
 
             Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), world, position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
             if (enemy == null)continue;//TODO this has to go aways after levels are fixed
@@ -431,7 +468,7 @@ public class LevelLoader
         for (int i = 0; i < jObjects.length(); i++)
         {
             JSONObject jObject = jObjects.getJSONObject(i);
-            Vector2 position = new Vector2((float) jObject.getDouble(KEY.posx.toString()), (float) jObject.getDouble(KEY.posy.toString()));
+            Vector3 position = new Vector3((float) jObject.getDouble(KEY.posx.toString()), (float) jObject.getDouble(KEY.posy.toString()), 0);
 
             CustomObject object = CustomObject.initObject(jObject.getString(KEY.object_class.toString()), world, position, (float) jObject.getDouble(KEY.width.toString()), (float) jObject.getDouble(KEY.height.toString()));
 
@@ -453,5 +490,17 @@ public class LevelLoader
         //level.setObjects(objects);
     }
 
+	/** Comparator used for sorting, sorts in ascending order (biggset z to smallest z).
+	 * @author mzechner */
+	public class ZSpriteComparator implements Comparator<GameObject> 
+	{
+		@Override
+		public int compare (GameObject sprite1, GameObject sprite2) 
+		{
+			if(sprite1.getPosition().z > sprite2.getPosition().z) return 1;
+			if(sprite1.getPosition().z < sprite2.getPosition().z) return -1;
+			return 0;
+		}
+	}
 
 }

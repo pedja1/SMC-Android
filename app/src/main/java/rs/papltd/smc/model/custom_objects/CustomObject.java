@@ -1,13 +1,8 @@
 package rs.papltd.smc.model.custom_objects;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-
-import rs.papltd.smc.model.Coin;
-import rs.papltd.smc.model.Sprite;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.physics.box2d.*;
+import rs.papltd.smc.model.*;
 
 /**
  * Created by pedja on 24.5.14..
@@ -23,14 +18,14 @@ public abstract class CustomObject extends Sprite
     protected Body body;
     protected World world;
 
-    public CustomObject(World world, Vector2 position, float width, float height)
+    public CustomObject(World world, Vector3 position, float width, float height)
     {
         super(position, width, height);
         this.world = world;
         body = createBody(world, position, width, height);
     }
 
-    public Body createBody(World world, Vector2 position, float width, float height)
+    public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -50,7 +45,7 @@ public abstract class CustomObject extends Sprite
     }
 
 
-    public static CustomObject initObject(String objectClassString, World world, Vector2 position, float width, float height)
+    public static CustomObject initObject(String objectClassString, World world, Vector3 position, float width, float height)
     {
         CLASS enemyClass = CLASS.valueOf(objectClassString);
         CustomObject object = null;

@@ -10,7 +10,6 @@ public class Sprite extends GameObject
     protected String textureAtlas;
     private String textureName;//name of texture from pack or png
     protected TYPE type = null;
-    protected Vector2 position;
 
     @Override
     public void render(SpriteBatch spriteBatch)
@@ -48,21 +47,13 @@ public class Sprite extends GameObject
         massive, passive, front_passive
     }
 
-    public Sprite(Vector2 position, float width, float height)
+    public Sprite(Vector3 position, float width, float height)
     {
-        super(new Rectangle(position.x, position.y, width, height));
+        super(new Rectangle(position.x, position.y, width, height), position);
         this.position = position;
     }
 
-    public Vector2 getPosition()
-    {
-        return position;
-    }
-
-    public Rectangle getBounds()
-    {
-        return bounds;
-    }
+    
 
     public String getTextureAtlas()
     {
