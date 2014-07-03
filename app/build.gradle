@@ -59,4 +59,5 @@ dependencies {
     //compile files('libs/gdx-sources.jar')
     //compile files('libs/gdx-freetype-sources.jar')
     compile files('libs/gdx-backend-android.jar')
+	compile files('libs/gdx-box2d.jar')
 }
