@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
-import rs.papltd.smc.model.custom_objects.CustomObject;
+import rs.papltd.smc.model.items.Item;
 import rs.papltd.smc.model.enemy.Enemy;
 import rs.papltd.smc.utility.*;
 

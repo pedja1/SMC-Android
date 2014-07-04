@@ -23,7 +23,6 @@ public class Flyon extends Enemy
     {
         super(world, position, width, height);
         body.setGravityScale(0);
-        velocity.set(0, FLYON_VELOCITY);
     }
 
     @Override
@@ -47,6 +46,7 @@ public class Flyon extends Enemy
 
     public void update(float deltaTime)
     {
+		body.getPosition().x = 0;
         stateTime += deltaTime;
         Vector2 position = body.getPosition();
         Vector2 velocity = body.getLinearVelocity();
@@ -93,13 +93,19 @@ public class Flyon extends Enemy
         }
         if(goingUp)
         {
-            body.setLinearVelocity(velocity.x, velocity.y =+((Constants.CAMERA_HEIGHT - position.y)/3f));
+            body.setLinearVelocity(0, velocity.y =+((Constants.CAMERA_HEIGHT - position.y)/3f));
         }
         else
         {
             //body.setLinearDamping(5);
-            body.setLinearVelocity(velocity.x, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
+            body.setLinearVelocity(0, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
         }
 
     }
+	
+	@Override
+	public BodyDef.BodyType getBodyType()
+	{
+		return BodyDef.BodyType.KinematicBody;
+	}
 }

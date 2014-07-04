@@ -10,7 +10,7 @@ import java.util.*;
 import org.json.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.model.*;
-import rs.papltd.smc.model.custom_objects.*;
+import rs.papltd.smc.model.items.*;
 import rs.papltd.smc.model.enemy.*;
 
 import rs.papltd.smc.model.Sprite;
@@ -32,7 +32,7 @@ public class LevelLoader
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
-		massive_type
+		massive_type, type
 	}
 
 	private enum DATA_KEY
@@ -107,6 +107,15 @@ public class LevelLoader
 					break;
 				case player:
 					parsePlayer(jObject);
+					break;
+				case item:
+					parseItem(jObject, world);
+					break;
+				case enemy:
+					parseEnemy(jObject, world);
+					break;
+				case enemy_stopper:
+					parseEnemyStopper(jObject, world);
 					break;
 			}
 		}
@@ -422,22 +431,12 @@ public class LevelLoader
         return key.equals(DATA_KEY.txt.toString());
     }
 
-    private void parseEnemies(JSONObject jLevel, World world) throws JSONException
+    private void parseEnemy(JSONObject jEnemy, World world) throws JSONException
     {
-        if (!jLevel.has(KEY.enemies.toString()))
-        {
-            return;
-        }
-        JSONArray jEnemies = jLevel.getJSONArray(KEY.enemies.toString());
-        Array<Enemy> enemies = new Array<Enemy>();
-
-        for (int i = 0; i < jEnemies.length(); i++)
-        {
-            JSONObject jEnemy = jEnemies.getJSONObject(i);
-            Vector3 position = new Vector3((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()), 0);
+        Vector3 position = new Vector3((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()), 0);
 
             Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), world, position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
-            if (enemy == null)continue;//TODO this has to go aways after levels are fixed
+            if (enemy == null)return;//TODO this has to go aways after levels are fixed
             if (jEnemy.has(KEY.texture_atlas.toString()))
             {
                 enemy.setTextureAtlas(jEnemy.getString(KEY.texture_atlas.toString()));
@@ -451,43 +450,41 @@ public class LevelLoader
 													   + "in [level].smclvl must also be included in [level].data (" + enemy.getTextureAtlas() + ")");
                 }
             }
-            enemies.add(enemy);
-        }
-		// level.setEnemies(enemies);
+            level.getGameObjects().add(enemy);
     }
 
-    private void parseObjects(JSONObject jLevel, World world) throws JSONException
+	private void parseEnemyStopper(JSONObject jEnemyStopper, World world) throws JSONException
     {
-        if (!jLevel.has(KEY.objects.toString()))
-        {
-            return;
-        }
-        JSONArray jObjects = jLevel.getJSONArray(KEY.objects.toString());
-        Array<CustomObject> objects = new Array<CustomObject>();
+		System.out.println("enemy stopper");
+        Vector3 position = new Vector3((float) jEnemyStopper.getDouble(KEY.posx.toString()), (float) jEnemyStopper.getDouble(KEY.posy.toString()), 0);
+        float width =  (float) jEnemyStopper.getDouble(KEY.width.toString());
+		float height =  (float) jEnemyStopper.getDouble(KEY.height.toString());
+		
+		EnemyStopper stopper = new EnemyStopper(world, position, width, height);
+		
+		level.getGameObjects().add(stopper);
+    }
+	
+    private void parseItem(JSONObject jItem, World world) throws JSONException
+    {
+            Vector3 position = new Vector3((float) jItem.getDouble(KEY.posx.toString()), (float) jItem.getDouble(KEY.posy.toString()), 0);
 
-        for (int i = 0; i < jObjects.length(); i++)
-        {
-            JSONObject jObject = jObjects.getJSONObject(i);
-            Vector3 position = new Vector3((float) jObject.getDouble(KEY.posx.toString()), (float) jObject.getDouble(KEY.posy.toString()), 0);
-
-            CustomObject object = CustomObject.initObject(jObject.getString(KEY.object_class.toString()), world, position, (float) jObject.getDouble(KEY.width.toString()), (float) jObject.getDouble(KEY.height.toString()));
-
-            if (jObject.has(KEY.texture_atlas.toString()))
+            Item item = Item.initObject(jItem.getString(KEY.type.toString()), world, position, (float) jItem.getDouble(KEY.width.toString()), (float) jItem.getDouble(KEY.height.toString()));
+            if(item == null) return;
+            if (jItem.has(KEY.texture_atlas.toString()))
             {
-                object.setTextureAtlas(jObject.getString(KEY.texture_atlas.toString()));
-                if (Assets.manager.isLoaded(object.getTextureAtlas()))
+                item.setTextureAtlas(jItem.getString(KEY.texture_atlas.toString()));
+                if (Assets.manager.isLoaded(item.getTextureAtlas()))
                 {
-                    object.loadTextures();
+                    item.loadTextures();
                 }
                 else
                 {
                     throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-													   + "in [level].smclvl must also be included in [level].data (" + object.getTextureAtlas() + ")");
+													   + "in [level].smclvl must also be included in [level].data (" + item.getTextureAtlas() + ")");
                 }
             }
-            objects.add(object);
-        }
-        //level.setObjects(objects);
+            level.getGameObjects().add(item);
     }
 
 	/** Comparator used for sorting, sorts in ascending order (biggset z to smallest z).

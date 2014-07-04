@@ -35,4 +35,18 @@ public class Eato extends Enemy
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
         Utility.draw(spriteBatch, frame, body.getPosition().x - bounds.width / 2, body.getPosition().y - bounds.height / 2, bounds.height);
     }
+	
+	@Override
+	public void update(float delta)
+	{
+		super.update(delta);
+		body.getPosition().x = position.x;
+		body.getPosition().y = position.y;
+	}
+	
+	@Override
+	public BodyDef.BodyType getBodyType()
+	{
+		return BodyDef.BodyType.KinematicBody;
+	}
 }

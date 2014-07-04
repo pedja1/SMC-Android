@@ -1,4 +1,4 @@
-package rs.papltd.smc.model.custom_objects;
+package rs.papltd.smc.model.items;
 
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
@@ -7,18 +7,18 @@ import rs.papltd.smc.model.*;
 /**
  * Created by pedja on 24.5.14..
  */
-public abstract class CustomObject extends Sprite
+public abstract class Item extends Sprite
 {
     protected float stateTime;
     enum CLASS
     {
-        coin
+        goldpiece, moon, jstar, mushroom, fireplant
     }
     WorldState worldState = WorldState.IDLE;
     protected Body body;
     protected World world;
 
-    public CustomObject(World world, Vector3 position, float width, float height)
+    public Item(World world, Vector3 position, float width, float height)
     {
         super(position, width, height);
         this.world = world;
@@ -45,13 +45,13 @@ public abstract class CustomObject extends Sprite
     }
 
 
-    public static CustomObject initObject(String objectClassString, World world, Vector3 position, float width, float height)
+    public static Item initObject(String objectClassString, World world, Vector3 position, float width, float height)
     {
-        CLASS enemyClass = CLASS.valueOf(objectClassString);
-        CustomObject object = null;
-        switch (enemyClass)
+        CLASS itemClass = CLASS.valueOf(objectClassString);
+        Item object = null;
+        switch (itemClass)
         {
-            case coin:
+            case goldpiece:
                 object = new Coin(world, position, width, height);
                 break;
         }

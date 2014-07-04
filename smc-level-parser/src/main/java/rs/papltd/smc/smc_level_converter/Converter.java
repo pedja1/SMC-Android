@@ -19,12 +19,12 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class Converter
 {
-    public static final String dataRoot = "/home/pedja/workspace/smc/smc/data/pixmaps/";
+    public static final String dataRoot = "/sdcard/AppProjects/smc/smc/data/pixmaps/";
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File("/home/pedja/workspace/smc/smc/data/levels/menu_green_1.smclvl");
+            File fXmlFile = new File("/sdcard/AppProjects/smc/smc/data/levels/menu_green_1.smclvl");
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
             // create a SAXXMLHandler
@@ -37,7 +37,7 @@ public class Converter
 
             String levelJson = convertToJson(level);
             //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter("/home/pedja/workspace/.smc/app/src/main/assets/data/levels/main_menu.smclvl", "UTF-8");
+			PrintWriter writer = new PrintWriter("/sdcard/AppProjects/SMC-Android/app/src/main/assets/data/levels/main_menu.smclvl", "UTF-8");
 			writer.print(levelJson);
 			writer.close();
 

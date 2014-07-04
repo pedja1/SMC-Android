@@ -748,12 +748,12 @@ public class SAXXMLHandler extends DefaultHandler
     private void fixItem(Item item)
     {
         item.posx = item.posx / 64f;
-        item.posy = Math.abs(item.posy / 64f);
         switch (item.type)
         {
             case "goldpiece":
                 item.width = item.height = 0.59375f;
                 item.texture_atlas = "data/game/items/goldpiece/" + item.color + ".pack";
+				item.image = "game/items/goldpiece/" + item.color + "/1.png";
                 break;
             case "mushroom":
                 switch (item.mushroom_type)
@@ -764,32 +764,38 @@ public class SAXXMLHandler extends DefaultHandler
 	TYPE_MUSHROOM_BLUE = 51,
 	TYPE_MUSHROOM_GHOST = 52,*/
                     case 25:
-                        item.texture_name = "data/game/item/mushroom_red.png";
+                        item.texture_name = "data/game/items/mushroom_red.png";
                         break;
                     case 35:
-                        item.texture_name = "data/game/item/mushroom_green.png";
+                        item.texture_name = "data/game/items/mushroom_green.png";
                         break;
                     case 49:
-                        item.texture_name = "data/game/item/mushroom_poison.png";
+                        item.texture_name = "data/game/items/mushroom_poison.png";
                         break;
                     case 51:
-                        item.texture_name = "data/game/item/mushroom_blue.png";
+                        item.texture_name = "data/game/items/mushroom_blue.png";
                         break;
                     case 52:
-                        item.texture_name = "data/game/item/mushroom_ghost.png";
+                        item.texture_name = "data/game/items/mushroom_ghost.png";
                         break;
+					
                 }
+				item.image = item.texture_name.substring(item.texture_name.indexOf("/") - 1, item.texture_name.length() - 1);
                 break;
             case "fireplant":
-                item.texture_atlas = "data/game/item/fireplant.pack";
+                item.texture_atlas = "data/game/items/fireplant.pack";
+				item.image = "game/items/fireplant.png";
                 break;
             case "jstar":
-                item.texture_name = "data/game/item/star.png";
+                item.texture_name = "data/game/items/star.png";
+				item.image = item.texture_name.substring(item.texture_name.indexOf("/") - 1, item.texture_name.length() - 1);
                 break;
             case "moon":
-                item.texture_name = "data/game/item/moon.pack";
+                item.texture_name = "data/game/items/moon.pack";
+				item.image = "game/items/moon_1.png";
                 break;
         }
+		setItemSettings(item);
     }
 
     private void fixPlayer(Player player)
@@ -882,6 +888,29 @@ public class SAXXMLHandler extends DefaultHandler
             sprite.texture_name = "data/" + sprite.image;
         }
         setSpriteSettings(sprite);
+    }
+	
+	private void setItemSettings(Item item)
+    {
+        String fileName = item.image.replaceAll("png", "settings");
+        File settings = new File(Converter.dataRoot, fileName);
+        String settingsData = readFileContents(settings);
+        String[] lines = settingsData.split("\n");
+        float origHeight = 1;
+        for(String s : lines)
+        {
+            String[] data = s.split(" ");
+            if("width".equals(data[0]))
+            {
+                item.width = Float.parseFloat(data[1]) / 64f;
+            }
+            else if("height".equals(data[0]))
+            {
+                origHeight = Float.parseFloat(data[1]);
+                item.height = origHeight / 64f;
+            }
+        }
+        item.posy = convertY(item.posy, origHeight);
     }
 
     private void setSpriteSettings(Sprite sprite)

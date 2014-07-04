@@ -23,3 +23,5 @@ txt:data/ground/jungle_1/beanstalk_2.png
 txt:data/blocks/wood/1.png
 txt:data/ground/green_3/ground/middle/left_top.png
 txt:data/signs/default_1/1_ending.png
+atl:data/game/items/goldpiece/yellow.pack
+atl:data/enemy/furball/brown.pack

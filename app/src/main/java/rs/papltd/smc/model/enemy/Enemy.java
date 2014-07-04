@@ -10,9 +10,24 @@ import rs.papltd.smc.model.*;
 public abstract class Enemy extends GameObject
 {
     protected float stateTime;
-    protected Vector2 velocity;
     protected String textureAtlas;
     private String textureName;//name of texture from pack
+	protected Direction direction = Direction.right;
+
+	public void setDirection(Direction direction)
+	{
+		this.direction = direction;
+	}
+
+	public Direction getDirection()
+	{
+		return direction;
+	}
+	
+	public enum Direction
+	{
+		right, left
+	}
 
 	public void setTextureAtlas(String textureAtlas)
 	{
@@ -33,10 +48,16 @@ public abstract class Enemy extends GameObject
 	{
 		return textureName;
 	}
+	
     enum CLASS
     {
-        eato, flyon, furball, turtle
+        eato, flyon, furball, turtle, gee, krush, rokko, spika, spikeball, thromp, turtleboss
     }
+	
+	public enum ContactType
+	{
+		stopper, player, enemy
+	}
 
     WorldState worldState = WorldState.IDLE;
     protected Body body;
@@ -46,14 +67,13 @@ public abstract class Enemy extends GameObject
     {
         super(new Rectangle(position.x, position.y, width, height), position);
         this.world = world;
-        velocity = new Vector2();
         body = createBody(world, position, width, height);
     }
 
     public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = getBodyType();
         bodyDef.position.set(position.x + width / 2, position.y + height / 2);
 
         Body body = world.createBody(bodyDef);
@@ -74,6 +94,7 @@ public abstract class Enemy extends GameObject
         fixtureDef.restitution = 0.5f;
 
         body.createFixture(fixtureDef);
+		body.setUserData(this);
 
         polygonShape.dispose();
         return body;
@@ -81,6 +102,7 @@ public abstract class Enemy extends GameObject
 
     public static Enemy initEnemy(String enemyClassString, World world, Vector3 position, float width, float height)
     {
+		System.out.println(enemyClassString);
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)
@@ -91,6 +113,9 @@ public abstract class Enemy extends GameObject
             case flyon:
                 enemy = new Flyon(world, position, width, height);
                 break;
+			case furball:
+                enemy = new Furball(world, position, width, height);
+                break;
         }
         return enemy;
     }
@@ -100,4 +125,10 @@ public abstract class Enemy extends GameObject
     {
         stateTime += delta;
     }
+	
+	public abstract BodyDef.BodyType getBodyType();
+	public void handleCollision(ContactType ContactType)
+	{
+		// subclasses should implement this
+	}
 }

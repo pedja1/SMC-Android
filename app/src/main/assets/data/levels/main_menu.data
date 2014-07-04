@@ -3,7 +3,7 @@ atl:data/ground/jungle_1/slider/green.pack
 atl:data/menu/menu.pack
 atl:data/enemy/eato/brown.pack
 atl:data/enemy/flyon/orange.pack
-atl:data/game/items/goldpiece/yellow.pack
+atl:data/game/items/goldpiece/red.pack
 txt:data/ground/green_3/ground/top/1.png
 txt:data/ground/green_3/ground/top/left.png
 txt:data/ground/green_1/hedges/wild_medium.png
@@ -22,3 +22,4 @@ txt:data/ground/green_2/hedges/big_3.png
 txt:data/ground/green_1/hedges/medium_2.png
 txt:data/ground/green_1/hedges/small_1.png
 txt:data/ground/green_2/hedges/small_1.png
+atl:data/enemy/furball/brown.pack

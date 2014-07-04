@@ -6,25 +6,33 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import rs.papltd.smc.*;
 import rs.papltd.smc.utility.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.*;
+import rs.papltd.smc.model.enemy.Enemy.*;
 
 /**
  * Created by pedja on 18.5.14..
  */
 public class Furball extends Enemy
 {
+
+	@Override
+	public BodyDef.BodyType getBodyType()
+	{
+		return BodyDef.BodyType.DynamicBody;
+	}
+
     public static final float VELOCITY = 3f;
 
     public Furball(World world, Vector3 position, float width, float height)
     {
         super(world, position, width, height);
-        velocity.set(0, VELOCITY);
     }
 
     @Override
     public void loadTextures()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = new Array<TextureAtlas.AtlasRegion>();
+        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();//new Array<TextureAtlas.AtlasRegion>();
 
 
         Assets.animations.put(textureAtlas, new Animation(0.25f, frames));
@@ -45,54 +53,25 @@ public class Furball extends Enemy
         Vector2 position = body.getPosition();
         Vector2 velocity = body.getLinearVelocity();
 
-        /*long timeNow = System.currentTimeMillis();
-        if((topReached && timeNow - maxPositionReachedTs < STAY_TOP_TIME))
-        {
-            body.setLinearVelocity(0, 0);
-            return;
-        }
-        else
-        {
-            if(position.y > 5)
-            {
-                maxPositionReachedTs = System.currentTimeMillis();
-                goingUp = false;
-                topReached = true;
-            }
-            else
-            {
-                topReached = false;
-                maxPositionReachedTs = 0;
-            }
-        }
-        if((bottomReached && timeNow - minPositionReachedTs < STAY_BOTTOM_TIME))
-        {
-            body.setLinearVelocity(0, 0);
-            return;
-        }
-        else
-        {
-            if(position.y <= 1.5f)
-            {
-                minPositionReachedTs = System.currentTimeMillis();
-                goingUp = true;
-                bottomReached = true;
-            }
-            else
-            {
-                bottomReached = false;
-                minPositionReachedTs = 0;
-            }
-        }
-        if(goingUp)
-        {
-            body.setLinearVelocity(velocity.x, velocity.y =+((Constants.CAMERA_HEIGHT - position.y)/3f));
-        }
-        else
-        {
-            //body.setLinearDamping(5);
-            body.setLinearVelocity(velocity.x, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
-        }*/
-
+		switch(direction)
+		{
+			case right:
+				body.setLinearVelocity(velocity.x =+((Constants.CAMERA_WIDTH - position.x)/VELOCITY), velocity.y);
+				break;
+			case left:
+				body.setLinearVelocity(velocity.x =-((Constants.CAMERA_WIDTH - position.x)/VELOCITY), velocity.y);
+				break;
+		}
     }
+
+	@Override
+	public void handleCollision(Enemy.ContactType contactType)
+	{
+		switch(contactType)
+		{
+			case stopper:
+				direction = direction == Direction.right ? Direction.left : Direction.right;
+				break;
+		}
+	}
 }

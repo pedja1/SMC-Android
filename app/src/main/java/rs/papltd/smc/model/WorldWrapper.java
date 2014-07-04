@@ -2,10 +2,8 @@ package rs.papltd.smc.model;
 
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.physics.box2d.*;
-
 import java.util.*;
-
-import rs.papltd.smc.model.enemy.Enemy;
+import rs.papltd.smc.model.enemy.*;
 import rs.papltd.smc.utility.*;
 
 
@@ -110,9 +108,17 @@ public class WorldWrapper
             @Override
             public void beginContact(Contact contact)
             {
-                // TODO: Implement this method
-                //System.out.println(contact.toString());
-                //throw new RuntimeException();
+                if(contact.getFixtureA().getUserData() instanceof Enemy)
+				{
+					if(contact.getFixtureB().getUserData() instanceof EnemyStopper)
+					{
+						((Enemy)contact.getFixtureA().getUserData()).handleCollision(Enemy.ContactType.stopper);
+					}
+					else if(contact.getFixtureB().getUserData() instanceof Maryo)
+					{
+						((Enemy)contact.getFixtureA().getUserData()).handleCollision(Enemy.ContactType.player);
+					}
+				}
             }
 
             @Override
