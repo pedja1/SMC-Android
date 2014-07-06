@@ -108,17 +108,31 @@ public class WorldWrapper
             @Override
             public void beginContact(Contact contact)
             {
-                if(contact.getFixtureA().getUserData() instanceof Enemy)
+                if(contact.getFixtureA().getBody().getUserData() instanceof Enemy)
 				{
-					if(contact.getFixtureB().getUserData() instanceof EnemyStopper)
+					if(contact.getFixtureB().getBody().getUserData() instanceof EnemyStopper || contact.getFixtureB().getBody().getUserData() instanceof Collider)
 					{
-						((Enemy)contact.getFixtureA().getUserData()).handleCollision(Enemy.ContactType.stopper);
+						((Enemy)contact.getFixtureA().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
 					}
-					else if(contact.getFixtureB().getUserData() instanceof Maryo)
+					else if(contact.getFixtureB().getBody().getUserData() instanceof Maryo)
 					{
-						((Enemy)contact.getFixtureA().getUserData()).handleCollision(Enemy.ContactType.player);
+						((Enemy)contact.getFixtureA().getBody().getUserData()).handleCollision(Enemy.ContactType.player);
 					}
 				}
+                else if(contact.getFixtureA().getBody().getUserData() instanceof EnemyStopper)
+                {
+                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
+                    {
+                        ((Enemy)contact.getFixtureB().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
+                    }
+                }
+                else if(contact.getFixtureA().getBody().getUserData() instanceof Collider)
+                {
+                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
+                    {
+                        ((Enemy)contact.getFixtureB().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
+                    }
+                }
             }
 
             @Override
@@ -130,7 +144,21 @@ public class WorldWrapper
             @Override
             public void preSolve(Contact contact, Manifold oldManifold)
             {
-                // TODO: Implement this method
+                if(contact.getFixtureA().getBody().getUserData() instanceof Enemy)
+                {
+                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
+                    {
+                        //TODO i don't know if its a good idea or not to disable contact between 2 enemies
+                        //contact.setEnabled(false);
+                    }
+                }
+                else if(contact.getFixtureA().getBody().getUserData() instanceof EnemyStopper)
+                {
+                    if(contact.getFixtureB().getBody().getUserData() instanceof Maryo)
+                    {
+                        contact.setEnabled(false);
+                    }
+                }
             }
 
             @Override

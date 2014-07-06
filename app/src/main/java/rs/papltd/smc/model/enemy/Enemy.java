@@ -91,7 +91,7 @@ public abstract class Enemy extends GameObject
         fixtureDef.shape = polygonShape;
         fixtureDef.density = 1062;
         fixtureDef.friction = /*0.5f*/0;
-        fixtureDef.restitution = 0.5f;
+        fixtureDef.restitution = 0.1f;
 
         body.createFixture(fixtureDef);
 		body.setUserData(this);
@@ -114,6 +114,7 @@ public abstract class Enemy extends GameObject
                 enemy = new Flyon(world, position, width, height);
                 break;
 			case furball:
+                position.z = Furball.POS_Z;
                 enemy = new Furball(world, position, width, height);
                 break;
         }

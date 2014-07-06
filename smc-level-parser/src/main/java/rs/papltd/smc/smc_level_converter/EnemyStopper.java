@@ -5,5 +5,5 @@ package rs.papltd.smc.smc_level_converter;
  */
 public class EnemyStopper
 {
-    public float posx, posy, width = .2f, height = .2f;
+    public float posx, posy, width = 15, height = 15f;
 }

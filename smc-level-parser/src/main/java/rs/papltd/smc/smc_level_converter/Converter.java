@@ -19,12 +19,12 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class Converter
 {
-    public static final String dataRoot = "/sdcard/AppProjects/smc/smc/data/pixmaps/";
+    public static final String dataRoot = "/home/pedja/workspace/SMC/smc/data/pixmaps/";
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File("/sdcard/AppProjects/smc/smc/data/levels/menu_green_1.smclvl");
+            File fXmlFile = new File("/home/pedja/workspace/SMC/smc/data/levels/lvl_1.smclvl");
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
             // create a SAXXMLHandler
@@ -37,7 +37,7 @@ public class Converter
 
             String levelJson = convertToJson(level);
             //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter("/sdcard/AppProjects/SMC-Android/app/src/main/assets/data/levels/main_menu.smclvl", "UTF-8");
+			PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/app/src/main/assets/data/levels/test_lvl.smclvl", "UTF-8");
 			writer.print(levelJson);
 			writer.close();
 
@@ -248,16 +248,41 @@ public class Converter
         body.put("posy", 0);
         body.put("width", 1);
         body.put("height", level.settings.height);
+        body.put("enemy_filter", true);
         collBodies.put(body);
         body = new JSONObject();
         body.put("posx", level.settings.width);
         body.put("posy", 0);
         body.put("width", 1);
         body.put("height", level.settings.height);
+        body.put("enemy_filter", true);
         collBodies.put(body);
+
+        addLevelSpecificBodies(level, collBodies, "lvl_1.smclvl");//change to actual level name
 
         jsonLevel.put("collision_bodies", collBodies);
 
         return jsonLevel.toString();
+    }
+
+    private static void addLevelSpecificBodies(Level level, JSONArray collBodies, String levelName)
+    {
+        switch (levelName)
+        {
+            case "lvl_1.smclvl":
+                JSONObject body = new JSONObject();
+                body.put("posx", 0);
+                body.put("width", 116.6875f);
+                body.put("height", 1);
+                body.put("posy", -0.265625f);
+                collBodies.put(body);
+                body = new JSONObject();
+                body.put("posx", 118);
+                body.put("width", level.settings.width);
+                body.put("height", 1);
+                body.put("posy", 0.921875);
+                collBodies.put(body);
+                break;
+        }
     }
 }

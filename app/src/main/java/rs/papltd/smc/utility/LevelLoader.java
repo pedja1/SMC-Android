@@ -32,7 +32,7 @@ public class LevelLoader
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
-		massive_type, type
+		massive_type, type, enemy_filter
 	}
 
 	private enum DATA_KEY
@@ -90,7 +90,8 @@ public class LevelLoader
 		{
 			JSONObject jBody = jCollisionBodies.getJSONObject(i);
 			Vector2 position = new Vector2((float) jBody.getDouble(KEY.posx.toString()), (float) jBody.getDouble(KEY.posy.toString()));
-			createBody(world, position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()));
+            boolean enemyFilter = jBody.has(KEY.enemy_filter.toString());
+            createBody(world, position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()),enemyFilter);
 		}
 	}
 
@@ -208,12 +209,12 @@ public class LevelLoader
 				throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used" 
 												   + "in [level].smclvl must also be included in [level].data (" + textureName + ")");
 			}
-			float r1 = (float) jBg.getDouble(KEY.r_1.toString());
-			float r2 = (float) jBg.getDouble(KEY.r_2.toString());
-			float g1 = (float) jBg.getDouble(KEY.g_1.toString());
-			float g2 = (float) jBg.getDouble(KEY.g_2.toString());
-			float b1 = (float) jBg.getDouble(KEY.b_1.toString());
-			float b2 = (float) jBg.getDouble(KEY.b_2.toString());
+			float r1 = (float) jBg.getDouble(KEY.r_1.toString()) / 255;//convert from 0-255 range to 0-1 range
+			float r2 = (float) jBg.getDouble(KEY.r_2.toString()) / 255;
+			float g1 = (float) jBg.getDouble(KEY.g_1.toString()) / 255;
+			float g2 = (float) jBg.getDouble(KEY.g_2.toString()) / 255;
+			float b1 = (float) jBg.getDouble(KEY.b_1.toString()) / 255;
+			float b2 = (float) jBg.getDouble(KEY.b_2.toString()) / 255;
 
 			BackgroundColor bgColor = new BackgroundColor();
 			bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
@@ -380,7 +381,7 @@ public class LevelLoader
 
     }
 
-    public Body createBody(World world, Vector2 position, float width, float height)
+    public Body createBody(World world, Vector2 position, float width, float height, boolean enemyFilter)
     {
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.position.set(position.x + width / 2, position.y + height / 2);
@@ -392,6 +393,7 @@ public class LevelLoader
 		groundBox.setAsBox(width / 2, height / 2);
 
 		body.createFixture(groundBox, 0.0f);
+        if(enemyFilter)body.setUserData(new Collider());
 
 		groundBox.dispose();
         return body;

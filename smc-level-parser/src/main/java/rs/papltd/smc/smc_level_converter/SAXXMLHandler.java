@@ -548,7 +548,7 @@ public class SAXXMLHandler extends DefaultHandler
                 tmpEnemy = null;
                 break;
             case "enemystopper":
-                //TODO fix enemy stopper
+                fixEnemyStopper(tmpStopper);
                 level.objects.add(tmpStopper);
                 tmpStopper = null;
                 break;
@@ -664,6 +664,14 @@ public class SAXXMLHandler extends DefaultHandler
         }
     }
 
+    private void fixEnemyStopper(EnemyStopper enemyStopper)
+    {
+        enemyStopper.posx = enemyStopper.posx / 64;
+        enemyStopper.posy = convertY(enemyStopper.posy, enemyStopper.height);
+        enemyStopper.height = enemyStopper.height / 64;
+        enemyStopper.width = enemyStopper.width / 64;
+    }
+
     private void fixEnemy(Enemy enemy)
     {
         if("eato".equals(enemy.type))
@@ -740,8 +748,7 @@ public class SAXXMLHandler extends DefaultHandler
                 enemy.height =  origHeight / 64f;
             }
         }
-        enemy.posy = convertY(enemy.posy, origHeight);
-        System.out.println("");
+        enemy.posy = convertY(enemy.posy, origHeight) + 0.1f;//TODO for collision
     }
 
 
