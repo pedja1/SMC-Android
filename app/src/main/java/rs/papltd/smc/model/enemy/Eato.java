@@ -21,7 +21,10 @@ public class Eato extends Enemy
     public void loadTextures()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
+        Array<TextureAtlas.AtlasRegion> frames = new Array<>();//atlas.getRegions();
+		frames.add(atlas.findRegion(TKey.one.toString()));
+		frames.add(atlas.findRegion(TKey.two.toString()));
+		frames.add(atlas.findRegion(TKey.three.toString()));
         frames.add(atlas.findRegion(TKey.two.toString()));
 
         Assets.animations.put(textureAtlas, new Animation(0.18f, frames));
