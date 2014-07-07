@@ -83,9 +83,16 @@ public abstract class Enemy extends GameObject
         body.setMassData(massData);
         body.setUserData(this);*/
 
+		float[] box = {0.0625f, 0.21875f, 0.4375f, 0.34375f};
+		Vector2[] vertices = new Vector2[4];
+		vertices[0] = new Vector2(box[0], box[1]);
+		vertices[1] = new Vector2(box[1], box[2]);
+		vertices[2] = new Vector2(box[2], box[3]);
+		vertices[3] = new Vector2(box[3], box[0]);
+
         PolygonShape polygonShape = new PolygonShape();
 
-        polygonShape.setAsBox(width / 2, height / 2);
+        polygonShape.set(vertices);//.setAsBox(width / 2, height / 2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
