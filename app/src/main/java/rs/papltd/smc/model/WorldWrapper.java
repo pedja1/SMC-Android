@@ -149,7 +149,7 @@ public class WorldWrapper
                     if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
                     {
                         //TODO i don't know if its a good idea or not to disable contact between 2 enemies
-                        //contact.setEnabled(false);
+                        contact.setEnabled(false);
                     }
                 }
                 else if(contact.getFixtureA().getBody().getUserData() instanceof EnemyStopper)
