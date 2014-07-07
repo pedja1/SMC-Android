@@ -8,6 +8,15 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest.attributes("Main-Class": "rs.papltd.smc.smc_level_converter.Converter")
+}
+task fatJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.json:json:20140107'

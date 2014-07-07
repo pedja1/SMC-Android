@@ -19,12 +19,12 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class Converter
 {
-    public static final String dataRoot = "/sdcard/AppProjects/smc/smc/data/pixmaps/";
+    
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File("/sdcard/AppProjects/smc/smc/data/levels/lvl_1.smclvl");
+            File fXmlFile = new File(Const.LEVEL_IMPORT);
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
             // create a SAXXMLHandler
@@ -37,7 +37,7 @@ public class Converter
 
             String levelJson = convertToJson(level);
             //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter("/sdcard/AppProjects/SMC-Android/app/src/main/assets/data/levels/test_lvl.smclvl", "UTF-8");
+			PrintWriter writer = new PrintWriter(Const.LEVEL_EXPORT, "UTF-8");
 			writer.print(levelJson);
 			writer.close();
 
@@ -351,6 +351,41 @@ public class Converter
                 body.put("height", 1.5625f);
                 body.put("posy", 1.734375f);
 				body.put("enemy_filter", true);
+                collBodies.put(body);
+				body = new JSONObject();
+                body.put("posx", 85.078125f);
+                body.put("width", 8);
+                body.put("height", 1);
+                body.put("posy", 7.5f);
+				body.put("type", "halfmassive");
+                collBodies.put(body);
+				body = new JSONObject();
+                body.put("posx", 74.453125f);
+                body.put("width", 5);
+                body.put("height", 1);
+                body.put("posy", 2.578125f);
+				body.put("type", "halfmassive");
+                collBodies.put(body);
+				body = new JSONObject();
+                body.put("posx", 74.453125f);
+                body.put("width", 6);
+                body.put("height", 1);
+                body.put("posy", 2.578125f);
+				body.put("type", "halfmassive");
+                collBodies.put(body);
+				body = new JSONObject();
+                body.put("posx", 89.3125f);
+                body.put("width", 8);
+                body.put("height", 1);
+                body.put("posy", 4.71875f);
+				body.put("type", "halfmassive");
+                collBodies.put(body);
+				body = new JSONObject();
+                body.put("posx", 79.453125f);
+                body.put("width", 2);
+                body.put("height", 1);
+                body.put("posy", 4.578125f);
+				body.put("type", "halfmassive");
                 collBodies.put(body);
                 break;
         }
