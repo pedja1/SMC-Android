@@ -1,0 +1,19 @@
+
+very-light-blue-1.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1-big
+  rotate: false
+  xy: 2, 132
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+1-medium
+  rotate: false
+  xy: 2, 2
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1

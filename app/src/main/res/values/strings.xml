@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">SMC</string><string name="media_unmounted_error">This game requires that shared storage(usually internal or external sd card) is mounted.\nPlease mount shared storage and try again</string>
-    <string name="obb_mounting_error">TODO: instead of getting this error we should check if file is consistent and re-download if not!</string>
-</resources>
