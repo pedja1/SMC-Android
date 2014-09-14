@@ -1,23 +1,18 @@
 package rs.pedjaapps.smc.model.enemy;
+
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 
 import rs.pedjaapps.smc.model.GameObject;
 
 public class EnemyStopper extends GameObject
 {
-    World world;
-    Body body;
-
-	public EnemyStopper(World world, Vector3 position, float width, float height)
+	public EnemyStopper(Vector3 position, float width, float height)
     {
         super(new Rectangle(position.x, position.y, width, height), position);
-        this.world = world;
-        body = createBody(world, position, width, height);
     }
 
-    public Body createBody(World world, Vector3 position, float width, float height)
+    /*public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -32,7 +27,7 @@ public class EnemyStopper extends GameObject
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.density = 1062;
-        fixtureDef.friction = /*0.5f*/0;
+        fixtureDef.friction = 0;
         fixtureDef.restitution = 0f;
 
         body.createFixture(fixtureDef);
@@ -40,7 +35,7 @@ public class EnemyStopper extends GameObject
 
         polygonShape.dispose();
         return body;
-    }
+    }*/
 
 
     @Override

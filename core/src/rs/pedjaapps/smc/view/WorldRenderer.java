@@ -8,14 +8,14 @@ import com.badlogic.gdx.math.*;
 
 import rs.pedjaapps.smc.model.BackgroundColor;
 import rs.pedjaapps.smc.model.GameObject;
-import rs.pedjaapps.smc.model.WorldWrapper;
+import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 
 public class WorldRenderer
 {
 
-    private WorldWrapper world;
+    private World world;
     private OrthographicCamera cam;
     private OrthographicCamera pCamera;
     private OrthographicCamera guiCam;
@@ -56,7 +56,7 @@ public class WorldRenderer
 
     public WorldRenderer(GameScreen gameScreen)
     {
-        this.world = gameScreen.getWorldWrapper();
+        this.world = gameScreen.getWorld();
         this.width = gameScreen.getWidth();
         this.height = gameScreen.getHeight();
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
@@ -104,7 +104,7 @@ public class WorldRenderer
 
     public void render(float delta)
     {
-        moveCamera(cam, world.getMario().getBody().getPosition().x, world.getMario().getBody().getPosition().y);
+        moveCamera(cam, world.getMario().getPosition().x, world.getMario().getPosition().y);
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
@@ -123,8 +123,8 @@ public class WorldRenderer
         if(debug)drawDebugText();
         drawHud();
         spriteBatch.end();
-		if(debug)world.getDebugRenderer().render(world.getWorld(), cam.combined);
-		world.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
+		//if(debug)world.getDebugRenderer().render(world.getWorld(), cam.combined);
+		//world.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
 	private void drawBackground()
@@ -219,7 +219,7 @@ public class WorldRenderer
     private String generateDebugMessage()
     {
         return "Level: width=" + world.getLevel().getWidth() + ", height=" + world.getLevel().getHeight()
-			+ "\n" + "Player: x=" + world.getMario().getBody().getPosition().x + ", y=" + world.getMario().getBody().getPosition().y
+			+ "\n" + "Player: x=" + world.getMario().getPosition().x + ", y=" + world.getMario().getPosition().y
             + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
             + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
             + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 
 import org.json.JSONArray;
@@ -36,7 +35,6 @@ import rs.pedjaapps.smc.model.items.Item;
 public class LevelLoader
 {
     Level level;
-	World world;
 
     private enum KEY
     {
@@ -71,9 +69,8 @@ public class LevelLoader
         level = new Level();
     }
 
-	public void parseLevel(String jsonString, World world)
+	public void parseLevel(String jsonString)
 	{
-		this.world = world;
 		JSONObject jLevel;
         try
         {
@@ -102,7 +99,7 @@ public class LevelLoader
 			JSONObject jBody = jCollisionBodies.getJSONObject(i);
 			Vector2 position = new Vector2((float) jBody.getDouble(KEY.posx.toString()), (float) jBody.getDouble(KEY.posy.toString()));
             boolean enemyFilter = jBody.has(KEY.enemy_filter.toString());
-            createBody(world, position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()),enemyFilter);
+            //createBody(position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()),enemyFilter);
 		}
 	}
 
@@ -121,13 +118,13 @@ public class LevelLoader
 					parsePlayer(jObject);
 					break;
 				case item:
-					parseItem(jObject, world);
+					parseItem(jObject);
 					break;
 				case enemy:
-					parseEnemy(jObject, world);
+					parseEnemy(jObject);
 					break;
 				case enemy_stopper:
-					parseEnemyStopper(jObject, world);
+					parseEnemyStopper(jObject);
 					break;
 			}
 		}
@@ -392,7 +389,7 @@ public class LevelLoader
 
     }
 
-    public Body createBody(World world, Vector2 position, float width, float height, boolean enemyFilter)
+    /*public Body createBody(World world, Vector2 position, float width, float height, boolean enemyFilter)
     {
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.position.set(position.x + width / 2, position.y + height / 2);
@@ -408,7 +405,7 @@ public class LevelLoader
 
 		groundBox.dispose();
         return body;
-    }
+    }*/
 
     public Level getLevel()
     {
@@ -444,11 +441,11 @@ public class LevelLoader
         return key.equals(DATA_KEY.txt.toString());
     }
 
-    private void parseEnemy(JSONObject jEnemy, World world) throws JSONException
+    private void parseEnemy(JSONObject jEnemy) throws JSONException
     {
         Vector3 position = new Vector3((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()), 0);
 
-            Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), world, position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
+            Enemy enemy = Enemy.initEnemy(jEnemy.getString(KEY.enemy_class.toString()), position, (float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString()));
             if (enemy == null)return;//TODO this has to go aways after levels are fixed
             if (jEnemy.has(KEY.texture_atlas.toString()))
             {
@@ -466,23 +463,23 @@ public class LevelLoader
             level.getGameObjects().add(enemy);
     }
 
-	private void parseEnemyStopper(JSONObject jEnemyStopper, World world) throws JSONException
+	private void parseEnemyStopper(JSONObject jEnemyStopper) throws JSONException
     {
 		System.out.println("enemy stopper");
         Vector3 position = new Vector3((float) jEnemyStopper.getDouble(KEY.posx.toString()), (float) jEnemyStopper.getDouble(KEY.posy.toString()), 0);
         float width =  (float) jEnemyStopper.getDouble(KEY.width.toString());
 		float height =  (float) jEnemyStopper.getDouble(KEY.height.toString());
 		
-		EnemyStopper stopper = new EnemyStopper(world, position, width, height);
+		EnemyStopper stopper = new EnemyStopper(position, width, height);
 		
 		level.getGameObjects().add(stopper);
     }
 	
-    private void parseItem(JSONObject jItem, World world) throws JSONException
+    private void parseItem(JSONObject jItem) throws JSONException
     {
             Vector3 position = new Vector3((float) jItem.getDouble(KEY.posx.toString()), (float) jItem.getDouble(KEY.posy.toString()), 0);
 
-            Item item = Item.initObject(jItem.getString(KEY.type.toString()), world, position, (float) jItem.getDouble(KEY.width.toString()), (float) jItem.getDouble(KEY.height.toString()));
+            Item item = Item.initObject(jItem.getString(KEY.type.toString()), position, (float) jItem.getDouble(KEY.width.toString()), (float) jItem.getDouble(KEY.height.toString()));
             if(item == null) return;
             if (jItem.has(KEY.texture_atlas.toString()))
             {

@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.model;
 
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
@@ -15,9 +14,9 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Coin extends Item
 {
 
-    public Coin(World world, Vector3 position, float width, float height)
+    public Coin(Vector3 position, float width, float height)
     {
-        super(world, position, width, height);
+        super(position, width, height);
     }
 
     @Override
@@ -42,6 +41,6 @@ public class Coin extends Item
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, body.getPosition().x - getBounds().width / 2, body.getPosition().y - getBounds().height / 2, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x - getBounds().width / 2, position.y - getBounds().height / 2, bounds.height);
     }
 }

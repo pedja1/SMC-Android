@@ -2,10 +2,10 @@ package rs.pedjaapps.smc.model;
 
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.utility.Constants;
 
 public class Maryo extends GameObject
 {
@@ -23,19 +23,23 @@ public class Maryo extends GameObject
     boolean facingLeft = false;
     boolean longJump = false;
 
-	Body body;
-    Fixture sensorFixture;
-
     Array<MarioState> usedStates = new Array<MarioState>();
 
-    public Maryo(Vector3 position, Vector2 size, World world, Array<MarioState> usedStates)
+    private static final long LONG_JUMP_PRESS   = 150l;
+    private static final float ACCELERATION     = 20f;
+    private static final float GRAVITY          = -20f;
+    private static final float MAX_JUMP_SPEED   = 7f;
+    private static final float DAMP             = 0.90f;
+    private static final float MAX_VEL          = 4f;
+
+    public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
     {
-        super(new Rectangle(position.x, position.y, size.x, size.y), position);
+        super(world, new Rectangle(position.x, position.y, size.x, size.y), position);
         this.usedStates = usedStates;
-		body = createBody(world, position);
+
     }
 
-	private Body createBody(World world, Vector3 position)
+	/*private Body createBody(World world, Vector3 position)
 	{
         //TODO body should be resized dynamically depending on maryo's state
 		BodyDef bodyDef = new BodyDef();
@@ -66,7 +70,7 @@ public class Maryo extends GameObject
         FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = polygonShape;
 		fixtureDef.density = 1062;
-		fixtureDef.friction = /*0.5f*/0;
+		fixtureDef.friction = 0;
         fixtureDef.restitution = 0.5f;
 		//fixtureDef.restitution = 1;
 
@@ -86,7 +90,7 @@ public class Maryo extends GameObject
 
         polygonShape.dispose();
 		return body;
-	}
+	}*/
 
     public void loadTextures()
     {
@@ -154,7 +158,7 @@ public class Maryo extends GameObject
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
-            if (getBody().getLinearVelocity().y > 0)
+            if (velocity.y > 0)
             {
                 marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + marioState) : Assets.loadedRegions.get(TKey.jump_right + ":" + marioState);
             }
@@ -163,15 +167,130 @@ public class Maryo extends GameObject
                 marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
             }
         }
-        spriteBatch.draw(marioFrame, getBody().getPosition().x - getBounds().width/2, getBody().getPosition().y - getBounds().height/2, bounds.width, bounds.height);
+        spriteBatch.draw(marioFrame, position.x - getBounds().width/2, position.y - getBounds().height/2, bounds.width, bounds.height);
     }
 
     @Override
     public void update(float delta)
     {
+        // Setting initial vertical acceleration 
+        acceleration.y = GRAVITY;
+
+        // Convert acceleration to frame time
+        acceleration.scl(delta);
+
+        // apply acceleration to change velocity
+        velocity.add(acceleration.x, acceleration.y);
+
+        // checking collisions with the surrounding blocks depending on Bob's velocity
+        checkCollisionWithBlocks(delta);
+
+        // apply damping to halt Maryo nicely 
+        velocity.x *= DAMP;
+
+        // ensure terminal velocity is not exceeded
+        if (velocity.x > MAX_VEL) {
+            velocity.x = MAX_VEL;
+        }
+        if (velocity.x < -MAX_VEL) {
+            velocity.x = -MAX_VEL;
+        }
+        
         stateTime += delta;
+
     }
 
+    /** Collision checking **/
+    private void checkCollisionWithBlocks(float delta) 
+    {
+        // scale velocity to frame units 
+        velocity.scl(delta);
+
+
+        // we first check the movement on the horizontal X axis
+        int startX, endX;
+        int startY = (int) bounds.y;
+        int endY = (int) (bounds.y + bounds.height);
+        // if Bob is heading left then we check if he collides with the block on his left
+        // we check the block on his right otherwise
+        if (velocity.x < 0) {
+            startX = endX = (int) Math.floor(bounds.x + velocity.x);
+        } else {
+            startX = endX = (int) Math.floor(bounds.x + bounds.width + velocity.x);
+        }
+
+        // get the block(s) maryo can collide with
+        populateCollidableBlocks(startX, startY, endX, endY);
+
+        // simulate maryos's movement on the X
+        bounds.x += velocity.x;
+
+        // if bob collides, make his horizontal velocity 0
+        for (Block block : collidable) {
+            if (block == null) continue;
+            if (bobRect.overlaps(block.getBounds())) {
+                velocity.x = 0;
+                world.getCollisionRects().add(block.getBounds());
+                break;
+            }
+        }
+
+        // reset the x position of the collision box
+        bobRect.x = bob.getPosition().x;
+
+        // the same thing but on the vertical Y axis
+        startX = (int) bounds.x;
+        endX = (int) (bounds.x + bounds.width);
+        if (velocity.y < 0) {
+            startY = endY = (int) Math.floor(bounds.y + velocity.y);
+        } else {
+            startY = endY = (int) Math.floor(bounds.y + bounds.height + velocity.y);
+        }
+
+        populateCollidableBlocks(startX, startY, endX, endY);
+
+        bobRect.y += velocity.y;
+
+        for (Block block : collidable) {
+            if (block == null) continue;
+            if (bobRect.overlaps(block.getBounds())) {
+                if (velocity.y < 0) {
+                    grounded = true;
+                }
+                velocity.y = 0;
+                world.getCollisionRects().add(block.getBounds());
+                break;
+            }
+        }
+        // reset the collision box's position on Y
+        bobRect.y = bob.getPosition().y;
+
+        // update Bob's position
+        bob.getPosition().add(velocity);
+        bounds.x = bob.getPosition().x;
+        bounds.y = bob.getPosition().y;
+
+        // un-scale velocity (not in frame time)
+        velocity.mul(1 / delta);
+
+    }
+
+    /** populate the collidable array with the blocks found in the enclosing coordinates **/
+    private Array<GameObject> populateCollidableBlocks()
+    {
+        Array<GameObject> collidable = new Array<GameObject>();
+        for (int x = startX; x <= endX; x++)
+        {
+            for (int y = startY; y <= endY; y++)
+            {
+                if (x >= 0 && x < world.getLevel().getWidth() && y >= 0 && y < world.getLevel().getHeight())
+                {
+                    collidable.add(world.getLevel().get(x, y));
+                }
+            }
+        }
+        return collidable;
+    }
 
     public boolean isFacingLeft()
     {
@@ -220,20 +339,4 @@ public class Maryo extends GameObject
     {
         return stateTime;
     }
-
-    public void setBody(Body body)
-    {
-        this.body = body;
-    }
-
-    public Body getBody()
-    {
-        return body;
-    }
-
-    public Fixture getSensorFixture()
-    {
-        return sensorFixture;
-    }
-
 }

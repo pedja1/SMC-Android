@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.model.enemy;
 
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 import rs.pedjaapps.smc.model.GameObject;
 
 /**
@@ -60,17 +59,13 @@ public abstract class Enemy extends GameObject
 	}
 
     WorldState worldState = WorldState.IDLE;
-    protected Body body;
-    protected World world;
 
-    protected Enemy(World world, Vector3 position, float width, float height)
+    protected Enemy(Vector3 position, float width, float height)
     {
         super(new Rectangle(position.x, position.y, width, height), position);
-        this.world = world;
-        body = createBody(world, position, width, height);
     }
 
-    public Body createBody(World world, Vector3 position, float width, float height)
+    /*public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = getBodyType();
@@ -78,10 +73,6 @@ public abstract class Enemy extends GameObject
 
         Body body = world.createBody(bodyDef);
 
-        /*MassData massData = new MassData();
-        massData.mass = 0.0000001f;
-        body.setMassData(massData);
-        body.setUserData(this);*/
         PolygonShape polygonShape = new PolygonShape();
 
         polygonShape.setAsBox(width / 2, height / 2);
@@ -89,7 +80,7 @@ public abstract class Enemy extends GameObject
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = polygonShape;
         fixtureDef.density = 1062;
-        fixtureDef.friction = /*0.5f*/0;
+        fixtureDef.friction = 0;
         fixtureDef.restitution = 0.1f;
 
         body.createFixture(fixtureDef);
@@ -97,9 +88,9 @@ public abstract class Enemy extends GameObject
 
         polygonShape.dispose();
         return body;
-    }
+    }*/
 
-    public static Enemy initEnemy(String enemyClassString, World world, Vector3 position, float width, float height)
+    public static Enemy initEnemy(String enemyClassString, Vector3 position, float width, float height)
     {
 		System.out.println(enemyClassString);
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
@@ -107,14 +98,14 @@ public abstract class Enemy extends GameObject
         switch (enemyClass)
         {
             case eato:
-                enemy = new Eato(world, position, width, height);
+                enemy = new Eato(position, width, height);
                 break;
             case flyon:
-                enemy = new Flyon(world, position, width, height);
+                enemy = new Flyon(position, width, height);
                 break;
 			case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, position, width, height);
+                enemy = new Furball(position, width, height);
                 break;
         }
         return enemy;
@@ -125,8 +116,7 @@ public abstract class Enemy extends GameObject
     {
         stateTime += delta;
     }
-	
-	public abstract BodyDef.BodyType getBodyType();
+
 	public void handleCollision(ContactType ContactType)
 	{
 		// subclasses should implement this

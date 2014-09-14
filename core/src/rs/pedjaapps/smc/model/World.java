@@ -1,7 +1,8 @@
 package rs.pedjaapps.smc.model;
 
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
+
 import java.util.*;
 
 import rs.pedjaapps.smc.model.enemy.Enemy;
@@ -9,12 +10,8 @@ import rs.pedjaapps.smc.model.enemy.EnemyStopper;
 import rs.pedjaapps.smc.utility.Constants;
 
 
-public class WorldWrapper
+public class World
 {
-
-    World world = new World(new Vector2(0, Constants.GRAVITY), true);
-
-    Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
     /**
      * Our player controlled hero *
@@ -24,21 +21,7 @@ public class WorldWrapper
      * A world has a level through which Mario needs to go through *
      */
     Level level;
-
-    public void setDebugRenderer(Box2DDebugRenderer debugRenderer)
-    {
-        this.debugRenderer = debugRenderer;
-    }
-
-    public Box2DDebugRenderer getDebugRenderer()
-    {
-        return debugRenderer;
-    }
-
-    public World getWorld()
-    {
-        return world;
-    }
+    Array<GameObject> visibleObjects;
 
     // Getters -----------
 
@@ -50,11 +33,6 @@ public class WorldWrapper
     public Level getLevel()
     {
         return level;
-    }
-
-    public void setWorld(World world)
-    {
-        this.world = world;
     }
 
     public void setMario(Maryo mario)
@@ -71,9 +49,9 @@ public class WorldWrapper
      * Return only the blocks that need to be drawn *
      * All Enemies are always returned
      */
-    public List<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
+    public Array<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
     {
-        List<GameObject> sprites = new ArrayList<GameObject>();
+        Array<GameObject> objects = new Array<GameObject>();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
@@ -84,7 +62,7 @@ public class WorldWrapper
             Rectangle bounds = object.getBounds();
             if (bounds.overlaps(worldBounds) || object instanceof Enemy)
             {
-                sprites.add(object);
+                objects.add(object);
                 /*if (getFront)
                 {
                     if (object.isFront())
@@ -98,13 +76,14 @@ public class WorldWrapper
                 }*/
             }
         }
-        return sprites;
+        visibleObjects = objects;
+        return objects;
     }
 
     // --------------------
-    public WorldWrapper()
+    public World()
     {
-        world.setContactListener(new ContactListener()
+        /*world.setContactListener(new ContactListener()
         {
 
             @Override
@@ -168,7 +147,12 @@ public class WorldWrapper
             {
                 // TODO: Implement this method
             }
-        });
+        });*/
+
     }
 
+    public Array<GameObject> getVisibleObjects()
+    {
+        return visibleObjects;
+    }
 }

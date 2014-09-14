@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.model.enemy;
 
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.*;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Utility;
@@ -13,12 +12,6 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Furball extends Enemy
 {
 
-	@Override
-	public BodyDef.BodyType getBodyType()
-	{
-		return BodyDef.BodyType.DynamicBody;
-	}
-
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
@@ -26,9 +19,9 @@ public class Furball extends Enemy
     private boolean turn;
     private float turnStartTime;
 
-    public Furball(World world, Vector3 position, float width, float height)
+    public Furball(Vector3 position, float width, float height)
     {
-        super(world, position, width, height);
+        super(position, width, height);
     }
 
     @Override
@@ -60,7 +53,7 @@ public class Furball extends Enemy
                 : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, body.getPosition().x - bounds.width / 2, body.getPosition().y - bounds.height / 2, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x - bounds.width / 2, position.y - bounds.height / 2, bounds.height);
     }
 
     public void update(float deltaTime)
@@ -71,16 +64,14 @@ public class Furball extends Enemy
             turnStartTime = 0;
             turn = false;
         }
-        Vector2 position = body.getPosition();
-        Vector2 velocity = body.getLinearVelocity();
 
 		switch(direction)
 		{
 			case right:
-				body.setLinearVelocity(velocity.x =- (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
+				setVelocity(velocity.x =- (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
 				break;
 			case left:
-				body.setLinearVelocity(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
+				setVelocity(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
 				break;
 		}
     }

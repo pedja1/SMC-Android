@@ -14,7 +14,7 @@ import rs.pedjaapps.smc.model.Background;
 import rs.pedjaapps.smc.model.BackgroundColor;
 import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.WorldWrapper;
+import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
@@ -41,7 +41,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     int screenHeight = Gdx.graphics.getHeight();
     Music music;
     Sound audioOn;
-    WorldWrapper worldWrapper;
+    World world;
     private ParticleEffect cloudsPEffect;
 
     public MainMenuScreen(MaryoGame game)
@@ -63,7 +63,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
-        worldWrapper = new WorldWrapper();
+        world = new World();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         drawObjects(delta);
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
-        worldWrapper.getMario().render(batch);
+        world.getMario().render(batch);
 
         batch.end();
 
@@ -113,7 +113,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             batch.begin();
             debugFont.drawMultiLine(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 50f, 670f);
             batch.end();
-            if(debug)worldWrapper.getDebugRenderer().render(worldWrapper.getWorld(), drawCam.combined);
+            //if(debug)worldWrapper.getDebugRenderer().render(worldWrapper.getWorld(), drawCam.combined);
         }
         if(Assets.playMusic)
         {
@@ -123,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             music.pause();
         }
-        worldWrapper.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
+        //worldWrapper.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
     private void drawObjects(float deltaTime)
@@ -202,7 +202,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.internal("data/levels/main_menu.smclvl").readString(), worldWrapper.getWorld());
+        loader.parseLevel(Gdx.files.internal("data/levels/main_menu.smclvl").readString());
 
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
@@ -242,11 +242,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);
-        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);
+        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
         maryo.setFacingLeft(false);
         maryo.loadTextures();
-        worldWrapper.setMario(maryo);
-        worldWrapper.setLevel(loader.getLevel());
+        world.setMario(maryo);
+        world.setLevel(loader.getLevel());
 
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 

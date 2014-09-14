@@ -13,7 +13,7 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.WorldWrapper;
+import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.view.HUD;
@@ -22,7 +22,7 @@ import rs.pedjaapps.smc.view.WorldRenderer;
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
 
-    private WorldWrapper worldWrapper;
+    private World world;
     private WorldRenderer renderer;
     private MarioController controller;
     //DPad dPad;
@@ -53,12 +53,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        worldWrapper = new WorldWrapper();
+        world = new World();
         hud = new HUD();
         //dPad = new DPad(0.3f * width);
         //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
         renderer = new WorldRenderer(this);
-        controller = new MarioController(worldWrapper);
+        controller = new MarioController(world);
         Gdx.input.setInputProcessor(this);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
@@ -175,14 +175,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.internal("data/levels/test_lvl.smclvl").readString(), worldWrapper.getWorld());
+        loader.parseLevel(Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
         hud.loadAssets();
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);//TODO load from level
-        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), worldWrapper.getWorld(), states);
+        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
         maryo.loadTextures();
-        worldWrapper.setMario(maryo);
-        worldWrapper.setLevel(loader.getLevel());
+        world.setMario(maryo);
+        world.setLevel(loader.getLevel());
         controller.setMaryo(maryo);
     }
 
@@ -445,14 +445,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return ABP + APC + PBC == ABC;
     }
 
-    public WorldWrapper getWorldWrapper()
+    public World getWorld()
     {
-        return worldWrapper;
+        return world;
     }
 
-    public void setWorldWrapper(WorldWrapper worldWrapper)
+    public void setWorld(World world)
     {
-        this.worldWrapper = worldWrapper;
+        this.world = world;
     }
 
     /*public DPad getdPad()

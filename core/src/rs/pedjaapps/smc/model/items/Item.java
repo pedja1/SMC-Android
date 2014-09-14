@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.model.items;
 
 import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.physics.box2d.*;
 
 import rs.pedjaapps.smc.model.Coin;
 import rs.pedjaapps.smc.model.Sprite;
@@ -17,17 +16,13 @@ public abstract class Item extends Sprite
         goldpiece, moon, jstar, mushroom, fireplant
     }
     WorldState worldState = WorldState.IDLE;
-    protected Body body;
-    protected World world;
 
-    public Item(World world, Vector3 position, float width, float height)
+    public Item(Vector3 position, float width, float height)
     {
         super(position, width, height);
-        this.world = world;
-        body = createBody(world, position, width, height);
     }
 
-    public Body createBody(World world, Vector3 position, float width, float height)
+    /*public Body createBody(World world, Vector3 position, float width, float height)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -44,17 +39,17 @@ public abstract class Item extends Sprite
 
         polygonShape.dispose();
         return body;
-    }
+    }*/
 
 
-    public static Item initObject(String objectClassString, World world, Vector3 position, float width, float height)
+    public static Item initObject(String objectClassString, Vector3 position, float width, float height)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);
         Item object = null;
         switch (itemClass)
         {
             case goldpiece:
-                object = new Coin(world, position, width, height);
+                object = new Coin(position, width, height);
                 break;
         }
         return object;

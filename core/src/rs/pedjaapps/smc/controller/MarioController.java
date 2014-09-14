@@ -1,13 +1,14 @@
 package rs.pedjaapps.smc.controller;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.*;
 
+import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.WorldWrapper;
+import rs.pedjaapps.smc.model.World;
 
 public class MarioController
 {
@@ -21,7 +22,7 @@ public class MarioController
     private static final float MAX_JUMP_SPEED = 5f;
     private static final float MAX_VEL = 2f;
 
-    private WorldWrapper world;
+    private World world;
     private Maryo maryo;
     private long jumpPressedTime;
     private boolean jumpingPressed;
@@ -29,7 +30,7 @@ public class MarioController
 
     static Set<Keys> keys = new HashSet<Keys>();
 
-    public MarioController(WorldWrapper world)
+    public MarioController(World world)
     {
         this.world = world;
         this.maryo = world.getMario();
@@ -119,16 +120,15 @@ public class MarioController
         // simply updates the state time
         maryo.update(delta);
         //world.getLevel().getPb().moveX(delta);
-		
-    }
+	}
 
     /**
      * Change Mario's state and parameters based on input controls *
      */
     private boolean processInput()
     {
-        Vector2 vel = maryo.getBody().getLinearVelocity();
-        Vector2 pos = maryo.getBody().getPosition();
+        Vector2 vel = maryo.getVelocity();
+        Vector3 pos = maryo.getPosition();
         if (keys.contains(Keys.JUMP))
         {
             //System.out.println("jump");
@@ -151,8 +151,8 @@ public class MarioController
                     if (jumpingPressed && vel.y < MAX_JUMP_SPEED)
                     {
                         //maryo.getVelocity().y = MAX_JUMP_SPEED;
-                        maryo.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
-                        maryo.getBody().setLinearVelocity(vel.x, vel.y = +10f);
+                        //maryo.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
+                        maryo.setVelocity(vel.x, vel.y = +10f);
                     }
                 }
             }
@@ -169,7 +169,7 @@ public class MarioController
             //if (vel.x > -MAX_VEL)
             //{
                 //maryo.getBody().applyLinearImpulse(-1.2f, 0, 0, 0, true);
-                maryo.getBody().setLinearVelocity(vel.x = -4f, vel.y);
+                maryo.setVelocity(vel.x = -4f, vel.y);
             //}
         }
         else if (keys.contains(Keys.RIGHT))
@@ -184,7 +184,7 @@ public class MarioController
             //if (vel.x < MAX_VEL)
             //{
                 //maryo.getBody().applyLinearImpulse(1.2f, 0, 0, 0, true);
-                maryo.getBody().setLinearVelocity(vel.x = +4f, vel.y);
+                maryo.setVelocity(vel.x = +4f, vel.y);
             //}
         }
         else if (keys.contains(Keys.DOWN))
@@ -202,33 +202,14 @@ public class MarioController
                 maryo.setWorldState(Maryo.WorldState.IDLE);
             }
             //slowly decrease linear velocity on x axes
-            maryo.getBody().setLinearVelocity(vel.x * 0.7f, vel.y);
+            maryo.setVelocity(vel.x * 0.7f, vel.y);
         }
         return false;
     }
 
     private boolean isPlayerGrounded()
     {
-        Array<Contact> contactList = world.getWorld().getContactList();
-        for (int i = 0; i < contactList.size; i++)
-        {
-            Contact contact = contactList.get(i);
-            if (contact.isTouching()
-                    && (contact.getFixtureA() == maryo.getSensorFixture() || contact.getFixtureB() == maryo.getSensorFixture()))
-            {
-                /*Vector2 pos = maryo.getBody().getPosition();
-                WorldManifold manifold = contact.getWorldManifold();
-                boolean below = true;
-                for (int j = 0; j < manifold.getNumberOfContactPoints(); j++)
-                {
-                    below &= (manifold.getPoints()[j].y < pos.y - 1.5f);
-                }*/
-
-                return true;
-
-            }
-        }
-        return false;
+        return maryo.getVelocity().y == 0;
     }
 
     public void setMaryo(Maryo mario)
