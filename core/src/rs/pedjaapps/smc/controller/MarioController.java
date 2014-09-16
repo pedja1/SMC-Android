@@ -26,7 +26,7 @@ public class MarioController
     private Maryo maryo;
     private long jumpPressedTime;
     private boolean jumpingPressed;
-    private boolean grounded = false;
+    
 
     static Set<Keys> keys = new HashSet<Keys>();
 
@@ -107,13 +107,13 @@ public class MarioController
      */
     public void update(float delta)
     {
-        grounded = isPlayerGrounded();
+        boolean grounded = maryo.isGrounded();//maryo.checkGrounded();
 		if(!grounded)
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
 		}
         processInput();
-        if (grounded && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+        if (maryo.isGrounded() && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
         {
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
@@ -138,7 +138,7 @@ public class MarioController
                 jumpPressedTime = System.currentTimeMillis();
                 maryo.setWorldState(Maryo.WorldState.JUMPING);
                 //maryo.getVelocity().y = MAX_JUMP_SPEED;
-                grounded = false;
+                maryo.setGrounded(false);
             }
             else
             {
@@ -207,10 +207,7 @@ public class MarioController
         return false;
     }
 
-    private boolean isPlayerGrounded()
-    {
-        return maryo.getVelocity().y == 0;
-    }
+    
 
     public void setMaryo(Maryo mario)
     {

@@ -31,6 +31,8 @@ public class Maryo extends GameObject
     private static final float MAX_JUMP_SPEED   = 7f;
     private static final float DAMP             = 0.90f;
     private static final float MAX_VEL          = 4f;
+	
+	private boolean grounded = false;
 
     public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
     {
@@ -257,6 +259,10 @@ public class Maryo extends GameObject
             if (object == null) continue;
             if (object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive && bounds.overlaps(object.getBounds())) 
 			{
+				if (velocity.y < 0) 
+				{
+					grounded = true;
+				}
                 velocity.y = 0;
 				break;
             }
@@ -321,4 +327,20 @@ public class Maryo extends GameObject
     {
         return stateTime;
     }
+	
+	public boolean checkGrounded()
+    {
+        grounded = velocity.y == 0;
+		return grounded;
+    }
+	
+	public void setGrounded(boolean grounded)
+	{
+		this.grounded = grounded;
+	}
+	
+	public boolean isGrounded()
+	{
+		return grounded;
+	}
 }
