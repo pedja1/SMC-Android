@@ -202,7 +202,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.internal("data/levels/main_menu.smclvl").readString());
+        loader.parseLevel(world, Gdx.files.internal("data/levels/main_menu.smclvl").readString());
 
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
@@ -242,7 +242,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);
-        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
+        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
         maryo.setFacingLeft(false);
         maryo.loadTextures();
         world.setMario(maryo);

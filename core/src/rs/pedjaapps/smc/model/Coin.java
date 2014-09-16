@@ -14,9 +14,9 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Coin extends Item
 {
 
-    public Coin(Vector3 position, float width, float height)
+    public Coin(World world, Vector2 size, Vector3 position)
     {
-        super(position, width, height);
+        super(world, size, position);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class Coin extends Item
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, position.x - getBounds().width / 2, position.y - getBounds().height / 2, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
     }
 }

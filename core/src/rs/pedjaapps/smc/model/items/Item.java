@@ -1,9 +1,10 @@
 package rs.pedjaapps.smc.model.items;
 
-import com.badlogic.gdx.math.*;
-
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.model.Coin;
 import rs.pedjaapps.smc.model.Sprite;
+import rs.pedjaapps.smc.model.World;
 
 /**
  * Created by pedja on 24.5.14..
@@ -17,9 +18,9 @@ public abstract class Item extends Sprite
     }
     WorldState worldState = WorldState.IDLE;
 
-    public Item(Vector3 position, float width, float height)
+    public Item(World world, Vector2 size, Vector3 position)
     {
-        super(position, width, height);
+        super(world, size, position);
     }
 
     /*public Body createBody(World world, Vector3 position, float width, float height)
@@ -42,14 +43,14 @@ public abstract class Item extends Sprite
     }*/
 
 
-    public static Item initObject(String objectClassString, Vector3 position, float width, float height)
+    public static Item initObject(World world, String objectClassString, Vector2 size, Vector3 position)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);
         Item object = null;
         switch (itemClass)
         {
             case goldpiece:
-                object = new Coin(position, width, height);
+                object = new Coin(world, size, position);
                 break;
         }
         return object;

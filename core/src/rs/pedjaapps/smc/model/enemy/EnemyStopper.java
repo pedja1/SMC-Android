@@ -1,15 +1,17 @@
 package rs.pedjaapps.smc.model.enemy;
 
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.model.World;
 
 public class EnemyStopper extends GameObject
 {
-	public EnemyStopper(Vector3 position, float width, float height)
+	public EnemyStopper(World world, Vector2 size, Vector3 position)
     {
-        super(new Rectangle(position.x, position.y, width, height), position);
+        super(world, size, position);
     }
 
     /*public Body createBody(World world, Vector3 position, float width, float height)
@@ -41,7 +43,7 @@ public class EnemyStopper extends GameObject
     @Override
 	public void render(SpriteBatch spriteBatch)
 	{
-		// thus object is invisible
+		// this object is invisible
 	}
 
     @Override

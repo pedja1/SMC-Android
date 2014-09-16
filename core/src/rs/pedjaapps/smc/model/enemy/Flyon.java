@@ -1,10 +1,14 @@
 package rs.pedjaapps.smc.model.enemy;
 
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -20,9 +24,9 @@ public class Flyon extends Enemy
     private static final long STAY_TOP_TIME = 300;//2 seconds
     private static final long STAY_BOTTOM_TIME = 2500;//3 seconds
 
-    public Flyon(Vector3 position, float width, float height)
+    public Flyon(World world, Vector2 size, Vector3 position)
     {
-        super(position, width, height);
+        super(world, size, position);
     }
 
     @Override
@@ -41,7 +45,7 @@ public class Flyon extends Enemy
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, position.x - bounds.width / 2, position.y - bounds.height / 2, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
     }
 
     public void update(float deltaTime)

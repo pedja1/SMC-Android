@@ -10,8 +10,8 @@ public abstract class GameObject
 {
     protected Rectangle bounds = new Rectangle();
 	protected Vector3 position = new Vector3();
-    protected Vector2 velocity = new Vector2();
-    protected Vector2 acceleration = new Vector2();
+    protected Vector3 velocity = new Vector3();
+    protected Vector3 acceleration = new Vector3();
     protected World world;
     boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
     public enum WorldState
@@ -55,9 +55,9 @@ public abstract class GameObject
         walk_left, walk_right
     }
 
-    public GameObject(World world, Rectangle bounds, Vector3 position)
+    public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.bounds = bounds;
+        this.bounds = new Rectangle(position.x, position.y, size.x, size.y);
 		this.position = position;
         this.world = world;
     }
@@ -92,19 +92,19 @@ public abstract class GameObject
         this.position = position;
     }
 
-    public Vector2 getVelocity()
+    public Vector3 getVelocity()
     {
         return velocity;
     }
 
-    public void setVelocity(Vector2 velocity)
+    public void setVelocity(Vector3 velocity)
     {
         this.velocity = velocity;
     }
 
     public void setVelocity(float x, float y)
     {
-        this.velocity = new Vector2(x, y);
+        this.velocity = new Vector3(x, y, 0);
     }
 
     public abstract void render(SpriteBatch spriteBatch);

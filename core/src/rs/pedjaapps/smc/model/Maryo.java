@@ -34,7 +34,7 @@ public class Maryo extends GameObject
 
     public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
     {
-        super(world, new Rectangle(position.x, position.y, size.x, size.y), position);
+        super(world, size, position);
         this.usedStates = usedStates;
 
     }
@@ -167,7 +167,7 @@ public class Maryo extends GameObject
                 marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
             }
         }
-        spriteBatch.draw(marioFrame, position.x - getBounds().width/2, position.y - getBounds().height/2, bounds.width, bounds.height);
+        spriteBatch.draw(marioFrame, position.x, position.y, bounds.width, bounds.height);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class Maryo extends GameObject
         acceleration.scl(delta);
 
         // apply acceleration to change velocity
-        velocity.add(acceleration.x, acceleration.y);
+        velocity.add(acceleration);
 
         // checking collisions with the surrounding blocks depending on Bob's velocity
         checkCollisionWithBlocks(delta);
@@ -208,7 +208,7 @@ public class Maryo extends GameObject
 
 
         // we first check the movement on the horizontal X axis
-        int startX, endX;
+        /*int startX, endX;
         int startY = (int) bounds.y;
         int endY = (int) (bounds.y + bounds.height);
         // if Bob is heading left then we check if he collides with the block on his left
@@ -217,79 +217,61 @@ public class Maryo extends GameObject
             startX = endX = (int) Math.floor(bounds.x + velocity.x);
         } else {
             startX = endX = (int) Math.floor(bounds.x + bounds.width + velocity.x);
-        }
+        }*/
 
         // get the block(s) maryo can collide with
-        populateCollidableBlocks(startX, startY, endX, endY);
+        //populateCollidableBlocks(startX, startY, endX, endY);
 
         // simulate maryos's movement on the X
         bounds.x += velocity.x;
 
         // if bob collides, make his horizontal velocity 0
-        for (Block block : collidable) {
-            if (block == null) continue;
-            if (bobRect.overlaps(block.getBounds())) {
+        for (GameObject object : world.getVisibleObjects()) 
+		{
+            if (object == null) continue;
+            if (object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive && bounds.overlaps(object.getBounds())) 
+			{
                 velocity.x = 0;
-                world.getCollisionRects().add(block.getBounds());
-                break;
+				break;
             }
         }
 
         // reset the x position of the collision box
-        bobRect.x = bob.getPosition().x;
+        bounds.x = position.x;
 
         // the same thing but on the vertical Y axis
-        startX = (int) bounds.x;
+        /*startX = (int) bounds.x;
         endX = (int) (bounds.x + bounds.width);
         if (velocity.y < 0) {
             startY = endY = (int) Math.floor(bounds.y + velocity.y);
         } else {
             startY = endY = (int) Math.floor(bounds.y + bounds.height + velocity.y);
-        }
+        }*/
 
-        populateCollidableBlocks(startX, startY, endX, endY);
+        //populateCollidableBlocks(startX, startY, endX, endY);
 
-        bobRect.y += velocity.y;
+        bounds.y += velocity.y;
 
-        for (Block block : collidable) {
-            if (block == null) continue;
-            if (bobRect.overlaps(block.getBounds())) {
-                if (velocity.y < 0) {
-                    grounded = true;
-                }
+        for (GameObject object : world.getVisibleObjects()) 
+		{
+            if (object == null) continue;
+            if (object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive && bounds.overlaps(object.getBounds())) 
+			{
                 velocity.y = 0;
-                world.getCollisionRects().add(block.getBounds());
-                break;
+				break;
             }
         }
         // reset the collision box's position on Y
-        bobRect.y = bob.getPosition().y;
+        bounds.y = position.y;
 
         // update Bob's position
-        bob.getPosition().add(velocity);
-        bounds.x = bob.getPosition().x;
-        bounds.y = bob.getPosition().y;
+        position.add(velocity);
+        bounds.x = position.x;
+        bounds.y = position.y;
 
         // un-scale velocity (not in frame time)
-        velocity.mul(1 / delta);
+        velocity.scl(1 / delta);
 
-    }
-
-    /** populate the collidable array with the blocks found in the enclosing coordinates **/
-    private Array<GameObject> populateCollidableBlocks()
-    {
-        Array<GameObject> collidable = new Array<GameObject>();
-        for (int x = startX; x <= endX; x++)
-        {
-            for (int y = startY; y <= endY; y++)
-            {
-                if (x >= 0 && x < world.getLevel().getWidth() && y >= 0 && y < world.getLevel().getHeight())
-                {
-                    collidable.add(world.getLevel().get(x, y));
-                }
-            }
-        }
-        return collidable;
     }
 
     public boolean isFacingLeft()

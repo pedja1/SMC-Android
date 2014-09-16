@@ -175,11 +175,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
+        loader.parseLevel(world, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
         hud.loadAssets();
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);//TODO load from level
-        Maryo maryo = new Maryo(loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
+        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
         maryo.loadTextures();
         world.setMario(maryo);
         world.setLevel(loader.getLevel());

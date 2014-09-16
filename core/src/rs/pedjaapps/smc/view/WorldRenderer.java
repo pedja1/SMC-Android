@@ -1,13 +1,17 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import rs.pedjaapps.smc.model.BackgroundColor;
 import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -24,7 +28,7 @@ public class WorldRenderer
     /**
      * for debug rendering *
      */
-    ShapeRenderer bgRenderer = new ShapeRenderer();
+    ShapeRenderer debugRenderer = new ShapeRenderer();
 
     /**
      * Textures *
@@ -120,7 +124,11 @@ public class WorldRenderer
         spriteBatch.setProjectionMatrix(guiCam.combined);
         spriteBatch.begin();
         leafEffect.draw(spriteBatch, delta);
-        if(debug)drawDebugText();
+        if(debug)
+		{
+			drawDebugText();
+			drawDebug();
+		}
         drawHud();
         spriteBatch.end();
 		//if(debug)world.getDebugRenderer().render(world.getWorld(), cam.combined);
@@ -208,6 +216,25 @@ public class WorldRenderer
         }*/
         //System.out.println(dPad.getPosition().x + " " + dPad.getPosition().y + " " + dPad.getBounds().height);
     }
+	
+	private void drawDebug() 
+	{
+		// render blocks
+		debugRenderer.setProjectionMatrix(cam.combined);
+		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
+		for (GameObject go : world.getVisibleObjects()) 
+		{
+			Rectangle rect = go.getBounds();
+			debugRenderer.setColor(new Color(1, 0, 0, 1));
+			debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		}
+		// render Bob
+		Maryo bob = world.getMario();
+		Rectangle rect = bob.getBounds();
+		debugRenderer.setColor(new Color(0, 1, 0, 1));
+		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		debugRenderer.end();
+	}
 
     private void drawDebugText()
     {

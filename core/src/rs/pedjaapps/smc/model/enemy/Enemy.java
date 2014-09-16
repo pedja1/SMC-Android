@@ -1,7 +1,10 @@
 package rs.pedjaapps.smc.model.enemy;
 
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.model.World;
 
 /**
  * Created by pedja on 18.5.14..
@@ -60,9 +63,9 @@ public abstract class Enemy extends GameObject
 
     WorldState worldState = WorldState.IDLE;
 
-    protected Enemy(Vector3 position, float width, float height)
+    protected Enemy(World world, Vector2 size, Vector3 position)
     {
-        super(new Rectangle(position.x, position.y, width, height), position);
+        super(world, size, position);
     }
 
     /*public Body createBody(World world, Vector3 position, float width, float height)
@@ -90,7 +93,7 @@ public abstract class Enemy extends GameObject
         return body;
     }*/
 
-    public static Enemy initEnemy(String enemyClassString, Vector3 position, float width, float height)
+    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position)
     {
 		System.out.println(enemyClassString);
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
@@ -98,14 +101,14 @@ public abstract class Enemy extends GameObject
         switch (enemyClass)
         {
             case eato:
-                enemy = new Eato(position, width, height);
+                enemy = new Eato(world, size, position);
                 break;
             case flyon:
-                enemy = new Flyon(position, width, height);
+                enemy = new Flyon(world, size, position);
                 break;
 			case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(position, width, height);
+                enemy = new Furball(world, size, position);
                 break;
         }
         return enemy;

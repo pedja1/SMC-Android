@@ -9,7 +9,7 @@ public class Sprite extends GameObject
 {
     protected String textureAtlas;
     private String textureName;//name of texture from pack or png
-    protected TYPE type = null;
+    protected Type type = null;
 
     @Override
     public void render(SpriteBatch spriteBatch)
@@ -42,14 +42,14 @@ public class Sprite extends GameObject
      * passive = player passes in front of it
      * front_passive = player passes behind it
      * */
-    public enum TYPE
+    public enum Type
     {
-        massive, passive, front_passive
+        massive, passive, front_passive, halfmassive, climbable
     }
 
-    public Sprite(Vector3 position, float width, float height)
+    public Sprite(World world, Vector2 size, Vector3 position)
     {
-        super(new Rectangle(position.x, position.y, width, height), position);
+        super(world, size, position);
         this.position = position;
     }
 
@@ -80,12 +80,12 @@ public class Sprite extends GameObject
         this.bounds = bounds;
     }
 
-    public TYPE getType()
+    public Type getType()
     {
         return type;
     }
 
-    public void setType(TYPE type)
+    public void setType(Type type)
     {
         this.type = type;
     }

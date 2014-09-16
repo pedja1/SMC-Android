@@ -127,7 +127,7 @@ public class MarioController
      */
     private boolean processInput()
     {
-        Vector2 vel = maryo.getVelocity();
+        Vector3 vel = maryo.getVelocity();
         Vector3 pos = maryo.getPosition();
         if (keys.contains(Keys.JUMP))
         {
