@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.*;
  */
 public abstract class GameObject
 {
-    protected Rectangle bounds = new Rectangle();
-	public Vector3 pp = new Vector3();
+    protected Rectangle bounds = new Rectangle();//used for draw
+    protected Rectangle body = new Rectangle();//used for collision detection
 	public Vector3 position = new Vector3();
     protected Vector3 velocity = new Vector3();
     protected Vector3 acceleration = new Vector3();
@@ -60,8 +60,8 @@ public abstract class GameObject
     public GameObject(World world, Vector2 size, Vector3 position)
     {
         this.bounds = new Rectangle(position.x, position.y, size.x, size.y);
+        body = new Rectangle(bounds);
 		this.position = position;
-		pp = position;
         this.world = world;
     }
 
@@ -108,6 +108,16 @@ public abstract class GameObject
     public void setVelocity(float x, float y)
     {
         this.velocity = new Vector3(x, y, 0);
+    }
+
+    public Rectangle getBody()
+    {
+        return body;
+    }
+
+    public void setBody(Rectangle body)
+    {
+        this.body = body;
     }
 
     public abstract void render(SpriteBatch spriteBatch);

@@ -230,9 +230,12 @@ public class WorldRenderer
 		}
 		// render Bob
 		Maryo bob = world.getMario();
-		Rectangle rect = bob.getBounds();
+		Rectangle body = bob.getBody();
+        Rectangle bounds = bob.getBounds();
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
-		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		debugRenderer.rect(body.x, body.y, body.width, body.height);
+        debugRenderer.setColor(new Color(1, 0, 0, 1));
+        debugRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		debugRenderer.end();
 	}
 

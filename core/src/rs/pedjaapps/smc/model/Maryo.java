@@ -5,8 +5,6 @@ import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.CollisionManager;
 
 public class Maryo extends GameObject
 {
@@ -19,7 +17,7 @@ public class Maryo extends GameObject
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
 
-    WorldState worldState = WorldState.IDLE;
+    WorldState worldState = WorldState.JUMPING;
     MarioState marioState = MarioState.small;
     boolean facingLeft = false;
     boolean longJump = false;
@@ -37,7 +35,22 @@ public class Maryo extends GameObject
     {
         super(world, size, position);
         this.usedStates = usedStates;
+        setupBoundingBox();
+    }
 
+    private void setupBoundingBox()
+    {
+        body.x = bounds.x + bounds.width / 4;
+        body.width = bounds.width / 2;
+        position.x = body.x;
+
+        position.y = body.y = bounds.y += 0.5f;
+    }
+
+    private void updateBounds()
+    {
+        bounds.x = body.x - bounds.width / 4;
+        bounds.y = body.y;
     }
 
 	/*private Body createBody(World world, Vector3 position)
@@ -168,7 +181,7 @@ public class Maryo extends GameObject
                 marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
             }
         }
-        spriteBatch.draw(marioFrame, position.x, position.y, bounds.width, bounds.height);
+        spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
     @Override
@@ -207,53 +220,50 @@ public class Maryo extends GameObject
         // scale velocity to frame units 
         velocity.scl(delta);
 
-
         // we first check the movement on the horizontal X axis
         
         // simulate maryos's movement on the X
-        bounds.x += velocity.x;
-		
-		
+        body.x += velocity.x;
+
         // if m collides, make his horizontal velocity 0
         for (GameObject object : world.getVisibleObjects()) 
 		{
             if (object == null) continue;
-            if (CollisionManager.collides(this, object)) 
+            if (body.overlaps(object.getBody()))
 			{
 				handleCollision(object, false);
-				//break;
             }
         }
 
         // reset the x position of the collision box
-        bounds.x = position.x;
+        body.x = position.x;
 
         // the same thing but on the vertical Y axis
         
-        bounds.y += velocity.y;
+        body.y += velocity.y;
 
         for (GameObject object : world.getVisibleObjects()) 
 		{
             if (object == null) continue;
-            if (bounds.overlaps(object.getBounds())) 
+            if (body.overlaps(object.getBody()))
 			{
 				handleCollision(object, true);
-				//break;
             }
         }
         // reset the collision box's position on Y
-        bounds.y = position.y;
+        body.y = position.y;
 
         // update position
         position.add(velocity);
-        bounds.x = position.x;
-        bounds.y = position.y;
+        body.x = position.x;
+        body.y = position.y;
+        updateBounds();
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
     }
-	
-	private void handleCollision(GameObject object, boolean vertical)
+
+    private void handleCollision(GameObject object, boolean vertical)
 	{
 		if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive)
 		{
@@ -272,7 +282,7 @@ public class Maryo extends GameObject
 		}
 		else if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.halfmassive)
 		{
-			if(velocity.y < 0 && position.y > object.position.y + object.bounds.height)
+			if(velocity.y < 0 && position.y > object.position.y + object.body.height)
 			{
 				grounded = true;
 				velocity.y = 0;
@@ -310,13 +320,6 @@ public class Maryo extends GameObject
         this.longJump = longJump;
     }
 
-
-    public void setBounds(Rectangle bounds)
-    {
-        this.bounds = bounds;
-    }
-
-
     public void setStateTime(float stateTime)
     {
         this.stateTime = stateTime;
@@ -343,4 +346,6 @@ public class Maryo extends GameObject
 	{
 		return grounded;
 	}
+
+
 }
