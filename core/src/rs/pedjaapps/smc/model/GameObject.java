@@ -9,12 +9,14 @@ import com.badlogic.gdx.math.*;
 public abstract class GameObject
 {
     protected Rectangle bounds = new Rectangle();
-	protected Vector3 position = new Vector3();
+	public Vector3 pp = new Vector3();
+	public Vector3 position = new Vector3();
     protected Vector3 velocity = new Vector3();
     protected Vector3 acceleration = new Vector3();
     protected World world;
-    boolean isFront = false; // is sprite drawn after player, so that it appears like player walks behind it
-    public enum WorldState
+    boolean isFront = false;// is sprite drawn after player, so that it appears like player walks behind it
+    
+	public enum WorldState
     {
         IDLE, WALKING, JUMPING, DYING, DUCKING
     }
@@ -59,6 +61,7 @@ public abstract class GameObject
     {
         this.bounds = new Rectangle(position.x, position.y, size.x, size.y);
 		this.position = position;
+		pp = position;
         this.world = world;
     }
 

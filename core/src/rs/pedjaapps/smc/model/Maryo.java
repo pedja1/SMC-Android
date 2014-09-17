@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.CollisionManager;
 
 public class Maryo extends GameObject
 {
@@ -25,10 +26,8 @@ public class Maryo extends GameObject
 
     Array<MarioState> usedStates = new Array<MarioState>();
 
-    private static final long LONG_JUMP_PRESS   = 150l;
     private static final float ACCELERATION     = 20f;
     private static final float GRAVITY          = -20f;
-    private static final float MAX_JUMP_SPEED   = 7f;
     private static final float DAMP             = 0.90f;
     private static final float MAX_VEL          = 4f;
 	
@@ -210,31 +209,19 @@ public class Maryo extends GameObject
 
 
         // we first check the movement on the horizontal X axis
-        /*int startX, endX;
-        int startY = (int) bounds.y;
-        int endY = (int) (bounds.y + bounds.height);
-        // if Bob is heading left then we check if he collides with the block on his left
-        // we check the block on his right otherwise
-        if (velocity.x < 0) {
-            startX = endX = (int) Math.floor(bounds.x + velocity.x);
-        } else {
-            startX = endX = (int) Math.floor(bounds.x + bounds.width + velocity.x);
-        }*/
-
-        // get the block(s) maryo can collide with
-        //populateCollidableBlocks(startX, startY, endX, endY);
-
+        
         // simulate maryos's movement on the X
         bounds.x += velocity.x;
-
-        // if bob collides, make his horizontal velocity 0
+		
+		
+        // if m collides, make his horizontal velocity 0
         for (GameObject object : world.getVisibleObjects()) 
 		{
             if (object == null) continue;
-            if (object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive && bounds.overlaps(object.getBounds())) 
+            if (CollisionManager.collides(this, object)) 
 			{
-                velocity.x = 0;
-				break;
+				handleCollision(object, false);
+				//break;
             }
         }
 
@@ -242,43 +229,56 @@ public class Maryo extends GameObject
         bounds.x = position.x;
 
         // the same thing but on the vertical Y axis
-        /*startX = (int) bounds.x;
-        endX = (int) (bounds.x + bounds.width);
-        if (velocity.y < 0) {
-            startY = endY = (int) Math.floor(bounds.y + velocity.y);
-        } else {
-            startY = endY = (int) Math.floor(bounds.y + bounds.height + velocity.y);
-        }*/
-
-        //populateCollidableBlocks(startX, startY, endX, endY);
-
+        
         bounds.y += velocity.y;
 
         for (GameObject object : world.getVisibleObjects()) 
 		{
             if (object == null) continue;
-            if (object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive && bounds.overlaps(object.getBounds())) 
+            if (bounds.overlaps(object.getBounds())) 
 			{
-				if (velocity.y < 0) 
-				{
-					grounded = true;
-				}
-                velocity.y = 0;
-				break;
+				handleCollision(object, true);
+				//break;
             }
         }
         // reset the collision box's position on Y
         bounds.y = position.y;
 
-        // update Bob's position
+        // update position
         position.add(velocity);
         bounds.x = position.x;
         bounds.y = position.y;
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
-
     }
+	
+	private void handleCollision(GameObject object, boolean vertical)
+	{
+		if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive)
+		{
+			if(vertical/*CollisionManager.resolve_objects(this, object)*/)
+			{
+				if (velocity.y < 0) 
+				{
+					grounded = true;
+				}
+                velocity.y = 0;
+			}
+			else
+			{
+				velocity.x = 0;
+			}
+		}
+		else if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.halfmassive)
+		{
+			if(velocity.y < 0 && position.y > object.position.y + object.bounds.height)
+			{
+				grounded = true;
+				velocity.y = 0;
+			}
+		}
+	}
 
     public boolean isFacingLeft()
     {
