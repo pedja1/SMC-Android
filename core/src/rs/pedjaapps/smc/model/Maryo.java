@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
 
-public class Maryo extends GameObject
+public class Maryo extends DynamicObject
 {
     protected float stateTime;
 
@@ -47,7 +47,8 @@ public class Maryo extends GameObject
         position.y = body.y = bounds.y += 0.5f;
     }
 
-    private void updateBounds()
+	@Override
+    protected void updateBounds()
     {
         bounds.x = body.x - bounds.width / 4;
         bounds.y = body.y;

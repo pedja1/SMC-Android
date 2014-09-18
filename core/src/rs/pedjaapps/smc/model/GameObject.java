@@ -107,7 +107,8 @@ public abstract class GameObject
 
     public void setVelocity(float x, float y)
     {
-        this.velocity = new Vector3(x, y, 0);
+        velocity.x = x;
+		velocity.y = y;
     }
 
     public Rectangle getBody()

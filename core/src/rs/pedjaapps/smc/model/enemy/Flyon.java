@@ -44,20 +44,26 @@ public class Flyon extends Enemy
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 
-        //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+		Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
     }
 
     public void update(float deltaTime)
     {
-		position.x = 0;
+		// Setting initial vertical acceleration 
+        acceleration.y = Constants.GRAVITY;
+
+        // Convert acceleration to frame time
+        acceleration.scl(deltaTime);
+
+        // apply acceleration to change velocity
+        velocity.add(acceleration);
+		
         stateTime += deltaTime;
 
         long timeNow = System.currentTimeMillis();
         if((topReached && timeNow - maxPositionReachedTs < STAY_TOP_TIME))
         {
-            //body.applyForceToCenter(0, /*+world.getGravity().y*/20, true);
-            setVelocity(0, 0);
+			setVelocity(0, -Constants.GRAVITY);
             return;
         }
         else
@@ -99,9 +105,16 @@ public class Flyon extends Enemy
         }
         else
         {
-            //body.setLinearDamping(5);
-            setVelocity(0, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
+			setVelocity(0, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
         }
-
+		
+		velocity.scl(deltaTime);
+		
+		position.add(velocity);
+        body.x = position.x;
+        body.y = position.y;
+        updateBounds();
+		
+		velocity.scl(1 / deltaTime);
     }
 }

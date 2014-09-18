@@ -1,15 +1,14 @@
 package rs.pedjaapps.smc.model.enemy;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.model.DynamicObject;
 import rs.pedjaapps.smc.model.World;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public abstract class Enemy extends GameObject
+public abstract class Enemy extends DynamicObject
 {
     protected float stateTime;
     protected String textureAtlas;
