@@ -10,7 +10,6 @@ import rs.pedjaapps.smc.model.World;
  */
 public abstract class Enemy extends DynamicObject
 {
-    protected float stateTime;
     protected String textureAtlas;
     private String textureName;//name of texture from pack
 	protected Direction direction = Direction.right;
@@ -122,5 +121,11 @@ public abstract class Enemy extends DynamicObject
 	public void handleCollision(ContactType ContactType)
 	{
 		// subclasses should implement this
+	}
+	
+	@Override
+	public float maxVelocity()
+	{
+		return DEF_MAX_VEL;
 	}
 }

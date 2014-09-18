@@ -44,7 +44,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private GAME_STATE gameState;
 
     private HashMap<Integer, TouchInfo> touches = new HashMap<Integer, TouchInfo>();
-    boolean update = false;
+    public boolean update = false;
     LevelLoader loader;
 
     public GameScreen(MaryoGame game)

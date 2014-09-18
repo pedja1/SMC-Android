@@ -15,6 +15,8 @@ import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.model.DynamicObject;
+import rs.pedjaapps.smc.model.enemy.Furball;
 
 public class WorldRenderer
 {
@@ -41,6 +43,8 @@ public class WorldRenderer
     private int height;
 
     private BitmapFont debugFont;
+	
+	GameScreen gameScreen;
 
     public void setSize(int w, int h)
     {
@@ -60,6 +64,7 @@ public class WorldRenderer
 
     public WorldRenderer(GameScreen gameScreen)
     {
+		this.gameScreen = gameScreen;
         this.world = gameScreen.getWorld();
         this.width = gameScreen.getWidth();
         this.height = gameScreen.getHeight();
@@ -127,7 +132,7 @@ public class WorldRenderer
         if(debug)
 		{
 			drawDebugText();
-			drawDebug();
+			//drawDebug();
 		}
         drawHud();
         spriteBatch.end();
@@ -176,10 +181,21 @@ public class WorldRenderer
 
     private void drawObjects(/*boolean front, */float delta)
     {
+		int f = 0;
+		for(GameObject go : world.getLevel().getGameObjects())
+		{
+			//if(go instanceof DynamicObject)
+			{
+				if(gameScreen.update)go.update(delta);
+				go.render(spriteBatch);
+			}
+			if(go instanceof Furball)f++;
+		}
+		System.out.println("f count: " + f);
         for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
         {
-            object.update(delta);
-            object.render(spriteBatch);
+			//if(gameScreen.update) object.update(delta);
+            //object.render(spriteBatch);
         }
     }
 

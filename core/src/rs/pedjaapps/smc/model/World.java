@@ -60,7 +60,7 @@ public class World
         for (GameObject object : level.getGameObjects())
         {
             Rectangle bounds = object.getBounds();
-            if (bounds.overlaps(worldBounds) || object instanceof Enemy)
+            if (bounds.overlaps(worldBounds)/* || object instanceof Enemy*/)
             {
                 objects.add(object);
                 /*if (getFront)
@@ -80,6 +80,35 @@ public class World
         return objects;
     }
 
+	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
+    {
+        Array<GameObject> objects = new Array<GameObject>();
+        float wX = center.getBody().x - offset;
+        float wY = center.getBody().y - offset;
+        float wW = center.getBody().x + center.getBody().width + offset * 2;
+        float wH = center.getBody().y + center.getBody().height + offset * 2;
+        Rectangle offsetBounds = new Rectangle(wX, wY, wW, wH);
+        for (GameObject object : level.getGameObjects())
+        {
+            Rectangle bounds = object.getBounds();
+            if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
+            {
+                objects.add(object);
+                /*if (getFront)
+				 {
+				 if (object.isFront())
+				 {
+				 sprites.add(object);
+				 }
+				 }
+				 else
+				 {
+				 sprites.add(object);
+				 }*/
+            }
+        }
+        return objects;
+    }
     // --------------------
     public World()
     {
@@ -153,6 +182,6 @@ public class World
 
     public Array<GameObject> getVisibleObjects()
     {
-        return visibleObjects;
+        return visibleObjects == null ? new Array<>() : visibleObjects;
     }
 }

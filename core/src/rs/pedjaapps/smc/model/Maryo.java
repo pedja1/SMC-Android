@@ -8,7 +8,6 @@ import rs.pedjaapps.smc.Assets;
 
 public class Maryo extends DynamicObject
 {
-    protected float stateTime;
 
     public enum MarioState
     {
@@ -16,7 +15,9 @@ public class Maryo extends DynamicObject
     }
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
-
+	
+	protected static final float MAX_VEL          = 4f;
+	
     WorldState worldState = WorldState.JUMPING;
     MarioState marioState = MarioState.small;
     boolean facingLeft = false;
@@ -24,13 +25,7 @@ public class Maryo extends DynamicObject
 
     Array<MarioState> usedStates = new Array<MarioState>();
 
-    private static final float ACCELERATION     = 20f;
-    private static final float GRAVITY          = -20f;
-    private static final float DAMP             = 0.90f;
-    private static final float MAX_VEL          = 4f;
-	
-	private boolean grounded = false;
-
+    
     public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
     {
         super(world, size, position);
@@ -185,111 +180,7 @@ public class Maryo extends DynamicObject
         spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
-    @Override
-    public void update(float delta)
-    {
-        // Setting initial vertical acceleration 
-        acceleration.y = GRAVITY;
-
-        // Convert acceleration to frame time
-        acceleration.scl(delta);
-
-        // apply acceleration to change velocity
-        velocity.add(acceleration);
-
-        // checking collisions with the surrounding blocks depending on Bob's velocity
-        checkCollisionWithBlocks(delta);
-
-        // apply damping to halt Maryo nicely 
-        velocity.x *= DAMP;
-
-        // ensure terminal velocity is not exceeded
-        if (velocity.x > MAX_VEL) {
-            velocity.x = MAX_VEL;
-        }
-        if (velocity.x < -MAX_VEL) {
-            velocity.x = -MAX_VEL;
-        }
-        
-        stateTime += delta;
-
-    }
-
-    /** Collision checking **/
-    private void checkCollisionWithBlocks(float delta) 
-    {
-        // scale velocity to frame units 
-        velocity.scl(delta);
-
-        // we first check the movement on the horizontal X axis
-        
-        // simulate maryos's movement on the X
-        body.x += velocity.x;
-
-        // if m collides, make his horizontal velocity 0
-        for (GameObject object : world.getVisibleObjects()) 
-		{
-            if (object == null) continue;
-            if (body.overlaps(object.getBody()))
-			{
-				handleCollision(object, false);
-            }
-        }
-
-        // reset the x position of the collision box
-        body.x = position.x;
-
-        // the same thing but on the vertical Y axis
-        
-        body.y += velocity.y;
-
-        for (GameObject object : world.getVisibleObjects()) 
-		{
-            if (object == null) continue;
-            if (body.overlaps(object.getBody()))
-			{
-				handleCollision(object, true);
-            }
-        }
-        // reset the collision box's position on Y
-        body.y = position.y;
-
-        // update position
-        position.add(velocity);
-        body.x = position.x;
-        body.y = position.y;
-        updateBounds();
-
-        // un-scale velocity (not in frame time)
-        velocity.scl(1 / delta);
-    }
-
-    private void handleCollision(GameObject object, boolean vertical)
-	{
-		if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive)
-		{
-			if(vertical/*CollisionManager.resolve_objects(this, object)*/)
-			{
-				if (velocity.y < 0) 
-				{
-					grounded = true;
-				}
-                velocity.y = 0;
-			}
-			else
-			{
-				velocity.x = 0;
-			}
-		}
-		else if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.halfmassive)
-		{
-			if(velocity.y < 0 && position.y > object.position.y + object.body.height)
-			{
-				grounded = true;
-				velocity.y = 0;
-			}
-		}
-	}
+    
 
     public boolean isFacingLeft()
     {
@@ -349,4 +240,9 @@ public class Maryo extends DynamicObject
 	}
 
 
+	@Override
+	public float maxVelocity()
+	{
+		return MAX_VEL;
+	}
 }

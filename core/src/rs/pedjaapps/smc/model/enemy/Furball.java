@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -16,6 +17,9 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Furball extends Enemy
 {
+
+	
+	
 
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
@@ -58,11 +62,34 @@ public class Furball extends Enemy
                 : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
 
         //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
-        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+        Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
     }
 
     public void update(float deltaTime)
     {
+		// Setting initial vertical acceleration 
+        acceleration.y = Constants.GRAVITY;
+
+        // Convert acceleration to frame time
+        acceleration.scl(deltaTime);
+
+        // apply acceleration to change velocity
+        velocity.add(acceleration);
+		
+		// checking collisions with the surrounding blocks depending on Bob's velocity
+        checkCollisionWithBlocks(deltaTime);
+
+        // apply damping to halt Maryo nicely 
+        velocity.x *= DAMP;
+
+        // ensure terminal velocity is not exceeded
+        if (velocity.x > maxVelocity()) {
+            velocity.x = maxVelocity();
+        }
+        if (velocity.x < -maxVelocity()) {
+            velocity.x = -maxVelocity();
+        }
+		
         stateTime += deltaTime;
         if(stateTime - turnStartTime > 0.15f)
         {
@@ -79,6 +106,7 @@ public class Furball extends Enemy
 				setVelocity(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
 				break;
 		}
+		
     }
 
 	@Override
@@ -93,4 +121,5 @@ public class Furball extends Enemy
 				break;
 		}
 	}
+	
 }

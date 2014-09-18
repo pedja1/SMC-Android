@@ -108,13 +108,6 @@ public class Flyon extends Enemy
 			setVelocity(0, velocity.y =-((Constants.CAMERA_HEIGHT - position.y)/3f));
         }
 		
-		velocity.scl(deltaTime);
-		
-		position.add(velocity);
-        body.x = position.x;
-        body.y = position.y;
-        updateBounds();
-		
-		velocity.scl(1 / deltaTime);
+		updatePosition(deltaTime);
     }
 }
