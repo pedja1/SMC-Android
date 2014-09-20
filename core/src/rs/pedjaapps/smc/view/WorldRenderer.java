@@ -181,7 +181,7 @@ public class WorldRenderer
 
     private void drawObjects(/*boolean front, */float delta)
     {
-		//int f = 0;
+		int f = 0;
 		for(GameObject go : world.getLevel().getGameObjects())
 		{
 			//if(go instanceof DynamicObject)
@@ -189,9 +189,9 @@ public class WorldRenderer
 				if(gameScreen.update)go.update(delta);
 				go.render(spriteBatch);
 			}
-			//if(go instanceof Furball)f++;
+			if(go instanceof Furball)f++;
 		}
-		System.out.println("game objects size: " + world.getLevel().getGameObjects().size());
+		System.out.println("f count: " + f);
         for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
         {
 			//if(gameScreen.update) object.update(delta);

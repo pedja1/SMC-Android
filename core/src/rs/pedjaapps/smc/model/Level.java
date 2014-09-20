@@ -3,9 +3,6 @@ package rs.pedjaapps.smc.model;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by pedja on 1/31/14.
  */
@@ -13,7 +10,7 @@ public class Level
 {
     private float width;
     private float height;
-    private List<GameObject> gameObjects;
+    private Array<GameObject> gameObjects;
     private Vector3 spanPosition;//i think its a camera position
 	private Background bg1;
 	private Background bg2;
@@ -22,7 +19,7 @@ public class Level
 
 	public Level()
 	{
-		this.gameObjects = new ArrayList<GameObject>();
+		this.gameObjects = new Array<GameObject>();
 	}
 	
 	public void setBg1(Background bg1)
@@ -65,12 +62,12 @@ public class Level
         this.height = height;
     }
 
-    public List<GameObject> getGameObjects()
+    public Array<GameObject> getGameObjects()
     {
         return gameObjects;
     }
 
-    public void setGameObjects(List<GameObject> gameObjects)
+    public void setGameObjects(Array<GameObject> gameObjects)
     {
         this.gameObjects = gameObjects;
     }
