@@ -1,8 +1,10 @@
 package rs.pedjaapps.smc.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import rs.pedjaapps.smc.utility.Constants;
+import java.util.List;
 import rs.pedjaapps.smc.model.enemy.Furball;
+import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.CollisionManager;
 
 public abstract class DynamicObject extends GameObject
 {
@@ -18,12 +20,6 @@ public abstract class DynamicObject extends GameObject
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-    }
-	
-	protected void updateBounds()
-    {
-        bounds.x = body.x;
-        bounds.y = body.y;
     }
 	
 	protected void updatePosition(float deltaTime)
@@ -78,8 +74,9 @@ public abstract class DynamicObject extends GameObject
         // simulate maryos's movement on the X
         body.x += velocity.x;
 
+		List<GameObject> surroundingObjects = world.getLevel().getGameObjects();//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
-        for (GameObject object : world.getSurroundingObjects(this, 1)) 
+        for (GameObject object : surroundingObjects) 
 		{
             if (object == null) continue;
             if (body.overlaps(object.getBody()))
@@ -95,7 +92,7 @@ public abstract class DynamicObject extends GameObject
 
         body.y += velocity.y;
 
-        for (GameObject object : world.getSurroundingObjects(this, 1)) 
+        for (GameObject object : surroundingObjects) 
 		{
             if (object == null) continue;
             if (body.overlaps(object.getBody()))
@@ -114,11 +111,6 @@ public abstract class DynamicObject extends GameObject
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
-		
-		if(this instanceof Furball)
-		{
-			System.out.println("x: " + bounds.x + " " + body.x + " " + position.x);
-		}
     }
 
     protected void handleCollision(GameObject object, boolean vertical)
@@ -137,6 +129,7 @@ public abstract class DynamicObject extends GameObject
 			{
 				velocity.x = 0;
 			}
+			//CollisionManager.resolve_objects(this, object,!vertical);
 		}
 		else if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.halfmassive)
 		{
@@ -144,6 +137,7 @@ public abstract class DynamicObject extends GameObject
 			{
 				grounded = true;
 				velocity.y = 0;
+				//CollisionManager.resolve_objects(this, object,false);
 			}
 		}
 	}

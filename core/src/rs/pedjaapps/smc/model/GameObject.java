@@ -64,6 +64,12 @@ public abstract class GameObject
 		this.position = position;
         this.world = world;
     }
+	
+	public void updateBounds()
+    {
+        bounds.x = body.x;
+        bounds.y = body.y;
+    }
 
     public Rectangle getBounds()
     {

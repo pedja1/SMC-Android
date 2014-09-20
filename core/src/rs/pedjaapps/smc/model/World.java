@@ -1,12 +1,10 @@
 package rs.pedjaapps.smc.model;
 
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.*;
-
-import rs.pedjaapps.smc.model.enemy.Enemy;
-import rs.pedjaapps.smc.model.enemy.EnemyStopper;
+import com.badlogic.gdx.utils.Pool;
+import java.util.ArrayList;
+import java.util.List;
 import rs.pedjaapps.smc.utility.Constants;
 
 
@@ -22,6 +20,17 @@ public class World
      */
     Level level;
     Array<GameObject> visibleObjects;
+	
+	// This is the rectangle pool used in collision detection
+	// Good to avoid instantiation each frame
+	public Pool<Rectangle> rectPool = new Pool<Rectangle>() 
+	{
+		@Override
+		protected Rectangle newObject() 
+		{
+			return new Rectangle();
+		}
+	};
 
     // Getters -----------
 
@@ -56,7 +65,8 @@ public class World
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
         float wH = Constants.CAMERA_HEIGHT + 1;
-        Rectangle worldBounds = new Rectangle(wX, wY, wW, wH);
+        Rectangle worldBounds = rectPool.obtain();
+		worldBounds.set(wX, wY, wW, wH);
         for (GameObject object : level.getGameObjects())
         {
             Rectangle bounds = object.getBounds();
@@ -80,14 +90,15 @@ public class World
         return objects;
     }
 
-	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
+	public List<GameObject> getSurroundingObjects(GameObject center, float offset)
     {
-        Array<GameObject> objects = new Array<GameObject>();
+        List<GameObject> objects = new ArrayList<GameObject>();
         float wX = center.getBody().x - offset;
         float wY = center.getBody().y - offset;
         float wW = center.getBody().x + center.getBody().width + offset * 2;
         float wH = center.getBody().y + center.getBody().height + offset * 2;
-        Rectangle offsetBounds = new Rectangle(wX, wY, wW, wH);
+        Rectangle offsetBounds = rectPool.obtain();
+		offsetBounds.set(wX, wY, wW, wH);
         for (GameObject object : level.getGameObjects())
         {
             Rectangle bounds = object.getBounds();
@@ -109,6 +120,18 @@ public class World
         }
         return objects;
     }
+	
+	public Rectangle createMaryoRectWithOffset(float offset)
+	{
+		float wX = mario.getBody().x - offset;
+        float wY = mario.getBody().y - offset;
+        float wW = mario.getBody().x + mario.getBody().width + offset * 2;
+        float wH = mario.getBody().y + mario.getBody().height + offset * 2;
+        Rectangle offsetBounds = rectPool.obtain();
+		offsetBounds.set(wX, wY, wW, wH);
+     	return offsetBounds;
+	}
+	
     // --------------------
     public World()
     {

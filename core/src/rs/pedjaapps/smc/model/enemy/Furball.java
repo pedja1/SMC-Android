@@ -8,7 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.model.Sprite;
 import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.utility.CollisionManager;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -17,9 +20,6 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Furball extends Enemy
 {
-
-	
-	
 
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
@@ -79,16 +79,16 @@ public class Furball extends Enemy
 		// checking collisions with the surrounding blocks depending on Bob's velocity
         checkCollisionWithBlocks(deltaTime);
 
-        // apply damping to halt Maryo nicely 
-        velocity.x *= DAMP;
+        // apply damping to halt nicely 
+        //velocity.x *= DAMP;
 
         // ensure terminal velocity is not exceeded
-        if (velocity.x > maxVelocity()) {
+        /*if (velocity.x > maxVelocity()) {
             velocity.x = maxVelocity();
         }
         if (velocity.x < -maxVelocity()) {
             velocity.x = -maxVelocity();
-        }
+        }*/
 		
         stateTime += deltaTime;
         if(stateTime - turnStartTime > 0.15f)
@@ -106,8 +106,30 @@ public class Furball extends Enemy
 				setVelocity(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
 				break;
 		}
+		System.out.println("turn: " + turn);
 		
     }
+	
+	@Override
+	protected void handleCollision(GameObject object, boolean vertical)
+	{
+		if(vertical)
+		{
+			super.handleCollision(object, vertical);
+		}
+		else
+		{
+			if((object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive
+					&& object.getBody().y + object.getBody().height > body.y + 0.1f)
+					|| object instanceof EnemyStopper)
+			{
+				//System.out.println("pos before: " + position.x);
+				//CollisionManager.resolve_objects(this, object, true);
+				//System.out.println("pos  after: " + position.x);
+				handleCollision(Enemy.ContactType.stopper);
+			}
+		}
+	}
 
 	@Override
 	public void handleCollision(Enemy.ContactType contactType)
@@ -118,6 +140,8 @@ public class Furball extends Enemy
 				direction = direction == Direction.right ? Direction.left : Direction.right;
                 turnStartTime = stateTime;
                 turn = true;
+				System.out.println("start turn");
+				velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
 				break;
 		}
 	}
