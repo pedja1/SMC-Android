@@ -85,6 +85,7 @@ public abstract class DynamicObject extends GameObject
             }
         }
 
+
         // reset the x position of the collision box
         body.x = position.x;
 

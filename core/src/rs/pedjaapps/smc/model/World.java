@@ -205,6 +205,6 @@ public class World
 
     public Array<GameObject> getVisibleObjects()
     {
-        return visibleObjects == null ? new Array<>() : visibleObjects;
+        return visibleObjects == null ? new Array<GameObject>() : visibleObjects;
     }
 }

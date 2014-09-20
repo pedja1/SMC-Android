@@ -28,6 +28,8 @@ public class Furball extends Enemy
     private boolean turn;
     private float turnStartTime;
 
+    private boolean turned = false;
+
     public Furball(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
@@ -75,7 +77,7 @@ public class Furball extends Enemy
 
         // apply acceleration to change velocity
         velocity.add(acceleration);
-		
+
 		// checking collisions with the surrounding blocks depending on Bob's velocity
         checkCollisionWithBlocks(deltaTime);
 
@@ -106,27 +108,22 @@ public class Furball extends Enemy
 				setVelocity(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y);
 				break;
 		}
-		System.out.println("turn: " + turn);
-		
+		turned = false;
     }
 	
 	@Override
 	protected void handleCollision(GameObject object, boolean vertical)
 	{
-		if(vertical)
+        super.handleCollision(object, vertical);
+		if(!vertical)
 		{
-			super.handleCollision(object, vertical);
-		}
-		else
-		{
-			if((object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive
+			if(((object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive
 					&& object.getBody().y + object.getBody().height > body.y + 0.1f)
 					|| object instanceof EnemyStopper)
+                    && !turned)
 			{
-				//System.out.println("pos before: " + position.x);
 				//CollisionManager.resolve_objects(this, object, true);
-				//System.out.println("pos  after: " + position.x);
-				handleCollision(Enemy.ContactType.stopper);
+                handleCollision(Enemy.ContactType.stopper);
 			}
 		}
 	}
@@ -140,8 +137,8 @@ public class Furball extends Enemy
 				direction = direction == Direction.right ? Direction.left : Direction.right;
                 turnStartTime = stateTime;
                 turn = true;
-				System.out.println("start turn");
 				velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
+                turned = true;
 				break;
 		}
 	}
