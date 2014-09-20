@@ -129,13 +129,10 @@ public class WorldRenderer
         spriteBatch.setProjectionMatrix(guiCam.combined);
         spriteBatch.begin();
         leafEffect.draw(spriteBatch, delta);
-        if(debug)
-		{
-			drawDebugText();
-			//drawDebug();
-		}
+        if(debug)drawDebugText();
         drawHud();
         spriteBatch.end();
+		if(debug)drawDebug();
 		//if(debug)world.getDebugRenderer().render(world.getWorld(), cam.combined);
 		//world.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
@@ -181,21 +178,19 @@ public class WorldRenderer
 
     private void drawObjects(/*boolean front, */float delta)
     {
-		int f = 0;
+		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
 		for(GameObject go : world.getLevel().getGameObjects())
 		{
-			//if(go instanceof DynamicObject)
+			if(go instanceof DynamicObject && maryoBWO.overlaps(go.getBody()))
 			{
 				if(gameScreen.update)go.update(delta);
-				go.render(spriteBatch);
+				//go.render(spriteBatch);
 			}
-			if(go instanceof Furball)f++;
 		}
-		System.out.println("f count: " + f);
-        for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
+		for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
         {
 			//if(gameScreen.update) object.update(delta);
-            //object.render(spriteBatch);
+            object.render(spriteBatch);
         }
     }
 

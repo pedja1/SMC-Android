@@ -43,7 +43,7 @@ public class Maryo extends DynamicObject
     }
 
 	@Override
-    protected void updateBounds()
+    public void updateBounds()
     {
         bounds.x = body.x - bounds.width / 4;
         bounds.y = body.y;

@@ -1,7 +1,9 @@
 package rs.pedjaapps.smc.model;
 
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pedja on 1/31/14.
@@ -10,7 +12,7 @@ public class Level
 {
     private float width;
     private float height;
-    private Array<GameObject> gameObjects;
+    private List<GameObject> gameObjects;
     private Vector3 spanPosition;//i think its a camera position
 	private Background bg1;
 	private Background bg2;
@@ -19,7 +21,7 @@ public class Level
 
 	public Level()
 	{
-		this.gameObjects = new Array<GameObject>();
+		this.gameObjects = new ArrayList<GameObject>();
 	}
 	
 	public void setBg1(Background bg1)
@@ -62,12 +64,12 @@ public class Level
         this.height = height;
     }
 
-    public Array<GameObject> getGameObjects()
+    public List<GameObject> getGameObjects()
     {
         return gameObjects;
     }
 
-    public void setGameObjects(Array<GameObject> gameObjects)
+    public void setGameObjects(List<GameObject> gameObjects)
     {
         this.gameObjects = gameObjects;
     }
