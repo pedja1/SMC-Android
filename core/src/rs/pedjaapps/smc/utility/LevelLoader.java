@@ -75,7 +75,6 @@ public class LevelLoader
             //parseObjects(jLevel, world);//movable/animated objects(have their own class)
             //parseEnemies(jLevel, world);
             //parsePlayer(jLevel);
-			parseColBoxes(jLevel);
             parseBg(jLevel);
 			parseGameObjects(world, jLevel);
         }
@@ -84,18 +83,6 @@ public class LevelLoader
             e.printStackTrace();
             throw new RuntimeException("Unable to load level! " + e.getMessage());
         }
-	}
-
-	private void parseColBoxes(JSONObject jLevel) throws JSONException
-	{
-		JSONArray jCollisionBodies = jLevel.getJSONArray(KEY.collision_bodies.toString());
-		for (int i = 0; i < jCollisionBodies.length(); i++)
-		{
-			JSONObject jBody = jCollisionBodies.getJSONObject(i);
-			Vector2 position = new Vector2((float) jBody.getDouble(KEY.posx.toString()), (float) jBody.getDouble(KEY.posy.toString()));
-            boolean enemyFilter = jBody.has(KEY.enemy_filter.toString());
-            //createBody(position, (float) jBody.getDouble(KEY.width.toString()), (float) jBody.getDouble(KEY.height.toString()),enemyFilter);
-		}
 	}
 
 	private void parseGameObjects(World world, JSONObject level) throws JSONException

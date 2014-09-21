@@ -38,22 +38,14 @@ public class Utility
         return newWidth * origHeight / origWidth;
     }
 
-    public enum PrefsKey
-    {
-        sound, music
-    }
-
     /**Checks current sound state(on/off) and toggles it
      * @return new state of the sound(true = on, false = off)*/
     public static boolean toggleSound()
     {
-        /*boolean currentState = Assets.prefs.getBoolean(PrefsKey.sound.toString(), true);
-        SharedPreferences.Editor editor = Assets.prefs.edit();
-        editor.putBoolean(PrefsKey.sound.toString(), !currentState);
-        editor.apply();//apply will make changes to memory immediately, and write to disk asynchronously
+        boolean currentState = PrefsManager.isPlaySounds();
+        PrefsManager.setPlaySounds(!currentState);
         Assets.playSounds = !currentState;
-        return !currentState;*/
-        return false;
+        return !currentState;
     }
 
 
@@ -61,13 +53,10 @@ public class Utility
      * @return new state of the music(true = on, false = off)*/
     public static boolean toggleMusic()
     {
-        /*boolean currentState = Assets.prefs.getBoolean(PrefsKey.music.toString(), true);
-        SharedPreferences.Editor editor = Assets.prefs.edit();
-        editor.putBoolean(PrefsKey.music.toString(), !currentState);
-        editor.apply();//apply will make changes to memory immediately, and write to disk asynchronously
+        boolean currentState = PrefsManager.isPlayMusic();
+        PrefsManager.setPlayMusic(!currentState);
         Assets.playMusic = !currentState;
-        return !currentState;*/
-        return false;
+        return !currentState;
     }
 
     public static void draw(SpriteBatch batch, Texture texture, float x, float y, float height)

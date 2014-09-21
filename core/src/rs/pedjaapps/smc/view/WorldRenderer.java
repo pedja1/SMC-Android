@@ -46,6 +46,9 @@ public class WorldRenderer
 	
 	GameScreen gameScreen;
 
+    Vector2 camMin = new Vector2();
+    Vector2 camMax = new Vector2();
+
     public void setSize(int w, int h)
     {
         this.width = w;
@@ -163,9 +166,9 @@ public class WorldRenderer
         float camX = cam.position.x;
         float camY = cam.position.y;
 
-        Vector2 camMin = new Vector2(cam.viewportWidth, cam.viewportHeight);
+        camMin.set(cam.viewportWidth, cam.viewportHeight);
         camMin.scl(cam.zoom/2); //bring to center and scale by the zoom level
-        Vector2 camMax = new Vector2(world.getLevel().getWidth(), world.getLevel().getHeight());
+        camMax.set(world.getLevel().getWidth(), world.getLevel().getHeight());
         camMax.sub(camMin); //bring to center
 
         //keep camera within borders
@@ -176,20 +179,18 @@ public class WorldRenderer
         cam.update();
     }
 
-    private void drawObjects(/*boolean front, */float delta)
+    private void drawObjects(float delta)
     {
 		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
 		for(GameObject go : world.getLevel().getGameObjects())
 		{
-			if(go instanceof DynamicObject && maryoBWO.overlaps(go.getBody()))
+			if(maryoBWO.overlaps(go.getBody()))
 			{
 				if(gameScreen.update)go.update(delta);
-				//go.render(spriteBatch);
 			}
 		}
 		for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y/*, front*/))
         {
-			//if(gameScreen.update) object.update(delta);
             object.render(spriteBatch);
         }
     }
@@ -235,14 +236,17 @@ public class WorldRenderer
 		debugRenderer.begin(ShapeRenderer.ShapeType.Line);
 		for (GameObject go : world.getVisibleObjects()) 
 		{
-			Rectangle rect = go.getBounds();
-			debugRenderer.setColor(new Color(1, 0, 0, 1));
-			debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+            Rectangle body = go.getBody();
+            Rectangle bounds = go.getBounds();
+            debugRenderer.setColor(new Color(0, 1, 0, 1));
+            debugRenderer.rect(body.x, body.y, body.width, body.height);
+            debugRenderer.setColor(new Color(1, 0, 0, 1));
+            debugRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
-		// render Bob
-		Maryo bob = world.getMario();
-		Rectangle body = bob.getBody();
-        Rectangle bounds = bob.getBounds();
+		// render maryo
+		Maryo maryo = world.getMario();
+		Rectangle body = maryo.getBody();
+        Rectangle bounds = maryo.getBounds();
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
 		debugRenderer.rect(body.x, body.y, body.width, body.height);
         debugRenderer.setColor(new Color(1, 0, 0, 1));

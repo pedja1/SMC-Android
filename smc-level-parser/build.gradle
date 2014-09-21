@@ -11,4 +11,5 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.json:json:20140107'
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 }

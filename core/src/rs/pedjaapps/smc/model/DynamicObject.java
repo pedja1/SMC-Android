@@ -2,9 +2,8 @@ package rs.pedjaapps.smc.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import java.util.List;
-import rs.pedjaapps.smc.model.enemy.Furball;
+
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.CollisionManager;
 
 public abstract class DynamicObject extends GameObject
 {
@@ -84,7 +83,10 @@ public abstract class DynamicObject extends GameObject
 				handleCollision(object, false);
             }
         }
-
+        if(body.x < 0 || body.x + body.width > world.getLevel().getWidth())
+        {
+            velocity.x = 0;
+        }
 
         // reset the x position of the collision box
         body.x = position.x;
@@ -101,6 +103,11 @@ public abstract class DynamicObject extends GameObject
 				handleCollision(object, true);
             }
         }
+        if(body.y < 0)
+        {
+            handleFailedBelowWorld();
+        }
+
         // reset the collision box's position on Y
         body.y = position.y;
 
@@ -114,11 +121,21 @@ public abstract class DynamicObject extends GameObject
         velocity.scl(1 / delta);
     }
 
+    protected void handleFailedBelowWorld()
+    {
+        //TODO for now only prevent it from falling below
+        if (velocity.y < 0)
+        {
+            grounded = true;
+        }
+        velocity.y = 0;
+    }
+
     protected void handleCollision(GameObject object, boolean vertical)
 	{
 		if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive)
 		{
-			if(vertical/*CollisionManager.resolve_objects(this, object)*/)
+			if(vertical)
 			{
 				if (velocity.y < 0) 
 				{
@@ -130,7 +147,6 @@ public abstract class DynamicObject extends GameObject
 			{
 				velocity.x = 0;
 			}
-			//CollisionManager.resolve_objects(this, object,!vertical);
 		}
 		else if(object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.halfmassive)
 		{
@@ -138,7 +154,6 @@ public abstract class DynamicObject extends GameObject
 			{
 				grounded = true;
 				velocity.y = 0;
-				//CollisionManager.resolve_objects(this, object,false);
 			}
 		}
 	}

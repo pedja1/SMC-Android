@@ -1,6 +1,8 @@
 package rs.papltd.smc.smc_level_converter;
 
 
+import com.badlogic.gdx.math.Rectangle;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -9,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by pedja on 11/1/13.
@@ -644,24 +648,39 @@ public class SAXXMLHandler extends DefaultHandler
     {
         box.posx = box.posx / 64;
         box.posy = convertY(box.posy, 43f);
+        String settingsFileName = null;
         if(box.animation != null)
         {
             switch (box.animation)
             {
                 case "Bonus":
+                    settingsFileName = "game/box/yellow/bonus/1.settings";
                     box.texture_atlas = "data/game/box/yellow/bonus.pack";
                     break;
                 case "Default":
+                    settingsFileName = "game/box/yellow/default.settings";
                     box.texture_name = "data/game/box/yellow/default.png";
                     break;
                 case "Power":
+                    settingsFileName = "game/box/yellow/power_1.settings";
                     box.texture_atlas = "data/game/box/yellow/power.pack";
                     break;
                 case "Spin":
+                    settingsFileName = "game/box/yellow/spin/1.settings";
                     box.texture_atlas = "data/game/box/yellow/spin.pack";
+                    break;
+                default:
+                    settingsFileName = "game/box/yellow/default.settings";
                     break;
             }
         }
+        else
+        {
+            settingsFileName = "game/box/yellow/default.settings";
+        }
+        File settings = new File(Converter.dataRoot, settingsFileName);
+        String settingsData = readFileContents(settings);
+        box.colRect = getCollisionRectangle(settingsData);
     }
 
     private void fixEnemyStopper(EnemyStopper enemyStopper)
@@ -749,6 +768,7 @@ public class SAXXMLHandler extends DefaultHandler
             }
         }
         enemy.posy = convertY(enemy.posy, origHeight) + 0.1f;//TODO for collision
+        enemy.colRect = getCollisionRectangle(settingsData);
     }
 
 
@@ -918,6 +938,7 @@ public class SAXXMLHandler extends DefaultHandler
             }
         }
         item.posy = convertY(item.posy, origHeight);
+        item.colRect = getCollisionRectangle(settingsData);
     }
 
     private void setSpriteSettings(Sprite sprite)
@@ -972,4 +993,17 @@ public class SAXXMLHandler extends DefaultHandler
         return (Math.abs(posy) - height) / 64f;
     }
 
+
+    public Rectangle getCollisionRectangle(String content)
+    {
+        Pattern pattern = Pattern.compile("col_rect\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*([0-9])");
+        Matcher matcher = pattern.matcher(content);
+        if(matcher.find())
+        {
+            Rectangle rectangle = new Rectangle();
+            rectangle.set(Float.parseFloat(matcher.group(1)), Float.parseFloat(matcher.group(2)), Float.parseFloat(matcher.group(3)), Float.parseFloat(matcher.group(4)));
+            return rectangle;
+        }
+        return null;
+    }
 }

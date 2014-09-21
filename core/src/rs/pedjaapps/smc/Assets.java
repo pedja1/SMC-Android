@@ -1,5 +1,7 @@
 package rs.pedjaapps.smc;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.assets.*;
 
 import rs.pedjaapps.smc.utility.MyFileHandleResolver;
+import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -16,7 +19,6 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Assets
 {
-   // public static SharedPreferences prefs;
     public static AssetManager manager;
     public static TextureLoader.TextureParameter textureParameter;
     public static HashMap<String, TextureRegion> loadedRegions;
@@ -34,9 +36,9 @@ public class Assets
         manager = new AssetManager(new MyFileHandleResolver());
         loadedRegions = new HashMap<String, TextureRegion>();
         animations = new HashMap<String, Animation>();
-        //prefs = PreferenceManager.getDefaultSharedPreferences(MainApp.getContext());
-        //playMusic = prefs.getBoolean(Utility.PrefsKey.music.toString(), true);
-        //playSounds = prefs.getBoolean(Utility.PrefsKey.sound.toString(), true);
+
+        playMusic = PrefsManager.isPlayMusic();
+        playSounds = PrefsManager.isPlaySounds();
     }
 
     public static void dispose()

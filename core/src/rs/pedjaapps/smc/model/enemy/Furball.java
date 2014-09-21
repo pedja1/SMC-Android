@@ -33,6 +33,7 @@ public class Furball extends Enemy
     public Furball(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
+        setupBoundingBox();
     }
 
     @Override
@@ -142,5 +143,16 @@ public class Furball extends Enemy
 				break;
 		}
 	}
-	
+
+    private void setupBoundingBox()
+    {
+        body.height = body.height - 0.2f;
+    }
+
+    @Override
+    public void updateBounds()
+    {
+        bounds.height = body.height + 0.2f;
+        super.updateBounds();
+    }
 }

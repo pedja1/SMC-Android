@@ -25,7 +25,6 @@ import rs.pedjaapps.smc.utility.Utility;
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
     Texture gameLogo;
-    //Texture gdxLogo;
     TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
     Rectangle playR, musicR, soundR;
     OrthographicCamera drawCam, debugCam, hudCam;
@@ -35,7 +34,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	BackgroundColor bgColor;
     LevelLoader loader;
     private BitmapFont debugFont;
-    private boolean playT = false, musicT = false, soundT = false, debug = false, playMusic, playSound;
+    private boolean playT = false, musicT = false, soundT = false, debug = false;
 
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
@@ -71,6 +70,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setInputProcessor(this);
         music = Assets.manager.get(loader.getLevel().getMusic().first());
+        if(Assets.playMusic)music.play();
     }
 
     @Override
@@ -92,7 +92,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         drawObjects(delta);
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
-        world.getMario().render(batch);
+
+        TextureRegion marioFrame = Assets.loadedRegions.get(GameObject.TKey.stand_right + ":" + Maryo.MarioState.small);
+        batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
 
@@ -100,10 +102,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         batch.begin();
 
         batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
-        batch.draw(soundT ? soundOnP : soundOn, soundR.x, soundR.y,soundR.width, soundR.height);
+        batch.draw(soundT ? (Assets.playSounds ? soundOnP : soundOffP) : (Assets.playSounds ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
         batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
-        /*batch.draw(gdxLogo, (screenWidth/100*2), (screenHeight/100*2),
-                screenWidth/10f, (screenWidth/10f)/4);*/
 
         batch.end();
 
@@ -113,17 +113,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             batch.begin();
             debugFont.drawMultiLine(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 50f, 670f);
             batch.end();
-            //if(debug)worldWrapper.getDebugRenderer().render(worldWrapper.getWorld(), drawCam.combined);
         }
-        if(Assets.playMusic)
-        {
-            music.play();
-        }
-        else
-        {
-            music.pause();
-        }
-        //worldWrapper.getWorld().step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
     private void drawObjects(float deltaTime)
@@ -240,13 +230,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
-        states.add(Maryo.MarioState.small);
-        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
-        maryo.setFacingLeft(false);
-        maryo.loadTextures();
-        world.setMario(maryo);
         world.setLevel(loader.getLevel());
+
+        TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
+        Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MarioState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));
+
 
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 
@@ -314,7 +302,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         if(musicR.contains(x, y))
         {
             musicT = false;
-            Utility.toggleMusic();
+            if(Utility.toggleMusic())
+            {
+                music.play();
+            }
+            else
+            {
+                music.pause();
+            }
         }
         if(soundR.contains(x, y))
         {
