@@ -22,11 +22,13 @@ public class LoadingScreen extends AbstractScreen
     private Sprite bgSprite;
 
     private AbstractScreen screenToLoadAfter;
+	private boolean resume = false;
 
-    public LoadingScreen(AbstractScreen screenToLoadAfter)
+    public LoadingScreen(AbstractScreen screenToLoadAfter, boolean resume)
     {
         super(screenToLoadAfter.game);
         this.screenToLoadAfter = screenToLoadAfter;
+		this.resume = resume;
     }
 
     @Override
@@ -69,7 +71,7 @@ public class LoadingScreen extends AbstractScreen
         if (Assets.manager.update())
         {
             // Load some, will return true if done loading
-            screenToLoadAfter.afterLoadAssets();
+            if(!resume)screenToLoadAfter.afterLoadAssets();
             System.out.println("LS : start screen()");
             game.setScreen(screenToLoadAfter);
         }

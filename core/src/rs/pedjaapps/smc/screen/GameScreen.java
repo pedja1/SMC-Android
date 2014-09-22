@@ -129,19 +129,19 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void hide()
     {
-        Gdx.input.setInputProcessor(null);
+        //Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void pause()
     {
-        // TODO Auto-generated method stub
+		update = false;
     }
 
     @Override
     public void resume()
     {
-        // TODO Auto-generated method stub
+		//Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -169,7 +169,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
-
     }
 
     @Override

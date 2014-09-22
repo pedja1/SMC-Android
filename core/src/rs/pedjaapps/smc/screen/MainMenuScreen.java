@@ -245,7 +245,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         if(keycode == Input.Keys.ENTER)
         {
-            game.setScreen(new LoadingScreen(new GameScreen(game)));
+            game.setScreen(new LoadingScreen(new GameScreen(game), false));
         }
         else if(keycode == Input.Keys.D)
         {
@@ -297,7 +297,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             playT = false;
             music.stop();
-            game.setScreen(new LoadingScreen(new GameScreen(game)));
+            game.setScreen(new LoadingScreen(new GameScreen(game), false));
         }
         if(musicR.contains(x, y))
         {

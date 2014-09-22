@@ -1,18 +1,13 @@
 package rs.pedjaapps.smc;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
 import java.util.HashMap;
-
-import com.badlogic.gdx.assets.*;
-
 import rs.pedjaapps.smc.utility.MyFileHandleResolver;
 import rs.pedjaapps.smc.utility.PrefsManager;
-import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 2/15/14.

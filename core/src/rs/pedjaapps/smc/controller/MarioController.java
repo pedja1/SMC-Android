@@ -107,7 +107,7 @@ public class MarioController
     public void update(float delta)
     {
         //maryo.setGrounded(maryo.getVelocity().y == 0);
-        System.out.println(maryo.getVelocity().y + " : " + maryo.isGrounded());
+        //System.out.println(maryo.getVelocity().y + " : " + maryo.isGrounded());
 		if(!maryo.isGrounded())
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
