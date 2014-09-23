@@ -28,11 +28,13 @@ public class PrefsManager
     public static void setPlayMusic(boolean playMusic)
     {
         prefs.putBoolean(PrefsKey.music.toString(), playMusic);
+		flush();
     }
 
     public static void setPlaySounds(boolean playSounds)
     {
         prefs.putBoolean(PrefsKey.sound.toString(), playSounds);
+		flush();
     }
 	
 	public static void flush()

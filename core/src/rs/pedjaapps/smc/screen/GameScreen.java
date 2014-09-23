@@ -1,51 +1,94 @@
 package rs.pedjaapps.smc.screen;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
 import java.util.HashMap;
-
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
+import rs.pedjaapps.smc.model.BackgroundColor;
+import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.HUD;
-import rs.pedjaapps.smc.view.WorldRenderer;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
 
     private World world;
-    private WorldRenderer renderer;
+    private OrthographicCamera cam;
+    private OrthographicCamera pCamera;
+    private OrthographicCamera guiCam;
+	private OrthographicCamera bgCam;
+
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+    /**
+     * Textures *
+     */
+    private ParticleEffect leafEffect;
+
+    private SpriteBatch spriteBatch;
+    private boolean debug = true;
+
+    private BitmapFont debugFont;
+
+    Vector2 camMin = new Vector2();
+    Vector2 camMax = new Vector2();
     private MarioController controller;
-    //DPad dPad;
-    //BtnJump jump;
+    
     HUD hud;
 
     private int width, height;
 
-    enum CONTROL_CLICK_AREA
-    {
-        NONE, DPAD_RIGHT, DPAD_LEFT, DPAD_TOP, DPAD_BOTTOM, JUMP, FIRE
-    }
-
-    enum GAME_STATE
+    public enum GAME_STATE
     {
         GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER
-    }
+	}
 
     private GAME_STATE gameState;
 
     private HashMap<Integer, TouchInfo> touches = new HashMap<Integer, TouchInfo>();
-    public boolean update = false;
     LevelLoader loader;
+	
+	Sound audioOn;
+	Music music;
+
+	public void setSize(int w, int h)
+    {
+        this.width = w;
+        this.height = h;
+    }
+
+    public boolean isDebug()
+    {
+        return debug;
+    }
+
+    public void setDebug(boolean debug)
+    {
+        this.debug = debug;
+    }
 
     public GameScreen(MaryoGame game)
     {
@@ -57,8 +100,41 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud = new HUD();
         //dPad = new DPad(0.3f * width);
         //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
-        renderer = new WorldRenderer(this);
+        this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        //this.cam.position.set(world.getMario().getPosition().x, world.getMario().getPosition().y, 0);
+        this.cam.update();
+
+        pCamera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        pCamera.position.set(Constants.CAMERA_WIDTH / 2f, Constants.CAMERA_HEIGHT / 2f, 0);
+        pCamera.update();
+
+        guiCam = new OrthographicCamera(width, height);
+        guiCam.position.set(width / 2f, height / 2f, 0);
+        guiCam.update();
+
+		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        bgCam.position.set(cam.position.x, cam.position.y, 0);
+        bgCam.update();
+
+        spriteBatch = new SpriteBatch();
+        debugFont = new BitmapFont();
+        debugFont.setColor(Color.RED);
+        debugFont.setScale(1.3f);
+
+        BitmapFont guiFont = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
+        guiFont.setColor(Color.WHITE);
+        guiFont.setScale(1f);
+
+        BitmapFont guiFontBold = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
+        guiFontBold.setColor(Color.WHITE);
+        guiFontBold.setScale(1f);
+
+        loadTextures();
         controller = new MarioController(world);
+		//Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
@@ -72,57 +148,143 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
-
-    }
-
-    /*public void update(float deltaTime)
-    {
-        if (deltaTime > 0.1f) deltaTime = 0.1f;
-
-        switch (gameState)
-        {
-            case GAME_READY:
-                updateReady();
-                break;
-            case GAME_RUNNING:
-                updateRunning(deltaTime);
-                break;
-            case GAME_PAUSED:
-                updatePaused();
-                break;
-            case GAME_LEVEL_END:
-                updateLevelEnd();
-                break;
-            case GAME_OVER:
-                updateGameOver();
-                break;
-        }
-    }*/
-
-    private void updateReady()
-    {
-        if (Gdx.input.justTouched())
-        {
-            gameState = GAME_STATE.GAME_RUNNING;
-        }
+		music = Assets.manager.get(loader.getLevel().getMusic().first());
+        if(Assets.playMusic)music.play();
     }
 
     @Override
     public void render(float delta)
     {
+		if (delta > 0.1f) delta = 0.1f;
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+        if (gameState == GAME_STATE.GAME_RUNNING)controller.update(delta);
+        moveCamera(cam, world.getMario().getPosition().x, world.getMario().getPosition().y);
+        drawBackground();
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        drawObjects(delta);
+        world.getMario().render(spriteBatch);
+        spriteBatch.end();
 
-        if (update) controller.update(delta);
-        renderer.render(delta);
-        hud.render();
+        spriteBatch.setProjectionMatrix(pCamera.combined);
+        spriteBatch.begin();
+        if (gameState == GAME_STATE.GAME_RUNNING)leafEffect.draw(spriteBatch, delta);
+        spriteBatch.end();
+
+        spriteBatch.setProjectionMatrix(guiCam.combined);
+        spriteBatch.begin();
+        if (debug)drawDebugText();
+        spriteBatch.end();
+		if (debug)drawDebug();
+		
+        hud.render(gameState);
+
+    }
+
+	
+
+	private void drawBackground()
+	{
+        BackgroundColor bgColor = world.getLevel().getBgColor();
+        bgColor.render(bgCam);
+        bgCam.position.set(cam.position.x * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportWidth * 0.44f,
+						   cam.position.y * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportHeight * 0.44f, 0);
+        bgCam.update();
+        spriteBatch.setProjectionMatrix(bgCam.combined);
+        spriteBatch.begin();
+		world.getLevel().getBg1().render(spriteBatch);
+		world.getLevel().getBg2().render(spriteBatch);
+        spriteBatch.end();
+	}
+
+    public void moveCamera(OrthographicCamera cam, float x, float y)
+    {
+        cam.position.set(x, y, 0);
+        cam.update();
+        keepCameraInBounds(cam);
+    }
+
+    private void keepCameraInBounds(OrthographicCamera cam)
+    {
+        float camX = cam.position.x;
+        float camY = cam.position.y;
+
+        camMin.set(cam.viewportWidth, cam.viewportHeight);
+        camMin.scl(cam.zoom / 2); //bring to center and scale by the zoom level
+        camMax.set(world.getLevel().getWidth(), world.getLevel().getHeight());
+        camMax.sub(camMin); //bring to center
+
+        //keep camera within borders
+        camX = Math.min(camMax.x, Math.max(camX, camMin.x));
+        camY = Math.min(camMax.y, Math.max(camY, camMin.y));
+
+        cam.position.set(camX, camY, cam.position.z);
+        cam.update();
+    }
+
+    private void drawObjects(float delta)
+    {
+		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
+		for (GameObject go : world.getLevel().getGameObjects())
+		{
+			if (maryoBWO.overlaps(go.getBody()))
+			{
+				if (gameState == GAME_STATE.GAME_RUNNING)go.update(delta);
+			}
+		}
+		for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y))
+        {
+            object.render(spriteBatch);
+        }
+    }
+
+	private void drawDebug() 
+	{
+		// render blocks
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		for (GameObject go : world.getVisibleObjects()) 
+		{
+            Rectangle body = go.getBody();
+            Rectangle bounds = go.getBounds();
+            shapeRenderer.setColor(new Color(0, 1, 0, 1));
+            shapeRenderer.rect(body.x, body.y, body.width, body.height);
+            shapeRenderer.setColor(new Color(1, 0, 0, 1));
+            shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		}
+		// render maryo
+		Maryo maryo = world.getMario();
+		Rectangle body = maryo.getBody();
+        Rectangle bounds = maryo.getBounds();
+		shapeRenderer.setColor(new Color(0, 1, 0, 1));
+		shapeRenderer.rect(body.x, body.y, body.width, body.height);
+        shapeRenderer.setColor(new Color(1, 0, 0, 1));
+        shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+		shapeRenderer.end();
+	}
+
+    private void drawDebugText()
+    {
+        String debugMessage = generateDebugMessage();
+        BitmapFont.TextBounds tb = debugFont.getBounds(debugMessage);
+        debugFont.drawMultiLine(spriteBatch, debugMessage, 20, height - 20);
+    }
+
+    private String generateDebugMessage()
+    {
+        return "Level: width=" + world.getLevel().getWidth() + ", height=" + world.getLevel().getHeight()
+			+ "\n" + "Player: x=" + world.getMario().getPosition().x + ", y=" + world.getMario().getPosition().y
+            + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
+            + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
+            + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
     @Override
     public void resize(int width, int height)
     {
-        renderer.setSize(width, height);
-        this.width = width;
+		this.width = width;
         this.height = height;
     }
 
@@ -135,7 +297,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void pause()
     {
-		update = false;
+		gameState = GAME_STATE.GAME_PAUSED;
     }
 
     @Override
@@ -147,6 +309,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void dispose()
     {
+		music.stop();
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
     }
@@ -156,9 +319,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/test_lvl.data").readString());
 
-        for(String[] s : data)
+        for (String[] s : data)
         {
-            if(LevelLoader.isTexture(s[0]))
+            if (LevelLoader.isTexture(s[0]))
             {
                 Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
             }
@@ -169,6 +332,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
+		Assets.manager.load("data/hud/pause.png", Texture.class);
+		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
+        
+    }
+
+	private void loadTextures()
+    {
+        leafEffect = new ParticleEffect();
+        leafEffect.load(Gdx.files.internal("data/animation/particles/leaf_emitter.p"), Gdx.files.internal("data/animation/particles"));
+        leafEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
+        leafEffect.start();
     }
 
     @Override
@@ -183,6 +357,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         world.setMario(maryo);
         world.setLevel(loader.getLevel());
         controller.setMaryo(maryo);
+		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
     }
 
     // * InputProcessor methods ***************************//
@@ -190,7 +365,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean keyDown(int keycode)
     {
-        update = true;
+        if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
         if (keycode == Input.Keys.LEFT)
         {
             controller.leftPressed();
@@ -257,8 +432,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.upReleased();
             hud.upReleased();
         }
+		if(keycode == Input.Keys.BACK)
+		{
+			
+		}
         if (keycode == Input.Keys.D)
-            renderer.setDebug(!renderer.isDebug());
+            debug = !debug;
         return true;
     }
 
@@ -272,7 +451,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
-        update = true;
+		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
         //System.out.println("Touch point: " + x + "x" + y);
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
@@ -282,40 +461,57 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //System.out.println("Is touching right: " + Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))));
         if (pointer < 5)
         {
-            if (Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_RIGHT, x, y)*/)//is right
+            if (Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))))//is right
             {
                 controller.rightPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
-                touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_RIGHT;
+                touches.get(pointer).clickArea = HUD.Key.right;
                 hud.rightPressed();
             }
-            if (Intersector.isPointInPolygon(hud.leftPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_LEFT, x, y)*/)//is left
+            if (Intersector.isPointInPolygon(hud.leftPolygon, new Vector2(x, invertY(y))))//is left
             {
                 controller.leftPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
-                touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_LEFT;
+                touches.get(pointer).clickArea = HUD.Key.left;
                 hud.leftPressed();
             }
-            if (Intersector.isPointInPolygon(hud.upPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_TOP, x, y)*/)//is top
+            if (Intersector.isPointInPolygon(hud.upPolygon, new Vector2(x, invertY(y))))//is top
             {
                 controller.upPressed();
-                //dPad.setClickedArea(DPad.CLICKED_AREA.TOP);
-                touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_TOP;
+                touches.get(pointer).clickArea = HUD.Key.up;
                 hud.upPressed();
             }
-            if (Intersector.isPointInPolygon(hud.downPolygon, new Vector2(x, invertY(y)))/*isTouchInBounds(CONTROL_CLICK_AREA.DPAD_BOTTOM, x, y)*/)//is bottom
+            if (Intersector.isPointInPolygon(hud.downPolygon, new Vector2(x, invertY(y))))//is bottom
             {
-                controller.downPressed();//not implemented yet
-                //dPad.setClickedArea(DPad.CLICKED_AREA.BOTTOM);
-                touches.get(pointer).clickArea = CONTROL_CLICK_AREA.DPAD_BOTTOM;
+                controller.downPressed();
+                touches.get(pointer).clickArea = HUD.Key.down;
                 hud.downPressed();
             }
             if (hud.jumpR.contains(x, invertY(y)))
             {
                 controller.jumpPressed();
-                //jump.setClicked(true);
-                touches.get(pointer).clickArea = CONTROL_CLICK_AREA.JUMP;
+                touches.get(pointer).clickArea = HUD.Key.jump;
                 hud.jumpPressed();
+            }
+			if (hud.pauseR.contains(x, invertY(y)))
+            {
+				touches.get(pointer).clickArea = HUD.Key.pause;
+                hud.pausePressed();
+            }
+			if (gameState == GAME_STATE.GAME_PAUSED && hud.soundR.contains(x, invertY(y)))
+            {
+				touches.get(pointer).clickArea = HUD.Key.sound;
+                hud.soundPressed();
+            }
+			if (gameState == GAME_STATE.GAME_PAUSED && hud.musicR.contains(x, invertY(y)))
+            {
+				touches.get(pointer).clickArea = HUD.Key.music;
+                hud.musicPressed();
+            }
+			if (gameState == GAME_STATE.GAME_PAUSED && hud.playR.contains(x, invertY(y)))
+            {
+				touches.get(pointer).clickArea = HUD.Key.play;
+                hud.playPressed();
             }
         }
 
@@ -329,7 +525,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private float convertTouchPointToGamePoint(int val, boolean isX)
     {
-        if(isX)
+        if (isX)
         {
             return val / ((float)width / Constants.CAMERA_WIDTH);
         }
@@ -349,30 +545,54 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             switch (ti.clickArea)
             {
-                case DPAD_RIGHT:
+                case right:
                     controller.rightReleased();
                     hud.rightReleased();
                     break;
-                case DPAD_LEFT:
+                case left:
                     controller.leftReleased();
                     hud.leftReleased();
                     break;
-                case DPAD_TOP:
+                case up:
                     controller.upReleased();
                     hud.upReleased();
                     break;
-                case DPAD_BOTTOM:
+                case down:
                     controller.downReleased();
                     hud.downReleased();
                     break;
-                case JUMP:
+                case jump:
                     controller.jumpReleased();
-                    //jump.setClicked(false);
                     hud.jumpReleased();
                     break;
+				case pause:
+					if (gameState == GAME_STATE.GAME_RUNNING)gameState = GAME_STATE.GAME_PAUSED;
+                    hud.pauseReleased();
+                    break;
+				case play:
+					gameState = GAME_STATE.GAME_RUNNING;
+                    hud.playReleased();
+                    break;
+				case sound:
+					if(Utility.toggleSound())
+					{
+						audioOn.play();
+					}
+					hud.soundReleased();
+                    break;
+				case music:
+					if(Utility.toggleMusic())
+					{
+						music.play();
+					}
+					else
+					{
+						music.pause();
+					}
+					hud.musicReleased();
+                    break;
             }
-            touches.get(pointer).clickArea = CONTROL_CLICK_AREA.NONE;
-            //dPad.setClickedArea(DPad.CLICKED_AREA.NONE);
+            touches.get(pointer).clickArea = HUD.Key.none;
         }
         return true;
     }
@@ -398,52 +618,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return false;
     }
 
-    private boolean isTouchInBounds(CONTROL_CLICK_AREA area, int x, int y)
-    {
-        float wh = 0;//dPad.getBounds().width;//width and height, they are the same
-        float dPadXPos = 0;//dPad.getPosition().x;
-        float dPadYPos = height - 0;//(dPad.getPosition().y + wh);
-
-        float bX = wh / 2, bY = dPadYPos + wh / 2; //b is always center
-        float aX = 0, aY = 0;
-        float cX = 0, cY = 0;
-        switch (area)
-        {
-            case DPAD_LEFT:
-                aX = dPadXPos;
-                aY = dPadYPos;
-                cX = dPadXPos;
-                cY = dPadYPos + wh;
-                break;
-            case DPAD_RIGHT:
-                aX = dPadXPos + wh;
-                aY = dPadYPos + wh;
-                cX = dPadXPos + wh;
-                cY = dPadYPos;
-                break;
-            case DPAD_BOTTOM:
-                aX = dPadXPos;
-                aY = dPadYPos + wh;
-                cX = dPadXPos + wh;
-                cY = dPadYPos + wh;
-                break;
-            case DPAD_TOP:
-                aX = dPadXPos + wh;
-                aY = dPadYPos;
-                cX = dPadXPos;
-                cY = dPadYPos;
-                break;
-        }
-
-        // no need to divide by 2.0 here, since it is not necessary in the equation
-        double ABC = Math.abs(aX * (bY - cY) + bX * (cY - aY) + cX * (aY - bY));
-        double ABP = Math.abs(aX * (bY - y) + bX * (y - aY) + x * (aY - bY));
-        double APC = Math.abs(aX * (y - cY) + x * (cY - aY) + cX * (aY - y));
-        double PBC = Math.abs(x * (bY - cY) + bX * (cY - y) + cX * (y - bY));
-
-        return ABP + APC + PBC == ABC;
-    }
-
     public World getWorld()
     {
         return world;
@@ -453,26 +627,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         this.world = world;
     }
-
-    /*public DPad getdPad()
-    {
-        return dPad;
-    }
-
-    public void setdPad(DPad dPad)
-    {
-        this.dPad = dPad;
-    }
-
-    public BtnJump getJump()
-    {
-        return jump;
-    }
-
-    public void setJump(BtnJump jump)
-    {
-        this.jump = jump;
-    }*/
 
     public int getWidth()
     {
@@ -499,6 +653,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         public float touchX = 0;
         public float touchY = 0;
         public boolean touched = false;
-        CONTROL_CLICK_AREA clickArea = CONTROL_CLICK_AREA.NONE;
+        HUD.Key clickArea = HUD.Key.none;
     }
 }
