@@ -18,6 +18,7 @@ import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.view.SelectionAdapter;
 
 /**
  * Created by pedja on 2/17/14.
@@ -43,19 +44,23 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     World world;
     private ParticleEffect cloudsPEffect;
 
+	private SelectionAdapter selectionAdapter;
+
+	private boolean isSelection;
+
     public MainMenuScreen(MaryoGame game)
     {
 		super(game);
         this.game = game;
         batch = new SpriteBatch();
         drawCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        drawCam.position.set(Constants.CAMERA_WIDTH/2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT/2, 0);
+        drawCam.position.set(Constants.CAMERA_WIDTH / 2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT / 2, 0);
         drawCam.update();
         debugCam = new OrthographicCamera(1280, 720);
-        debugCam.position.set(1280/2, 720/2, 0);
+        debugCam.position.set(1280 / 2, 720 / 2, 0);
         debugCam.update();
         hudCam = new OrthographicCamera(screenWidth, screenHeight);
-        hudCam.position.set(screenWidth/2, screenHeight/2, 0);
+        hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
 
         loader = new LevelLoader();
@@ -63,14 +68,36 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
         world = new World();
+
+		selectionAdapter = new SelectionAdapter(loadSelectionItems());
     }
+
+	public Array<SelectionAdapter.Level> loadSelectionItems()
+	{
+		Array<SelectionAdapter.Level> items = new Array<>();
+		SelectionAdapter.Level level = new SelectionAdapter.Level();
+		level.position.set(1, 4);
+		level.bounds.set(01.1f, 3.1f, 0.8f, 0.92f);
+		items.add(level);
+		
+		level = new SelectionAdapter.Level();
+		level.position.set(2, 4);
+		level.bounds.set(2.1f, 3.1f, 0.8f, 0.92f);
+		items.add(level);
+		
+		level = new SelectionAdapter.Level();
+		level.position.set(3, 4);
+		level.bounds.set(3.1f, 3.1f, 0.8f, 0.92f);
+		items.add(level);
+		return items;
+	}
 
     @Override
     public void show()
     {
         Gdx.input.setInputProcessor(this);
         music = Assets.manager.get(loader.getLevel().getMusic().first());
-        if(Assets.playMusic)music.play();
+        if (Assets.playMusic)music.play();
     }
 
     @Override
@@ -98,14 +125,21 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         batch.end();
 
-        batch.setProjectionMatrix(hudCam.combined);
-        batch.begin();
+        if (isSelection)
+		{
+			selectionAdapter.render(delta);
+		}
+		else
+		{
+			batch.setProjectionMatrix(hudCam.combined);
+			batch.begin();
 
-        batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
-        batch.draw(soundT ? (Assets.playSounds ? soundOnP : soundOffP) : (Assets.playSounds ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
-        batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+			batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
+			batch.draw(soundT ? (Assets.playSounds ? soundOnP : soundOffP) : (Assets.playSounds ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+			batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
 
-        batch.end();
+			batch.end();
+		}
 
         if (debug)
         {
@@ -132,10 +166,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         screenWidth = Gdx.graphics.getWidth();
         Constants.initCamera();
         drawCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        drawCam.position.set(Constants.CAMERA_WIDTH/2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT/2, 0);
+        drawCam.position.set(Constants.CAMERA_WIDTH / 2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT / 2, 0);
         drawCam.update();
         hudCam = new OrthographicCamera(screenWidth, screenHeight);
-        hudCam.position.set(screenWidth/2, screenHeight/2, 0);
+        hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
     }
 
@@ -171,9 +205,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/main_menu.data").readString());
 
-        for(String[] s : data)
+        for (String[] s : data)
         {
-            if(LevelLoader.isTexture(s[0]))
+            if (LevelLoader.isTexture(s[0]))
             {
                 Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
             }
@@ -184,10 +218,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
+		Assets.manager.load("data/hud/option.png", Texture.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         cloudsPEffect.start();
+		
+		Assets.manager.load("data/fonts/dejavu_sans.png", Texture.class);
+		Assets.manager.load("data/fonts/dejavu_sans.fnt", BitmapFont.class);
     }
 
     @Override
@@ -198,22 +236,22 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
         playP = controlsAtlas.findRegion("play-pressed");
-        playR = new Rectangle(screenWidth/2f - (screenWidth/10f) / 2,
-                screenHeight/2f - (screenWidth/10f) / 2, screenWidth/10f, screenWidth/10f);
+        playR = new Rectangle(screenWidth / 2f - (screenWidth / 10f) / 2,
+							  screenHeight / 2f - (screenWidth / 10f) / 2, screenWidth / 10f, screenWidth / 10f);
 
         musicOn = controlsAtlas.findRegion("music-on");
         musicOnP = controlsAtlas.findRegion("music-on-pressed");
         musicOff = controlsAtlas.findRegion("music-off");
         musicOffP = controlsAtlas.findRegion("music-off-pressed");
-        musicR = new Rectangle(screenWidth - (screenWidth/18f) * 1.25f,
-                (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
+        musicR = new Rectangle(screenWidth - (screenWidth / 18f) * 1.25f,
+							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
         soundOn = controlsAtlas.findRegion("sound-on");
         soundOnP = controlsAtlas.findRegion("sound-on-pressed");
         soundOff = controlsAtlas.findRegion("sound-off");
         soundOffP = controlsAtlas.findRegion("sound-off-pressed");
-        soundR = new Rectangle(screenWidth - (screenWidth/18f) * 2.5f,
-                (screenWidth/18f)/4, screenWidth/18f, screenWidth/18f);
+        soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
+							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
         Texture bgTexture = Assets.manager.get("data/game/background/more_hills.png");
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -239,16 +277,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 
+		selectionAdapter.loadAssets();
     }
 
     @Override
     public boolean keyDown(int keycode)
     {
-        if(keycode == Input.Keys.ENTER)
+        if (keycode == Input.Keys.ENTER)
         {
-            game.setScreen(new LoadingScreen(new GameScreen(game), false));
+            //game.setScreen(new LoadingScreen(new GameScreen(game), false));
+			isSelection = true;
         }
-        else if(keycode == Input.Keys.D)
+        else if (keycode == Input.Keys.D)
         {
             debug = !debug;
         }
@@ -273,15 +313,15 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         float x = screenX;//screenX / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
 
-        if(playR.contains(x, y))
+        if (playR.contains(x, y))
         {
             playT = true;
         }
-        if(musicR.contains(x, y))
+        if (musicR.contains(x, y))
         {
             musicT = true;
         }
-        if(soundR.contains(x, y))
+        if (soundR.contains(x, y))
         {
             soundT = true;
         }
@@ -294,16 +334,17 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
 
-        if(playR.contains(x, y))
+        if (playR.contains(x, y))
         {
             playT = false;
-            music.stop();
-            game.setScreen(new LoadingScreen(new GameScreen(game), false));
+            //music.stop();
+            //game.setScreen(new LoadingScreen(new GameScreen(game), false));
+			isSelection = true;
         }
-        if(musicR.contains(x, y))
+        if (musicR.contains(x, y))
         {
             musicT = false;
-            if(Utility.toggleMusic())
+            if (Utility.toggleMusic())
             {
                 music.play();
             }
@@ -312,10 +353,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
                 music.pause();
             }
         }
-        if(soundR.contains(x, y))
+        if (soundR.contains(x, y))
         {
             soundT = false;
-            if(Utility.toggleSound())
+            if (Utility.toggleSound())
             {
                 audioOn.play();
             }

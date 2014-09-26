@@ -10,7 +10,6 @@ import rs.pedjaapps.smc.utility.Constants;
 
 public class World
 {
-
     /**
      * Our player controlled hero *
      */
@@ -56,7 +55,7 @@ public class World
 
     /**
      * Return only the blocks that need to be drawn *
-     * All Enemies are always returned
+     * 
      */
     public Array<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
     {
@@ -73,17 +72,6 @@ public class World
             if (bounds.overlaps(worldBounds)/* || object instanceof Enemy*/)
             {
                 objects.add(object);
-                /*if (getFront)
-                {
-                    if (object.isFront())
-                    {
-                        sprites.add(object);
-                    }
-                }
-                else
-                {
-                    sprites.add(object);
-                }*/
             }
         }
         visibleObjects = objects;
@@ -105,17 +93,6 @@ public class World
             if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
             {
                 objects.add(object);
-                /*if (getFront)
-				 {
-				 if (object.isFront())
-				 {
-				 sprites.add(object);
-				 }
-				 }
-				 else
-				 {
-				 sprites.add(object);
-				 }*/
             }
         }
         return objects;
@@ -135,71 +112,6 @@ public class World
     // --------------------
     public World()
     {
-        /*world.setContactListener(new ContactListener()
-        {
-
-            @Override
-            public void beginContact(Contact contact)
-            {
-                if(contact.getFixtureA().getBody().getUserData() instanceof Enemy)
-				{
-					if(contact.getFixtureB().getBody().getUserData() instanceof EnemyStopper || contact.getFixtureB().getBody().getUserData() instanceof Collider)
-					{
-						((Enemy)contact.getFixtureA().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
-					}
-					else if(contact.getFixtureB().getBody().getUserData() instanceof Maryo)
-					{
-						((Enemy)contact.getFixtureA().getBody().getUserData()).handleCollision(Enemy.ContactType.player);
-					}
-				}
-                else if(contact.getFixtureA().getBody().getUserData() instanceof EnemyStopper)
-                {
-                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
-                    {
-                        ((Enemy)contact.getFixtureB().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
-                    }
-                }
-                else if(contact.getFixtureA().getBody().getUserData() instanceof Collider)
-                {
-                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
-                    {
-                        ((Enemy)contact.getFixtureB().getBody().getUserData()).handleCollision(Enemy.ContactType.stopper);
-                    }
-                }
-            }
-
-            @Override
-            public void endContact(Contact contact)
-            {
-                // TODO: Implement this method
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold)
-            {
-                if(contact.getFixtureA().getBody().getUserData() instanceof Enemy)
-                {
-                    if(contact.getFixtureB().getBody().getUserData() instanceof Enemy)
-                    {
-                        //TODO i don't know if its a good idea or not to disable contact between 2 enemies
-                        //contact.setEnabled(false);
-                    }
-                }
-                else if(contact.getFixtureA().getBody().getUserData() instanceof EnemyStopper)
-                {
-                    if(contact.getFixtureB().getBody().getUserData() instanceof Maryo)
-                    {
-                        contact.setEnabled(false);
-                    }
-                }
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse)
-            {
-                // TODO: Implement this method
-            }
-        });*/
 
     }
 
