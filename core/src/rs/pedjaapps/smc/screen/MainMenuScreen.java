@@ -74,7 +74,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 	public Array<SelectionAdapter.Level> loadSelectionItems()
 	{
-		Array<SelectionAdapter.Level> items = new Array<>();
+		Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
 		SelectionAdapter.Level level = new SelectionAdapter.Level();
 		level.position.set(1, 4);
 		level.bounds.set(01.1f, 3.1f, 0.8f, 0.92f);
