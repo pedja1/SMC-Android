@@ -69,26 +69,17 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont.setScale(1.3f);
         world = new World();
 
-		selectionAdapter = new SelectionAdapter(loadSelectionItems());
+		selectionAdapter = new SelectionAdapter(loadSelectionItems(), game);
     }
 
 	public Array<SelectionAdapter.Level> loadSelectionItems()
 	{
 		Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
-		SelectionAdapter.Level level = new SelectionAdapter.Level();
-		level.position.set(1, 4);
-		level.bounds.set(01.1f, 3.1f, 0.8f, 0.92f);
-		items.add(level);
-		
-		level = new SelectionAdapter.Level();
-		level.position.set(2, 4);
-		level.bounds.set(2.1f, 3.1f, 0.8f, 0.92f);
-		items.add(level);
-		
-		level = new SelectionAdapter.Level();
-		level.position.set(3, 4);
-		level.bounds.set(3.1f, 3.1f, 0.8f, 0.92f);
-		items.add(level);
+		for (int i = 0; i < 40; i++)
+		{
+			SelectionAdapter.Level level = new SelectionAdapter.Level();
+			items.add(level);
+		}
 		return items;
 	}
 
@@ -223,9 +214,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         cloudsPEffect.start();
-		
+
 		Assets.manager.load("data/fonts/dejavu_sans.png", Texture.class);
 		Assets.manager.load("data/fonts/dejavu_sans.fnt", BitmapFont.class);
+		Assets.manager.load("data/hud/lock.png", Texture.class);
     }
 
     @Override
@@ -313,18 +305,25 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         float x = screenX;//screenX / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
 
-        if (playR.contains(x, y))
-        {
-            playT = true;
-        }
-        if (musicR.contains(x, y))
-        {
-            musicT = true;
-        }
-        if (soundR.contains(x, y))
-        {
-            soundT = true;
-        }
+		if (isSelection)
+		{
+			selectionAdapter.handleTouch(x, y);
+		}
+		else
+		{
+			if (playR.contains(x, y))
+			{
+				playT = true;
+			}
+			if (musicR.contains(x, y))
+			{
+				musicT = true;
+			}
+			if (soundR.contains(x, y))
+			{
+				soundT = true;
+			}
+		}
         return false;
     }
 

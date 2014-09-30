@@ -1,24 +1,18 @@
 package rs.pedjaapps.smc.view;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.screen.LoadingScreen;
 
 public class SelectionAdapter
 {
@@ -27,18 +21,19 @@ public class SelectionAdapter
     public static final float CAM_WIDTH = 1280;
     public static float CAM_HEIGHT;
 
+	MaryoGame game;
 
     OrthographicCamera cam;
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
-	
+
 	Array<Level> items;
 	int page = 0;
-	
+
 	Texture txNextEnabled, txNextDisabled,
-		txPrevEnabled, txPrevDisabled,
-		txItemBg;
-    BitmapFont font24;
+	txPrevEnabled, txPrevDisabled,
+	txItemBg, txLock;
+    BitmapFont font96, font32;
 
     private float selectionWidth;
 	private float selectionHeight;
@@ -46,50 +41,61 @@ public class SelectionAdapter
 	private float cellPadding = 10;
 	private float selectionX;
 	private float selectionY;
+	private float lockSize;
 
     public static class Level
 	{
-		public Vector2 position = new Vector2();
-		public Rectangle bounds = new Rectangle();
+		private Rectangle bounds = new Rectangle();
 		public boolean isUnlocked;
+		public String levelId;
 	}
-	
-	public SelectionAdapter(Array<Level> items)
+
+	public SelectionAdapter(Array<Level> items, MaryoGame game)
 	{
 		this.items = items;
+		this.game = game;
         CAM_HEIGHT = CAM_WIDTH / ((float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight());
 		cam = new OrthographicCamera(CAM_WIDTH, CAM_HEIGHT);
-		cam.position.set(cam.viewportWidth/2, cam.viewportHeight/2, 0);
+		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
 		cam.update();
-		
+
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-		
+
 		selectionY = CAM_HEIGHT * 0.1f;
 		selectionHeight = selectionY + CAM_HEIGHT * 0.55f;
 		selectionWidth = selectionHeight * 1.6f;//1.6 is aspect of grid 8x5
 		selectionX = CAM_WIDTH / 2 - selectionWidth / 2;
-		
+
 		cellSize = selectionHeight / 5 - cellPadding / 2;// padding of 5 on every side
-		
+		lockSize = cellSize / 4;
+
 		System.out.println("x: " + selectionX + " y: " + selectionY + " width: " + selectionWidth + " height: " + selectionHeight + " cellSize: " + cellSize);
-		
+
 	}
-	
+
 	public void loadAssets()
 	{
 		txItemBg = Assets.manager.get("data/hud/option.png");
+		txLock = Assets.manager.get("data/hud/lock.png");
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 96;
-        parameter.characters = "SelctLv";
+        parameter.characters = "SECTLV";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
-        font24 = generator.generateFont(parameter);
+        font96 = generator.generateFont(parameter);
+
+		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 36;
+        parameter.characters = "0123456789BACK";
+        parameter.magFilter = Texture.TextureFilter.Linear;
+        parameter.minFilter = Texture.TextureFilter.Linear;
+        font32 = generator.generateFont(parameter);
         generator.dispose();
 	}
-	
+
 	public void render(float delta)
 	{
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -100,28 +106,39 @@ public class SelectionAdapter
 		shapeRenderer.setColor(0, 0, 0, 0.7f);
 		shapeRenderer.rect(0, 0, CAM_WIDTH, CAM_HEIGHT);
 		shapeRenderer.end();
-		
+
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 
-        font24.setColor(.5f, .5f, .5f, 1);
-        font24.drawMultiLine(batch, "Select Level", CAM_WIDTH/2 + 2, CAM_HEIGHT * 0.9f - 2, 0, BitmapFont.HAlignment.CENTER);
-        font24.setColor(1, 1, 1, 1);
-        font24.drawMultiLine(batch, "Select Level", CAM_WIDTH/2, CAM_HEIGHT * 0.9f, 0, BitmapFont.HAlignment.CENTER);
+        font96.setColor(.5f, .5f, .5f, 1);
+        font96.drawMultiLine(batch, "SELECT LEVEL", CAM_WIDTH / 2 + 2, CAM_HEIGHT * 0.9f - 2, 0, BitmapFont.HAlignment.CENTER);
+        font96.setColor(1, 1, 1, 1);
+        font96.drawMultiLine(batch, "SELECT LEVEL", CAM_WIDTH / 2, CAM_HEIGHT * 0.9f, 0, BitmapFont.HAlignment.CENTER);
 
 		int row = 0;
 		int column = 0;
-		
-        for(/*Level level : items*/int i = 0; i < 40; i++)
+		int offset = 0;
+
+        for (Level level : items)
 		{
-			//if(column > 40)break;//40 levels, 8x5
-			
+			if (offset > 40)break;//40 levels, 8x5
+
 			float x = selectionX + column * cellSize + (column == 0 ? cellPadding / 2 : cellPadding / 2 + cellPadding / 2 * column);
 			float y = (selectionY + selectionHeight - cellSize) - row * cellSize - (row == 0 ? cellPadding / 2 : cellPadding / 2 + cellPadding / 2 * row);
-			
+
+			level.bounds.set(x, y, cellSize, cellSize);
+
 			batch.draw(txItemBg, x, y, cellSize, cellSize);
-			
-			if(column == 7)
+
+			if (!level.isUnlocked)
+			{
+				batch.draw(txLock, x + cellSize - lockSize, y, lockSize, lockSize);
+			}
+
+			BitmapFont.TextBounds bounds = font32.getBounds(offset + 1 + "");
+			font32.draw(batch, offset + 1 + "", x + cellSize / 2 - bounds.width / 2, y + cellSize / 2 + bounds.height / 2);
+
+			if (column == 7)
 			{
 				row++;
 				column = 0;
@@ -130,21 +147,32 @@ public class SelectionAdapter
 			{
 				column++;
 			}
-			
+			offset++;
 		}
 
-		
+		font32.draw(batch, "BACK", 40f, 60f);
+
 		batch.end();
-		
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-		shapeRenderer.setColor(new Color(0, 1, 0, 1));
-		shapeRenderer.rect(selectionX, selectionY, selectionWidth, selectionHeight);
-		
-		shapeRenderer.end();
+		/*shapeRenderer.setProjectionMatrix(cam.combined);
+		 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+		 shapeRenderer.setColor(new Color(0, 1, 0, 1));
+		 shapeRenderer.rect(selectionX, selectionY, selectionWidth, selectionHeight);
+
+		 shapeRenderer.end();*/
 	}
 
+	public void handleTouch(float x, float y)
+	{
+		for (Level level : items)
+		{
+			if (level.bounds.contains(x, y) && level.isUnlocked)
+			{
+				//TODO start level
+				game.setScreen(new LoadingScreen(new GameScreen(game), false));
+			}
+		}
+	}
 
 }
