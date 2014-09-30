@@ -40,8 +40,12 @@ public class SelectionAdapter
 		txItemBg;
     BitmapFont font24;
 
-    private float selectionSize;
+    private float selectionWidth;
+	private float selectionHeight;
     private float cellSize;
+	private float cellPadding = 10;
+	private float selectionX;
+	private float selectionY;
 
     public static class Level
 	{
@@ -60,9 +64,16 @@ public class SelectionAdapter
 		
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
-
-        cellSize = CAM_HEIGHT / 7;
-        selectionSize = cellSize * 5;
+		
+		selectionY = CAM_HEIGHT * 0.1f;
+		selectionHeight = selectionY + CAM_HEIGHT * 0.55f;
+		selectionWidth = selectionHeight * 1.6f;//1.6 is aspect of grid 8x5
+		selectionX = CAM_WIDTH / 2 - selectionWidth / 2;
+		
+		cellSize = selectionHeight / 5 - cellPadding / 2;// padding of 5 on every side
+		
+		System.out.println("x: " + selectionX + " y: " + selectionY + " width: " + selectionWidth + " height: " + selectionHeight + " cellSize: " + cellSize);
+		
 	}
 	
 	public void loadAssets()
@@ -98,14 +109,40 @@ public class SelectionAdapter
         font24.setColor(1, 1, 1, 1);
         font24.drawMultiLine(batch, "Select Level", CAM_WIDTH/2, CAM_HEIGHT * 0.9f, 0, BitmapFont.HAlignment.CENTER);
 
-        for(int i = page; page < (ITEMS_COL_CNT * ITEMS_ROW_CNT); i++)
+		int row = 0;
+		int column = 0;
+		
+        for(/*Level level : items*/int i = 0; i < 40; i++)
 		{
-			if(i > items.size - 1)break;
-			Level level = items.get(i);
-			batch.draw(txItemBg, level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
+			//if(column > 40)break;//40 levels, 8x5
+			
+			float x = selectionX + column * cellSize + (column == 0 ? cellPadding / 2 : cellPadding / 2 + cellPadding / 2 * column);
+			float y = (selectionY + selectionHeight - cellSize) - row * cellSize - (row == 0 ? cellPadding / 2 : cellPadding / 2 + cellPadding / 2 * row);
+			
+			batch.draw(txItemBg, x, y, cellSize, cellSize);
+			
+			if(column == 7)
+			{
+				row++;
+				column = 0;
+			}
+			else
+			{
+				column++;
+			}
+			
 		}
 
+		
 		batch.end();
+		
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+		shapeRenderer.setColor(new Color(0, 1, 0, 1));
+		shapeRenderer.rect(selectionX, selectionY, selectionWidth, selectionHeight);
+		
+		shapeRenderer.end();
 
 	}
 
