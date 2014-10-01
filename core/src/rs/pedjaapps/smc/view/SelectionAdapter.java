@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.view;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,9 +11,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
+import rs.pedjaapps.smc.screen.MainMenuScreen;
 
 public class SelectionAdapter
 {
@@ -21,7 +22,7 @@ public class SelectionAdapter
     public static final float CAM_WIDTH = 1280;
     public static float CAM_HEIGHT;
 
-	MaryoGame game;
+	MainMenuScreen mainMenuScreen;
 
     OrthographicCamera cam;
 	SpriteBatch batch;
@@ -42,6 +43,8 @@ public class SelectionAdapter
 	private float selectionX;
 	private float selectionY;
 	private float lockSize;
+	
+	Rectangle backBounds;
 
     public static class Level
 	{
@@ -50,10 +53,10 @@ public class SelectionAdapter
 		public String levelId;
 	}
 
-	public SelectionAdapter(Array<Level> items, MaryoGame game)
+	public SelectionAdapter(Array<Level> items, MainMenuScreen mainMenuScreen)
 	{
 		this.items = items;
-		this.game = game;
+		this.mainMenuScreen = mainMenuScreen;
         CAM_HEIGHT = CAM_WIDTH / ((float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight());
 		cam = new OrthographicCamera(CAM_WIDTH, CAM_HEIGHT);
 		cam.position.set(cam.viewportWidth / 2, cam.viewportHeight / 2, 0);
@@ -72,6 +75,7 @@ public class SelectionAdapter
 
 		System.out.println("x: " + selectionX + " y: " + selectionY + " width: " + selectionWidth + " height: " + selectionHeight + " cellSize: " + cellSize);
 
+		backBounds = new Rectangle();
 	}
 
 	public void loadAssets()
@@ -150,27 +154,46 @@ public class SelectionAdapter
 			offset++;
 		}
 
-		font32.draw(batch, "BACK", 40f, 60f);
+		BitmapFont.TextBounds bounds = font32.getBounds("BACK");
+		backBounds.set(20, 20, bounds.width + 40, bounds.height + 40);
+		font32.draw(batch, "BACK", 40f, 40 + bounds.height);
 
 		batch.end();
 
-		/*shapeRenderer.setProjectionMatrix(cam.combined);
+		//debug
+		shapeRenderer.setProjectionMatrix(cam.combined);
 		 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
 		 shapeRenderer.setColor(new Color(0, 1, 0, 1));
-		 shapeRenderer.rect(selectionX, selectionY, selectionWidth, selectionHeight);
+		 //shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
 
-		 shapeRenderer.end();*/
+		 for(Level level : items)
+		 {
+			 shapeRenderer.rect(level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
+		 }
+		 
+		 shapeRenderer.end();
+		 //debug end
 	}
 
 	public void handleTouch(float x, float y)
 	{
+		//convert touch point to camera point
+		x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
+		y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
+		
+		if(backBounds.contains(x, y))
+		{
+			mainMenuScreen.isSelection = false;
+			return;
+		}
 		for (Level level : items)
 		{
 			if (level.bounds.contains(x, y) && level.isUnlocked)
 			{
 				//TODO start level
-				game.setScreen(new LoadingScreen(new GameScreen(game), false));
+				mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game), false));
+				break;
 			}
 		}
 	}

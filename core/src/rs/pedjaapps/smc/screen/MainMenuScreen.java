@@ -30,7 +30,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     Rectangle playR, musicR, soundR;
     OrthographicCamera drawCam, debugCam, hudCam;
     SpriteBatch batch;
-    MaryoGame game;
+    public MaryoGame game;
 	Background bgr1, bgr2;
 	BackgroundColor bgColor;
     LevelLoader loader;
@@ -46,7 +46,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 	private SelectionAdapter selectionAdapter;
 
-	private boolean isSelection;
+	public boolean isSelection;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -69,7 +69,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont.setScale(1.3f);
         world = new World();
 
-		selectionAdapter = new SelectionAdapter(loadSelectionItems(), game);
+		selectionAdapter = new SelectionAdapter(loadSelectionItems(), this);
     }
 
 	public Array<SelectionAdapter.Level> loadSelectionItems()
@@ -78,6 +78,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		for (int i = 0; i < 40; i++)
 		{
 			SelectionAdapter.Level level = new SelectionAdapter.Level();
+			if(i == 0)level.isUnlocked = true;
 			items.add(level);
 		}
 		return items;
