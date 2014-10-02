@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.HashSet;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.utility.Utility;
 
 public class HUD
 {
@@ -22,6 +25,8 @@ public class HUD
 		downP, leftP, rightP, soundOnP, soundOffP, musicOnP, musicOffP;
     public Rectangle pauseR, playR, fireR, jumpR, upR, downR, rightR,
 		leftR, soundR, musicR;
+	Texture itemBox, maryoL, goldM;
+	Rectangle itemBoxR, maryoLR;
     public Array<Vector2> leftPolygon = new Array<Vector2>(5);
     public Array<Vector2> rightPolygon = new Array<Vector2>(5);
     public Array<Vector2> upPolygon = new Array<Vector2>(5);
@@ -32,6 +37,7 @@ public class HUD
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 
+	public BitmapFont font;
 
 	public static final float C_W = Gdx.graphics.getWidth();
 	public static final float C_H = Gdx.graphics.getHeight();
@@ -42,6 +48,8 @@ public class HUD
 	}
 
 	public HashSet<Key> pressedKeys = new HashSet<Key>();
+	
+	float stateTime;
 
 	public HUD()
 	{
@@ -118,6 +126,12 @@ public class HUD
 		
 		x = soundR.x * 0.80f;
 		playR = new Rectangle(x, y, width, height);
+		
+		float ibSize = C_W / 12;
+		itemBoxR = new Rectangle(C_W / 2 - ibSize, C_H - ibSize - ibSize / 5, ibSize, ibSize);
+		
+		float maryoLSize = itemBoxR.height / 2;
+		maryoLR = new Rectangle(pauseR.x - maryoLSize * 3, itemBoxR.y + itemBoxR.height - maryoLSize - maryoLSize / 2, maryoLSize * 2, maryoLSize);
     }
 
     public void loadAssets()
@@ -153,9 +167,29 @@ public class HUD
 		down.flip(false, true);
 		downP = new TextureRegion(upP);
 		downP.flip(false, true);
+		
+		itemBox = Assets.manager.get("data/hud/itembox.png");
+		maryoL = Assets.manager.get("data/hud/maryo_l.png");
+		goldM = Assets.manager.get("data/hud/gold_m.png");
+		
+		Texture.TextureFilter filter = Texture.TextureFilter.Linear;
+		itemBox.setFilter(filter, filter);
+		maryoL.setFilter(filter, filter);
+		goldM.setFilter(filter, filter);
+		
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = (int) C_H / 20;
+        parameter.characters = "0123456789TimePonts:";
+        parameter.magFilter = Texture.TextureFilter.Linear;
+        parameter.minFilter = Texture.TextureFilter.Linear;
+        font = generator.generateFont(parameter);
+		font.setColor(1, 1, 1, 1);//white
+		
+		generator.dispose();
 	}
 
-	public void render(GameScreen.GAME_STATE gameState)
+	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
 	{
 		if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
 		{
@@ -163,6 +197,7 @@ public class HUD
 		}
 		else
 		{
+			stateTime += deltaTime;
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(pressedKeys.contains(Key.pause) ? pauseP : pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
@@ -172,6 +207,39 @@ public class HUD
 			batch.draw(pressedKeys.contains(Key.right) ? rightP : right, rightR.x, rightR.y , rightR.width, rightR.height);
 			batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 			batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
+			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
+			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
+			
+			// points
+			BitmapFont.TextBounds bounds = font.getBounds("Points 00000000");
+			float pointsX = C_W * 0.03f;
+			float pointsY = bounds.height / 2 + maryoLR.y + maryoLR.height / 2;
+			font.setColor(0, 0, 0, 1);
+			font.draw(batch, "Points 00000000", pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.setColor(1, 1, 1, 1);
+			font.draw(batch, "Points 00000000", pointsX, pointsY);
+			
+			//coins
+			float goldHeight = bounds.height * 1.1f;
+			float goldX = pointsX + bounds.width + goldHeight;
+			batch.draw(goldM, goldX, pointsY - bounds.height, goldHeight * 2, goldHeight);
+			
+			font.setColor(0, 0, 0, 1);
+			font.draw(batch, "0", goldX + goldHeight * 2 + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.setColor(1, 1, 1, 1);
+			font.draw(batch, "0", goldX + goldHeight * 2, pointsY);
+			
+			//time
+			System.out.println("stateTime" + stateTime);
+			String time = Utility.millisToString(stateTime);
+			bounds = font.getBounds("Time " + time);
+			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - bounds.width / 2;
+			font.setColor(0, 0, 0, 1);
+			font.draw(batch, "Time " + time, timeX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.setColor(1, 1, 1, 1);
+			font.draw(batch, "Time " + time, timeX, pointsY);
+			
+			
 			batch.end();
 		}
 	}

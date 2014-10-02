@@ -35,7 +35,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	BackgroundColor bgColor;
     LevelLoader loader;
     private BitmapFont debugFont;
-    private boolean playT = false, musicT = false, soundT = false, debug = false;
+    private boolean playT = false, musicT = false, soundT = false;
+	public boolean debug = false;
 
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
@@ -219,6 +220,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		Assets.manager.load("data/fonts/dejavu_sans.png", Texture.class);
 		Assets.manager.load("data/fonts/dejavu_sans.fnt", BitmapFont.class);
 		Assets.manager.load("data/hud/lock.png", Texture.class);
+		
     }
 
     @Override

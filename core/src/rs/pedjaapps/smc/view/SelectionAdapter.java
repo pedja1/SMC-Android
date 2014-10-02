@@ -43,7 +43,7 @@ public class SelectionAdapter
 	private float selectionX;
 	private float selectionY;
 	private float lockSize;
-	
+
 	Rectangle backBounds;
 
     public static class Level
@@ -161,19 +161,22 @@ public class SelectionAdapter
 		batch.end();
 
 		//debug
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		if (mainMenuScreen.debug)
+		{
+			shapeRenderer.setProjectionMatrix(cam.combined);
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-		 shapeRenderer.setColor(new Color(0, 1, 0, 1));
-		 //shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
+			shapeRenderer.setColor(new Color(0, 1, 0, 1));
+			shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
 
-		 for(Level level : items)
-		 {
-			 shapeRenderer.rect(level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
-		 }
-		 
-		 shapeRenderer.end();
-		 //debug end
+			for (Level level : items)
+			{
+				shapeRenderer.rect(level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
+			}
+
+			shapeRenderer.end();
+		}
+		//debug end
 	}
 
 	public void handleTouch(float x, float y)
@@ -181,8 +184,8 @@ public class SelectionAdapter
 		//convert touch point to camera point
 		x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
 		y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
-		
-		if(backBounds.contains(x, y))
+
+		if (backBounds.contains(x, y))
 		{
 			mainMenuScreen.isSelection = false;
 			return;

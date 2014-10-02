@@ -7,6 +7,8 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import android.view.View;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.model.Maryo;
 
 /**
  * Created by pedja on 2/27/14.
@@ -30,8 +32,14 @@ public class AndroidLauncher extends AndroidApplication
 		config.hideStatusBar = true;
 		config.useImmersiveMode = true;
         //config.useGL20 = true;
-        game = new MaryoGame();
+		
+		game = new MaryoGame();
         initialize(game, config);
+		
+		GameSaveUtility.getInstance(); //initialize save game
+		//debug
+		System.out.println(GameSaveUtility.getInstance().save.toString());
+		//debug end
     }
 
     @Override
@@ -42,4 +50,15 @@ public class AndroidLauncher extends AndroidApplication
             super.onBackPressed();
         }
     }
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		//debug
+		GameSaveUtility.getInstance().save.currentLevel = 5;
+		GameSaveUtility.getInstance().save.playerState = Maryo.MarioState.big;
+		//debug end
+		GameSaveUtility.getInstance().dispose();
+	}
 }

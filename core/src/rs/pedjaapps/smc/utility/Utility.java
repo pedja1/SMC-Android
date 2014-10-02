@@ -1,12 +1,10 @@
 package rs.pedjaapps.smc.utility;
 
 
+import android.util.Base64;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import java.io.File;
-
 import rs.pedjaapps.smc.Assets;
 
 /**
@@ -69,4 +67,44 @@ public class Utility
         batch.draw(region, x, y, height * region.getRegionWidth()/region.getRegionHeight(), height);
     }
     /*(+x\y-height)/64*/
+	
+	public static String base64Encode(final String input) 
+	{
+		return Base64.encodeToString(input.getBytes(), Base64.DEFAULT);
+	}
+	
+	public static String base64Decode(final String input) 
+	{
+		return new String(Base64.decode(input, Base64.DEFAULT));
+	}
+	
+	public static int parseInt(String input, int defValue)
+	{
+		try
+		{
+			return Integer.parseInt(input);
+		}
+		catch(Exception e)
+		{
+			return defValue;
+		}
+	}
+	
+	public static String millisToString(float millis)
+	{
+		//String timeString;
+        int s = (int) millis % 60;
+        int m = ((int) ((millis / 60) % 60));
+        
+		/*StringBuilder builder = new StringBuilder();
+        if (m != 0)
+        {
+            builder.append(m).append("m:");
+        }
+
+        builder.append(s).append("s");
+        timeString = builder.toString();
+        return timeString;*/
+		return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+	}
 }

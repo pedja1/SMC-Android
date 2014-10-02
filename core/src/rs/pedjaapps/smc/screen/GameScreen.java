@@ -179,7 +179,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.end();
 		if (debug)drawDebug();
 		
-        hud.render(gameState);
+        hud.render(gameState, delta);
 
     }
 
@@ -334,6 +334,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
 		Assets.manager.load("data/hud/pause.png", Texture.class);
 		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
+		Assets.manager.load("data/hud/itembox.png", Texture.class);
+        Assets.manager.load("data/hud/maryo_l.png", Texture.class);
+        Assets.manager.load("data/hud/gold_m.png", Texture.class);
         
     }
 

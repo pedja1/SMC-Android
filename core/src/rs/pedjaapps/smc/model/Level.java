@@ -18,6 +18,8 @@ public class Level
 	private Background bg2;
     private BackgroundColor bgColor;
     private Array<String> music;
+	
+	public static final String[] levels = {"data/"};
 
 	public Level()
 	{
