@@ -19,11 +19,17 @@ public class GameSaveUtility
 		save = read();
 	}
 
-	public void nextLevel()
+	public void startLevelFresh()
 	{
 		if(save.lifes < 3)save.lifes = 3;
+	}
+	
+	public void reset()
+	{
 		save.coins = 0;
-		save.points = 0;// maybe not?
+		save.points = 0;
+		save.lifes = 0;
+		save.playerState = Maryo.MarioState.small;
 	}
 	
 	public static GameSaveUtility getInstance()
@@ -58,11 +64,12 @@ public class GameSaveUtility
 	public static class Save
 	{
 		//persistent
-		public Maryo.MarioState playerState = Maryo.MarioState.small;
 		public int currentLevel = 0;
 		
 		//in memory only
+		
 		public int coins;
+		public Maryo.MarioState playerState = Maryo.MarioState.small;
 		public int lifes;
 		public int points;
 		
@@ -92,8 +99,8 @@ public class GameSaveUtility
 				map.put(keyValue[0], keyValue[1]);
 			}
 			Save save = new Save();
-			String state = map.get("state");
-			save.playerState = state == null ? Maryo.MarioState.small: Maryo.MarioState.valueOf(state);
+			//String state = map.get("state");
+			//save.playerState = state == null ? Maryo.MarioState.small: Maryo.MarioState.valueOf(state);
 			save.currentLevel = Utility.parseInt(map.get("level"), 0);
 			return save;
 		}
@@ -101,8 +108,8 @@ public class GameSaveUtility
 		public static String writeToString(Save save)
 		{
 			if(save == null)return  null;
-			String input = "state=" + save.playerState.toString()
-							+ "\nlevel=" + save.currentLevel;
+			String input = /*"state=" + save.playerState.toString()
+							+ "\n*/"level=" + save.currentLevel;
 			return Utility.base64Encode(input);
 		}
 

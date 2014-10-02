@@ -151,7 +151,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		music = Assets.manager.get(loader.getLevel().getMusic().first());
         if(Assets.playMusic)music.play();
-		GameSaveUtility.getInstance().nextLevel();
+		
+		//TODO only call when starting game from menu
+		GameSaveUtility.getInstance().startLevelFresh();
     }
 
     @Override
