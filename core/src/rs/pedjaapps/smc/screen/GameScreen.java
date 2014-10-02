@@ -31,6 +31,7 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.HUD;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
@@ -150,6 +151,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		music = Assets.manager.get(loader.getLevel().getMusic().first());
         if(Assets.playMusic)music.play();
+		GameSaveUtility.getInstance().nextLevel();
     }
 
     @Override
@@ -181,6 +183,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		
         hud.render(gameState, delta);
 
+		//cleanup
+		for(GameObject obj : world.trashObjects)
+		{
+			world.getLevel().getGameObjects().remove(obj);
+		}
     }
 
 	
@@ -337,6 +344,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		Assets.manager.load("data/hud/itembox.png", Texture.class);
         Assets.manager.load("data/hud/maryo_l.png", Texture.class);
         Assets.manager.load("data/hud/gold_m.png", Texture.class);
+		
+		Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
+        Assets.manager.load("data/sounds/item/goldpiece_red.wav", Sound.class);
         
     }
 

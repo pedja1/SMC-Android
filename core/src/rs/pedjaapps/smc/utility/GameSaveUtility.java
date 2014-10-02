@@ -18,6 +18,13 @@ public class GameSaveUtility
 	{
 		save = read();
 	}
+
+	public void nextLevel()
+	{
+		if(save.lifes < 3)save.lifes = 3;
+		save.coins = 0;
+		save.points = 0;// maybe not?
+	}
 	
 	public static GameSaveUtility getInstance()
 	{
@@ -57,6 +64,7 @@ public class GameSaveUtility
 		//in memory only
 		public int coins;
 		public int lifes;
+		public int points;
 		
 		//copy constructor, only persistent objects are copied
 		public Save(Save save)

@@ -1,10 +1,15 @@
 package rs.pedjaapps.smc.model;
 
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class Maryo extends DynamicObject
 {
@@ -48,59 +53,6 @@ public class Maryo extends DynamicObject
         bounds.x = body.x - bounds.width / 4;
         bounds.y = body.y;
     }
-
-	/*private Body createBody(World world, Vector3 position)
-	{
-        //TODO body should be resized dynamically depending on maryo's state
-		BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(position.x + bounds.width / 2, position.y + bounds.height / 2);
-        bodyDef.fixedRotation = true;
-
-        Body body = world.createBody(bodyDef);
-
-        MassData massData = new MassData();
-        massData.mass = 90;
-        body.setMassData(massData);
-        body.setUserData(this);
-        //body.setLinearDamping(2.0f);
-
-		PolygonShape polygonShape = new PolygonShape();
-        Vector2[] vertices = new Vector2[8];
-        vertices[0] = new Vector2((bounds.width * -0.4f)/2, (bounds.height * -0.65f)/2);
-        vertices[1] = new Vector2((bounds.width * -0.15f)/2, (bounds.height * -0.875f)/2);
-        vertices[2] = new Vector2((bounds.width * 0.15f)/2, (bounds.height * -0.875f)/2);
-        vertices[3] = new Vector2((bounds.width * 0.4f)/2, (bounds.height * -0.65f)/2);
-        vertices[4] = new Vector2((bounds.width * 0.4f)/2, (bounds.height * 0.8f)/2);
-        vertices[5] = new Vector2((bounds.width * 0.3f)/2, (bounds.height * 0.875f)/2);
-        vertices[6] = new Vector2((bounds.width * -0.3f)/2, (bounds.height * 0.875f)/2);
-        vertices[7] = new Vector2((bounds.width * -0.4f)/2, (bounds.height * 0.8f)/2);
-        polygonShape.set(vertices);
-
-        FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = polygonShape;
-		fixtureDef.density = 1062;
-		fixtureDef.friction = 0;
-        fixtureDef.restitution = 0.5f;
-		//fixtureDef.restitution = 1;
-
-        body.createFixture(fixtureDef);
-
-        polygonShape = new PolygonShape();
-        //polygonShape.setAsBox(bounds.width/4, .1f);
-        vertices = new Vector2[4];
-        vertices[0] = new Vector2((bounds.width * -0.3f)/2, (bounds.height * -0.65f)/2);
-        vertices[1] = new Vector2((bounds.width * -0.3f)/2, (-bounds.height)/2);
-        vertices[2] = new Vector2((bounds.width * 0.3f)/2, (-bounds.height)/2);
-        vertices[3] = new Vector2((bounds.width * 0.3f)/2, (bounds.height * -0.65f)/2);
-        polygonShape.set(vertices);
-        sensorFixture = body.createFixture(polygonShape, 0);
-
-        body.setBullet(true);
-
-        polygonShape.dispose();
-		return body;
-	}*/
 
     public void loadTextures()
     {
@@ -180,7 +132,28 @@ public class Maryo extends DynamicObject
         spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
-    
+	@Override
+	protected void handleCollision(GameObject object, boolean vertical)
+	{
+		super.handleCollision(object, vertical);
+		if(object instanceof Coin)
+		{
+			Coin coin = (Coin)object;
+			Sound sound = null;
+			if(coin.textureAtlas.contains("yellow"))
+			{
+				sound = Assets.manager.get("data/sounds/item/goldpiece_1.ogg");
+			}
+			else
+			{
+				sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
+			}
+			if(sound != null)sound.play();
+			GameSaveUtility.getInstance().save.coins++;
+			
+			world.trashObjects.add(object);
+		}
+	}
 
     public boolean isFacingLeft()
     {
@@ -238,7 +211,6 @@ public class Maryo extends DynamicObject
 	{
 		return grounded;
 	}
-
 
 	@Override
 	public float maxVelocity()

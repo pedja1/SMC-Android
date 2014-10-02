@@ -17,6 +17,7 @@ import java.util.HashSet;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class HUD
 {
@@ -180,7 +181,7 @@ public class HUD
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) C_H / 20;
-        parameter.characters = "0123456789TimePonts:";
+        parameter.characters = "0123456789TimePontsx:";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
         font = generator.generateFont(parameter);
@@ -224,13 +225,13 @@ public class HUD
 			float goldX = pointsX + bounds.width + goldHeight;
 			batch.draw(goldM, goldX, pointsY - bounds.height, goldHeight * 2, goldHeight);
 			
+			String coins = GameSaveUtility.getInstance().save.coins + "";
 			font.setColor(0, 0, 0, 1);
-			font.draw(batch, "0", goldX + goldHeight * 2 + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.draw(batch, coins, goldX + goldHeight * 2 + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
-			font.draw(batch, "0", goldX + goldHeight * 2, pointsY);
+			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
 			//time
-			System.out.println("stateTime" + stateTime);
 			String time = Utility.millisToString(stateTime);
 			bounds = font.getBounds("Time " + time);
 			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - bounds.width / 2;
@@ -239,6 +240,14 @@ public class HUD
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, "Time " + time, timeX, pointsY);
 			
+			//lifes
+			String lifes = GameSaveUtility.getInstance().save.lifes + "x";
+			bounds = font.getBounds(lifes);
+			float lifesX = maryoLR.x - bounds.width;
+			font.setColor(0, 0, 0, 1);
+			font.draw(batch, lifes, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.setColor(0, 1, 0, 1);
+			font.draw(batch, lifes, lifesX, pointsY);
 			
 			batch.end();
 		}
