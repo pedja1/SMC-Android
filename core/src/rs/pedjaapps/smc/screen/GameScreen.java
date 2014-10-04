@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -349,6 +350,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		
 		Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
         Assets.manager.load("data/sounds/item/goldpiece_red.wav", Sound.class);
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
+        coinSize.fontParameters.size = 10;
+        coinSize.fontParameters.characters = "0123456789";
+        Assets.manager.load("coin.ttf", BitmapFont.class, coinSize);
         
     }
 
@@ -367,7 +373,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.loadAssets();
         Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
         states.add(Maryo.MarioState.small);//TODO load from level
-        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.85f, 0.85f), states);
+        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.9f, 0.9f), states);
         maryo.loadTextures();
         world.setMario(maryo);
         world.setLevel(loader.getLevel());

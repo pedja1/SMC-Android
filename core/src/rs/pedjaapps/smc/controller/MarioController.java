@@ -19,13 +19,12 @@ public class MarioController
     }
 
     private static final long LONG_JUMP_PRESS = 150l;
-    private static final float MAX_JUMP_SPEED = 5f;
+    private static final float MAX_JUMP_SPEED = 7f;
     
     private World world;
     private Maryo maryo;
     private long jumpPressedTime;
     private boolean jumpingPressed;
-    
 
     static Set<Keys> keys = new HashSet<Keys>();
 
@@ -33,9 +32,6 @@ public class MarioController
     {
         this.world = world;
         this.maryo = world.getMario();
-        /*rbg = new ParallaxBackground(new ParallaxLayer[]{
-                new ParallaxLayer(new TextureRegion(new Texture(Gdx.files.internal("data/background/green_junglehills.png"))), new Vector2(), new Vector2(0, 0))
-        }, 10, 7, new Vector2(150, 0));*/
     }
 
     // ** Key presses and touches **************** //
@@ -152,7 +148,7 @@ public class MarioController
                     {
                         //maryo.getVelocity().y = MAX_JUMP_SPEED;
                         //maryo.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
-                        maryo.setVelocity(vel.x, vel.y = +10f);
+                        maryo.setVelocity(vel.x, vel.y = +11f);
                     }
                 }
             }
@@ -206,8 +202,6 @@ public class MarioController
         }
         return false;
     }
-
-    
 
     public void setMaryo(Maryo mario)
     {

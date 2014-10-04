@@ -161,19 +161,7 @@ public class Maryo extends DynamicObject
 		if(object instanceof Coin)
 		{
 			Coin coin = (Coin)object;
-			Sound sound = null;
-			if(coin.textureAtlas.contains("yellow"))
-			{
-				sound = Assets.manager.get("data/sounds/item/goldpiece_1.ogg");
-			}
-			else
-			{
-				sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
-			}
-			if(sound != null)sound.play();
-			GameSaveUtility.getInstance().save.coins++;
-			
-			world.trashObjects.add(object);
+			if(!coin.playerHit)coin.hitPlayer();
 		}
 		else if(object instanceof Enemy)
 		{
@@ -249,7 +237,7 @@ public class Maryo extends DynamicObject
 	public class DyingAnimation
 	{
 		private float diedTime;
-		boolean firstDelayDone, secondDelayDone;
+		boolean upAnimFinished, dyedReset, firstDelayFinished;
 		Vector3 diedPosition;
 		
 		public void start()
@@ -267,15 +255,39 @@ public class Maryo extends DynamicObject
 				return;
 			}
 			
-			if(stateTime - diedTime < 0.5f)//delay 500ms
+			if(!firstDelayFinished && stateTime - diedTime < 0.5f)//delay 500ms
 			{
 				return;
 			}
+            else
+            {
+                firstDelayFinished = true;
+            }
 
-			//animate player up a bit
-			position.y += 13f * delat;
-			body.y = position.y;
-			updateBounds();
+            if (!upAnimFinished && position.y < diedPosition.y + bounds.height)
+            {
+                //animate player up a bit
+                velocity.y =
+                position.y += 7f * delat;
+                body.y = position.y;
+                updateBounds();
+            }
+            else
+            {
+                if(!dyedReset)
+                {
+                    diedTime = stateTime;
+                    dyedReset = true;
+                }
+                if(stateTime - diedTime < 0.3f)//delay 300ms
+                {
+                    return;
+                }
+                upAnimFinished = true;
+                position.y -= 7f * delat;
+                body.y = position.y;
+                updateBounds();
+            }
 			/*if()
 			{
 				

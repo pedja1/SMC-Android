@@ -23,7 +23,7 @@ public class World
 	/**
 	 * 
 	 */
-	public final Array<GameObject> trashObjects = new Array<>();
+	public final Array<GameObject> trashObjects = new Array<GameObject>();
 	
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame

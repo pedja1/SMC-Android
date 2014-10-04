@@ -175,17 +175,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void pause()
     {
+        music.stop();
     }
 
     @Override
     public void resume()
     {
+        if (Assets.playMusic)music.play();
     }
 
     @Override
     public void dispose()
     {
-		music.stop();
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
         bgColor.dispose();

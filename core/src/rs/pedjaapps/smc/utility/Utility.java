@@ -1,10 +1,11 @@
 package rs.pedjaapps.smc.utility;
 
 
-import android.util.Base64;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Base64Coder;
+
 import rs.pedjaapps.smc.Assets;
 
 /**
@@ -70,12 +71,12 @@ public class Utility
 	
 	public static String base64Encode(final String input) 
 	{
-		return Base64.encodeToString(input.getBytes(), Base64.DEFAULT);
+		return Base64Coder.encodeString(input);
 	}
 	
 	public static String base64Decode(final String input) 
 	{
-		return new String(Base64.decode(input, Base64.DEFAULT));
+		return Base64Coder.decodeString(input);
 	}
 	
 	public static int parseInt(String input, int defValue)
