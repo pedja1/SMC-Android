@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.model.enemy.Enemy;
 
 public class Maryo extends DynamicObject
 {
@@ -30,6 +31,8 @@ public class Maryo extends DynamicObject
 
     Array<MarioState> usedStates = new Array<MarioState>();
 
+	private boolean handleCollision = true;
+	DyingAnimation dyingAnim = new DyingAnimation();
     
     public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
     {
@@ -129,12 +132,31 @@ public class Maryo extends DynamicObject
                 marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
             }
         }
+		else if(worldState == WorldState.DYING)
+		{
+			marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + marioState) : Assets.loadedRegions.get(TKey.dead_right + ":" + marioState);
+		}
         spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
 	@Override
+	public void update(float delta)
+	{
+		if(worldState == WorldState.DYING)
+		{
+			stateTime += delta;
+			dyingAnim.update(delta);
+		}
+		else
+		{
+			super.update(delta);
+		}
+	}
+
+	@Override
 	protected void handleCollision(GameObject object, boolean vertical)
 	{
+		if(!handleCollision)return;
 		super.handleCollision(object, vertical);
 		if(object instanceof Coin)
 		{
@@ -152,6 +174,11 @@ public class Maryo extends DynamicObject
 			GameSaveUtility.getInstance().save.coins++;
 			
 			world.trashObjects.add(object);
+		}
+		else if(object instanceof Enemy)
+		{
+			worldState = WorldState.DYING;
+			dyingAnim.start();
 		}
 	}
 
@@ -172,6 +199,7 @@ public class Maryo extends DynamicObject
 
     public void setWorldState(WorldState newWorldState)
     {
+		if(worldState == WorldState.DYING)return;
         this.worldState = newWorldState;
     }
 
@@ -216,5 +244,43 @@ public class Maryo extends DynamicObject
 	public float maxVelocity()
 	{
 		return MAX_VEL;
+	}
+	
+	public class DyingAnimation
+	{
+		private float diedTime;
+		boolean firstDelayDone, secondDelayDone;
+		Vector3 diedPosition;
+		
+		public void start()
+		{
+			diedTime = stateTime;
+			handleCollision = false;
+			diedPosition = new Vector3(position);
+		}
+		
+		public void update(float delat)
+		{
+			velocity.x = 0;
+			if(bounds.y + bounds.height < 0)//first check if player is visible
+			{
+				return;
+			}
+			
+			if(stateTime - diedTime < 0.5f)//delay 500ms
+			{
+				return;
+			}
+
+			//animate player up a bit
+			position.y += 13f * delat;
+			body.y = position.y;
+			updateBounds();
+			/*if()
+			{
+				
+			}*/
+			
+		}
 	}
 }
