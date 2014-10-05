@@ -105,7 +105,7 @@ public abstract class DynamicObject extends GameObject
         }
         if(body.y < 0)
         {
-            handleFailedBelowWorld();
+            handleDroppedBelowWorld();
         }
 
         // reset the collision box's position on Y
@@ -121,9 +121,9 @@ public abstract class DynamicObject extends GameObject
         velocity.scl(1 / delta);
     }
 
-    protected void handleFailedBelowWorld()
+    protected void handleDroppedBelowWorld()
     {
-        //TODO for now only prevent it from falling below
+        //TODO for now only prevent it from dropping below
         if (velocity.y < 0)
         {
             grounded = true;

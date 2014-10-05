@@ -89,7 +89,6 @@ public class GameSaveUtility
 		{
 			if(serializedSave == null) return new Save();
 			serializedSave = Utility.base64Decode(serializedSave);
-			System.out.println(serializedSave);
 			HashMap<String, String> map = new HashMap<String, String>();
 			String[] values = serializedSave.split("\n");
 			for(String s : values)

@@ -227,7 +227,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(world, Gdx.files.internal("data/levels/main_menu.smclvl").readString());
+        loader.parseLevel(world, null, Gdx.files.internal("data/levels/main_menu.smclvl").readString());
 
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");

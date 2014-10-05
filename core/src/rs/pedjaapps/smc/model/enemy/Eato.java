@@ -16,6 +16,7 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Eato extends Enemy
 {
+    boolean dying = false;
     public Eato(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
@@ -38,8 +39,6 @@ public class Eato extends Enemy
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-
-        //spriteBatch.draw(frame, body.getPosition().x - getBounds().width/2, body.getPosition().y - getBounds().height/2, bounds.width, bounds.height);
         Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
     }
 	

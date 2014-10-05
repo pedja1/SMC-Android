@@ -8,31 +8,34 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Sprite;
 import rs.pedjaapps.smc.model.World;
-import rs.pedjaapps.smc.utility.CollisionManager;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public class Furball extends Enemy
+public class Turtle extends Enemy
 {
 
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
-    public static final float POS_Z = 0.09f;
+    public static final float POS_Z = 0.091f;
 
     private boolean turn;
     private float turnStartTime;
 
     private boolean turned = false;
-    boolean dying = false;
 
-    public Furball(World world, Vector2 size, Vector3 position)
+    boolean isShell = false;
+
+    boolean isBoss;
+
+    public Turtle(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
         setupBoundingBox();
@@ -41,11 +44,12 @@ public class Furball extends Enemy
     @Override
     public void loadTextures()
     {
+        isBoss = textureAtlas.contains("red");
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureRegion> rightFrames = /*atlas.getRegions();//*/new Array<TextureRegion>();
-        Array<TextureRegion> leftFrames = /*atlas.getRegions();//*/new Array<TextureRegion>();
+        Array<TextureRegion> rightFrames = new Array<TextureRegion>();
+        Array<TextureRegion> leftFrames = new Array<TextureRegion>();
 
-        for(int i = 1; i < 9; i++)
+        for(int i = isBoss ? 0 : 1; i < (isBoss ? 3 : 9); i++)
         {
             TextureRegion region = atlas.findRegion("walk-" + i);
             rightFrames.add(region);
@@ -57,12 +61,7 @@ public class Furball extends Enemy
 
         Assets.animations.put(textureAtlas, new Animation(0.07f, rightFrames));
         Assets.animations.put(textureAtlas + "_l", new Animation(0.07f, leftFrames));
-        Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
-        TextureRegion tmp = atlas.findRegion("dead");
-        Assets.loadedRegions.put(textureAtlas + ":dead", tmp);
-        tmp = new TextureRegion(tmp);
-        tmp.flip(true, false);
-        Assets.loadedRegions.put(textureAtlas + ":dead_r", tmp);
+        if(!isBoss)Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
 
     }
 
@@ -70,32 +69,16 @@ public class Furball extends Enemy
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
-        if (!dying)
-        {
-            frame = turn ? Assets.loadedRegions.get(textureAtlas + ":turn")
-                    : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
-            Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
-        }
-        else
-        {
-            frame = direction == Direction.right ? Assets.loadedRegions.get(textureAtlas + ":dead") : Assets.loadedRegions.get(textureAtlas + ":dead_r");
-            spriteBatch.draw(frame, bounds.x ,bounds.y ,bounds.width, bounds.height);
-        }
+        frame = (turn && !isBoss) ? Assets.loadedRegions.get(textureAtlas + ":turn")
+                : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
+        Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
     }
 
     public void update(float deltaTime)
     {
         stateTime += deltaTime;
-        if(dying)
-        {
-            //resize it by state time
-            bounds.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
-            bounds.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
-            if(bounds.height < 0)world.trashObjects.add(this);
-            return;
-        }
 
-		// Setting initial vertical acceleration 
+		// Setting initial vertical acceleration
         acceleration.y = Constants.GRAVITY;
 
         // Convert acceleration to frame time
@@ -123,7 +106,7 @@ public class Furball extends Enemy
 		}
 		turned = false;
     }
-	
+
 	@Override
 	protected void handleCollision(GameObject object, boolean vertical)
 	{
@@ -136,21 +119,24 @@ public class Furball extends Enemy
                     && !turned)
 			{
 				//CollisionManager.resolve_objects(this, object, true);
-                handleCollision(Enemy.ContactType.stopper);
+                handleCollision(ContactType.stopper);
 			}
 		}
 	}
 
 	@Override
-	public void handleCollision(Enemy.ContactType contactType)
+	public void handleCollision(ContactType contactType)
 	{
 		switch(contactType)
 		{
 			case stopper:
 				direction = direction == Direction.right ? Direction.left : Direction.right;
-                turnStartTime = stateTime;
-                turn = true;
-				velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
+                if (!isBoss)
+                {
+                    turnStartTime = stateTime;
+                    turn = true;
+                }
+                velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
                 turned = true;
 				break;
 		}
@@ -166,13 +152,5 @@ public class Furball extends Enemy
     {
         bounds.height = body.height + 0.2f;
         super.updateBounds();
-    }
-
-    @Override
-    public void die()
-    {
-        stateTime = 0;
-        handleCollision = false;
-        dying = true;
     }
 }

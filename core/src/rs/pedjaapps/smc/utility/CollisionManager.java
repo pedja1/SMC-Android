@@ -37,7 +37,6 @@ public class CollisionManager
 		float o2size = x ? o2.getBody().width : o2.getBody().height;
 		
 		float overlap = get_overlap(o1pos, o1size, o2pos, o2size);
-		System.out.println(overlap);
 		if(o1pos > o2pos)
 		{
 			if(x)o1.position.x -= overlap;

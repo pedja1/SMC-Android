@@ -1,14 +1,21 @@
 package rs.pedjaapps.smc.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.List;
+
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.enemy.Eato;
+import rs.pedjaapps.smc.model.enemy.Flyon;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.model.enemy.Enemy;
 
@@ -25,19 +32,20 @@ public class Maryo extends DynamicObject
 	protected static final float MAX_VEL          = 4f;
 	
     WorldState worldState = WorldState.JUMPING;
-    MarioState marioState = MarioState.small;
+    private MarioState marioState = MarioState.small;
     boolean facingLeft = false;
     boolean longJump = false;
 
-    Array<MarioState> usedStates = new Array<MarioState>();
+    public float groundY = 0;
 
 	private boolean handleCollision = true;
 	DyingAnimation dyingAnim = new DyingAnimation();
+
+    public Sound jumpSound = null;
     
-    public Maryo(World world, Vector3 position, Vector2 size, Array<MarioState> usedStates)
+    public Maryo(World world, Vector3 position, Vector2 size)
     {
         super(world, size, position);
-        this.usedStates = usedStates;
         setupBoundingBox();
     }
 
@@ -59,10 +67,12 @@ public class Maryo extends DynamicObject
 
     public void loadTextures()
     {
-        for(MarioState ms : usedStates)
+        MarioState[] states = new MarioState[]{MarioState.small, MarioState.big, MarioState.fire, MarioState.ghost, MarioState.ice};
+        for(MarioState ms : states)
         {
             loadTextures(ms.toString());
         }
+        setJumpSound();
     }
 
     private void loadTextures(String state)
@@ -99,10 +109,13 @@ public class Maryo extends DynamicObject
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.fall_left + ":" + state, tmp);
 
-        Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
-        tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString() + ":" + state));
-        tmp.flip(true, false);
-        Assets.loadedRegions.put(TKey.dead_left + ":" + state, tmp);
+        if (MarioState.small.toString().equals(state))
+        {
+            Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
+            tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString() + ":" + state));
+            tmp.flip(true, false);
+            Assets.loadedRegions.put(TKey.dead_left + ":" + state, tmp);
+        }
 
         Assets.loadedRegions.put(TKey.duck_right + ":" + state, atlas.findRegion(TKey.duck_right.toString()));
         tmp = new TextureRegion(Assets.loadedRegions.get(TKey.duck_right.toString() + ":" + state));
@@ -150,6 +163,29 @@ public class Maryo extends DynamicObject
 		else
 		{
 			super.update(delta);
+
+            //check where ground is
+            Array<GameObject> objects = world.getVisibleObjects();
+            Rectangle rect = world.rectPool.obtain();
+            rect.set(position.x, 0, bounds.width, position.y);
+            float tmpGroundY = 0;
+            float distance = body.y;
+            for(GameObject go : objects)
+            {
+                if(go == null)continue;
+                if(go instanceof Sprite
+                        && (((Sprite)go).getType() == Sprite.Type.massive || ((Sprite)go).getType() == Sprite.Type.halfmassive)
+                        && rect.overlaps(go.getBody()))
+                {
+                    float tmpDistance = body.y - (go.body.y + go.body.height);
+                    if(tmpDistance < distance)
+                    {
+                        distance = tmpDistance;
+                        tmpGroundY = go.body.y + go.body.height;
+                    }
+                }
+            }
+            groundY = tmpGroundY;
 		}
 	}
 
@@ -163,12 +199,35 @@ public class Maryo extends DynamicObject
 			Coin coin = (Coin)object;
 			if(!coin.playerHit)coin.hitPlayer();
 		}
-		else if(object instanceof Enemy)
+		else if(object instanceof Enemy && ((Enemy)object).handleCollision)
 		{
-			worldState = WorldState.DYING;
-			dyingAnim.start();
+            boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
+            if(deadAnyway)
+            {
+                worldState = WorldState.DYING;
+                dyingAnim.start();
+            }
+            else
+            {
+                if(vertical && body.y > object.body.y)//enemy death from above
+                {
+                    velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                    ((Enemy)object).die();
+                }
+                else
+                {
+                    worldState = WorldState.DYING;
+                    dyingAnim.start();
+                }
+            }
 		}
 	}
+
+    private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)
+    {
+        //TODO update this when you add new enemy classes
+        return object instanceof Flyon || object instanceof Eato;
+    }
 
     public boolean isFacingLeft()
     {
@@ -245,6 +304,11 @@ public class Maryo extends DynamicObject
 			diedTime = stateTime;
 			handleCollision = false;
 			diedPosition = new Vector3(position);
+            if(Assets.playSounds)
+            {
+                Sound sound = Assets.manager.get("data/sounds/player/dead.ogg");
+                sound.play();
+            }
 		}
 		
 		public void update(float delat)
@@ -288,11 +352,43 @@ public class Maryo extends DynamicObject
                 body.y = position.y;
                 updateBounds();
             }
-			/*if()
-			{
-				
-			}*/
 			
 		}
 	}
+
+    @Override
+    protected void handleDroppedBelowWorld()
+    {
+        worldState = WorldState.DYING;
+        dyingAnim.start();
+    }
+
+    private void setJumpSound()
+    {
+        switch (marioState)
+        {
+            case small:
+                jumpSound = Assets.manager.get("data/sounds/player/jump_small.ogg");
+                break;
+            case big:
+            case fire:
+            case ice:
+                jumpSound = Assets.manager.get("data/sounds/player/jump_big.ogg");
+                break;
+            case ghost:
+                jumpSound = Assets.manager.get("data/sounds/player/jump_ghost.ogg");
+                break;
+        }
+    }
+
+    public MarioState getMarioState()
+    {
+        return marioState;
+    }
+
+    public void setMarioState(MarioState marioState)
+    {
+        this.marioState = marioState;
+        setJumpSound();
+    }
 }

@@ -94,7 +94,7 @@ public class Coin extends Item
         {
             sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
         }
-        if(sound != null)sound.play();
+        if(sound != null && Assets.playSounds)sound.play();
         GameSaveUtility.getInstance().save.coins++;
 
         world.trashObjects.add(this);

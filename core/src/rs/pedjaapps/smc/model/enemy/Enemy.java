@@ -13,6 +13,7 @@ public abstract class Enemy extends DynamicObject
     protected String textureAtlas;
     private String textureName;//name of texture from pack
 	protected Direction direction = Direction.right;
+    public boolean handleCollision = true;
 
 	public void setDirection(Direction direction)
 	{
@@ -23,8 +24,15 @@ public abstract class Enemy extends DynamicObject
 	{
 		return direction;
 	}
-	
-	public enum Direction
+
+    public void die()
+    {
+        //TODO implement this in subclasses and dont call super
+        handleCollision = false;
+        world.trashObjects.add(this);
+    }
+
+    public enum Direction
 	{
 		right, left
 	}
@@ -107,6 +115,10 @@ public abstract class Enemy extends DynamicObject
 			case furball:
                 position.z = Furball.POS_Z;
                 enemy = new Furball(world, size, position);
+                break;
+            case turtle:
+                position.z = Turtle.POS_Z;
+                enemy = new Turtle(world, size, position);
                 break;
         }
         return enemy;

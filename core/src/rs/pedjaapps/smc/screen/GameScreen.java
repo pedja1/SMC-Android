@@ -161,6 +161,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void render(float delta)
     {
 		if (delta > 0.1f) delta = 0.1f;
+        //debug
+        //delta = 0.0666f;
+        //debug end
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -170,7 +173,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
         drawObjects(delta);
-        world.getMario().render(spriteBatch);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(pCamera.combined);
@@ -286,6 +288,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         return "Level: width=" + world.getLevel().getWidth() + ", height=" + world.getLevel().getHeight()
 			+ "\n" + "Player: x=" + world.getMario().getPosition().x + ", y=" + world.getMario().getPosition().y
+            + "\n" + "Player Vel: x=" + world.getMario().getVelocity().x + ", y=" + world.getMario().getVelocity().y
             + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
             + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
             + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
@@ -341,15 +344,30 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);//TODO load depending on states
+        for(Maryo.MarioState ms : Maryo.MarioState.values())
+        {
+            Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
+        }
 		Assets.manager.load("data/hud/pause.png", Texture.class);
-		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
 		Assets.manager.load("data/hud/itembox.png", Texture.class);
         Assets.manager.load("data/hud/maryo_l.png", Texture.class);
         Assets.manager.load("data/hud/gold_m.png", Texture.class);
-		
+
+        //audio
+        Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
 		Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
         Assets.manager.load("data/sounds/item/goldpiece_red.wav", Sound.class);
+        Assets.manager.load("data/sounds/player/dead.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_big.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_big_power.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_small.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_small_power.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_ghost.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/ghost_end.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/pickup_item.wav", Sound.class);
+        Assets.manager.load("data/sounds/player/powerdown.ogg", Sound.class);
+        Assets.manager.load("data/sounds/player/run_stop.ogg", Sound.class);
+
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
         coinSize.fontParameters.size = 10;
@@ -369,15 +387,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(world, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
+        loader.parseLevel(world, controller, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
         hud.loadAssets();
-        Array<Maryo.MarioState> states = new Array<Maryo.MarioState>();
-        states.add(Maryo.MarioState.small);//TODO load from level
-        Maryo maryo = new Maryo(world, loader.getLevel().getSpanPosition(), new Vector2(0.9f, 0.9f), states);
-        maryo.loadTextures();
-        world.setMario(maryo);
         world.setLevel(loader.getLevel());
-        controller.setMaryo(maryo);
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
     }
 

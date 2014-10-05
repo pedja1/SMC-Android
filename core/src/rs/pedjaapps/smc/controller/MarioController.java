@@ -1,11 +1,13 @@
 package rs.pedjaapps.smc.controller;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.*;
 
+import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
@@ -19,12 +21,11 @@ public class MarioController
     }
 
     private static final long LONG_JUMP_PRESS = 150l;
-    private static final float MAX_JUMP_SPEED = 7f;
+    private static final float MAX_JUMP_SPEED = 9f;
     
     private World world;
     private Maryo maryo;
-    private long jumpPressedTime;
-    private boolean jumpingPressed;
+    private boolean jumped;
 
     static Set<Keys> keys = new HashSet<Keys>();
 
@@ -58,7 +59,16 @@ public class MarioController
 
     public void jumpPressed()
     {
-        keys.add(Keys.JUMP);
+        if(maryo.isGrounded())
+        {
+            keys.add(Keys.JUMP);
+
+            if(Assets.playSounds)
+            {
+                Sound sound = maryo.jumpSound;
+                if(sound != null)sound.play();
+            }
+        }
     }
 
     public void firePressed()
@@ -89,7 +99,7 @@ public class MarioController
     public void jumpReleased()
     {
         keys.remove(Keys.JUMP);
-        jumpingPressed = false;
+        jumped = false;
     }
 
     public void fireReleased()
@@ -102,8 +112,7 @@ public class MarioController
      */
     public void update(float delta)
     {
-        //maryo.setGrounded(maryo.getVelocity().y == 0);
-        //System.out.println(maryo.getVelocity().y + " : " + maryo.isGrounded());
+        maryo.setGrounded(maryo.position.y - maryo.groundY < 0.1f);
 		if(!maryo.isGrounded())
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
@@ -113,9 +122,6 @@ public class MarioController
         {
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
-
-        maryo.update(delta);
-        //world.getLevel().getPb().moveX(delta);
 	}
 
     /**
@@ -127,65 +133,37 @@ public class MarioController
         Vector3 pos = maryo.getPosition();
         if (keys.contains(Keys.JUMP))
         {
-            //System.out.println("jump");
-            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (!jumped && vel.y < MAX_JUMP_SPEED)
             {
-                jumpingPressed = true;
-                jumpPressedTime = System.currentTimeMillis();
-                maryo.setWorldState(Maryo.WorldState.JUMPING);
-                //maryo.getVelocity().y = MAX_JUMP_SPEED;
-                maryo.setGrounded(false);
+                maryo.setVelocity(vel.x, vel.y += 2f);
             }
             else
             {
-                if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS))
-                {
-                    jumpingPressed = false;
-                }
-                else
-                {
-                    if (jumpingPressed && vel.y < MAX_JUMP_SPEED)
-                    {
-                        //maryo.getVelocity().y = MAX_JUMP_SPEED;
-                        //maryo.getBody().setTransform(pos.x, pos.y + 0.01f, 0);
-                        maryo.setVelocity(vel.x, vel.y = +11f);
-                    }
-                }
+                jumped = true;
             }
         }
         if (keys.contains(Keys.LEFT))
         {
-            //System.out.println("left");
             // left is pressed
             maryo.setFacingLeft(true);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
-            //if (vel.x > -MAX_VEL)
-            //{
-                //maryo.getBody().applyLinearImpulse(-1.2f, 0, 0, 0, true);
-                maryo.setVelocity(vel.x = -4f, vel.y);
-            //}
+            maryo.setVelocity(vel.x = -4f, vel.y);
         }
         else if (keys.contains(Keys.RIGHT))
         {
-            //System.out.println("right");
             // right is pressed
             maryo.setFacingLeft(false);
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
-            //if (vel.x < MAX_VEL)
-            //{
-                //maryo.getBody().applyLinearImpulse(1.2f, 0, 0, 0, true);
-                maryo.setVelocity(vel.x = +4f, vel.y);
-            //}
+            maryo.setVelocity(vel.x = +4f, vel.y);
         }
         else if (keys.contains(Keys.DOWN))
         {
-            //System.out.println("down");
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.DUCKING);
@@ -198,7 +176,7 @@ public class MarioController
                 maryo.setWorldState(Maryo.WorldState.IDLE);
             }
             //slowly decrease linear velocity on x axes
-            maryo.setVelocity(vel.x * 0.7f, vel.y);
+            maryo.setVelocity(vel.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */vel.y);
         }
         return false;
     }

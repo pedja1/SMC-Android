@@ -15,10 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.model.Background;
 import rs.pedjaapps.smc.model.BackgroundColor;
 import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Level;
+import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.Sprite;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.model.enemy.Enemy;
@@ -64,19 +66,15 @@ public class LevelLoader
         level = new Level();
     }
 
-	public void parseLevel(World world, String jsonString)
+	public void parseLevel(World world, MarioController controller, String jsonString)
 	{
 		JSONObject jLevel;
         try
         {
             jLevel = new JSONObject(jsonString);
             parseInfo(jLevel);
-            //parseSprites(jLevel, world);//not movable objects
-            //parseObjects(jLevel, world);//movable/animated objects(have their own class)
-            //parseEnemies(jLevel, world);
-            //parsePlayer(jLevel);
             parseBg(jLevel);
-			parseGameObjects(world, jLevel);
+			parseGameObjects(world, controller, jLevel);
         }
         catch (JSONException e)
         {
@@ -85,7 +83,7 @@ public class LevelLoader
         }
 	}
 
-	private void parseGameObjects(World world, JSONObject level) throws JSONException
+	private void parseGameObjects(World world, MarioController controller, JSONObject level) throws JSONException
 	{
 		JSONArray jObjects =  level.getJSONArray(KEY.objects.toString());
 		for (int i = 0; i < jObjects.length(); i++)
@@ -97,7 +95,7 @@ public class LevelLoader
 					parseSprite(world, jObject);
 					break;
 				case player:
-					parsePlayer(jObject);
+					parsePlayer(jObject, world, controller);
 					break;
 				case item:
 					parseItem(world, jObject);
@@ -218,11 +216,19 @@ public class LevelLoader
 		}
     }
 
-    private void parsePlayer(JSONObject jPlayer) throws JSONException
+    private void parsePlayer(JSONObject jPlayer, World world, MarioController controller) throws JSONException
     {
         float x = (float) jPlayer.getDouble(KEY.posx.toString());
         float y = (float) jPlayer.getDouble(KEY.posy.toString());
-        level.setSpanPosition(new Vector3(x, y, 0));
+        level.setSpanPosition(new Vector3(x, y, 0.0999f));
+        if (controller != null)
+        {
+            Maryo maryo = new Maryo(world, level.getSpanPosition(), new Vector2(0.9f, 0.9f));
+            maryo.loadTextures();
+            world.setMario(maryo);
+            level.getGameObjects().add(maryo);
+            controller.setMaryo(maryo);
+        }
     }
 
     private void parseSprite(World world, JSONObject jSprite) throws JSONException
