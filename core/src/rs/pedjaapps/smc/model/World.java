@@ -5,11 +5,13 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import java.util.ArrayList;
 import java.util.List;
+import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.utility.Constants;
 
 
 public class World
 {
+	public AbstractScreen screen;
     /**
      * Our player controlled hero *
      */
@@ -35,6 +37,16 @@ public class World
 			return new Rectangle();
 		}
 	};
+
+	public void setScreen(AbstractScreen screen)
+	{
+		this.screen = screen;
+	}
+
+	public AbstractScreen getScreen()
+	{
+		return screen;
+	}
 
     // Getters -----------
 
@@ -115,9 +127,9 @@ public class World
 	}
 	
     // --------------------
-    public World()
+    public World(AbstractScreen screen)
     {
-
+		this.screen = screen;
     }
 
     public Array<GameObject> getVisibleObjects()

@@ -195,7 +195,7 @@ public class SelectionAdapter
 			if (level.bounds.contains(x, y) && level.isUnlocked)
 			{
 				//TODO start level
-				mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game), false));
+				mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true), false));
 				break;
 			}
 		}

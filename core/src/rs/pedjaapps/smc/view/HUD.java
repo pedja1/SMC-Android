@@ -51,6 +51,7 @@ public class HUD
 	public HashSet<Key> pressedKeys = new HashSet<Key>();
 	
 	float stateTime;
+	public boolean updateTimer = true;
 
 	public HUD()
 	{
@@ -198,7 +199,7 @@ public class HUD
 		}
 		else
 		{
-			stateTime += deltaTime;
+			if(updateTimer)stateTime += deltaTime;
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(pressedKeys.contains(Key.pause) ? pauseP : pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);

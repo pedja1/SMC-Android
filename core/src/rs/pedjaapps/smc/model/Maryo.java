@@ -18,6 +18,7 @@ import rs.pedjaapps.smc.model.enemy.Eato;
 import rs.pedjaapps.smc.model.enemy.Flyon;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.model.enemy.Enemy;
+import rs.pedjaapps.smc.screen.GameScreen;
 
 public class Maryo extends DynamicObject
 {
@@ -177,6 +178,10 @@ public class Maryo extends DynamicObject
                         && (((Sprite)go).getType() == Sprite.Type.massive || ((Sprite)go).getType() == Sprite.Type.halfmassive)
                         && rect.overlaps(go.getBody()))
                 {
+					if(((Sprite)go).getType() == Sprite.Type.halfmassive && body.y < go.body.y + go.body.height)
+					{
+						continue;
+					}
                     float tmpDistance = body.y - (go.body.y + go.body.height);
                     if(tmpDistance < distance)
                     {
@@ -309,6 +314,8 @@ public class Maryo extends DynamicObject
                 Sound sound = Assets.manager.get("data/sounds/player/dead.ogg");
                 sound.play();
             }
+			((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
+			GameSaveUtility.getInstance().save.lifes--;
 		}
 		
 		public void update(float delat)
@@ -316,6 +323,7 @@ public class Maryo extends DynamicObject
 			velocity.x = 0;
 			if(bounds.y + bounds.height < 0)//first check if player is visible
 			{
+				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
 				return;
 			}
 			

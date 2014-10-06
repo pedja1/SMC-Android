@@ -21,7 +21,7 @@ public class GameSaveUtility
 
 	public void startLevelFresh()
 	{
-		if(save.lifes < 3)save.lifes = 3;
+		/*if(save.lifes < 3)*/save.lifes = 3;
 	}
 	
 	public void reset()

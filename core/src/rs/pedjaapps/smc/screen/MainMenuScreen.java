@@ -68,7 +68,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
-        world = new World();
+        world = new World(this);
 
 		selectionAdapter = new SelectionAdapter(loadSelectionItems(), this);
     }

@@ -59,13 +59,24 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     Vector2 camMax = new Vector2();
     private MarioController controller;
     
-    HUD hud;
+    public HUD hud;
 
     private int width, height;
 
+	public void setGameState(GAME_STATE gameState)
+	{
+		this.gameState = gameState;
+		if(gameState == GAME_STATE.PLAYER_DEAD)hud.updateTimer = false;
+	}
+
+	public GAME_STATE getGameState()
+	{
+		return gameState;
+	}
+
     public enum GAME_STATE
     {
-        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER
+        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD
 	}
 
     private GAME_STATE gameState;
@@ -75,6 +86,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 	
 	Sound audioOn;
 	Music music;
+	
+	float goAlpha = 0.0f;
+	boolean goTouched = false;
 
 	public void setSize(int w, int h)
     {
@@ -92,13 +106,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.debug = debug;
     }
 
-    public GameScreen(MaryoGame game)
+    public GameScreen(MaryoGame game, boolean fromMenu)
     {
 		super(game);
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        world = new World();
+        world = new World(this);
         hud = new HUD();
         //dPad = new DPad(0.3f * width);
         //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
@@ -145,6 +159,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         loader = new LevelLoader();
         //Gdx.graphics.setContinuousRendering(false);
+		if(fromMenu)GameSaveUtility.getInstance().startLevelFresh();
     }
 
     @Override
@@ -152,9 +167,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		music = Assets.manager.get(loader.getLevel().getMusic().first());
         if(Assets.playMusic)music.play();
-		
-		//TODO only call when starting game from menu
-		GameSaveUtility.getInstance().startLevelFresh();
     }
 
     @Override
@@ -187,6 +199,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		if (debug)drawDebug();
 		
         hud.render(gameState, delta);
+		
+		if(gameState == GAME_STATE.GAME_OVER)
+		{
+			handleGameOver(delta);
+		}
 
 		//cleanup
 		for(GameObject obj : world.trashObjects)
@@ -195,7 +212,56 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		}
     }
 
-	
+	private void handleGameOver(float delta)
+	{
+		if(GameSaveUtility.getInstance().save.lifes < 0)
+		{
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+
+			shapeRenderer.setProjectionMatrix(guiCam.combined);
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+			shapeRenderer.setColor(0, 0, 0, 0.5f);
+			shapeRenderer.rect(0, 0, width, height);
+			shapeRenderer.end();
+			
+			spriteBatch.setProjectionMatrix(guiCam.combined);
+			spriteBatch.begin();
+			
+			Texture go = Assets.manager.get("data/hud/game_over.png");
+			go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+			float width = this.width * 0.8f;
+			float height = width / 4;
+			
+			float x = this.width / 2 - width / 2;
+			float y = this.height / 2 - height / 2;
+			spriteBatch.draw(go, x, y, width, height);
+			
+			spriteBatch.end();
+			if(!goTouched)return;
+		}
+		
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+
+		shapeRenderer.setProjectionMatrix(guiCam.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(0, 0, 0, goAlpha += 0.033f);
+		shapeRenderer.rect(0, 0, width, height);
+		shapeRenderer.end();
+		
+		if(goAlpha >= 1)
+		{
+			if(GameSaveUtility.getInstance().save.lifes < 0)
+			{
+				game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+			}
+			else
+			{
+				game.setScreen(new LoadingScreen(new GameScreen(game, false), false));
+			}
+		}
+	}
 
 	private void drawBackground()
 	{
@@ -243,7 +309,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		{
 			if (maryoBWO.overlaps(go.getBody()))
 			{
-				if (gameState == GAME_STATE.GAME_RUNNING)go.update(delta);
+				if (gameState == GAME_STATE.GAME_RUNNING || (gameState == GAME_STATE.PLAYER_DEAD && go instanceof Maryo))
+				{
+					go.update(delta);
+				}
 			}
 		}
 		for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y))
@@ -352,7 +421,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		Assets.manager.load("data/hud/itembox.png", Texture.class);
         Assets.manager.load("data/hud/maryo_l.png", Texture.class);
         Assets.manager.load("data/hud/gold_m.png", Texture.class);
-
+		Assets.manager.load("data/hud/game_over.png", Texture.class);
+		
         //audio
         Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
 		Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
@@ -485,6 +555,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public boolean touchDown(int x, int y, int pointer, int button)
     {
 		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
+		if(gameState == GAME_STATE.GAME_OVER)goTouched = true;
         //System.out.println("Touch point: " + x + "x" + y);
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
