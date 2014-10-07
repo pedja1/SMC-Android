@@ -159,12 +159,11 @@ public class Maryo extends DynamicObject
 		if(worldState == WorldState.DYING)
 		{
 			stateTime += delta;
-			dyingAnim.update(delta);
+			if(dyingAnim.update(delta))super.update(delta);
 		}
 		else
 		{
 			super.update(delta);
-
             //check where ground is
             Array<GameObject> objects = world.getVisibleObjects();
             Rectangle rect = world.rectPool.obtain();
@@ -303,6 +302,7 @@ public class Maryo extends DynamicObject
 		private float diedTime;
 		boolean upAnimFinished, dyedReset, firstDelayFinished;
 		Vector3 diedPosition;
+		boolean upBoost;
 		
 		public void start()
 		{
@@ -318,49 +318,33 @@ public class Maryo extends DynamicObject
 			GameSaveUtility.getInstance().save.lifes--;
 		}
 		
-		public void update(float delat)
+		public boolean update(float delat)
 		{
 			velocity.x = 0;
+			position.x = diedPosition.x;
 			if(bounds.y + bounds.height < 0)//first check if player is visible
 			{
 				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
-				return;
+				return false;
 			}
 			
 			if(!firstDelayFinished && stateTime - diedTime < 0.5f)//delay 500ms
 			{
-				return;
+				return false;
 			}
             else
             {
                 firstDelayFinished = true;
             }
 
-            if (!upAnimFinished && position.y < diedPosition.y + bounds.height)
+            if (!upBoost)
             {
                 //animate player up a bit
-                velocity.y =
-                position.y += 7f * delat;
-                body.y = position.y;
-                updateBounds();
+				velocity.y = 8f;
+				upBoost = true;
             }
-            else
-            {
-                if(!dyedReset)
-                {
-                    diedTime = stateTime;
-                    dyedReset = true;
-                }
-                if(stateTime - diedTime < 0.3f)//delay 300ms
-                {
-                    return;
-                }
-                upAnimFinished = true;
-                position.y -= 7f * delat;
-                body.y = position.y;
-                updateBounds();
-            }
-			
+           
+			return true;
 		}
 	}
 
