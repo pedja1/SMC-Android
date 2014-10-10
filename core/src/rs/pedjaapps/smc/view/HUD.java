@@ -219,13 +219,14 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			BitmapFont.TextBounds bounds = font.getBounds("Points 00000000");
+			String points = String.format("Points %08d", GameSaveUtility.getInstance().save.points);
+			BitmapFont.TextBounds bounds = font.getBounds(points);
 			float pointsX = C_W * 0.03f;
 			float pointsY = bounds.height / 2 + maryoLR.y + maryoLR.height / 2;
 			font.setColor(0, 0, 0, 1);
-			font.draw(batch, "Points 00000000", pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.draw(batch, points, pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
-			font.draw(batch, "Points 00000000", pointsX, pointsY);
+			font.draw(batch, points, pointsX, pointsY);
 			
 			//coins
 			float goldHeight = bounds.height * 1.1f;

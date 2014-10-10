@@ -2,10 +2,15 @@ package rs.pedjaapps.smc.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.items.Item;
 import rs.pedjaapps.smc.utility.Constants;
@@ -129,7 +134,12 @@ public class Coin extends Item
 
 			// un-scale velocity (not in frame time)
 			velocity.scl(1 / delta);
-			if(false)//TODO not in camera viewport
+			OrthographicCamera cam = ((GameScreen)world.screen).cam;
+			float camLeft = cam.position.x - cam.viewportWidth / 2;
+			float camTop = cam.position.y + cam.viewportHeight / 2;
+			float objRight = position.x + bounds.width;
+			float objBottom = position.y;
+			if(objRight < camLeft || objBottom > camTop)//is visible
 			{
 				world.trashObjects.add(this);
 			}
@@ -159,6 +169,7 @@ public class Coin extends Item
         }
         if(sound != null && Assets.playSounds)sound.play();
         GameSaveUtility.getInstance().save.coins++;
+		GameSaveUtility.getInstance().save.points += points;
 
         collect();
     }
@@ -171,5 +182,6 @@ public class Coin extends Item
 		velocity.y = 4f;
 		originalPosY = position.y;
 		System.out.println("popOutFromBox");
+		GameSaveUtility.getInstance().save.points += points;
 	}
 }
