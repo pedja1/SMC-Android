@@ -11,6 +11,22 @@ import rs.pedjaapps.smc.model.World;
  */
 public abstract class Item extends Sprite
 {
+	//item types
+	public static final int
+	TYPE_POWERUP = 23,
+	TYPE_MUSHROOM_DEFAULT = 25,
+	TYPE_MUSHROOM_LIVE_1 = 35,
+	TYPE_MUSHROOM_POISON = 49,
+	TYPE_MUSHROOM_BLUE = 51,
+	TYPE_MUSHROOM_GHOST = 52,
+	TYPE_FIREPLANT = 24,
+	TYPE_JUMPING_GOLDPIECE = 22,
+	TYPE_FALLING_GOLDPIECE = 48,
+	TYPE_GOLDPIECE = 8,
+	TYPE_MOON = 37,
+	TYPE_STAR = 39;
+	
+	
     protected float stateTime;
     enum CLASS
     {
@@ -61,4 +77,9 @@ public abstract class Item extends Sprite
     {
         stateTime += delta;
     }
+	
+	public void popOutFromBox()
+	{
+		
+	}
 }

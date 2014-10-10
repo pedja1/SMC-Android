@@ -8,7 +8,7 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Sprite extends GameObject
 {
     protected String textureAtlas;
-    private String textureName;//name of texture from pack or png
+    protected String textureName;//name of texture from pack or png
     protected Type type = null;
 
     @Override
@@ -38,7 +38,7 @@ public class Sprite extends GameObject
 
     /**
      * Type of the block
-     * massive = player cant pass by it or stand on it, eg. no collision detection
+     * massive = player cant pass by it
      * passive = player passes in front of it
      * front_passive = player passes behind it
      * */

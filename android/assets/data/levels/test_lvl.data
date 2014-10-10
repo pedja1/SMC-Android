@@ -27,3 +27,7 @@ atl:data/game/items/goldpiece/yellow.pack
 atl:data/enemy/furball/brown.pack
 atl:data/enemy/turtle/red.pack
 atl:data/enemy/turtle/green.pack
+txt:data/game/box/yellow/default.png
+atl:data/game/box/yellow/bonus.pack
+atl:data/game/box/yellow/power.pack
+atl:data/game/box/yellow/spin.pack

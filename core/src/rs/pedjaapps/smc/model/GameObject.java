@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.*;
  */
 public abstract class GameObject
 {
-    protected Rectangle bounds = new Rectangle();//used for draw
-    protected Rectangle body = new Rectangle();//used for collision detection
+    public Rectangle bounds = new Rectangle();//used for draw
+    public Rectangle body = new Rectangle();//used for collision detection
 	public Vector3 position = new Vector3();
     protected Vector3 velocity = new Vector3();
     protected Vector3 acceleration = new Vector3();

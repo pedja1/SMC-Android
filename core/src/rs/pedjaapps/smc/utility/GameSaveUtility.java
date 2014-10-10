@@ -21,14 +21,14 @@ public class GameSaveUtility
 
 	public void startLevelFresh()
 	{
-		/*if(save.lifes < 3)*/save.lifes = 3;
+		reset();
 	}
 	
 	public void reset()
 	{
 		save.coins = 0;
 		save.points = 0;
-		save.lifes = 0;
+		save.lifes = 3;
 		save.playerState = Maryo.MarioState.small;
 	}
 	

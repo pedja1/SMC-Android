@@ -15,12 +15,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import java.util.HashSet;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.screen.GameScreen;
-import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.model.GameObject;
 
 public class HUD
 {
+	World world;
+	
 	TextureRegion pause, play, fire, jump, up, down, right,
 		left, soundOn, soundOff, musicOn, musicOff, pauseP, playP, fireP, jumpP, upP, 
 		downP, leftP, rightP, soundOnP, soundOffP, musicOnP, musicOffP;
@@ -33,7 +37,7 @@ public class HUD
     public Array<Vector2> upPolygon = new Array<Vector2>(5);
     public Array<Vector2> downPolygon = new Array<Vector2>(5);
 
-	OrthographicCamera cam;
+	public OrthographicCamera cam;
 	SpriteBatch batch;
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -53,13 +57,15 @@ public class HUD
 	float stateTime;
 	public boolean updateTimer = true;
 
-	public HUD()
+	public HUD(World world)
 	{
+		this.world = world;
 		cam = new OrthographicCamera(C_W, C_H);
 		cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
 		cam.update();
 		batch = new SpriteBatch();
         setBounds();
+		
 	}
 
     private void setBounds()
@@ -242,7 +248,7 @@ public class HUD
 			font.draw(batch, "Time " + time, timeX, pointsY);
 			
 			//lifes
-			String lifes = GameSaveUtility.getInstance().save.lifes + "x";
+			String lifes = Math.max(GameSaveUtility.getInstance().save.lifes, 0) + "x";
 			bounds = font.getBounds(lifes);
 			float lifesX = maryoLR.x - bounds.width;
 			font.setColor(0, 0, 0, 1);

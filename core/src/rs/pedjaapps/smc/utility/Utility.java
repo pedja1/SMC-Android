@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Base64Coder;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.GameObject;
+import rs.pedjaapps.smc.screen.GameScreen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 /**
  * Created by pedja on 2/27/14.
@@ -107,5 +110,23 @@ public class Utility
         timeString = builder.toString();
         return timeString;*/
 		return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+	}
+	
+	public static void scaleObjectToGuiCam(GameObject gameObject, GameScreen gameScreen)
+	{
+		OrthographicCamera cam = gameScreen.cam;
+		OrthographicCamera guiCam = gameScreen.hud.cam;
+		float widthMul = guiCam.viewportWidth / cam.viewportWidth;
+		float heightMul = guiCam.viewportHeight / cam.viewportHeight;
+		
+		float objGuiX = (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
+		float objGuiY = (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
+		System.out.println("tr x: " + objGuiX + ", camx: " + cam.position.x);
+		
+		gameObject.body.y = gameObject.bounds.y = gameObject.position.y = objGuiY;
+		gameObject.body.x = gameObject.bounds.x = gameObject.position.x = objGuiX;
+		
+		gameObject.body.width = gameObject.bounds.width = gameObject.bounds.width * widthMul;
+		gameObject.body.height = gameObject.bounds.height = gameObject.bounds.height * heightMul;
 	}
 }

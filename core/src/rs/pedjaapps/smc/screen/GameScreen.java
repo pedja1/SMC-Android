@@ -38,9 +38,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 {
 
     private World world;
-    private OrthographicCamera cam;
+    public OrthographicCamera cam;
     private OrthographicCamera pCamera;
-    private OrthographicCamera guiCam;
+    public OrthographicCamera guiCam;
 	private OrthographicCamera bgCam;
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -113,7 +113,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         world = new World(this);
-        hud = new HUD();
+        hud = new HUD(world);
         //dPad = new DPad(0.3f * width);
         //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);

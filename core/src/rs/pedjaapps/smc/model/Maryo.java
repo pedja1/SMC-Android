@@ -225,6 +225,10 @@ public class Maryo extends DynamicObject
                 }
             }
 		}
+		else if(object instanceof Box && position.y + body.height <= object.position.y)
+		{
+			((Box)object).handleHitByPlayer();
+		}
 	}
 
     private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)
@@ -325,6 +329,7 @@ public class Maryo extends DynamicObject
 			if(bounds.y + bounds.height < 0)//first check if player is visible
 			{
 				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
+				world.trashObjects.add(Maryo.this);
 				return false;
 			}
 			
@@ -351,8 +356,11 @@ public class Maryo extends DynamicObject
     @Override
     protected void handleDroppedBelowWorld()
     {
-        worldState = WorldState.DYING;
-        dyingAnim.start();
+		if(worldState != WorldState.DYING)
+		{
+        	worldState = WorldState.DYING;
+        	dyingAnim.start();
+		}
     }
 
     private void setJumpSound()

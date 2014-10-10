@@ -11,21 +11,36 @@ import rs.pedjaapps.smc.model.items.Item;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.screen.GameScreen;
 
 /**
  * Created by pedja on 24.5.14..
  */
 public class Coin extends Item
 {
+	public static final float DEF_SIZE = 0.59375f;
+	public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
     public boolean playerHit;
     private Vector2 pointsTextPosition = new Vector2();
     private BitmapFont font;
     public int points = 5;
+	
+	//collectable by player
+	public boolean collectable = true;
+	
+	//is drawn
+	public boolean visible = true;
+	
+	boolean popFromBox;
+
+	float originalPosY;
+	
+	boolean scrollOut;
+	
 
     public Coin(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-
     }
 
     @Override
@@ -64,10 +79,12 @@ public class Coin extends Item
     @Override
     public void render(SpriteBatch spriteBatch)
     {
+		if(!visible)return;
         //if (!playerHit)
         //{
             TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
             Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+			System.out.println("posy: " + position.y + ", boundsy: " + bounds.y);
         //}
         //else
         //{
@@ -79,11 +96,57 @@ public class Coin extends Item
     public void update(float delta)
     {
         super.update(delta);
-        pointsTextPosition.y += 3f * delta;
+        //pointsTextPosition.y += 3f * delta;
+		if(popFromBox)
+		{
+			System.out.println("popfb update");
+			// scale velocity to frame units 
+			velocity.scl(delta);
+
+			// update position
+			position.add(velocity);
+			body.y = position.y;
+			updateBounds();
+
+			// un-scale velocity (not in frame time)
+			velocity.scl(1 / delta);
+
+			if(position.y >= originalPosY + body.height + 0.3f)
+			{
+				System.out.println("stop updating");
+				popFromBox = false;
+				collect();
+			}
+		}
+		if(scrollOut)
+		{
+			velocity.scl(delta);
+			
+			position.add(velocity);
+			body.y = position.y;
+			body.x = position.x;
+			updateBounds();
+
+			// un-scale velocity (not in frame time)
+			velocity.scl(1 / delta);
+			if(false)//TODO not in camera viewport
+			{
+				world.trashObjects.add(this);
+			}
+			
+		}
     }
+	
+	private void collect()
+	{
+		scrollOut = true;
+		velocity.x = -9f;
+		velocity.y = 2f;
+	}
 
     public void hitPlayer()
     {
+		if(!collectable)return;
         playerHit = true;
         Sound sound;
         if(textureAtlas.contains("yellow"))
@@ -97,6 +160,16 @@ public class Coin extends Item
         if(sound != null && Assets.playSounds)sound.play();
         GameSaveUtility.getInstance().save.coins++;
 
-        world.trashObjects.add(this);
+        collect();
     }
+	
+	@Override
+	public void popOutFromBox()
+	{
+		visible = true;
+		popFromBox = true;
+		velocity.y = 4f;
+		originalPosY = position.y;
+		System.out.println("popOutFromBox");
+	}
 }

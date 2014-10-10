@@ -55,10 +55,6 @@ public class AndroidLauncher extends AndroidApplication
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		//debug
-		GameSaveUtility.getInstance().save.currentLevel = 5;
-		GameSaveUtility.getInstance().save.playerState = Maryo.MarioState.big;
-		//debug end
 		GameSaveUtility.getInstance().dispose();
 	}
 }

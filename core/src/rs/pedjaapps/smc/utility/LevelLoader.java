@@ -18,6 +18,7 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.model.Background;
 import rs.pedjaapps.smc.model.BackgroundColor;
+import rs.pedjaapps.smc.model.Box;
 import rs.pedjaapps.smc.model.GameObject;
 import rs.pedjaapps.smc.model.Level;
 import rs.pedjaapps.smc.model.Maryo;
@@ -38,12 +39,13 @@ public class LevelLoader
 {
     Level level;
 
-    private enum KEY
+    public enum KEY
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
-		massive_type, type, enemy_filter
+		massive_type, type, enemy_filter, gold_color, item, text, usable_count, invisible, animation,
+		force_best_item, 
 	}
 
 	private enum DATA_KEY
@@ -105,6 +107,9 @@ public class LevelLoader
 					break;
 				case enemy_stopper:
 					parseEnemyStopper(world, jObject);
+					break;
+				case box:
+					parseBox(world, jObject);
 					break;
 			}
 		}
@@ -489,6 +494,12 @@ public class LevelLoader
             level.getGameObjects().add(item);
     }
 
+	private void parseBox(World world, JSONObject jBox) throws JSONException
+    {
+		Box box = Box.initBox(world, jBox, this);
+		level.getGameObjects().add(box);
+    }
+	
 	/** Comparator used for sorting, sorts in ascending order (biggset z to smallest z).
 	 * @author mzechner */
 	public class ZSpriteComparator implements Comparator<GameObject>
