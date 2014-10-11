@@ -317,7 +317,6 @@ public class LevelLoader
 			{
 				newTextureName = sprite.getTextureName() + "-flip_xy";
 			}
-			System.out.println("flip_data" + newTextureName);
 
 			if(newTextureName != null)if (Assets.loadedRegions.get(newTextureName) == null)
 			{
@@ -462,7 +461,6 @@ public class LevelLoader
 
 	private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
     {
-		System.out.println("enemy stopper");
         Vector3 position = new Vector3((float) jEnemyStopper.getDouble(KEY.posx.toString()), (float) jEnemyStopper.getDouble(KEY.posy.toString()), 0);
         float width =  (float) jEnemyStopper.getDouble(KEY.width.toString());
 		float height =  (float) jEnemyStopper.getDouble(KEY.height.toString());

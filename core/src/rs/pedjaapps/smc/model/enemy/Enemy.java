@@ -101,7 +101,6 @@ public abstract class Enemy extends DynamicObject
 
     public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position)
     {
-		System.out.println(enemyClassString);
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)

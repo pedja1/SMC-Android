@@ -121,7 +121,6 @@ public class Utility
 		
 		float objGuiX = (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
 		float objGuiY = (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
-		System.out.println("tr x: " + objGuiX + ", camx: " + cam.position.x);
 		
 		gameObject.body.y = gameObject.bounds.y = gameObject.position.y = objGuiY;
 		gameObject.body.x = gameObject.bounds.x = gameObject.position.x = objGuiX;

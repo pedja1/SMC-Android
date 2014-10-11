@@ -557,13 +557,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
 		if(gameState == GAME_STATE.GAME_OVER)goTouched = true;
-        //System.out.println("Touch point: " + x + "x" + y);
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
-        //float gameX = convertTouchPointToGamePoint(x, true);
-        //float gameY = convertTouchPointToGamePoint(y, false);
-        //System.out.println("Game point: " + gameX + "x" + gameY);
-        //System.out.println("Is touching right: " + Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))));
         if (pointer < 5)
         {
             if (Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))))//is right

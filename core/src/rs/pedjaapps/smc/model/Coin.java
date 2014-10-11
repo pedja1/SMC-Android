@@ -89,7 +89,6 @@ public class Coin extends Item
         //{
             TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
             Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
-			System.out.println("posy: " + position.y + ", boundsy: " + bounds.y);
         //}
         //else
         //{
@@ -104,7 +103,6 @@ public class Coin extends Item
         //pointsTextPosition.y += 3f * delta;
 		if(popFromBox)
 		{
-			System.out.println("popfb update");
 			// scale velocity to frame units 
 			velocity.scl(delta);
 
@@ -118,7 +116,6 @@ public class Coin extends Item
 
 			if(position.y >= originalPosY + body.height + 0.3f)
 			{
-				System.out.println("stop updating");
 				popFromBox = false;
 				collect();
 			}
@@ -181,7 +178,6 @@ public class Coin extends Item
 		popFromBox = true;
 		velocity.y = 4f;
 		originalPosY = position.y;
-		System.out.println("popOutFromBox");
 		GameSaveUtility.getInstance().save.points += points;
 	}
 }

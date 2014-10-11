@@ -37,9 +37,6 @@ public class AndroidLauncher extends AndroidApplication
         initialize(game, config);
 		
 		GameSaveUtility.getInstance(); //initialize save game
-		//debug
-		System.out.println(GameSaveUtility.getInstance().save.toString());
-		//debug end
     }
 
     @Override

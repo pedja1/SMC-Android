@@ -72,7 +72,6 @@ public class LoadingScreen extends AbstractScreen
         {
             // Load some, will return true if done loading
             if(!resume)screenToLoadAfter.afterLoadAssets();
-            System.out.println("LS : start screen()");
             game.setScreen(screenToLoadAfter);
         }
         // Interpolate the percentage to make it more smooth

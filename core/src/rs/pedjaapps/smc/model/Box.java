@@ -56,9 +56,6 @@ public class Box extends Sprite
 	@Override
 	public void loadTextures()
 	{
-		System.out.println("box:::tname" + textureName);
-		System.out.println("box:::anim" + animation);
-		
 		if(animation == null || "default".equalsIgnoreCase(animation))
 		{
 			if(textureName == null)
@@ -111,11 +108,9 @@ public class Box extends Sprite
 		}
 		if(textureName != null)
 		{
-			System.out.println("tn");
 			Texture tx = Assets.manager.get(textureName);
 			Utility.draw(spriteBatch, tx, position.x, position.y, bounds.height);
 		}
-		System.out.println("ta " + textureAtlas);
 		if(textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
 		{
 			TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
@@ -181,7 +176,6 @@ public class Box extends Sprite
 		coin.visible = false;
 		
 		box.itemObject = coin;
-		System.out.println("level: " + box.world.level);
 		loader.getLevel().getGameObjects().add(coin);
 	}
 	

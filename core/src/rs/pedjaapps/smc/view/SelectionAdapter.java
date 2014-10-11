@@ -73,8 +73,6 @@ public class SelectionAdapter
 		cellSize = selectionHeight / 5 - cellPadding / 2;// padding of 5 on every side
 		lockSize = cellSize / 4;
 
-		System.out.println("x: " + selectionX + " y: " + selectionY + " width: " + selectionWidth + " height: " + selectionHeight + " cellSize: " + cellSize);
-
 		backBounds = new Rectangle();
 	}
 
