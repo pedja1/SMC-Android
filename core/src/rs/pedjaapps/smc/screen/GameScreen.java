@@ -30,6 +30,7 @@ import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.HUD;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
@@ -51,7 +52,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private ParticleEffect leafEffect;
 
     private SpriteBatch spriteBatch;
-    private boolean debug = true;
+    private boolean debug = PrefsManager.isDebug();
 
     private BitmapFont debugFont;
 

@@ -12,7 +12,7 @@ public class PrefsManager
 
     public enum PrefsKey
     {
-        sound, music, sg
+        sound, music, sg, debug
     }
 
     public static boolean isPlayMusic()
@@ -46,6 +46,11 @@ public class PrefsManager
     {
         prefs.putString(PrefsKey.sg.toString(), saveGame);
 		flush();
+    }
+
+    public static boolean isDebug()
+    {
+        return prefs.getBoolean(PrefsKey.debug.toString(), true);
     }
 	
 	public static void flush()
