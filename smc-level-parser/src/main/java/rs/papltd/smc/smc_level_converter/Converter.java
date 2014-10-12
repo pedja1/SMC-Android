@@ -119,6 +119,10 @@ public class Converter
                 jEnemy.put("texture_atlas", enemy.texture_atlas);
                 jEnemy.put("enemy_class", enemy.type);
                 jEnemy.put("obj_class", "enemy");
+                if("furball".equals(enemy.type))
+                {
+                    jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);

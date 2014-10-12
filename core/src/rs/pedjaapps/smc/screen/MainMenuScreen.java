@@ -18,6 +18,7 @@ import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.SelectionAdapter;
 
 /**
@@ -49,6 +50,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 	public boolean isSelection;
 
+    ConfirmDialog exitDialog;
+
     public MainMenuScreen(MaryoGame game)
     {
 		super(game);
@@ -71,6 +74,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         world = new World(this);
 
 		selectionAdapter = new SelectionAdapter(loadSelectionItems(), this);
+        exitDialog = new ConfirmDialog(this, hudCam);
     }
 
 	public Array<SelectionAdapter.Level> loadSelectionItems()
@@ -88,6 +92,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
+        Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
         music = Assets.manager.get(loader.getLevel().getMusic().first());
         if (Assets.playMusic)music.play();
@@ -141,6 +146,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             debugFont.drawMultiLine(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 50f, 670f);
             batch.end();
         }
+
+        exitDialog.render(batch);
     }
 
     private void drawObjects(float deltaTime)
@@ -164,12 +171,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         hudCam = new OrthographicCamera(screenWidth, screenHeight);
         hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
+        exitDialog.resize();
     }
 
     @Override
     public void hide()
     {
-
+        music.stop();
     }
 
     @Override
@@ -192,6 +200,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         bgColor.dispose();
         batch.dispose();
         bgr1.dispose();
+        exitDialog.dispose();
+        music.stop();
     }
 
     @Override
@@ -221,6 +231,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		Assets.manager.load("data/fonts/dejavu_sans.png", Texture.class);
 		Assets.manager.load("data/fonts/dejavu_sans.fnt", BitmapFont.class);
 		Assets.manager.load("data/hud/lock.png", Texture.class);
+        exitDialog.loadAssets();
 		
     }
 
@@ -274,6 +285,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 
 		selectionAdapter.loadAssets();
+        exitDialog.afterLoadAssets();
     }
 
     @Override
@@ -294,7 +306,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean keyUp(int keycode)
     {
-        return false;
+        if(keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
+        {
+            if(exitDialog.visible)exitDialog.hide();
+            else exitDialog.show();
+        }
+        return true;
     }
 
     @Override
@@ -308,6 +325,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         float x = screenX;//screenX / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
+
+        if(exitDialog.visible)
+        {
+            exitDialog.touchDown(x, y);
+            return true;
+        }
 
 		if (isSelection)
 		{
@@ -336,6 +359,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
+
+        if(exitDialog.visible)
+        {
+            exitDialog.touchUp(x, y);
+            return true;
+        }
 
         if (playR.contains(x, y))
         {
@@ -372,6 +401,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
         float y = screenHeight - screenY;
+
+        if(exitDialog.visible)
+        {
+            exitDialog.touchDragged(x, y);
+            return true;
+        }
 
         playT = playR.contains(x, y);
         musicT = musicR.contains(x, y);

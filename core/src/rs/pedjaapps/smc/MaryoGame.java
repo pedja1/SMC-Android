@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import rs.pedjaapps.smc.screen.AbstractScreen;
@@ -11,7 +12,6 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
 {
-	
     @Override
 	public void create()
 	{
@@ -40,8 +40,8 @@ public class MaryoGame extends Game
         Assets.dispose();
     }
 
-    public boolean onBackPressed()
+    public void exit()
     {
-        return ((AbstractScreen)getScreen()).onBackPressed();
+        Gdx.app.exit();
     }
 }

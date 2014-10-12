@@ -44,8 +44,8 @@ public class HUD
 
 	public BitmapFont font;
 
-	public static final float C_W = Gdx.graphics.getWidth();
-	public static final float C_H = Gdx.graphics.getHeight();
+	public static float C_W = Gdx.graphics.getWidth();
+	public static float C_H = Gdx.graphics.getHeight();
 
 	public enum Key
 	{
@@ -65,7 +65,6 @@ public class HUD
 		cam.update();
 		batch = new SpriteBatch();
         setBounds();
-		
 	}
 
     private void setBounds()
@@ -90,6 +89,7 @@ public class HUD
         y = height * 1.5f;
         width = width * 1.24f;
         leftR = new Rectangle(x, y, width, height);
+        leftPolygon.clear();
         leftPolygon.add(new Vector2(x, y + height));
         leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
         leftPolygon.add(new Vector2(x + width, y + height / 2));
@@ -98,6 +98,7 @@ public class HUD
 
         x = x + width + width / 4f;
         rightR = new Rectangle(x, y, width, height);
+        rightPolygon.clear();
         rightPolygon.add(new Vector2(x, y + height / 2));
         rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
         rightPolygon.add(new Vector2(x + width, y + height));
@@ -109,6 +110,7 @@ public class HUD
         x = x - width / 2f - width / 8f;
         y = y + height / 2f;
         upR = new Rectangle(x, y, width, height);
+        upPolygon.clear();
         upPolygon.add(new Vector2(x, y + height));
         upPolygon.add(new Vector2(x + width, y + height));
         upPolygon.add(new Vector2(x + width, y + y / 100 * 23.25f));
@@ -117,6 +119,7 @@ public class HUD
 
         y = y - height - height / 4f;
         downR = new Rectangle(x, y, width, height);
+        downPolygon.clear();
         downPolygon.add(new Vector2(x + width / 2, y + width));
         downPolygon.add(new Vector2(x + width, y + height - y / 100 * 23.25f));
         downPolygon.add(new Vector2(x + width, y));
@@ -140,6 +143,16 @@ public class HUD
 		
 		float maryoLSize = itemBoxR.height / 2;
 		maryoLR = new Rectangle(pauseR.x - maryoLSize * 3, itemBoxR.y + itemBoxR.height - maryoLSize - maryoLSize / 2, maryoLSize * 2, maryoLSize);
+    }
+
+    public void resize(int width, int height)
+    {
+        C_W = Gdx.graphics.getWidth();
+        C_H = Gdx.graphics.getHeight();
+        cam = new OrthographicCamera(C_W, C_H);
+        cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
+        cam.update();
+        setBounds();
     }
 
     public void loadAssets()
@@ -258,10 +271,29 @@ public class HUD
 			font.draw(batch, lifes, lifesX, pointsY);
 			
 			batch.end();
+
+            //drawDebug();
 		}
 	}
 
-	private void drawPauseOverlay()
+    private void drawDebug()
+    {
+        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(1, 0, 0, 1);
+        float[] vertices = new float[rightPolygon.size * 2];
+        int offset = 0;
+        for(Vector2 vect : rightPolygon)
+        {
+            vertices[offset] = vect.x;
+            vertices[offset + 1] = vect.y;
+            offset += 2;
+        }
+        shapeRenderer.polygon(vertices);
+        shapeRenderer.end();
+    }
+
+    private void drawPauseOverlay()
 	{
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		Gdx.gl.glEnable(GL20.GL_BLEND);

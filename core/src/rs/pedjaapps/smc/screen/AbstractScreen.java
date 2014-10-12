@@ -9,7 +9,6 @@ import rs.pedjaapps.smc.MaryoGame;
  */
 public abstract class AbstractScreen implements Screen
 {
-
     protected MaryoGame game;
 
     public AbstractScreen(MaryoGame game)
@@ -31,18 +30,20 @@ public abstract class AbstractScreen implements Screen
     public void dispose()
 	{
     }
+
+    public void exitToMenu()
+    {
+        game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+    }
+
+    public void quit()
+    {
+        game.exit();
+    }
 	
 	public abstract void loadAssets();
 
     /**
      * Called after after all assets has been loaded, use it to find regions from atlases for example*/
     public abstract void afterLoadAssets();
-
-    /**
-     * Return true for default action(exit app)
-     * */
-    public boolean onBackPressed()
-    {
-        return true;
-    }
 }

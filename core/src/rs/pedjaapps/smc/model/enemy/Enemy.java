@@ -25,7 +25,7 @@ public abstract class Enemy extends DynamicObject
 		return direction;
 	}
 
-    public void die()
+    public void hitByPlayer()
     {
         //TODO implement this in subclasses and dont call super
         handleCollision = false;
@@ -99,7 +99,7 @@ public abstract class Enemy extends DynamicObject
         return body;
     }*/
 
-    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position)
+    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position, int maxDowngradeCount)
     {
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;
@@ -113,7 +113,7 @@ public abstract class Enemy extends DynamicObject
                 break;
 			case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position);
+                enemy = new Furball(world, size, position, maxDowngradeCount);
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;

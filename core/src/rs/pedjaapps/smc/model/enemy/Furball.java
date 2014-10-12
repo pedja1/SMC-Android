@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.model.enemy;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,11 +32,27 @@ public class Furball extends Enemy
 
     private boolean turned = false;
     boolean dying = false;
+    int killPoints = 10;
+    boolean fireResistant = false;
+    float iceResistance = 0.0f;
+    boolean canBeHitFromShell = true;
 
-    public Furball(World world, Vector2 size, Vector3 position)
+    //only for boss
+    int downgradeCount;
+    int maxDowngradeCount = 5;
+
+    enum Type
+    {
+        brown, blue, boss
+    }
+
+    Type type = Type.brown;
+
+    public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
     {
         super(world, size, position);
         setupBoundingBox();
+        this.maxDowngradeCount = maxDowngradeCount;
     }
 
     @Override
@@ -64,6 +81,31 @@ public class Furball extends Enemy
         tmp.flip(true, false);
         Assets.loadedRegions.put(textureAtlas + ":dead_r", tmp);
 
+        if(textureAtlas.contains("brown"))
+        {
+            type = Type.brown;
+            killPoints = 10;
+            fireResistant = false;
+            iceResistance = .0f;
+            canBeHitFromShell = true;
+        }
+        else if(textureAtlas.contains("blue"))
+        {
+            type = Type.blue;
+            killPoints = 50;
+            fireResistant = false;
+            iceResistance = .9f;
+            canBeHitFromShell = true;
+        }
+        else if(textureAtlas.contains("boss"))
+        {
+            type = Type.boss;
+            killPoints = 2500;
+            fireResistant = true;
+            iceResistance = 1f;
+            canBeHitFromShell = false;
+            Assets.loadedRegions.put(textureAtlas + ":hit", atlas.findRegion("hit"));
+        }
     }
 
     @Override
@@ -169,10 +211,20 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void die()
+    public void hitByPlayer()
     {
+        if(type == Type.boss && downgradeCount >= maxDowngradeCount)
+        {
+            downgradeCount++;
+            return;
+        }
         stateTime = 0;
         handleCollision = false;
         dying = true;
+        Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.ogg");
+        if (sound != null && Assets.playSounds)
+        {
+            sound.play();
+        }
     }
 }

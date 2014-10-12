@@ -44,8 +44,8 @@ public class LevelLoader
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
-		massive_type, type, enemy_filter, gold_color, item, text, usable_count, invisible, animation,
-		force_best_item, 
+		massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
+		force_best_item, max_downgrade_count
 	}
 
 	private enum DATA_KEY
@@ -441,7 +441,7 @@ public class LevelLoader
     {
         Vector3 position = new Vector3((float) jEnemy.getDouble(KEY.posx.toString()), (float) jEnemy.getDouble(KEY.posy.toString()), 0);
 
-            Enemy enemy = Enemy.initEnemy(world, jEnemy.getString(KEY.enemy_class.toString()), new Vector2((float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString())), position);
+            Enemy enemy = Enemy.initEnemy(world, jEnemy.getString(KEY.enemy_class.toString()), new Vector2((float) jEnemy.getDouble(KEY.width.toString()), (float) jEnemy.getDouble(KEY.height.toString())), position, jEnemy.optInt(KEY.max_downgrade_count.toString()));
             if (enemy == null)return;//TODO this has to go aways after levels are fixed
             if (jEnemy.has(KEY.texture_atlas.toString()))
             {

@@ -341,6 +341,10 @@ public class SAXXMLHandler extends DefaultHandler
         {
             tmpEnemy.max_distance = Integer.parseInt(value);
         }
+        else if("max_downgrade_count".equals(name))
+        {
+            tmpEnemy.max_downgrade_count = Integer.parseInt(value);
+        }
     }
 
     private void setBoxAttributes(Attributes attributes)
@@ -671,12 +675,14 @@ public class SAXXMLHandler extends DefaultHandler
                     break;
                 default:
                     settingsFileName = "game/box/yellow/default.settings";
+                    box.texture_name = "data/game/box/yellow/default.png";
                     break;
             }
         }
         else
         {
             settingsFileName = "game/box/yellow/default.settings";
+            box.texture_name = "data/game/box/yellow/default.png";
         }
         File settings = new File(Converter.dataRoot, settingsFileName);
         String settingsData = readFileContents(settings);

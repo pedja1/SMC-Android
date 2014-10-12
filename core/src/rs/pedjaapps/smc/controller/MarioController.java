@@ -27,6 +27,8 @@ public class MarioController
     private Maryo maryo;
     private boolean jumped;
 
+    private long jumpClickTime;
+
     static Set<Keys> keys = new HashSet<Keys>();
 
     public MarioController(World world)
@@ -68,6 +70,7 @@ public class MarioController
                 Sound sound = maryo.jumpSound;
                 if(sound != null)sound.play();
             }
+            jumpClickTime = System.currentTimeMillis();
         }
     }
 
@@ -133,7 +136,7 @@ public class MarioController
         Vector3 pos = maryo.getPosition();
         if (keys.contains(Keys.JUMP))
         {
-            if (!jumped && vel.y < MAX_JUMP_SPEED)
+            if (!jumped && vel.y < MAX_JUMP_SPEED && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS)
             {
                 maryo.setVelocity(vel.x, vel.y += 2f);
             }

@@ -12,4 +12,5 @@ public class Enemy
     public float posx, posy, speed, width, height;
     public int max_distance;
     public Rectangle colRect = new Rectangle();
+    public int max_downgrade_count;
 }

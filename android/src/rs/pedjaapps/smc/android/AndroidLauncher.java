@@ -39,15 +39,6 @@ public class AndroidLauncher extends AndroidApplication
 		GameSaveUtility.getInstance(); //initialize save game
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        if(game.onBackPressed())
-        {
-            super.onBackPressed();
-        }
-    }
-
 	@Override
 	protected void onDestroy()
 	{

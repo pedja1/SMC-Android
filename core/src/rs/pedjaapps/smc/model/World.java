@@ -29,7 +29,7 @@ public class World
 	
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame
-	public Pool<Rectangle> rectPool = new Pool<Rectangle>() 
+	public Pool<Rectangle> rectPool = new Pool<Rectangle>()
 	{
 		@Override
 		protected Rectangle newObject() 

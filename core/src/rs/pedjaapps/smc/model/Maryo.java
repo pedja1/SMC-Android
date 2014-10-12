@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.List;
-
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.enemy.Eato;
 import rs.pedjaapps.smc.model.enemy.Flyon;
@@ -43,6 +41,8 @@ public class Maryo extends DynamicObject
 	DyingAnimation dyingAnim = new DyingAnimation();
 
     public Sound jumpSound = null;
+
+    public Rectangle debugRayRect = new Rectangle();
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -167,7 +167,8 @@ public class Maryo extends DynamicObject
             //check where ground is
             Array<GameObject> objects = world.getVisibleObjects();
             Rectangle rect = world.rectPool.obtain();
-            rect.set(position.x, 0, bounds.width, position.y);
+            debugRayRect = rect;
+            rect.set(position.x, 0, body.width, position.y);
             float tmpGroundY = 0;
             float distance = body.y;
             for(GameObject go : objects)
@@ -216,7 +217,7 @@ public class Maryo extends DynamicObject
                 if(vertical && body.y > object.body.y)//enemy death from above
                 {
                     velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                    ((Enemy)object).die();
+                    ((Enemy)object).hitByPlayer();
                 }
                 else
                 {

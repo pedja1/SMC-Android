@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
@@ -32,6 +33,7 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 
@@ -107,6 +109,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.debug = debug;
     }
 
+    ConfirmDialog exitDialog;
+
     public GameScreen(MaryoGame game, boolean fromMenu)
     {
 		super(game);
@@ -115,15 +119,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         height = Gdx.graphics.getHeight();
         world = new World(this);
         hud = new HUD(world);
-        //dPad = new DPad(0.3f * width);
-        //jump = new BtnJump(0.20f * height, new Vector2(width - 0.25f * width, 0.05f * height));
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        //this.cam.position.set(world.getMario().getPosition().x, world.getMario().getPosition().y, 0);
         this.cam.update();
 
         pCamera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        pCamera.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         pCamera.position.set(Constants.CAMERA_WIDTH / 2f, Constants.CAMERA_HEIGHT / 2f, 0);
         pCamera.update();
 
@@ -137,21 +138,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         bgCam.update();
 
         spriteBatch = new SpriteBatch();
-        debugFont = new BitmapFont();
-        debugFont.setColor(Color.RED);
-        debugFont.setScale(1.3f);
-
-        BitmapFont guiFont = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
-        guiFont.setColor(Color.WHITE);
-        guiFont.setScale(1f);
-
-        BitmapFont guiFontBold = new BitmapFont(Gdx.files.internal("data/fonts/default.fnt"));
-        guiFontBold.setColor(Color.WHITE);
-        guiFontBold.setScale(1f);
 
         loadTextures();
         controller = new MarioController(world);
-		//Gdx.input.setCatchBackKey(true);
+		Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
@@ -161,6 +151,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         loader = new LevelLoader();
         //Gdx.graphics.setContinuousRendering(false);
 		if(fromMenu)GameSaveUtility.getInstance().startLevelFresh();
+
+        exitDialog = new ConfirmDialog(this, guiCam);
     }
 
     @Override
@@ -206,6 +198,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 			handleGameOver(delta);
 		}
 
+        exitDialog.render(spriteBatch);
+
 		//cleanup
 		for(GameObject obj : world.trashObjects)
 		{
@@ -250,6 +244,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		shapeRenderer.setColor(0, 0, 0, goAlpha += 0.033f);
 		shapeRenderer.rect(0, 0, width, height);
 		shapeRenderer.end();
+
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        spriteBatch.end();
+        //background changes to black if i don't add this after blend
 		
 		if(goAlpha >= 1)
 		{
@@ -344,6 +343,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(new Color(1, 0, 0, 1));
         shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+        shapeRenderer.setColor(new Color(0, 0, 1, 1));
+        shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect.height);
 		shapeRenderer.end();
 	}
 
@@ -361,6 +362,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             + "\n" + "Player Vel: x=" + world.getMario().getVelocity().x + ", y=" + world.getMario().getVelocity().y
             + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
             + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
+            + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
+            + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
             + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
@@ -369,18 +372,42 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		this.width = width;
         this.height = height;
+
+        Constants.initCamera();
+
+        cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        cam.update();
+
+        pCamera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        pCamera.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        pCamera.position.set(Constants.CAMERA_WIDTH / 2f, Constants.CAMERA_HEIGHT / 2f, 0);
+        pCamera.update();
+
+        guiCam = new OrthographicCamera(width, height);
+        guiCam.position.set(width / 2f, height / 2f, 0);
+        guiCam.update();
+
+        bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        bgCam.position.set(cam.position.x, cam.position.y, 0);
+        bgCam.update();
+        exitDialog.resize();
+        hud.resize(width, height);
     }
 
     @Override
     public void hide()
     {
         //Gdx.input.setInputProcessor(null);
+        music.stop();
     }
 
     @Override
     public void pause()
     {
 		gameState = GAME_STATE.GAME_PAUSED;
+        music.stop();
     }
 
     @Override
@@ -395,6 +422,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		music.stop();
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
+        exitDialog.dispose();
     }
 
     @Override
@@ -438,12 +466,22 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/player/pickup_item.wav", Sound.class);
         Assets.manager.load("data/sounds/player/powerdown.ogg", Sound.class);
         Assets.manager.load("data/sounds/player/run_stop.ogg", Sound.class);
+        Assets.manager.load("data/sounds/wall_hit.wav", Sound.class);
+        Assets.manager.load("data/sounds/enemy/furball/die.ogg", Sound.class);
 
 
-        FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
+        /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
         coinSize.fontParameters.size = 10;
         coinSize.fontParameters.characters = "0123456789";
-        Assets.manager.load("coin.ttf", BitmapFont.class, coinSize);
+        Assets.manager.load("coin.ttf", BitmapFont.class, coinSize);*/
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+        debugFontParams.fontParameters.size = height / 20;
+        debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+        Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
+
+        exitDialog.loadAssets();
         
     }
 
@@ -462,6 +500,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.loadAssets();
         world.setLevel(loader.getLevel());
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
+        exitDialog.afterLoadAssets();
+
+        debugFont = Assets.manager.get("debug.ttf");
+        debugFont.setColor(1, 0, 0, 1);
     }
 
     // * InputProcessor methods ***************************//
@@ -536,9 +578,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.upReleased();
             hud.upReleased();
         }
-		if(keycode == Input.Keys.BACK)
+		if(keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
 		{
-			
+            if(exitDialog.visible)exitDialog.hide();
+            else exitDialog.show();
 		}
         if (keycode == Input.Keys.D)
             debug = !debug;
@@ -555,6 +598,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
+        if(exitDialog.visible)
+        {
+            exitDialog.touchDown(x, invertY(y));
+            return true;
+        }
 		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
 		if(gameState == GAME_STATE.GAME_OVER)goTouched = true;
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
@@ -638,6 +686,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchUp(int x, int y, int pointer, int button)
     {
+        if(exitDialog.visible)
+        {
+            exitDialog.touchUp(x, invertY(y));
+            return true;
+        }
         if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
             return false;
         TouchInfo ti = touches.get(pointer);
@@ -700,7 +753,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDragged(int x, int y, int pointer)
     {
-        // TODO Auto-generated method stub
+        if(exitDialog.visible)
+        {
+            exitDialog.touchDragged(x, invertY(y));
+            return true;
+        }
         return false;
     }
 

@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.model;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +11,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.xml.soap.Text;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.items.Item;
 import rs.pedjaapps.smc.utility.Constants;
@@ -38,7 +42,7 @@ public class Box extends Sprite
 	
 	protected float stateTime;
 	
-	TextureRegion txSpinDisabled;
+	TextureRegion txDisabled;
 	
 	boolean hitByPlayer;
 	float originalPosY;
@@ -56,6 +60,7 @@ public class Box extends Sprite
 	@Override
 	public void loadTextures()
 	{
+        txDisabled = new TextureRegion(Assets.manager.get("data/game/box/brown1_1.png", Texture.class));
 		if(animation == null || "default".equalsIgnoreCase(animation))
 		{
 			if(textureName == null)
@@ -64,6 +69,7 @@ public class Box extends Sprite
 			}
 			return;
 		}
+        if(textureAtlas == null)return;
 		TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> frames = new Array<TextureRegion>();
 		float animSpeed = 0;
@@ -93,7 +99,7 @@ public class Box extends Sprite
 			frames.add(atlas.findRegion("3"));
 			frames.add(atlas.findRegion("4"));
 			frames.add(atlas.findRegion("5"));
-			txSpinDisabled = atlas.findRegion("6");
+			txDisabled = atlas.findRegion("6");
 			animSpeed = 0.13f;
 		}
 		Assets.animations.put(textureAtlas, new Animation(animSpeed, frames));
@@ -106,16 +112,23 @@ public class Box extends Sprite
 		{
 			return;
 		}
-		if(textureName != null)
-		{
-			Texture tx = Assets.manager.get(textureName);
-			Utility.draw(spriteBatch, tx, position.x, position.y, bounds.height);
-		}
-		if(textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
-		{
-			TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-            Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
-		}
+        if(usableCount == 0)
+        {
+            Utility.draw(spriteBatch, txDisabled, position.x, position.y, bounds.height);
+        }
+        else
+        {
+            if (textureName != null)
+            {
+                Texture tx = Assets.manager.get(textureName);
+                Utility.draw(spriteBatch, tx, position.x, position.y, bounds.height);
+            }
+            if (textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
+            {
+                TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+                Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+            }
+        }
 	}
 	
 	public static Box initBox(World world, JSONObject jBox, LevelLoader loader) throws JSONException
@@ -131,23 +144,20 @@ public class Box extends Sprite
 		box.text = jBox.optString(LevelLoader.KEY.text.toString());
 		box.forceBestItem = jBox.optInt(LevelLoader.KEY.force_best_item.toString(), 0) == 1;
 		box.invisible = jBox.optInt(LevelLoader.KEY.invisible.toString(), 0) == 1;
-		box.usableCount = jBox.optInt(LevelLoader.KEY.usable_count.toString(), -1);
+		box.usableCount = jBox.optInt(LevelLoader.KEY.useable_count.toString(), -1);
 		box.item = jBox.optInt(LevelLoader.KEY.item.toString(), 0);
 		
 		box.textureName = jBox.optString(LevelLoader.KEY.texture_name.toString(), null);
 		if (jBox.has(LevelLoader.KEY.texture_atlas.toString()))
 		{
 			box.setTextureAtlas(jBox.getString(LevelLoader.KEY.texture_atlas.toString()));
-			if (Assets.manager.isLoaded(box.getTextureAtlas()))
+			if (!Assets.manager.isLoaded(box.getTextureAtlas()))
 			{
-				box.loadTextures();
-			}
-			else
-			{
-				throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-												   + "in [level].smclvl must also be included in [level].data (" + box.getTextureAtlas() + ")");
+                throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                        + "in [level].smclvl must also be included in [level].data (" + box.getTextureAtlas() + ")");
 			}
 		}
+        box.loadTextures();
 		//create item contained in box
 		switch(box.item)
 		{
@@ -181,12 +191,34 @@ public class Box extends Sprite
 	
 	public void handleHitByPlayer()
 	{
-		if(!hitByPlayer)
+        if(hitByPlayer)return;
+        Sound sound = null;
+		if((usableCount == -1 || usableCount > 0))//is disabled(no more items)
 		{
+            if(usableCount != -1)usableCount--;
 			hitByPlayer = true;
 			velocity.y = 3f;
-			if(itemObject != null)itemObject.popOutFromBox();
+			if(itemObject != null)
+            {
+                itemObject.popOutFromBox();
+                if(itemObject instanceof Coin)
+                {
+                    if(itemObject.textureAtlas.contains("yellow"))
+                    {
+                        sound = Assets.manager.get("data/sounds/item/goldpiece_1.ogg");
+                    }
+                    else
+                    {
+                        sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
+                    }
+                }
+            }
 		}
+        else
+        {
+            sound = Assets.manager.get("data/sounds/wall_hit.wav");
+        }
+        if(sound != null && Assets.playSounds)sound.play();
 	}
 	
 	@Override

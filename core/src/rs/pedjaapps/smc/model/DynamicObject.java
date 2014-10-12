@@ -1,8 +1,10 @@
 package rs.pedjaapps.smc.model;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 
+import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Constants;
 
 public abstract class DynamicObject extends GameObject
@@ -14,7 +16,8 @@ public abstract class DynamicObject extends GameObject
     protected static final float DEF_MAX_VEL = 4f;
 	
 	protected boolean grounded = false;
-	
+
+    long lasHitSoundPlayed;
 	
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
@@ -137,6 +140,18 @@ public abstract class DynamicObject extends GameObject
 		{
 			if(vertical)
 			{
+                if(velocity.y > 0 && this instanceof Maryo && !(object instanceof Box))
+                {
+                    if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
+                    {
+                        Sound sound = Assets.manager.get("data/sounds/wall_hit.wav");
+                        if (sound != null && Assets.playSounds)
+                        {
+                            sound.play();
+                            lasHitSoundPlayed = System.currentTimeMillis();
+                        }
+                    }
+                }
 				if (velocity.y < 0) 
 				{
 					grounded = true;
