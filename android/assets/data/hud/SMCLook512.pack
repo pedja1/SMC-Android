@@ -1,0 +1,34 @@
+
+SMCLook512.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ClientBrush
+  rotate: false
+  xy: 4, 4
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+button-normal
+  rotate: false
+  xy: 137, 41
+  size: 78, 30
+  orig: 78, 30
+  offset: 0, 0
+  index: -1
+button-pressed
+  rotate: false
+  xy: 137, 77
+  size: 78, 30
+  orig: 78, 30
+  offset: 0, 0
+  index: -1
+button-hover
+  rotate: false
+  xy: 137, 113
+  size: 78, 30
+  orig: 78, 30
+  offset: 0, 0
+  index: -1

@@ -19,12 +19,12 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class Converter
 {
-    
+    public static final String dataRoot = "/home/pedja/workspace/SMC/smc/data/pixmaps/";
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File(Const.LEVEL_IMPORT);
+            File fXmlFile = new File("/home/pedja/workspace/SMC/smc/data/levels/lvl_1.smclvl");
 
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
             // create a SAXXMLHandler
@@ -37,7 +37,7 @@ public class Converter
 
             String levelJson = convertToJson(level);
             //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter(Const.LEVEL_EXPORT, "UTF-8");
+			PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/test_lvl.smclvl", "UTF-8");
 			writer.print(levelJson);
 			writer.close();
 
@@ -119,6 +119,17 @@ public class Converter
                 jEnemy.put("texture_atlas", enemy.texture_atlas);
                 jEnemy.put("enemy_class", enemy.type);
                 jEnemy.put("obj_class", "enemy");
+                if("furball".equals(enemy.type))
+                {
+                    jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
+                }
+                /*if(enemy.colRect != null)
+                {
+                    jEnemy.put("col_x", enemy.colRect.x);
+                    jEnemy.put("col_y", enemy.colRect.y);
+                    jEnemy.put("col_width", enemy.colRect.width);
+                    jEnemy.put("col_height", enemy.colRect.height);
+                }*/
                 objects.put(jEnemy);
             }
             else if(obj instanceof Box)
@@ -138,6 +149,13 @@ public class Converter
                 jBox.put("useable_count", box.useable_count);
                 jBox.put("force_best_item", box.force_best_item);
                 jBox.put("obj_class", "box");
+                /*if(box.colRect != null)
+                {
+                    jBox.put("col_x", box.colRect.x);
+                    jBox.put("col_y", box.colRect.y);
+                    jBox.put("col_width", box.colRect.width);
+                    jBox.put("col_height", box.colRect.height);
+                }*/
                 objects.put(jBox);
             }
             else if(obj instanceof EnemyStopper)
@@ -165,6 +183,13 @@ public class Converter
                 jItem.put("height", item.height);
                 jItem.put("mushroom_type", item.mushroom_type);
                 jItem.put("obj_class", "item");
+                /*if(item.colRect != null)
+                {
+                    jItem.put("col_x", item.colRect.x);
+                    jItem.put("col_y", item.colRect.y);
+                    jItem.put("col_width", item.colRect.width);
+                    jItem.put("col_height", item.colRect.height);
+                }*/
                 objects.put(jItem);
             }
             else if(obj instanceof LevelEntry)
@@ -230,164 +255,6 @@ public class Converter
         }
         jsonLevel.put("objects", objects);
 
-        JSONArray collBodies = new JSONArray();
-        JSONObject body = new JSONObject();
-        body.put("posx", 0);
-        body.put("posy", -1);
-        body.put("width", level.settings.width);
-        body.put("height", 1);
-        collBodies.put(body);
-        body = new JSONObject();
-        body.put("posx", 0);
-        body.put("posy", level.settings.height + 1);
-        body.put("width", level.settings.width);
-        body.put("height", 1);
-        collBodies.put(body);
-        body = new JSONObject();
-        body.put("posx", -1);
-        body.put("posy", 0);
-        body.put("width", 1);
-        body.put("height", level.settings.height);
-        body.put("enemy_filter", true);
-        collBodies.put(body);
-        body = new JSONObject();
-        body.put("posx", level.settings.width);
-        body.put("posy", 0);
-        body.put("width", 1);
-        body.put("height", level.settings.height);
-        body.put("enemy_filter", true);
-        collBodies.put(body);
-
-        addLevelSpecificBodies(level, collBodies, "lvl_1.smclvl");//change to actual level name
-
-        jsonLevel.put("collision_bodies", collBodies);
-
         return jsonLevel.toString();
-    }
-
-    private static void addLevelSpecificBodies(Level level, JSONArray collBodies, String levelName)
-    {
-        switch (levelName)
-        {
-            case "lvl_1.smclvl":
-                JSONObject body = new JSONObject();
-                body.put("posx", 0);
-                body.put("width", 116.6875f);
-                body.put("height", 1);
-                body.put("posy", -0.265625f);
-                collBodies.put(body);
-                body = new JSONObject();
-                body.put("posx", 118);
-                body.put("width", level.settings.width - 118);
-                body.put("height", 1);
-                body.put("posy", 0.921875);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 1.859375f);
-                body.put("width", 1.25f);
-                body.put("height", 2.34375f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 50.890625f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 99.171875f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 109.875f);
-                body.put("width", 1.25f);
-                body.put("height", 2.34375f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 111.359375f);
-                body.put("width", 1.25f);
-                body.put("height", 0.78125f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-				collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 16.171875f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 20.765625f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 34.390625f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 74.71875f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 0.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 125.640625f);
-                body.put("width", 1.25f);
-                body.put("height", 1.5625f);
-                body.put("posy", 1.734375f);
-				body.put("enemy_filter", true);
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 85.078125f);
-                body.put("width", 8);
-                body.put("height", 1);
-                body.put("posy", 7.5f);
-				body.put("type", "halfmassive");
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 74.453125f);
-                body.put("width", 5);
-                body.put("height", 1);
-                body.put("posy", 2.578125f);
-				body.put("type", "halfmassive");
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 74.453125f);
-                body.put("width", 6);
-                body.put("height", 1);
-                body.put("posy", 2.578125f);
-				body.put("type", "halfmassive");
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 89.3125f);
-                body.put("width", 8);
-                body.put("height", 1);
-                body.put("posy", 4.71875f);
-				body.put("type", "halfmassive");
-                collBodies.put(body);
-				body = new JSONObject();
-                body.put("posx", 79.453125f);
-                body.put("width", 2);
-                body.put("height", 1);
-                body.put("posy", 4.578125f);
-				body.put("type", "halfmassive");
-                collBodies.put(body);
-                break;
-        }
     }
 }
