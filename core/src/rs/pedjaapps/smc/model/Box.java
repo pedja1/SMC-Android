@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Array;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.xml.soap.Text;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.items.Item;

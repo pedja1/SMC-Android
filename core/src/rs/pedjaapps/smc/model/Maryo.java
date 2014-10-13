@@ -20,7 +20,6 @@ import rs.pedjaapps.smc.screen.GameScreen;
 
 public class Maryo extends DynamicObject
 {
-
     public enum MarioState
     {
         small, big, fire, ice, ghost, flying
@@ -31,7 +30,7 @@ public class Maryo extends DynamicObject
 	protected static final float MAX_VEL          = 4f;
 	
     WorldState worldState = WorldState.JUMPING;
-    private MarioState marioState = MarioState.small;
+    private MarioState marioState = GameSaveUtility.getInstance().save.playerState;
     boolean facingLeft = false;
     boolean longJump = false;
 
@@ -52,11 +51,35 @@ public class Maryo extends DynamicObject
 
     private void setupBoundingBox()
     {
-        body.x = bounds.x + bounds.width / 4;
-        body.width = bounds.width / 2;
-        position.x = body.x;
-
-        position.y = body.y = bounds.y += 0.5f;
+		switch(marioState)
+		{
+			case small:
+				bounds.width = 0.9f;
+				bounds.height = 0.9f;
+				break;
+			case big:
+			case fire:
+			case ghost:
+			case ice:
+				bounds.height = 1.09f;
+				bounds.width = 1.09f;
+				break;
+			case flying:
+				break;
+		}
+		body.x = bounds.x + bounds.width / 4;
+		body.width = bounds.width / 2;
+		position.x = body.x;
+		position.y = body.y = bounds.y += 0.5f;
+		
+        if(worldState == WorldState.DUCKING)
+		{
+			body.height = bounds.height / 2;
+		}
+		else
+		{
+			body.height = bounds.height * 0.9f;
+		}
     }
 
 	@Override
@@ -257,6 +280,14 @@ public class Maryo extends DynamicObject
     {
 		if(worldState == WorldState.DYING)return;
         this.worldState = newWorldState;
+		if(worldState == WorldState.DUCKING)
+		{
+			body.height = bounds.height / 2;
+		}
+		else
+		{
+			body.height = bounds.height * 0.9f;
+		}
     }
 
     public boolean isLongJump()

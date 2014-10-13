@@ -49,14 +49,14 @@ public class Flyon extends Enemy
 
     public void update(float deltaTime)
     {
-		// Setting initial vertical acceleration 
+		/*// Setting initial vertical acceleration 
         acceleration.y = Constants.GRAVITY;
 
         // Convert acceleration to frame time
         acceleration.scl(deltaTime);
 
         // apply acceleration to change velocity
-        velocity.add(acceleration);
+        velocity.add(acceleration);*/
 		
         stateTime += deltaTime;
 

@@ -25,7 +25,6 @@ import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.Constants;
-import sun.applet.Main;
 
 /**
  * Created by pedja on 11.10.14..
