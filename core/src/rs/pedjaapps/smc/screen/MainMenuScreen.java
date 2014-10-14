@@ -118,7 +118,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
 
-        TextureRegion marioFrame = Assets.loadedRegions.get(GameObject.TKey.stand_right + ":" + Maryo.MarioState.small);
+        TextureRegion marioFrame = Assets.loadedRegions.get(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small);
         batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
@@ -279,7 +279,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         world.setLevel(loader.getLevel());
 
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
-        Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MarioState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));
+        Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));
 
 
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);

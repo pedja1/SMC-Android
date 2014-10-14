@@ -20,7 +20,7 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class Maryo extends DynamicObject
 {
-    public enum MarioState
+    public enum MaryoState
     {
         small, big, fire, ice, ghost, flying
     }
@@ -31,7 +31,7 @@ public class Maryo extends DynamicObject
 	private static final float GOD_MOD_TIMEOUT = 3000;//3 sec
 	
     WorldState worldState = WorldState.JUMPING;
-    private MarioState marioState = GameSaveUtility.getInstance().save.playerState;
+    private MaryoState maryoState = GameSaveUtility.getInstance().save.playerState;
     boolean facingLeft = false;
     boolean longJump = false;
 
@@ -46,7 +46,7 @@ public class Maryo extends DynamicObject
 	
 	/**
 	 * Makes player invincible and transparent for all enemies
-	 * Used (for limited time) when player is downgraded (or if you hack the game;
+	 * Used (for limited time) when player is downgraded (or if you hack the game :D
 	 */
 	boolean godMode = false;
 	long godModeActivatedTime;
@@ -62,7 +62,7 @@ public class Maryo extends DynamicObject
 
     private void setupBoundingBox()
     {
-		switch(marioState)
+		switch(maryoState)
 		{
 			case small:
 				bounds.width = 0.9f;
@@ -101,8 +101,8 @@ public class Maryo extends DynamicObject
 
     public void loadTextures()
     {
-        MarioState[] states = new MarioState[]{MarioState.small, MarioState.big, MarioState.fire, MarioState.ghost, MarioState.ice};
-        for(MarioState ms : states)
+        MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ghost, MaryoState.ice};
+        for(MaryoState ms : states)
         {
             loadTextures(ms.toString());
         }
@@ -143,7 +143,7 @@ public class Maryo extends DynamicObject
         tmp.flip(true, false);
         Assets.loadedRegions.put(TKey.fall_left + ":" + state, tmp);
 
-        if (MarioState.small.toString().equals(state))
+        if (MaryoState.small.toString().equals(state))
         {
             Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
             tmp = new TextureRegion(Assets.loadedRegions.get(TKey.dead_right.toString() + ":" + state));
@@ -159,30 +159,30 @@ public class Maryo extends DynamicObject
 
     public void render(SpriteBatch spriteBatch)
     {
-		System.out.println("state" + marioState);
-        TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + marioState) : Assets.loadedRegions.get(TKey.stand_right + ":" + marioState);
+		System.out.println("state" + maryoState);
+        TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.stand_right + ":" + maryoState);
         if (worldState.equals(WorldState.WALKING))
         {
-            marioFrame = isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + marioState).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + marioState).getKeyFrame(getStateTime(), true);
+            marioFrame = isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + maryoState).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + maryoState).getKeyFrame(getStateTime(), true);
         }
         else if(worldState == WorldState.DUCKING)
         {
-            marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.duck_left + ":" + marioState) : Assets.loadedRegions.get(TKey.duck_right + ":" + marioState);
+            marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.duck_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.duck_right + ":" + maryoState);
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (velocity.y > 0)
             {
-                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + marioState) : Assets.loadedRegions.get(TKey.jump_right + ":" + marioState);
+                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.jump_right + ":" + maryoState);
             }
             else
             {
-                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + marioState) : Assets.loadedRegions.get(TKey.fall_right + ":" + marioState);
+                marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.fall_right + ":" + maryoState);
             }
         }
 		else if(worldState == WorldState.DYING)
 		{
-			marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + marioState) : Assets.loadedRegions.get(TKey.dead_right + ":" + marioState);
+			marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.dead_right + ":" + maryoState);
 		}
 		
 		//if god mode, make player half-transparent
@@ -228,6 +228,7 @@ public class Maryo extends DynamicObject
             rect.set(position.x, 0, body.width, position.y);
             float tmpGroundY = 0;
             float distance = body.y;
+			GameObject closestObject = null;
             for(GameObject go : objects)
             {
                 if(go == null)continue;
@@ -244,10 +245,18 @@ public class Maryo extends DynamicObject
                     {
                         distance = tmpDistance;
                         tmpGroundY = go.body.y + go.body.height;
+						closestObject = go;
                     }
                 }
             }
             groundY = tmpGroundY;
+			if(closestObject != null 
+				&& closestObject instanceof Sprite 
+				&& ((Sprite)closestObject).getType() == Sprite.Type.halfmassive
+				&& worldState == WorldState.DUCKING)
+			{
+				position.y -= 0.1f;
+			}
 		}
 	}
 
@@ -367,7 +376,7 @@ public class Maryo extends DynamicObject
 	
 	public void downgradeOrDie(boolean forceDie)
 	{
-		if(marioState == MarioState.small || forceDie)
+		if(maryoState == MaryoState.small || forceDie)
 		{
 			worldState = WorldState.DYING;
 			dyingAnim.start();
@@ -377,8 +386,8 @@ public class Maryo extends DynamicObject
 			godMode = true;
 			godModeActivatedTime = System.currentTimeMillis();
 			//for now only make it small no matter the current state
-			marioState = MarioState.small;
-			GameSaveUtility.getInstance().save.playerState = marioState;
+			maryoState = MaryoState.small;
+			GameSaveUtility.getInstance().save.playerState = maryoState;
 			setupBoundingBox();
 		}
 	}
@@ -446,7 +455,7 @@ public class Maryo extends DynamicObject
 
     private void setJumpSound()
     {
-        switch (marioState)
+        switch (maryoState)
         {
             case small:
                 jumpSound = Assets.manager.get("data/sounds/player/jump_small.ogg");
@@ -462,14 +471,14 @@ public class Maryo extends DynamicObject
         }
     }
 
-    public MarioState getMarioState()
+    public MaryoState getMarioState()
     {
-        return marioState;
+        return maryoState;
     }
 
-    public void setMarioState(MarioState marioState)
+    public void setMarioState(MaryoState marioState)
     {
-        this.marioState = marioState;
+        this.maryoState = marioState;
         setJumpSound();
     }
 }

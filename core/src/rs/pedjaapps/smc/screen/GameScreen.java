@@ -442,7 +442,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
             }
         }
-        for(Maryo.MarioState ms : Maryo.MarioState.values())
+        for(Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
