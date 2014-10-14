@@ -115,7 +115,8 @@ public class Turtle extends Enemy
 		{
 			if(((object instanceof Sprite && ((Sprite)object).getType() == Sprite.Type.massive
 					&& object.getBody().y + object.getBody().height > body.y + 0.1f)
-					|| object instanceof EnemyStopper)
+					|| object instanceof EnemyStopper
+					|| (object instanceof Enemy && object != this))
                     && !turned)
 			{
 				//CollisionManager.resolve_objects(this, object, true);
