@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,13 +11,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.enemy.Eato;
-import rs.pedjaapps.smc.model.enemy.Flyon;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.model.enemy.Enemy;
+import rs.pedjaapps.smc.model.enemy.Flyon;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class Maryo extends DynamicObject
 {
@@ -28,6 +28,7 @@ public class Maryo extends DynamicObject
     private static final float RUNNING_FRAME_DURATION = 0.08f;
 	
 	protected static final float MAX_VEL          = 4f;
+	private static final float GOD_MOD_TIMEOUT = 3000;//3 sec
 	
     WorldState worldState = WorldState.JUMPING;
     private MarioState marioState = GameSaveUtility.getInstance().save.playerState;
@@ -42,11 +43,21 @@ public class Maryo extends DynamicObject
     public Sound jumpSound = null;
 
     public Rectangle debugRayRect = new Rectangle();
+	
+	/**
+	 * Makes player invincible and transparent for all enemies
+	 * Used (for limited time) when player is downgraded (or if you hack the game;
+	 */
+	boolean godMode = false;
+	long godModeActivatedTime;
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
         super(world, size, position);
         setupBoundingBox();
+		
+		position.y = body.y = bounds.y += 0.5f;
+		
     }
 
     private void setupBoundingBox()
@@ -70,7 +81,6 @@ public class Maryo extends DynamicObject
 		body.x = bounds.x + bounds.width / 4;
 		body.width = bounds.width / 2;
 		position.x = body.x;
-		position.y = body.y = bounds.y += 0.5f;
 		
         if(worldState == WorldState.DUCKING)
 		{
@@ -149,6 +159,7 @@ public class Maryo extends DynamicObject
 
     public void render(SpriteBatch spriteBatch)
     {
+		System.out.println("state" + marioState);
         TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + marioState) : Assets.loadedRegions.get(TKey.stand_right + ":" + marioState);
         if (worldState.equals(WorldState.WALKING))
         {
@@ -173,12 +184,35 @@ public class Maryo extends DynamicObject
 		{
 			marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + marioState) : Assets.loadedRegions.get(TKey.dead_right + ":" + marioState);
 		}
-        spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
+		
+		//if god mode, make player half-transparent
+		if(godMode)
+		{
+			Color color = spriteBatch.getColor();
+			float oldA = color.a;
+			
+			color.a = 0.5f;
+			spriteBatch.setColor(color);
+			
+			spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
+			
+			color.a = oldA;
+			spriteBatch.setColor(color);
+		}
+		else
+		{
+        	spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
+		}
     }
 
 	@Override
 	public void update(float delta)
 	{
+		//disable godmod after timeot
+		if(godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
+		{
+			godMode = false;
+		}
 		if(worldState == WorldState.DYING)
 		{
 			stateTime += delta;
@@ -232,20 +266,18 @@ public class Maryo extends DynamicObject
             boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
             if(deadAnyway)
             {
-                worldState = WorldState.DYING;
-                dyingAnim.start();
+                if(!godMode)downgradeOrDie(false);
             }
             else
             {
-                if(vertical && body.y > object.body.y)//enemy death from above
+                if(velocity.y < 0 && vertical && body.y > object.body.y)//enemy death from above
                 {
                     velocity.y = 5f * Gdx.graphics.getDeltaTime();
                     ((Enemy)object).hitByPlayer();
                 }
                 else
                 {
-                    worldState = WorldState.DYING;
-                    dyingAnim.start();
+                    if(!godMode)downgradeOrDie(false);
                 }
             }
 		}
@@ -333,6 +365,24 @@ public class Maryo extends DynamicObject
 		return MAX_VEL;
 	}
 	
+	public void downgradeOrDie(boolean forceDie)
+	{
+		if(marioState == MarioState.small || forceDie)
+		{
+			worldState = WorldState.DYING;
+			dyingAnim.start();
+		}
+		else
+		{
+			godMode = true;
+			godModeActivatedTime = System.currentTimeMillis();
+			//for now only make it small no matter the current state
+			marioState = MarioState.small;
+			GameSaveUtility.getInstance().save.playerState = marioState;
+			setupBoundingBox();
+		}
+	}
+	
 	public class DyingAnimation
 	{
 		private float diedTime;
@@ -390,8 +440,7 @@ public class Maryo extends DynamicObject
     {
 		if(worldState != WorldState.DYING)
 		{
-        	worldState = WorldState.DYING;
-        	dyingAnim.start();
+        	downgradeOrDie(true);
 		}
     }
 
