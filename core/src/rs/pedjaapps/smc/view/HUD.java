@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -17,9 +18,9 @@ import java.util.HashSet;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.World;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.model.GameObject;
 
 public class HUD
 {
@@ -42,7 +43,7 @@ public class HUD
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	public BitmapFont font;
+	public BitmapFont font, tts;
 
 	public static float C_W = Gdx.graphics.getWidth();
 	public static float C_H = Gdx.graphics.getHeight();
@@ -56,6 +57,11 @@ public class HUD
 	
 	float stateTime;
 	public boolean updateTimer = true;
+	
+	String ttsText = "TOUCH ANYWHERE TO START";
+	BitmapFont.TextBounds ttsBounds;
+	boolean ttsFadeIn;
+	float ttsAlpha = 1;
 
 	public HUD(World world)
 	{
@@ -154,8 +160,25 @@ public class HUD
         cam.update();
         setBounds();
     }
+	
+	public void loadAssets()
+	{
+		Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/pause.png", Texture.class);
+		Assets.manager.load("data/hud/itembox.png", Texture.class);
+        Assets.manager.load("data/hud/maryo_l.png", Texture.class);
+        Assets.manager.load("data/hud/gold_m.png", Texture.class);
+		Assets.manager.load("data/hud/game_over.png", Texture.class);
+		
+		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        ttsTextParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
+        ttsTextParams.fontParameters.size = (int) C_H / 15;
+        ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
+        Assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
+		
+	}
 
-    public void loadAssets()
+    public void afterLoadAssets()
 	{
 		TextureAtlas atlas = Assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		pause = atlas.findRegion("pause");
@@ -208,11 +231,34 @@ public class HUD
 		font.setColor(1, 1, 1, 1);//white
 		
 		generator.dispose();
+		
+		tts = Assets.manager.get("touch_to_start.ttf");
+		tts.setColor(1, 1, 1, 1);
+		ttsBounds = tts.getBounds(ttsText);
+		
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
 	{
-		if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
+		if (gameState == GameScreen.GAME_STATE.GAME_READY)
+		{
+			batch.setProjectionMatrix(cam.combined);
+			batch.begin();
+			if(ttsAlpha >= 1)
+			{
+				ttsAlpha = 1;
+				ttsFadeIn = false;
+			}
+			else if(ttsAlpha <= 0.3f)
+			{
+				ttsFadeIn = true;
+			}
+			tts.setColor(1, 1, 1, ttsFadeIn ? (ttsAlpha += 0.02f) : (ttsAlpha -= 0.02f));
+			
+			tts.draw(batch, ttsText, C_W / 2 - ttsBounds.width / 2, C_H / 2 + ttsBounds.height / 2);
+			batch.end();
+		}
+		else if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
 		{
 			drawPauseOverlay();
 		}

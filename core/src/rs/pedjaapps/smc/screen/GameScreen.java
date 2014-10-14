@@ -79,7 +79,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public enum GAME_STATE
     {
-        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD
+        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
+		NO_UPDATE
 	}
 
     private GAME_STATE gameState;
@@ -441,16 +442,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
             }
         }
-        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         for(Maryo.MarioState ms : Maryo.MarioState.values())
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
-		Assets.manager.load("data/hud/pause.png", Texture.class);
-		Assets.manager.load("data/hud/itembox.png", Texture.class);
-        Assets.manager.load("data/hud/maryo_l.png", Texture.class);
-        Assets.manager.load("data/hud/gold_m.png", Texture.class);
-		Assets.manager.load("data/hud/game_over.png", Texture.class);
+		hud.loadAssets();
 		
         //audio
         Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
@@ -497,7 +493,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void afterLoadAssets()
     {
         loader.parseLevel(world, controller, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
-        hud.loadAssets();
+        hud.afterLoadAssets();
         world.setLevel(loader.getLevel());
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
         exitDialog.afterLoadAssets();
