@@ -159,7 +159,6 @@ public class Maryo extends DynamicObject
 
     public void render(SpriteBatch spriteBatch)
     {
-		System.out.println("state" + maryoState);
         TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.stand_right + ":" + maryoState);
         if (worldState.equals(WorldState.WALKING))
         {

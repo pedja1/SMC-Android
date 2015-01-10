@@ -168,7 +168,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		if (delta > 0.1f) delta = 0.1f;
         //debug
-        //delta = 0.0666f;
+        //delta = 0.033333333f;//debug, 30 fps, everything is way to fast
         //debug end
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

@@ -31,8 +31,8 @@ public class Assets
 
         textureParameter = new TextureLoader.TextureParameter();
         //textureParameter.genMipMaps = true;
-        //textureParameter.magFilter = Texture.TextureFilter.Linear;
-        //textureParameter.minFilter = Texture.TextureFilter.Linear;
+        textureParameter.magFilter = Texture.TextureFilter.Linear;
+        textureParameter.minFilter = Texture.TextureFilter.Linear;
         MyFileHandleResolver resolver = new MyFileHandleResolver();
         manager = new AssetManager(resolver);
 
