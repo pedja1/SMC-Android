@@ -33,7 +33,7 @@ public class SelectionAdapter
 
 	Texture txNextEnabled, txNextDisabled,
 	txPrevEnabled, txPrevDisabled,
-	txItemBg, txLock;
+	txItemBg, txItemBgSelected, txLock;
     BitmapFont font96, font32;
 
     private float selectionWidth;
@@ -46,10 +46,12 @@ public class SelectionAdapter
 
 	Rectangle backBounds;
 
+    private Level touchDownLevel;
+
     public static class Level
 	{
 		private Rectangle bounds = new Rectangle();
-		public boolean isUnlocked;
+		public boolean isUnlocked, isTouched;
 		public String levelId;
 	}
 
@@ -79,6 +81,7 @@ public class SelectionAdapter
 	public void loadAssets()
 	{
 		txItemBg = Assets.manager.get("data/hud/option.png");
+		txItemBgSelected = Assets.manager.get("data/hud/option_selected.png");
 		txLock = Assets.manager.get("data/hud/lock.png");
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
@@ -130,7 +133,7 @@ public class SelectionAdapter
 
 			level.bounds.set(x, y, cellSize, cellSize);
 
-			batch.draw(txItemBg, x, y, cellSize, cellSize);
+			batch.draw(level.isTouched ? txItemBgSelected : txItemBg, x, y, cellSize, cellSize);
 
 			if (!level.isUnlocked)
 			{
@@ -177,7 +180,7 @@ public class SelectionAdapter
 		//debug end
 	}
 
-	public void handleTouch(float x, float y)
+	public void touchUp(float x, float y)
 	{
 		//convert touch point to camera point
 		x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
@@ -188,15 +191,40 @@ public class SelectionAdapter
 			mainMenuScreen.isSelection = false;
 			return;
 		}
-		for (Level level : items)
-		{
-			if (level.bounds.contains(x, y) && level.isUnlocked)
-			{
-				//TODO start level
-				mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true), false));
-				break;
-			}
-		}
+        if(touchDownLevel != null && touchDownLevel.bounds.contains(x, y))
+        {
+            //TODO start level
+            mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true), false));
+            touchDownLevel.isTouched = false;
+            touchDownLevel = null;
+        }
 	}
+
+    public void touchDown(float x, float y)
+    {
+        //convert touch point to camera point
+        x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
+        y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
+
+        for (Level level : items)
+        {
+            if (level.bounds.contains(x, y) && level.isUnlocked)
+            {
+                level.isTouched = true;
+                touchDownLevel = level;
+                break;
+            }
+        }
+    }
+
+    public void touchDragged(float x, float y)
+    {
+        touchDownLevel = null;
+        for (Level level : items)
+        {
+            level.isTouched = false;
+        }
+    }
+
 
 }

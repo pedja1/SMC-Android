@@ -223,6 +223,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
 		Assets.manager.load("data/hud/option.png", Texture.class);
+		Assets.manager.load("data/hud/option_selected.png", Texture.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
@@ -334,7 +335,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 		if (isSelection)
 		{
-			selectionAdapter.handleTouch(x, y);
+			selectionAdapter.touchDown(x, y);
 		}
 		else
 		{
@@ -366,31 +367,38 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             return true;
         }
 
-        if (playR.contains(x, y))
+        if (isSelection)
         {
-            playT = false;
-            //music.stop();
-            //game.setScreen(new LoadingScreen(new GameScreen(game), false));
-			isSelection = true;
+            selectionAdapter.touchUp(x, y);
         }
-        if (musicR.contains(x, y))
+        else
         {
-            musicT = false;
-            if (Utility.toggleMusic())
+            if (playR.contains(x, y))
             {
-                music.play();
+                playT = false;
+                //music.stop();
+                //game.setScreen(new LoadingScreen(new GameScreen(game), false));
+                isSelection = true;
             }
-            else
+            if (musicR.contains(x, y))
             {
-                music.pause();
+                musicT = false;
+                if (Utility.toggleMusic())
+                {
+                    music.play();
+                }
+                else
+                {
+                    music.pause();
+                }
             }
-        }
-        if (soundR.contains(x, y))
-        {
-            soundT = false;
-            if (Utility.toggleSound())
+            if (soundR.contains(x, y))
             {
-                audioOn.play();
+                soundT = false;
+                if (Utility.toggleSound())
+                {
+                    audioOn.play();
+                }
             }
         }
         return false;
@@ -408,9 +416,16 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             return true;
         }
 
-        playT = playR.contains(x, y);
-        musicT = musicR.contains(x, y);
-        soundT = soundR.contains(x, y);
+        if (isSelection)
+        {
+            selectionAdapter.touchDragged(x, y);
+        }
+        else
+        {
+            playT = playR.contains(x, y);
+            musicT = musicR.contains(x, y);
+            soundT = soundR.contains(x, y);
+        }
         return false;
     }
 
