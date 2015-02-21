@@ -52,7 +52,7 @@ public class LoadingScreen extends AbstractScreen
         bgSprite = new Sprite(bgTexture);
         bgSprite.setSize(camWidth, bgSprite.getHeight() / (bgSprite.getWidth() / camWidth));
         bgSprite.setOrigin(bgSprite.getWidth()/2, bgSprite.getHeight()/2);
-        bgSprite.setPosition(-bgSprite.getWidth()/2, -bgSprite.getHeight()/2);
+        bgSprite.setPosition(-bgSprite.getWidth()/2, -camHeight/2);
         screenToLoadAfter.loadAssets();
     }
 
