@@ -85,6 +85,10 @@ public abstract class DynamicObject extends GameObject
 			{
 				handleCollision(object, false);
             }
+            else if((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+            {
+                handleCollision(((Box) object).itemObject, false);
+            }
         }
         if(body.x < 0 || body.x + body.width > world.getLevel().getWidth())
         {
@@ -98,12 +102,16 @@ public abstract class DynamicObject extends GameObject
 
         body.y += velocity.y;
 
-        for (GameObject object : surroundingObjects) 
+        for (GameObject object : surroundingObjects)
 		{
             if (object == null) continue;
             if (body.overlaps(object.getBody()))
 			{
 				handleCollision(object, true);
+            }
+            else if((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+            {
+                handleCollision(((Box) object).itemObject, true);
             }
         }
         if(body.y < 0)

@@ -1,4 +1,4 @@
-package rs.pedjaapps.smc.model;
+package rs.pedjaapps.smc.model.items;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -11,12 +11,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.model.items.Item;
+import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.screen.GameScreen;
 
 /**
  * Created by pedja on 24.5.14..
@@ -25,21 +26,23 @@ public class Coin extends Item
 {
 	public static final float DEF_SIZE = 0.59375f;
 	public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
-    public boolean playerHit;
     private Vector2 pointsTextPosition = new Vector2();
-    private BitmapFont font;
     public int points = 5;
 	
-	//collectable by player
-	public boolean collectable = true;
+	//collectible by player
+	public boolean collectible = true;
 	
 	//is drawn
 	public boolean visible = true;
-	
+
+	/**
+	 * Coin will smoothly pop out of the box*/
 	boolean popFromBox;
 
 	float originalPosY;
-	
+
+	/**
+	 * Coin will move out of the screen when collected*/
 	boolean scrollOut;
 	
 
@@ -62,7 +65,7 @@ public class Coin extends Item
         Assets.animations.put(textureAtlas, new Animation(0.10f, frames));
         if (Assets.manager.isLoaded("coin.ttf"))
         {
-            font = Assets.manager.get("coin.ttf");
+            BitmapFont font = Assets.manager.get("coin.ttf");
             font.scale(Constants.CAMERA_WIDTH / Gdx.graphics.getWidth());
             BitmapFont.TextBounds textBounds;
             if(textureAtlas.contains("yellow"))
@@ -151,9 +154,10 @@ public class Coin extends Item
 		velocity.y = 2f;
 	}
 
+	@Override
     public void hitPlayer()
     {
-		if(!collectable)return;
+		if(!collectible)return;
         playerHit = true;
         Sound sound;
         if(textureAtlas.contains("yellow"))
@@ -172,8 +176,9 @@ public class Coin extends Item
     }
 	
 	@Override
-	public void popOutFromBox()
+	public void popOutFromBox(float popTargetPositionY)
 	{
+		super.popOutFromBox(popTargetPositionY);
 		visible = true;
 		popFromBox = true;
 		velocity.y = 4f;

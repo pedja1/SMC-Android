@@ -31,3 +31,7 @@ txt:data/game/box/yellow/default.png
 atl:data/game/box/yellow/bonus.pack
 atl:data/game/box/yellow/power.pack
 atl:data/game/box/yellow/spin.pack
+txt:data/game/items/mushroom_red.png
+snd:data/sounds/sprout_1.ogg
+snd:data/sounds/item/mushroom.ogg
+snd:data/sounds/enemy/furball/die.ogg

@@ -69,7 +69,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 	public void setGameState(GAME_STATE gameState)
 	{
 		this.gameState = gameState;
-		if(gameState == GAME_STATE.PLAYER_DEAD)hud.updateTimer = false;
+		if(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
+            hud.updateTimer = false;
 	}
 
 	public GAME_STATE getGameState()
@@ -80,7 +81,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public enum GAME_STATE
     {
         GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
-		NO_UPDATE
+		NO_UPDATE, PLAYER_UPDATING
 	}
 
     private GAME_STATE gameState;
@@ -206,6 +207,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		{
 			world.getLevel().getGameObjects().remove(obj);
 		}
+        world.trashObjects.clear();
+		for(GameObject obj : world.newObjects)
+		{
+			world.getLevel().getGameObjects().add(obj);
+		}
+        world.newObjects.clear();
     }
 
 	private void handleGameOver(float delta)
@@ -310,13 +317,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		{
 			if (maryoBWO.overlaps(go.getBody()))
 			{
-				if (gameState == GAME_STATE.GAME_RUNNING || (gameState == GAME_STATE.PLAYER_DEAD && go instanceof Maryo))
+				if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
 				{
 					go.update(delta);
 				}
 			}
 		}
-		for (GameObject object : world.getDrawableObjects(cam.position.x, cam.position.y))
+        Array<GameObject> drawableObjects = world.getDrawableObjects(cam.position.x, cam.position.y);
+		for (GameObject object : drawableObjects)
         {
             object.render(spriteBatch);
         }
@@ -463,7 +471,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/player/powerdown.ogg", Sound.class);
         Assets.manager.load("data/sounds/player/run_stop.ogg", Sound.class);
         Assets.manager.load("data/sounds/wall_hit.wav", Sound.class);
-        Assets.manager.load("data/sounds/enemy/furball/die.ogg", Sound.class);
 
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;

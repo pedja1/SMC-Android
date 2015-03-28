@@ -11,10 +11,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.enemy.Eato;
 import rs.pedjaapps.smc.model.enemy.Enemy;
 import rs.pedjaapps.smc.model.enemy.Flyon;
+import rs.pedjaapps.smc.model.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 
@@ -26,12 +28,16 @@ public class Maryo extends DynamicObject
     }
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
-	
+    private static final float RESIZE_ANIMATION_DURATION = 0.977f;
+    private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 6f;
+
 	protected static final float MAX_VEL          = 4f;
 	private static final float GOD_MOD_TIMEOUT = 3000;//3 sec
 	
     WorldState worldState = WorldState.JUMPING;
     private MaryoState maryoState = GameSaveUtility.getInstance().save.playerState;
+    private MaryoState newState;//used with resize animation
+    private MaryoState oldState;//used with resize animation
     boolean facingLeft = false;
     boolean longJump = false;
 
@@ -50,6 +56,9 @@ public class Maryo extends DynamicObject
 	 */
 	boolean godMode = false;
 	long godModeActivatedTime;
+
+    Animation resizingAnimation;
+    float resizeAnimStartTime;
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -159,8 +168,33 @@ public class Maryo extends DynamicObject
 
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.stand_right + ":" + maryoState);
-        if (worldState.equals(WorldState.WALKING))
+        TextureRegion marioFrame;
+        if(resizingAnimation != null && getStateTime() > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
+        {
+            resizeAnimStartTime = 0;
+            resizingAnimation = null;
+            ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
+            godMode = false;
+            maryoState = newState;
+            setupBoundingBox();
+            GameSaveUtility.getInstance().save.playerState = maryoState;
+        }
+        if(resizingAnimation != null)
+        {
+            int index = resizingAnimation.getKeyFrameIndex(getStateTime());
+            marioFrame = resizingAnimation.getKeyFrames()[index];
+            if(index == 0)
+            {
+                maryoState = oldState;
+                setupBoundingBox();
+            }
+            else
+            {
+                maryoState = newState;
+                setupBoundingBox();
+            }
+        }
+        else if (worldState.equals(WorldState.WALKING))
         {
             marioFrame = isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + maryoState).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + maryoState).getKeyFrame(getStateTime(), true);
         }
@@ -183,6 +217,10 @@ public class Maryo extends DynamicObject
 		{
 			marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.dead_right + ":" + maryoState);
 		}
+        else
+        {
+            marioFrame = isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.stand_right + ":" + maryoState);
+        }
 		
 		//if god mode, make player half-transparent
 		if(godMode)
@@ -264,10 +302,10 @@ public class Maryo extends DynamicObject
 	{
 		if(!handleCollision)return;
 		super.handleCollision(object, vertical);
-		if(object instanceof Coin)
+		if(object instanceof Item)
 		{
-			Coin coin = (Coin)object;
-			if(!coin.playerHit)coin.hitPlayer();
+            Item item = (Item)object;
+			if(!item.playerHit)item.hitPlayer();
 		}
 		else if(object instanceof Enemy && ((Enemy)object).handleCollision)
 		{
@@ -390,8 +428,63 @@ public class Maryo extends DynamicObject
 			setupBoundingBox();
 		}
 	}
-	
-	public class DyingAnimation
+
+    /*
+    * Level up*/
+    public void upgrade()
+    {
+        //TODO dynamically determine next state
+        newState = MaryoState.big;
+        oldState = maryoState;
+        Array<TextureRegion> frames = generateResizeAnimationFrames(maryoState, newState);
+        resizingAnimation = new Animation(RESIZE_ANIMATION_FRAME_DURATION, frames);
+        resizingAnimation.setPlayMode(Animation.PlayMode.LOOP);
+        resizeAnimStartTime = getStateTime();
+        godMode = true;
+        //TODO handle if screen isnt GameScreen
+        ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+    }
+
+    private Array<TextureRegion> generateResizeAnimationFrames(MaryoState stateFrom, MaryoState stateTo)
+    {
+        Array<TextureRegion> regions = new Array<>();
+        if (worldState.equals(WorldState.WALKING))
+        {
+            regions.add(isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + stateFrom).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + stateFrom).getKeyFrame(getStateTime(), true));
+            regions.add(isFacingLeft() ? Assets.animations.get(AKey.walk_left + ":" + stateTo).getKeyFrame(getStateTime(), true) : Assets.animations.get(AKey.walk_right + ":" + stateTo).getKeyFrame(getStateTime(), true));
+        }
+        else if(worldState == WorldState.DUCKING)
+        {
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.duck_left + ":" + stateFrom) : Assets.loadedRegions.get(TKey.duck_right + ":" + stateFrom));
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.duck_left + ":" + stateTo) : Assets.loadedRegions.get(TKey.duck_right + ":" + stateTo));
+        }
+        else if (getWorldState().equals(WorldState.JUMPING))
+        {
+            if (velocity.y > 0)
+            {
+                regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + stateFrom) : Assets.loadedRegions.get(TKey.jump_right + ":" + stateFrom));
+                regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.jump_left + ":" + stateTo) : Assets.loadedRegions.get(TKey.jump_right + ":" + stateTo));
+            }
+            else
+            {
+                regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + stateFrom) : Assets.loadedRegions.get(TKey.fall_right + ":" + stateFrom));
+                regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.fall_left + ":" + stateTo) : Assets.loadedRegions.get(TKey.fall_right + ":" + stateTo));
+            }
+        }
+        else if(worldState == WorldState.DYING)
+        {
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + stateFrom) : Assets.loadedRegions.get(TKey.dead_right + ":" + stateFrom));
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.dead_left + ":" + stateTo) : Assets.loadedRegions.get(TKey.dead_right + ":" + stateTo));
+        }
+        else
+        {
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + stateFrom) : Assets.loadedRegions.get(TKey.stand_right + ":" + stateFrom));
+            regions.add(isFacingLeft() ? Assets.loadedRegions.get(TKey.stand_left + ":" + stateTo) : Assets.loadedRegions.get(TKey.stand_right + ":" + stateTo));
+        }
+        return regions;
+    }
+
+    public class DyingAnimation
 	{
 		private float diedTime;
 		boolean upAnimFinished, dyedReset, firstDelayFinished;

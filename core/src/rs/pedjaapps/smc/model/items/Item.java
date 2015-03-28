@@ -2,7 +2,7 @@ package rs.pedjaapps.smc.model.items;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import rs.pedjaapps.smc.model.Coin;
+
 import rs.pedjaapps.smc.model.Sprite;
 import rs.pedjaapps.smc.model.World;
 
@@ -25,8 +25,10 @@ public abstract class Item extends Sprite
 	TYPE_GOLDPIECE = 8,
 	TYPE_MOON = 37,
 	TYPE_STAR = 39;
-	
-	
+
+
+    protected float popTargetPosY;
+    public boolean playerHit;
     protected float stateTime;
     enum CLASS
     {
@@ -39,26 +41,6 @@ public abstract class Item extends Sprite
         super(world, size, position);
     }
 
-    /*public Body createBody(World world, Vector3 position, float width, float height)
-    {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(position.x + width / 2, position.y + height / 2);
-
-        Body body = world.createBody(bodyDef);
-        body.setGravityScale(0);
-
-        PolygonShape polygonShape = new PolygonShape();
-
-        polygonShape.setAsBox(width / 2, height / 2);
-
-        body.createFixture(polygonShape, 0.0f);
-
-        polygonShape.dispose();
-        return body;
-    }*/
-
-
     public static Item initObject(World world, String objectClassString, Vector2 size, Vector3 position)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);
@@ -67,6 +49,8 @@ public abstract class Item extends Sprite
         {
             case goldpiece:
                 object = new Coin(world, size, position);
+                break;
+            case mushroom:
                 break;
         }
         return object;
@@ -78,8 +62,12 @@ public abstract class Item extends Sprite
         stateTime += delta;
     }
 	
-	public void popOutFromBox()
+	public void popOutFromBox(float popTargetPosY)
 	{
-		
+		this.popTargetPosY = popTargetPosY;
 	}
+
+    public abstract void hitPlayer();
+
+
 }

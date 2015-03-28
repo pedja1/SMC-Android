@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Pool;
 import java.util.ArrayList;
 import java.util.List;
 import rs.pedjaapps.smc.screen.AbstractScreen;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 
 
@@ -25,8 +26,9 @@ public class World
 	/**
 	 * 
 	 */
-	public final Array<GameObject> trashObjects = new Array<GameObject>();
-	
+	public final Array<GameObject> trashObjects = new Array<>();
+	public final Array<GameObject> newObjects = new Array<>();
+
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame
 	public Pool<Rectangle> rectPool = new Pool<Rectangle>()
@@ -135,5 +137,24 @@ public class World
     public Array<GameObject> getVisibleObjects()
     {
         return visibleObjects == null ? new Array<GameObject>() : visibleObjects;
+    }
+
+    /**
+     * Check if obejct is visible in current camera bounds
+     * @param fallback value to return if cant determine if object is visible
+     *
+     */
+    public boolean isObjectVisible(GameObject object, boolean fallback)
+    {
+        if(!(screen instanceof GameScreen))return fallback;
+        float camX = ((GameScreen) screen).cam.position.x;
+        float camY = ((GameScreen) screen).cam.position.y;;
+        float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
+        float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
+        float wW = Constants.CAMERA_WIDTH + 1;
+        float wH = Constants.CAMERA_HEIGHT + 1;
+        Rectangle worldBounds = rectPool.obtain();
+        worldBounds.set(wX, wY, wW, wH);
+        return object.getBounds().overlaps(worldBounds);
     }
 }
