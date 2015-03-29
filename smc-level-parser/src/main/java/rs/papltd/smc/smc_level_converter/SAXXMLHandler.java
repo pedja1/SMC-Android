@@ -755,7 +755,7 @@ public class SAXXMLHandler extends DefaultHandler
 
     private void setEnemySettings(Enemy enemy, String fileName)
     {
-        File settings = new File(Converter.dataRoot, enemy.image_dir);
+        File settings = new File(Const.dataRoot, enemy.image_dir);
         settings = new File(settings, fileName);
         String settingsData = readFileContents(settings);
         String[] lines = settingsData.split("\n");
@@ -926,7 +926,7 @@ public class SAXXMLHandler extends DefaultHandler
 	private void setItemSettings(Item item)
     {
         String fileName = item.image.replaceAll("png", "settings");
-        File settings = new File(Converter.dataRoot, fileName);
+        File settings = new File(Const.dataRoot, fileName);
         String settingsData = readFileContents(settings);
         String[] lines = settingsData.split("\n");
         float origHeight = 1;
@@ -950,7 +950,7 @@ public class SAXXMLHandler extends DefaultHandler
     private void setSpriteSettings(Sprite sprite)
     {
         String fileName = sprite.image.replaceAll("png", "settings");
-        File settings = new File(Converter.dataRoot, fileName);
+        File settings = new File(Const.dataRoot, fileName);
         String settingsData = readFileContents(settings);
         String[] lines = settingsData.split("\n");
         float origHeight = 1;
