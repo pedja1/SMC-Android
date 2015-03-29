@@ -17,11 +17,12 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.items.Coin;
 import rs.pedjaapps.smc.model.items.Fireplant;
 import rs.pedjaapps.smc.model.items.Item;
+import rs.pedjaapps.smc.model.items.Moon;
 import rs.pedjaapps.smc.model.items.mushroom.Mushroom;
 import rs.pedjaapps.smc.model.items.mushroom.MushroomBlue;
 import rs.pedjaapps.smc.model.items.mushroom.MushroomDefault;
 import rs.pedjaapps.smc.model.items.mushroom.MushroomGhost;
-import rs.pedjaapps.smc.model.items.mushroom.MushroomLevel1;
+import rs.pedjaapps.smc.model.items.mushroom.MushroomLive1;
 import rs.pedjaapps.smc.model.items.mushroom.MushroomPoison;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
@@ -202,6 +203,10 @@ public class Box extends Sprite
         {
 
         }
+        else if(box.item == Item.TYPE_MOON)
+        {
+            createMoon(box);
+        }
     }
 
     public static void createMushroom(Box box)
@@ -214,7 +219,7 @@ public class Box extends Sprite
                 mushroom = new MushroomDefault(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                 break;
             case Item.TYPE_MUSHROOM_LIVE_1:
-                mushroom = new MushroomLevel1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
+                mushroom = new MushroomLive1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                 break;
             case Item.TYPE_MUSHROOM_BLUE:
                 mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
@@ -268,6 +273,24 @@ public class Box extends Sprite
 
         box.itemObject = fireplant;
     }
+
+    public static void createMoon(Box box)
+    {
+        Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position));
+        if (Assets.manager.isLoaded(moon.getTextureAtlas()))
+        {
+            moon.loadTextures();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                    + "in [level].smclvl must also be included in [level].data (" + moon.getTextureAtlas() + ")");
+        }
+        moon.visible = false;
+
+        box.itemObject = moon;
+    }
+
 
     public void handleHitByPlayer()
     {

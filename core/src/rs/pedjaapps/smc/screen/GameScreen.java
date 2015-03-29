@@ -483,7 +483,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
         Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
         //Assets.manager.load("data/sounds/item/feather.wav", Sound.class);
-        //TODO this is issing somehow
+        //TODO this is missing somehow
 
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;

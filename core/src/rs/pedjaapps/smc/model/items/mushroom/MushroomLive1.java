@@ -4,7 +4,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 /**
  * Created by pedja on 29.3.15..
@@ -12,9 +15,9 @@ import rs.pedjaapps.smc.model.World;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public class MushroomLevel1 extends Mushroom
+public class MushroomLive1 extends Mushroom
 {
-    public MushroomLevel1(World world, Vector2 size, Vector3 position)
+    public MushroomLive1(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
         textureName = "data/game/items/mushroom_green.png";
@@ -23,6 +26,8 @@ public class MushroomLevel1 extends Mushroom
     @Override
     protected void performCollisionAction()
     {
-
+        GameSaveUtility.getInstance().save.lifes += 1;
+        Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
+        if(sound != null && Assets.playSounds)sound.play();
     }
 }
