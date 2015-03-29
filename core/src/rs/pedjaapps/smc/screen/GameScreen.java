@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -445,6 +446,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
             }
+            else if(LevelLoader.isParticle(s[0]))
+            {
+                Assets.manager.load(s[1], ParticleEffect.class, Assets.particleEffectParameter);
+            }
             else
             {
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
@@ -471,6 +476,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/player/powerdown.ogg", Sound.class);
         Assets.manager.load("data/sounds/player/run_stop.ogg", Sound.class);
         Assets.manager.load("data/sounds/wall_hit.wav", Sound.class);
+
+        Assets.manager.load("data/sounds/sprout_1.ogg", Sound.class);
+        Assets.manager.load("data/sounds/item/mushroom.ogg", Sound.class);
+        Assets.manager.load("data/sounds/item/mushroom_blue.wav", Sound.class);
+        Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
+        Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
+        //Assets.manager.load("data/sounds/item/feather.wav", Sound.class);
+        //TODO this is issing somehow
 
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;

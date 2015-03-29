@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.model.Maryo;
 import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 /**
  * Created by pedja on 29.3.15..
@@ -15,6 +17,7 @@ import rs.pedjaapps.smc.model.World;
  */
 public class MushroomDefault extends Mushroom
 {
+    public static final int POINTS = 500;
     public MushroomDefault(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
@@ -24,13 +27,8 @@ public class MushroomDefault extends Mushroom
     @Override
     protected void performCollisionAction()
     {
-        world.getMario().upgrade();
-        position.set(-1, -1 ,-1);//has the effect of removing item (if its not on screen it wont be drawn)
-    }
-
-    @Override
-    protected Sound getCollisionSound()
-    {
-        return Assets.manager.get("data/sounds/item/mushroom.ogg", Sound.class);
+        world.getMario().upgrade(Maryo.MaryoState.big);
+        position.set(-1, -1, -1);//has the effect of removing item (if its not on screen it wont be drawn)
+        GameSaveUtility.getInstance().save.points += POINTS;
     }
 }

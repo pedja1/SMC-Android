@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.World;
 
 /**
@@ -24,11 +25,5 @@ public class MushroomBlue extends Mushroom
     protected void performCollisionAction()
     {
 
-    }
-
-    @Override
-    protected Sound getCollisionSound()
-    {
-        return null;
     }
 }

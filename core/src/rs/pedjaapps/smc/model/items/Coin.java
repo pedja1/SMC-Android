@@ -28,18 +28,6 @@ public class Coin extends Item
 	public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
     private Vector2 pointsTextPosition = new Vector2();
     public int points = 5;
-	
-	//collectible by player
-	public boolean collectible = true;
-	
-	//is drawn
-	public boolean visible = true;
-
-	/**
-	 * Coin will smoothly pop out of the box*/
-	boolean popFromBox;
-
-	float originalPosY;
 
 	/**
 	 * Coin will move out of the screen when collected*/

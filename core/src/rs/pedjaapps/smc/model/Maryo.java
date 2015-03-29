@@ -36,8 +36,6 @@ public class Maryo extends DynamicObject
 	
     WorldState worldState = WorldState.JUMPING;
     private MaryoState maryoState = GameSaveUtility.getInstance().save.playerState;
-    private MaryoState newState;//used with resize animation
-    private MaryoState oldState;//used with resize animation
     boolean facingLeft = false;
     boolean longJump = false;
 
@@ -59,6 +57,8 @@ public class Maryo extends DynamicObject
 
     Animation resizingAnimation;
     float resizeAnimStartTime;
+    private MaryoState newState;//used with resize animation
+    private MaryoState oldState;//used with resize animation
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -71,6 +71,7 @@ public class Maryo extends DynamicObject
 
     private void setupBoundingBox()
     {
+        float centerX = position.x + body.width / 2;
 		switch(maryoState)
 		{
 			case small:
@@ -99,6 +100,8 @@ public class Maryo extends DynamicObject
 		{
 			body.height = bounds.height * 0.9f;
 		}
+
+        position.x = body.x = centerX - body.width / 2;
     }
 
 	@Override
@@ -176,6 +179,8 @@ public class Maryo extends DynamicObject
             ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             godMode = false;
             maryoState = newState;
+            newState = null;
+            oldState = null;
             setupBoundingBox();
             GameSaveUtility.getInstance().save.playerState = maryoState;
         }
@@ -431,10 +436,10 @@ public class Maryo extends DynamicObject
 
     /*
     * Level up*/
-    public void upgrade()
+    public void upgrade(MaryoState newState)
     {
-        //TODO dynamically determine next state
-        newState = MaryoState.big;
+        if(maryoState == newState)return;
+        this.newState = newState;
         oldState = maryoState;
         Array<TextureRegion> frames = generateResizeAnimationFrames(maryoState, newState);
         resizingAnimation = new Animation(RESIZE_ANIMATION_FRAME_DURATION, frames);
@@ -443,6 +448,29 @@ public class Maryo extends DynamicObject
         godMode = true;
         //TODO handle if screen isnt GameScreen
         ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+
+        //play new state sound
+        Sound sound = upgradeSound(newState);
+        if(sound != null && Assets.playSounds)sound.play();
+    }
+
+    private Sound upgradeSound(MaryoState newState)
+    {
+        switch (newState)
+        {
+            case big:
+                return Assets.manager.get("data/sounds/item/mushroom.ogg");
+            case fire:
+                return Assets.manager.get("data/sounds/item/fireplant.ogg");
+            case ice:
+                return Assets.manager.get("data/sounds/item/mushroom_blue.ogg");
+            case ghost:
+                return Assets.manager.get("data/sounds/item/mushroom_ghost.ogg");
+            case flying:
+                //TODO this asset is missing somehow
+                //return Assets.manager.get("data/sounds/item/feather.ogg");
+        }
+        return null;
     }
 
     private Array<TextureRegion> generateResizeAnimationFrames(MaryoState stateFrom, MaryoState stateTo)

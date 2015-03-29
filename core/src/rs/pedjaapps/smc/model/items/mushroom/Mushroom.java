@@ -27,17 +27,10 @@ public abstract class Mushroom extends Item
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.49f;
-    //is drawn
-    public boolean visible = true;
 
     protected boolean grounded = false;
-    /**
-     * Coin will smoothly pop out of the box*/
-    boolean popFromBox;
 
     boolean moving;
-
-    float originalPosY;
 
     public enum Direction
     {
@@ -200,9 +193,6 @@ public abstract class Mushroom extends Item
     public void hitPlayer()
     {
         playerHit = true;
-        Sound sound = getCollisionSound();
-        if(sound != null && Assets.playSounds)sound.play();
-
         performCollisionAction();
     }
 
@@ -217,5 +207,4 @@ public abstract class Mushroom extends Item
     }
 
     protected abstract void performCollisionAction();
-    protected abstract Sound getCollisionSound();
 }

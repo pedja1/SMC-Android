@@ -1,7 +1,7 @@
 
 fireplant.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 fireplant-left
   rotate: false
@@ -10,9 +10,16 @@ fireplant-left
   orig: 128, 128
   offset: 0, 0
   index: -1
-fireplant-right
+fireplant-normal
   rotate: false
   xy: 132, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+fireplant-right
+  rotate: false
+  xy: 262, 2
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

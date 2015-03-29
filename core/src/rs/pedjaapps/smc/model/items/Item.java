@@ -35,6 +35,16 @@ public abstract class Item extends Sprite
         goldpiece, moon, jstar, mushroom, fireplant
     }
     WorldState worldState = WorldState.IDLE;
+    //is drawn
+    public boolean visible = true;
+
+    protected float originalPosY;
+    //collectible by player
+    public boolean collectible = true;
+
+    /**
+     * Coin will smoothly pop out of the box*/
+    protected boolean popFromBox;
 
     public Item(World world, Vector2 size, Vector3 position)
     {

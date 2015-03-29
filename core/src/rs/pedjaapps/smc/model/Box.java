@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.model.items.Coin;
+import rs.pedjaapps.smc.model.items.Fireplant;
 import rs.pedjaapps.smc.model.items.Item;
 import rs.pedjaapps.smc.model.items.mushroom.Mushroom;
 import rs.pedjaapps.smc.model.items.mushroom.MushroomBlue;
@@ -195,7 +196,7 @@ public class Box extends Sprite
         }
         else if(box.item == Item.TYPE_FIREPLANT)
         {
-
+            createFireplant(box);
         }
         else if(box.item == Item.TYPE_STAR)
         {
@@ -231,7 +232,6 @@ public class Box extends Sprite
         box.itemObject = mushroom;
     }
 
-
     public static void createCoin(Box box)
     {
         Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position));
@@ -250,6 +250,23 @@ public class Box extends Sprite
         coin.visible = false;
 
         box.itemObject = coin;
+    }
+
+    public static void createFireplant(Box box)
+    {
+        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
+        if (Assets.manager.isLoaded(fireplant.getTextureAtlas()))
+        {
+            fireplant.loadTextures();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                    + "in [level].smclvl must also be included in [level].data (" + fireplant.getTextureAtlas() + ")");
+        }
+        fireplant.visible = false;
+
+        box.itemObject = fireplant;
     }
 
     public void handleHitByPlayer()

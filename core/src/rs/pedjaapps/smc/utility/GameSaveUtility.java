@@ -29,7 +29,7 @@ public class GameSaveUtility
 		save.coins = 0;
 		save.points = 0;
 		save.lifes = 3;
-		save.playerState = Maryo.MaryoState.small;
+		save.playerState = Maryo.MaryoState.big;
 	}
 	
 	public static GameSaveUtility getInstance()

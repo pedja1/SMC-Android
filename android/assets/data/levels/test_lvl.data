@@ -35,3 +35,6 @@ txt:data/game/items/mushroom_red.png
 snd:data/sounds/sprout_1.ogg
 snd:data/sounds/item/mushroom.ogg
 snd:data/sounds/enemy/furball/die.ogg
+atl:data/game/items/fireplant.pack
+pce:data/animation/particles/fireplant_emitter.p
+snd:data/sounds/item/fireplant.ogg

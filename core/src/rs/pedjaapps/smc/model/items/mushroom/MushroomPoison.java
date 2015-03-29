@@ -25,10 +25,4 @@ public class MushroomPoison extends Mushroom
     {
 
     }
-
-    @Override
-    protected Sound getCollisionSound()
-    {
-        return null;
-    }
 }

@@ -215,6 +215,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             {
                 Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
             }
+            else if(LevelLoader.isParticle(s[0]))
+            {
+                Assets.manager.load(s[1], ParticleEffect.class, Assets.particleEffectParameter);
+            }
             else
             {
                 Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));

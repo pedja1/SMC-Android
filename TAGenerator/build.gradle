@@ -4,6 +4,4 @@ sourceCompatibility = 1.6
 
 dependencies {
     compile files('gdx-tools.jar')
-    compile files('../app/libs/gdx.jar')
-    compile files('gdx-tools-source.jar')
 }

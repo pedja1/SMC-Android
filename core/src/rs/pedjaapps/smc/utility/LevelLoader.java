@@ -50,7 +50,21 @@ public class LevelLoader
 
 	private enum DATA_KEY
 	{
-		txt, atl, mus, snd
+		/**
+		* Texture*/
+		txt,
+		/**
+		 * TextureAtlas*/
+		atl,
+		/**
+		 * Music*/
+		mus,
+		/**
+		 * Sound*/
+		snd,
+		/**
+		 * PartcileEfect*/
+		pce
 	}
 
 	private enum ObjectClass
@@ -435,6 +449,11 @@ public class LevelLoader
     public static boolean isTexture(String key)
     {
         return key.equals(DATA_KEY.txt.toString());
+    }
+
+    public static boolean isParticle(String key)
+    {
+        return key.equals(DATA_KEY.pce.toString());
     }
 
     private void parseEnemy(World world, JSONObject jEnemy) throws JSONException
