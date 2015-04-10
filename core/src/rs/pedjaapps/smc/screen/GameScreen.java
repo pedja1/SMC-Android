@@ -288,6 +288,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public void moveCamera(OrthographicCamera cam, float x, float y)
     {
+        if(gameState == GAME_STATE.PLAYER_UPDATING)return;
         cam.position.set(x, y, 0);
         cam.update();
         keepCameraInBounds(cam);
