@@ -4,11 +4,9 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import android.view.View;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
-import rs.pedjaapps.smc.model.Maryo;
 
 /**
  * Created by pedja on 2/27/14.

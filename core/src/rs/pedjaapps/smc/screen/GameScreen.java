@@ -4,7 +4,6 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -26,10 +25,10 @@ import java.util.HashMap;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
-import rs.pedjaapps.smc.model.BackgroundColor;
-import rs.pedjaapps.smc.model.GameObject;
-import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.object.BackgroundColor;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -161,7 +160,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
-		music = Assets.manager.get(loader.getLevel().getMusic().first());
+		music = Assets.manager.get(loader.level.music.first());
         if(Assets.playMusic)music.play();
     }
 
@@ -176,7 +175,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
         if (gameState == GAME_STATE.GAME_RUNNING)controller.update(delta);
-        moveCamera(cam, world.getMario().getPosition().x, world.getMario().getPosition().y);
+        moveCamera(cam, world.maryo.position.x, world.maryo.position.y);
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
@@ -206,12 +205,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		//cleanup
 		for(GameObject obj : world.trashObjects)
 		{
-			world.getLevel().getGameObjects().remove(obj);
+			world.level.gameObjects.remove(obj);
 		}
         world.trashObjects.clear();
 		for(GameObject obj : world.newObjects)
 		{
-			world.getLevel().getGameObjects().add(obj);
+			world.level.gameObjects.add(obj);
 		}
         world.newObjects.clear();
     }
@@ -274,15 +273,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
 	private void drawBackground()
 	{
-        BackgroundColor bgColor = world.getLevel().getBgColor();
+        BackgroundColor bgColor = world.level.bgColor;
         bgColor.render(bgCam);
         bgCam.position.set(cam.position.x * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportWidth * 0.44f,
 						   cam.position.y * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportHeight * 0.44f, 0);
         bgCam.update();
         spriteBatch.setProjectionMatrix(bgCam.combined);
         spriteBatch.begin();
-		world.getLevel().getBg1().render(spriteBatch);
-		world.getLevel().getBg2().render(spriteBatch);
+		world.level.bg1.render(spriteBatch);
+		world.level.bg2.render(spriteBatch);
         spriteBatch.end();
 	}
 
@@ -301,7 +300,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         camMin.set(cam.viewportWidth, cam.viewportHeight);
         camMin.scl(cam.zoom / 2); //bring to center and scale by the zoom level
-        camMax.set(world.getLevel().getWidth(), world.getLevel().getHeight());
+        camMax.set(world.level.width, world.level.height);
         camMax.sub(camMin); //bring to center
 
         //keep camera within borders
@@ -315,9 +314,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void drawObjects(float delta)
     {
 		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
-		for (GameObject go : world.getLevel().getGameObjects())
+		for (GameObject go : world.level.gameObjects)
 		{
-			if (maryoBWO.overlaps(go.getBody()))
+			if (maryoBWO.overlaps(go.body))
 			{
 				if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
 				{
@@ -339,17 +338,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 		for (GameObject go : world.getVisibleObjects()) 
 		{
-            Rectangle body = go.getBody();
-            Rectangle bounds = go.getBounds();
+            Rectangle body = go.body;
+            Rectangle bounds = go.bounds;
             shapeRenderer.setColor(new Color(0, 1, 0, 1));
             shapeRenderer.rect(body.x, body.y, body.width, body.height);
             shapeRenderer.setColor(new Color(1, 0, 0, 1));
             shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 		// render maryo
-		Maryo maryo = world.getMario();
-		Rectangle body = maryo.getBody();
-        Rectangle bounds = maryo.getBounds();
+		Maryo maryo = world.maryo;
+		Rectangle body = maryo.body;
+        Rectangle bounds = maryo.bounds;
 		shapeRenderer.setColor(new Color(0, 1, 0, 1));
 		shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(new Color(1, 0, 0, 1));
@@ -368,9 +367,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private String generateDebugMessage()
     {
-        return "Level: width=" + world.getLevel().getWidth() + ", height=" + world.getLevel().getHeight()
-			+ "\n" + "Player: x=" + world.getMario().getPosition().x + ", y=" + world.getMario().getPosition().y
-            + "\n" + "Player Vel: x=" + world.getMario().getVelocity().x + ", y=" + world.getMario().getVelocity().y
+        return "Level: width=" + world.level.width + ", height=" + world.level.height
+			+ "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
+            + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
             + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
             + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
             + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
@@ -515,7 +514,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         loader.parseLevel(world, controller, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
         hud.afterLoadAssets();
-        world.setLevel(loader.getLevel());
+        world.level = loader.level;
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
         exitDialog.afterLoadAssets();
 

@@ -10,11 +10,11 @@ import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
-import rs.pedjaapps.smc.model.Background;
-import rs.pedjaapps.smc.model.BackgroundColor;
-import rs.pedjaapps.smc.model.GameObject;
-import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.object.Background;
+import rs.pedjaapps.smc.object.BackgroundColor;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
@@ -94,7 +94,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
-        music = Assets.manager.get(loader.getLevel().getMusic().first());
+        music = Assets.manager.get(loader.level.music.first());
         if (Assets.playMusic)music.play();
     }
 
@@ -152,7 +152,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
     private void drawObjects(float deltaTime)
     {
-        for (GameObject gameObject : loader.getLevel().getGameObjects())
+        for (GameObject gameObject : loader.level.gameObjects)
         {
 			gameObject.update(deltaTime);
             gameObject.render(batch);
@@ -281,7 +281,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        world.setLevel(loader.getLevel());
+        world.level = loader.level;
 
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
         Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));

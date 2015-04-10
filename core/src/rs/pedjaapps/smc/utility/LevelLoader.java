@@ -16,17 +16,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.controller.MarioController;
-import rs.pedjaapps.smc.model.Background;
-import rs.pedjaapps.smc.model.BackgroundColor;
-import rs.pedjaapps.smc.model.Box;
-import rs.pedjaapps.smc.model.GameObject;
-import rs.pedjaapps.smc.model.Level;
-import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.Sprite;
-import rs.pedjaapps.smc.model.World;
-import rs.pedjaapps.smc.model.enemy.Enemy;
-import rs.pedjaapps.smc.model.enemy.EnemyStopper;
-import rs.pedjaapps.smc.model.items.Item;
+import rs.pedjaapps.smc.object.Background;
+import rs.pedjaapps.smc.object.BackgroundColor;
+import rs.pedjaapps.smc.object.Box;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Level;
+import rs.pedjaapps.smc.object.LevelEntry;
+import rs.pedjaapps.smc.object.LevelExit;
+import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.Sprite;
+import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.enemy.Enemy;
+import rs.pedjaapps.smc.object.enemy.EnemyStopper;
+import rs.pedjaapps.smc.object.items.Item;
 
 /**
  * Created by pedja on 2/2/14.
@@ -37,7 +39,7 @@ import rs.pedjaapps.smc.model.items.Item;
  */
 public class LevelLoader
 {
-    Level level;
+    public Level level;
 
     public enum KEY
     {
@@ -45,7 +47,7 @@ public class LevelLoader
         level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class, 
 		massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
-		force_best_item, max_downgrade_count
+		force_best_item, max_downgrade_count, direction, level_name, name, camera_motion, entry
 	}
 
 	private enum DATA_KEY
@@ -125,10 +127,17 @@ public class LevelLoader
 				case box:
 					parseBox(world, jObject);
 					break;
+				case level_entry:
+					/*{"direction":"up","posy":-228,"name":"1","posx":8074,"type":1,"obj_class":"level_entry"}*/
+					parseLevelEntry(world, jObject);
+					break;
+				case level_exit:
+					parseLevelExit(world, jObject);
+					break;
 			}
 		}
-		//this.level.getGameObjects().sort(new ZSpriteComparator());
-		Collections.sort(this.level.getGameObjects(), new ZSpriteComparator());
+		//this.level.gameObjects.sort(new ZSpriteComparator());
+		Collections.sort(this.level.gameObjects, new ZSpriteComparator());
 	}
 
 	public Array<String[]> parseLevelData(String levelData)
@@ -183,8 +192,8 @@ public class LevelLoader
         JSONObject jInfo = jLevel.getJSONObject(KEY.info.toString());
         float width = (float) jInfo.getDouble(KEY.level_width.toString());
         float height = (float) jInfo.getDouble(KEY.level_height.toString());
-        level.setWidth(width);
-        level.setHeight(height);
+        level.width = width;
+        level.height = height;
         if (jInfo.has(KEY.level_music.toString()))
         {
             JSONArray jMusic = jInfo.getJSONArray(KEY.level_music.toString());
@@ -193,7 +202,7 @@ public class LevelLoader
             {
                 music.add(jMusic.getString(i));
             }
-            level.setMusic(music);
+            level.music = music;
         }
     }
 
@@ -207,9 +216,9 @@ public class LevelLoader
 			{
 				Texture bgTexture = Assets.manager.get(textureName);
 				Background bg = new Background(new Vector2(0, 0), bgTexture);
-				level.setBg1(bg);
+				level.bg1 = bg;
 				bg = new Background(new Vector2(Background.WIDTH, 0), bgTexture);
-				level.setBg2(bg);
+				level.bg2 = bg;
 				//TODO this is stupid, we should dinamically repeat background
 			}
 			else
@@ -227,7 +236,7 @@ public class LevelLoader
 			BackgroundColor bgColor = new BackgroundColor();
 			bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
 			bgColor.color2 = new Color(r2, g2, b2, 0f);
-			level.setBgColor(bgColor);
+			level.bgColor = bgColor;
 		}
 		else
 		{
@@ -239,13 +248,13 @@ public class LevelLoader
     {
         float x = (float) jPlayer.getDouble(KEY.posx.toString());
         float y = (float) jPlayer.getDouble(KEY.posy.toString());
-        level.setSpanPosition(new Vector3(x, y, 0.0999f));
+        level.spanPosition = new Vector3(x, y, 0.0999f);
         if (controller != null)
         {
-            Maryo maryo = new Maryo(world, level.getSpanPosition(), new Vector2(0.9f, 0.9f));
+            Maryo maryo = new Maryo(world, level.spanPosition, new Vector2(0.9f, 0.9f));
             maryo.loadTextures();
-            world.setMario(maryo);
-            level.getGameObjects().add(maryo);
+            world.maryo = maryo;
+            level.gameObjects.add(maryo);
             controller.setMaryo(maryo);
         }
     }
@@ -283,32 +292,32 @@ public class LevelLoader
 		}
 
 		Sprite sprite = new Sprite(world, new Vector2((float) jSprite.getDouble(KEY.width.toString()), (float) jSprite.getDouble(KEY.height.toString())), position);
-		sprite.setType(sType);
+		sprite.type = sType;
 
-		sprite.setTextureName(jSprite.getString(KEY.texture_name.toString()));
-		if (sprite.getTextureName() == null || sprite.getTextureName().isEmpty())
+		sprite.textureName = jSprite.getString(KEY.texture_name.toString());
+		if (sprite.textureName == null || sprite.textureName.isEmpty())
 		{
-			throw new IllegalArgumentException("texture name is invalid: \"" + sprite.getTextureName() + "\"");
+			throw new IllegalArgumentException("texture name is invalid: \"" + sprite.textureName + "\"");
 		}
 		if (jSprite.has(KEY.is_front.toString()))
 		{
-			sprite.setFront(jSprite.getBoolean(KEY.is_front.toString()));
+			sprite.isFront = jSprite.getBoolean(KEY.is_front.toString());
 		}
 
 		//load all assets
 		TextureAtlas atlas = null;
 		if (jSprite.has(KEY.texture_atlas.toString()))
 		{
-			sprite.setTextureAtlas(jSprite.getString(KEY.texture_atlas.toString()));
-			if (Assets.manager.isLoaded(sprite.getTextureAtlas()))
+			sprite.textureAtlas = jSprite.getString(KEY.texture_atlas.toString());
+			if (Assets.manager.isLoaded(sprite.textureAtlas))
 			{
-				atlas = Assets.manager.get(sprite.getTextureAtlas());
+				atlas = Assets.manager.get(sprite.textureAtlas);
 			}
 			else
 			{
 				throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used" 
 												   + "in [level].smclvl must also be included in [level].data ("
-												   + sprite.getTextureAtlas() + ")");
+												   + sprite.textureAtlas + ")");
 			}
 		}
 		boolean hasFlipData = jSprite.has(KEY.flip_data.toString());
@@ -321,81 +330,81 @@ public class LevelLoader
 			String newTextureName = null;
 			if (flipX && !flipY)
 			{
-				newTextureName = sprite.getTextureName() + "-flip_x";
+				newTextureName = sprite.textureName + "-flip_x";
 			}
 			else if (flipY && !flipX)
 			{
-				newTextureName = sprite.getTextureName() + "-flip_y";
+				newTextureName = sprite.textureName + "-flip_y";
 			}
 			else if (flipY && flipX)
 			{
-				newTextureName = sprite.getTextureName() + "-flip_xy";
+				newTextureName = sprite.textureName + "-flip_xy";
 			}
 
 			if(newTextureName != null)if (Assets.loadedRegions.get(newTextureName) == null)
 			{
 				TextureRegion orig;
-				if (Assets.loadedRegions.get(sprite.getTextureName()) == null)
+				if (Assets.loadedRegions.get(sprite.textureName) == null)
 				{
 					if (atlas == null)
 					{
-						if (Assets.manager.isLoaded(sprite.getTextureName()))
+						if (Assets.manager.isLoaded(sprite.textureName))
 						{
-							orig = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
+							orig = new TextureRegion(Assets.manager.get(sprite.textureName, Texture.class));
 						}
 						else
 						{
-							throw new IllegalArgumentException("Texture(" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used" 
-															   + "in [level].smclvl must also be included in [level].data (" + sprite.getTextureName() + ")");
+							throw new IllegalArgumentException("Texture(" + sprite.textureName + ") not found in AssetManager. Every Texture used" 
+															   + "in [level].smclvl must also be included in [level].data (" + sprite.textureName + ")");
 						}
 					}
 					else
 					{
-						orig = atlas.findRegion(sprite.getTextureName().split(":")[1]);
+						orig = atlas.findRegion(sprite.textureName.split(":")[1]);
 					}
-					Assets.loadedRegions.put(sprite.getTextureName(), orig);
+					Assets.loadedRegions.put(sprite.textureName, orig);
 				}
 				else
 				{
-					orig = Assets.loadedRegions.get(sprite.getTextureName());
+					orig = Assets.loadedRegions.get(sprite.textureName);
 				}
 				TextureRegion flipped = new TextureRegion(orig);
 				flipped.flip(flipX, flipY);
-				sprite.setTextureName(newTextureName);
+				sprite.textureName = newTextureName;
 				Assets.loadedRegions.put(newTextureName, flipped);
 				
 			}
 			else
 			{
-				sprite.setTextureName(newTextureName);
+				sprite.textureName = newTextureName;
 			}
 		}
 		else
 		{
-			if (Assets.loadedRegions.get(sprite.getTextureName()) == null)
+			if (Assets.loadedRegions.get(sprite.textureName) == null)
 			{
 				TextureRegion textureRegion;
 				if (atlas == null)
 				{
-					if (Assets.manager.isLoaded(sprite.getTextureName()))
+					if (Assets.manager.isLoaded(sprite.textureName))
 					{
-						textureRegion = new TextureRegion(Assets.manager.get(sprite.getTextureName(), Texture.class));
+						textureRegion = new TextureRegion(Assets.manager.get(sprite.textureName, Texture.class));
 					}
 					else
 					{
-						throw new IllegalArgumentException("Texture (" + sprite.getTextureName() + ") not found in AssetManager. Every Texture used"
-														   + "in [level].smclvl must also be included in [level].data ( " + sprite.getTextureName() + " )");
+						throw new IllegalArgumentException("Texture (" + sprite.textureName + ") not found in AssetManager. Every Texture used"
+														   + "in [level].smclvl must also be included in [level].data ( " + sprite.textureName + " )");
 					}
 				}
 				else
 				{
-					textureRegion = atlas.findRegion(sprite.getTextureName().split(":")[1]);
+					textureRegion = atlas.findRegion(sprite.textureName.split(":")[1]);
 				}
-				Assets.loadedRegions.put(sprite.getTextureName(), textureRegion);
+				Assets.loadedRegions.put(sprite.textureName, textureRegion);
 			}
 		}
 
-		level.getGameObjects().add(sprite);
+		level.gameObjects.add(sprite);
 
     }
 
@@ -416,11 +425,6 @@ public class LevelLoader
 		groundBox.dispose();
         return body;
     }*/
-
-    public Level getLevel()
-    {
-        return level;
-    }
 
     public static Class getTextureClassForKey(String key)
     {
@@ -464,18 +468,18 @@ public class LevelLoader
             if (enemy == null)return;//TODO this has to go aways after levels are fixed
             if (jEnemy.has(KEY.texture_atlas.toString()))
             {
-                enemy.setTextureAtlas(jEnemy.getString(KEY.texture_atlas.toString()));
-                if (Assets.manager.isLoaded(enemy.getTextureAtlas()))
+                enemy.textureAtlas = jEnemy.getString(KEY.texture_atlas.toString());
+                if (Assets.manager.isLoaded(enemy.textureAtlas))
                 {
                     enemy.loadTextures();
                 }
                 else
                 {
                     throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-													   + "in [level].smclvl must also be included in [level].data (" + enemy.getTextureAtlas() + ")");
+													   + "in [level].smclvl must also be included in [level].data (" + enemy.textureAtlas + ")");
                 }
             }
-            level.getGameObjects().add(enemy);
+            level.gameObjects.add(enemy);
     }
 
 	private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
@@ -486,10 +490,40 @@ public class LevelLoader
 		
 		EnemyStopper stopper = new EnemyStopper(world, new Vector2(width, height), position);
 		
-		level.getGameObjects().add(stopper);
+		level.gameObjects.add(stopper);
     }
-	
-    private void parseItem(World world, JSONObject jItem) throws JSONException
+
+	private void parseLevelEntry(World world, JSONObject jEntry) throws JSONException
+    {
+        Vector3 position = new Vector3((float) jEntry.getDouble(KEY.posx.toString()), (float) jEntry.getDouble(KEY.posy.toString()), 0);
+        float width =  0.2f;
+		float height =  0.2f;
+
+		LevelEntry entry = new LevelEntry(world, new Vector2(width, height), position);
+		entry.direction = jEntry.optString(KEY.direction.toString());
+		entry.type = jEntry.optInt(KEY.type.toString());
+		entry.name = jEntry.optString(KEY.name.toString());
+
+		level.gameObjects.add(entry);
+	}
+
+	private void parseLevelExit(World world, JSONObject jExit) throws JSONException
+    {
+        Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
+        float width =  (float) jExit.getDouble(KEY.width.toString());
+		float height =  (float) jExit.getDouble(KEY.height.toString());
+
+		LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
+		exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
+		exit.type = jExit.optInt(KEY.type.toString());
+		exit.levelName = jExit.optString(KEY.level_name.toString());
+		exit.entry = jExit.optString(KEY.entry.toString());
+		exit.direction = jExit.optString(KEY.direction.toString());
+
+		level.gameObjects.add(exit);
+	}
+
+	private void parseItem(World world, JSONObject jItem) throws JSONException
     {
             Vector3 position = new Vector3((float) jItem.getDouble(KEY.posx.toString()), (float) jItem.getDouble(KEY.posy.toString()), 0);
 
@@ -497,24 +531,24 @@ public class LevelLoader
             if(item == null) return;
             if (jItem.has(KEY.texture_atlas.toString()))
             {
-                item.setTextureAtlas(jItem.getString(KEY.texture_atlas.toString()));
-                if (Assets.manager.isLoaded(item.getTextureAtlas()))
+                item.textureAtlas = jItem.getString(KEY.texture_atlas.toString());
+                if (Assets.manager.isLoaded(item.textureAtlas))
                 {
                     item.loadTextures();
                 }
                 else
                 {
                     throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-													   + "in [level].smclvl must also be included in [level].data (" + item.getTextureAtlas() + ")");
+													   + "in [level].smclvl must also be included in [level].data (" + item.textureAtlas + ")");
                 }
             }
-            level.getGameObjects().add(item);
+            level.gameObjects.add(item);
     }
 
 	private void parseBox(World world, JSONObject jBox) throws JSONException
     {
 		Box box = Box.initBox(world, jBox, this);
-		level.getGameObjects().add(box);
+		level.gameObjects.add(box);
     }
 	
 	/** Comparator used for sorting, sorts in ascending order (biggset z to smallest z).
@@ -524,8 +558,8 @@ public class LevelLoader
 		@Override
 		public int compare (GameObject sprite1, GameObject sprite2)
 		{
-			if(sprite1.getPosition().z > sprite2.getPosition().z) return 1;
-			if(sprite1.getPosition().z < sprite2.getPosition().z) return -1;
+			if(sprite1.position.z > sprite2.position.z) return 1;
+			if(sprite1.position.z < sprite2.position.z) return -1;
 			return 0;
 		}
 	}

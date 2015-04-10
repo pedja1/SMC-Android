@@ -1,16 +1,13 @@
 package rs.pedjaapps.smc.controller;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.*;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.model.GameObject;
-import rs.pedjaapps.smc.model.Maryo;
-import rs.pedjaapps.smc.model.World;
+import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.World;
 
 public class MarioController
 {
@@ -34,7 +31,7 @@ public class MarioController
     public MarioController(World world)
     {
         this.world = world;
-        this.maryo = world.getMario();
+        this.maryo = world.maryo;
     }
 
     // ** Key presses and touches **************** //
@@ -61,7 +58,7 @@ public class MarioController
 
     public void jumpPressed()
     {
-        if(maryo.isGrounded())
+        if(maryo.grounded)
         {
             keys.add(Keys.JUMP);
 
@@ -115,13 +112,13 @@ public class MarioController
      */
     public void update(float delta)
     {
-        maryo.setGrounded(maryo.position.y - maryo.groundY < 0.1f);
-		if(!maryo.isGrounded())
+        maryo.grounded = maryo.position.y - maryo.groundY < 0.1f;
+		if(!maryo.grounded)
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
 		}
         processInput();
-        if (maryo.isGrounded() && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+        if (maryo.grounded && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
         {
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
@@ -132,13 +129,13 @@ public class MarioController
      */
     private boolean processInput()
     {
-        Vector3 vel = maryo.getVelocity();
-        Vector3 pos = maryo.getPosition();
+        Vector3 vel = maryo.velocity;
+        Vector3 pos = maryo.position;
         if (keys.contains(Keys.JUMP))
         {
             if (!jumped && vel.y < MAX_JUMP_SPEED && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS)
             {
-                maryo.setVelocity(vel.x, vel.y += 2f);
+                maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
             }
             else
             {
@@ -148,22 +145,22 @@ public class MarioController
         if (keys.contains(Keys.LEFT))
         {
             // left is pressed
-            maryo.setFacingLeft(true);
+            maryo.facingLeft = true;
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
-            maryo.setVelocity(vel.x = -4f, vel.y);
+            maryo.velocity.set(vel.x = -4f, vel.y, maryo.velocity.z);
         }
         else if (keys.contains(Keys.RIGHT))
         {
             // right is pressed
-            maryo.setFacingLeft(false);
+            maryo.facingLeft  = false;
             if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
-            maryo.setVelocity(vel.x = +4f, vel.y);
+            maryo.velocity.set(vel.x = +4f, vel.y, maryo.velocity.z);
         }
         else if (keys.contains(Keys.DOWN))
         {
@@ -179,7 +176,7 @@ public class MarioController
                 maryo.setWorldState(Maryo.WorldState.IDLE);
             }
             //slowly decrease linear velocity on x axes
-            maryo.setVelocity(vel.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */vel.y);
+            maryo.velocity.set(vel.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */vel.y, maryo.velocity.z);
         }
         return false;
     }

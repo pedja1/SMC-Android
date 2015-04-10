@@ -1,11 +1,5 @@
 package rs.pedjaapps.smc.utility;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import rs.pedjaapps.smc.model.Maryo;
+import rs.pedjaapps.smc.object.Maryo;
 import java.util.HashMap;
 
 public class GameSaveUtility
