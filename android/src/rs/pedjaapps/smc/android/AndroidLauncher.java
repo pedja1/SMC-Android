@@ -31,6 +31,7 @@ public class AndroidLauncher extends AndroidApplication
         config.useWakelock = true;
 		config.hideStatusBar = true;
 		config.useImmersiveMode = true;
+		config.useGLSurfaceView20API18 = true;
         //config.useGL20 = true;
 		
 		game = new MaryoGame();

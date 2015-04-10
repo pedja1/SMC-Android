@@ -171,6 +171,7 @@ public class Maryo extends DynamicObject
 
     public void render(SpriteBatch spriteBatch)
     {
+		long start = System.currentTimeMillis();
         TextureRegion marioFrame;
         if(resizingAnimation != null && getStateTime() > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
         {
@@ -245,11 +246,14 @@ public class Maryo extends DynamicObject
 		{
         	spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
 		}
+		long end = System.currentTimeMillis() - start;
+		System.out.println("maryo render" + end);
     }
 
 	@Override
 	public void update(float delta)
 	{
+		long start = System.currentTimeMillis();
 		//disable godmod after timeot
 		if(godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
 		{
@@ -300,6 +304,8 @@ public class Maryo extends DynamicObject
 				position.y -= 0.1f;
 			}
 		}
+		long end = System.currentTimeMillis() - start;
+		System.out.println("maryo update" + end);
 	}
 
 	@Override
