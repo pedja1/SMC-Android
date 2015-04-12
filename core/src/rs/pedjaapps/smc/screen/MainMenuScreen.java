@@ -13,9 +13,11 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.Background;
 import rs.pedjaapps.smc.object.BackgroundColor;
 import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Level;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
@@ -67,7 +69,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
 
-        loader = new LevelLoader();
+        loader = new LevelLoader("main_menu");
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.setScale(1.3f);
@@ -83,7 +85,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		for (int i = 0; i < 40; i++)
 		{
 			SelectionAdapter.Level level = new SelectionAdapter.Level();
-			if(i == 0)level.isUnlocked = true;
+			level.isUnlocked = (i <= GameSaveUtility.getInstance().save.currentLevel);
+            if(i < Level.levels.length)level.levelId = Level.levels[i];
 			items.add(level);
 		}
 		return items;
@@ -207,7 +210,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/main_menu.data").readString());
+        Array<String[]> data = loader.parseLevelData();
 
         for (String[] s : data)
         {
@@ -243,7 +246,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(world, null, Gdx.files.internal("data/levels/main_menu.smclvl").readString());
+        loader.parseLevel(world, null);
 
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");

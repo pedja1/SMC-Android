@@ -193,8 +193,7 @@ public class SelectionAdapter
 		}
         if(touchDownLevel != null && touchDownLevel.bounds.contains(x, y))
         {
-            //TODO start level
-            mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true), false));
+            mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true, touchDownLevel.levelId), false));
             touchDownLevel.isTouched = false;
             touchDownLevel = null;
         }
@@ -219,11 +218,18 @@ public class SelectionAdapter
 
     public void touchDragged(float x, float y)
     {
-        touchDownLevel = null;
-        for (Level level : items)
-        {
-            level.isTouched = false;
-        }
+    	//convert touch point to camera point
+		x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
+		y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
+
+		if(touchDownLevel != null && !touchDownLevel.bounds.contains(x, y))
+		{
+			touchDownLevel = null;
+			for (Level level : items)
+			{
+				level.isTouched = false;
+			}
+		}
     }
 
 

@@ -2,12 +2,19 @@ package rs.pedjaapps.smc.controller;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.*;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Level;
+import rs.pedjaapps.smc.object.LevelExit;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.screen.LoadingScreen;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class MarioController
 {
@@ -49,6 +56,15 @@ public class MarioController
     public void upPressed()
     {
         keys.add(Keys.UP);
+        for(GameObject go : world.getVisibleObjects())
+        {
+            if(go instanceof LevelExit && go.body.overlaps(maryo.body))
+            {
+                String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+                return;
+            }
+        }
     }
 
     public void downPressed()

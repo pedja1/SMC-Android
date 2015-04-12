@@ -165,11 +165,18 @@ public class Box extends Sprite
             box.textureAtlas = jBox.getString(LevelLoader.KEY.texture_atlas.toString());
             if (!Assets.manager.isLoaded(box.textureAtlas))
             {
-                throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                        + "in [level].smclvl must also be included in [level].data (" + box.textureAtlas + ")");
+                if(loader.fixDependencies)
+                {
+                    loader.builder.append("atl:").append(box.textureAtlas).append("\n");
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
+                            + "in [level].smclvl must also be included in [level].data (" + box.textureAtlas + ")");
+                }
             }
         }
-        box.loadTextures();
+        if(!loader.fixDependencies)box.loadTextures();
         //addBoxItem(box, loader.getLevel());
         return box;
     }

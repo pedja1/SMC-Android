@@ -8,6 +8,8 @@ import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.SplashScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import com.badlogic.gdx.Application;
+
+import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
@@ -16,6 +18,7 @@ public class MaryoGame extends Game
 	public void create()
 	{
 		setScreen(new SplashScreen(this));
+		LevelLoader.main(new String[0]);
 	}
 
 	@Override

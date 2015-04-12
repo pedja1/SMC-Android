@@ -9,7 +9,7 @@ import rs.pedjaapps.smc.MaryoGame;
  */
 public abstract class AbstractScreen implements Screen
 {
-    protected MaryoGame game;
+    public MaryoGame game;
 
     public AbstractScreen(MaryoGame game)
 	{

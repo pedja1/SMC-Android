@@ -66,6 +66,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private int width, height;
 
+    private String levelName;
+
 	public void setGameState(GAME_STATE gameState)
 	{
 		this.gameState = gameState;
@@ -113,9 +115,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     ConfirmDialog exitDialog;
 
-    public GameScreen(MaryoGame game, boolean fromMenu)
+    public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
 		super(game);
+        this.levelName = levelName;
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
@@ -150,7 +153,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             touches.put(i, new TouchInfo());
         }
-        loader = new LevelLoader();
+        loader = new LevelLoader(levelName);
         //Gdx.graphics.setContinuousRendering(false);
 		if(fromMenu)GameSaveUtility.getInstance().startLevelFresh();
 
@@ -266,7 +269,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 			}
 			else
 			{
-				game.setScreen(new LoadingScreen(new GameScreen(game, false), false));
+				game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
 			}
 		}
 	}
@@ -438,7 +441,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData(Gdx.files.internal("data/levels/test_lvl.data").readString());
+        Array<String[]> data = loader.parseLevelData();
 
         for (String[] s : data)
         {
@@ -512,7 +515,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void afterLoadAssets()
     {
-        loader.parseLevel(world, controller, Gdx.files.internal("data/levels/test_lvl.smclvl").readString());
+        loader.parseLevel(world, controller);
         hud.afterLoadAssets();
         world.level = loader.level;
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);

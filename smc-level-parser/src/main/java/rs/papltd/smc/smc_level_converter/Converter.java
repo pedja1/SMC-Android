@@ -19,27 +19,33 @@ import javax.xml.parsers.SAXParserFactory;
  */
 public class Converter
 {
-    public static final String dataRoot = "/home/pedja/workspace/SMC/smc/data/pixmaps/";
     public static void main(String[] args)
     {
         try
         {
-            File fXmlFile = new File("/home/pedja/workspace/SMC/smc/data/levels/lvl_1.smclvl");
+            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/android/assets/data/levels/levels_smc_original/levels");
+            File[] files = levelsFolder.listFiles();
+            for(File file : files)
+            {
+                System.out.println("Processing: " + file.getName());
+                XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+                // create a SAXXMLHandler
+                SAXXMLHandler saxHandler = new SAXXMLHandler();
+                // store handler in XMLReader
+                xmlReader.setContentHandler(saxHandler);
+                // the process starts
+                FileInputStream fis = new FileInputStream(file);
+                xmlReader.parse(new InputSource(fis));
+                Level level = saxHandler.level;
 
-            XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
-            // create a SAXXMLHandler
-            SAXXMLHandler saxHandler = new SAXXMLHandler();
-            // store handler in XMLReader
-            xmlReader.setContentHandler(saxHandler);
-            // the process starts
-            xmlReader.parse(new InputSource(new FileInputStream(fXmlFile)));
-            Level level = saxHandler.level;
-
-            String levelJson = convertToJson(level);
-            //System.out.println(levelJson);
-			PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/test_lvl.smclvl", "UTF-8");
-			writer.print(levelJson);
-			writer.close();
+                String levelJson = convertToJson(level);
+                //System.out.println(levelJson);
+                PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                writer.print(levelJson);
+                writer.flush();
+                writer.close();
+                fis.close();
+            }
 
         }
         catch (SAXException | ParserConfigurationException | IOException e)
@@ -63,13 +69,24 @@ public class Converter
         jsonLevel.put("info", info);
 
         JSONObject background = new JSONObject();
-        background.put("r_1", level.backgrounds.get(0).color1_red);
-        background.put("g_1", level.backgrounds.get(0).color1_green);
-        background.put("b_1", level.backgrounds.get(0).color1_blue);
-        background.put("r_2", level.backgrounds.get(0).color2_red);
-        background.put("g_2", level.backgrounds.get(0).color2_green);
-        background.put("b_2", level.backgrounds.get(0).color2_blue);
-        background.put("texture_name", level.backgrounds.get(1).image);
+        for(Background bg : level.backgrounds)
+        {
+            if(bg.type == 103)
+            {
+                background.put("r_1", bg.color1_red);
+                background.put("g_1", bg.color1_green);
+                background.put("b_1", bg.color1_blue);
+                background.put("r_2", bg.color2_red);
+                background.put("g_2", bg.color2_green);
+                background.put("b_2", bg.color2_blue);
+            }
+            else if(bg.type == 1)
+            {
+                background.put("texture_name", bg.image);
+            }
+        }
+
+
         jsonLevel.put("background", background);
 
         JSONArray objects = new JSONArray();

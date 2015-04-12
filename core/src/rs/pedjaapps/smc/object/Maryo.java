@@ -339,10 +339,6 @@ public class Maryo extends DynamicObject
 		{
 			((Box)object).handleHitByPlayer();
 		}
-        else if(object instanceof LevelExit)
-        {
-
-        }
 	}
 
     private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)

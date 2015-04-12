@@ -9,6 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -90,6 +91,9 @@ public class SAXXMLHandler extends DefaultHandler
             case "global_effect":
             case "path":
                 //we don't need this elements
+                break;
+            case "sound":
+                //TODO parse ambient sound for levels
                 break;
             default:
                 throw new IllegalArgumentException("Unknown element found (" + qName + ")");
@@ -508,11 +512,11 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("posx".equals(name))
         {
-            tmpBackground.posx = Integer.parseInt(value);
+            tmpBackground.posx = Float.parseFloat(value);
         }
         else if("posy".equals(name))
         {
-            tmpBackground.posy = Integer.parseInt(value);
+            tmpBackground.posy = Float.parseFloat(value);
         }
         else if("speedx".equals(name))
         {
@@ -528,11 +532,11 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("const_velx".equals(name))
         {
-            tmpBackground.const_velx = Integer.parseInt(value);
+            tmpBackground.const_velx = Float.parseFloat(value);
         }
         else if("const_vely".equals(name))
         {
-            tmpBackground.const_vely = Integer.parseInt(value);
+            tmpBackground.const_vely = Float.parseFloat(value);
         }
     }
 
@@ -566,12 +570,12 @@ public class SAXXMLHandler extends DefaultHandler
                 tmpItem = null;
                 break;
             case "levelexit":
-                //TODO fix level exit
+                fixLevelExit(tmpExit);
                 level.objects.add(tmpExit);
                 tmpExit = null;
                 break;
             case "level_entry":
-                //TODO fix level entry
+                fixLevelEntry(tmpEntry);
                 level.objects.add(tmpEntry);
                 tmpEntry = null;
                 break;
@@ -684,7 +688,7 @@ public class SAXXMLHandler extends DefaultHandler
             settingsFileName = "game/box/yellow/default.settings";
             box.texture_name = "data/game/box/yellow/default.png";
         }
-        File settings = new File(Converter.dataRoot, settingsFileName);
+        File settings = new File(Const.dataRoot, settingsFileName);
         String settingsData = readFileContents(settings);
         box.colRect = getCollisionRectangle(settingsData);
     }
@@ -695,6 +699,22 @@ public class SAXXMLHandler extends DefaultHandler
         enemyStopper.posy = convertY(enemyStopper.posy, enemyStopper.height);
         enemyStopper.height = enemyStopper.height / 64;
         enemyStopper.width = enemyStopper.width / 64;
+    }
+
+    private void fixLevelExit(LevelExit exit)
+    {
+        exit.posx = exit.posx / 64;
+        exit.posy = convertY(exit.posy, exit.height);
+        exit.height = exit.height / 64;
+        exit.width = exit.width / 64;
+    }
+
+    private void fixLevelEntry(LevelEntry entry)
+    {
+        entry.posx = entry.posx / 64;
+        entry.posy = convertY(entry.posy, 12f);
+        //entry.height = entry.height / 64;
+        //entry.width = entry.width / 64;
     }
 
     private void fixEnemy(Enemy enemy)
@@ -813,7 +833,7 @@ public class SAXXMLHandler extends DefaultHandler
                         break;
 					
                 }
-				item.image = item.texture_name.substring(item.texture_name.indexOf("/") - 1, item.texture_name.length() - 1);
+				item.image = item.texture_name.substring(item.texture_name.indexOf("/"), item.texture_name.length());
                 break;
             case "fireplant":
                 item.texture_atlas = "data/game/items/fireplant.pack";
@@ -864,6 +884,55 @@ public class SAXXMLHandler extends DefaultHandler
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
         }
+        else if(sprite.image.startsWith("ground/mushroom_1/platform"))
+        {
+            if(sprite.image.contains("blue"))
+            {
+                sprite.texture_atlas = "data/ground/mushroom_1/platform/blue.pack";
+            }
+            if(sprite.image.contains("gold"))
+            {
+                sprite.texture_atlas = "data/ground/mushroom_1/platform/gold.pack";
+            }
+            if(sprite.image.contains("green"))
+            {
+                sprite.texture_atlas = "data/ground/mushroom_1/platform/green.pack";
+            }
+            if(sprite.image.contains("red"))
+            {
+                sprite.texture_atlas = "data/ground/mushroom_1/platform/red.pack";
+            }
+            if(sprite.image.contains("shaft"))
+            {
+                sprite.texture_atlas = "data/ground/mushroom_1/platform/shaft.pack";
+            }
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
+        else if(sprite.image.contains("plastic_1/screw_block"))
+        {
+            if(sprite.image.contains("blue"))
+            {
+                sprite.texture_atlas = "data/ground/plastic_1/screw_block_blue.pack";
+            }
+            if(sprite.image.contains("grey"))
+            {
+                sprite.texture_atlas = "data/ground/plastic_1/screw_block_grey.pack";
+            }
+            if(sprite.image.contains("green"))
+            {
+                sprite.texture_atlas = "data/ground/plastic_1/screw_block_green.pack";
+            }
+            if(sprite.image.contains("red"))
+            {
+                sprite.texture_atlas = "data/ground/plastic_1/screw_block_red.pack";
+            }
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
+        else if(sprite.image.contains("trees/balloon_tree"))
+        {
+            sprite.texture_atlas = "data/ground/green_2/balloon_tree.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
         else if(sprite.image.contains("box/yellow"))
         {
             //TODO fix this and everything else
@@ -882,7 +951,7 @@ public class SAXXMLHandler extends DefaultHandler
             sprite.hasFlipData = true;
             sprite.flipX = true;
         }
-        else if(sprite.image.contains("1_ending_left"))
+        else if(sprite.image.contains("1_ending_left") && !sprite.image.contains("1_ending_left_up"))
         {
 			sprite.image = sprite.image.replace("_left", "");
             sprite.texture_name = "data/" + sprite.image;
@@ -915,6 +984,13 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.hasFlipData = true;
                 sprite.flipX = true;
             }
+        }
+        else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
+        {
+            sprite.texture_name = "data/" + sprite.image;
+            sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
+            sprite.hasFlipData = true;
+            sprite.flipX = true;
         }
         else
         {
@@ -972,9 +1048,10 @@ public class SAXXMLHandler extends DefaultHandler
 
     private String readFileContents(File file)
     {
+        BufferedReader br = null;
         try
         {
-			BufferedReader br = new BufferedReader(new FileReader(file));
+            br = new BufferedReader(new FileReader(file));
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -989,6 +1066,17 @@ public class SAXXMLHandler extends DefaultHandler
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                if (br != null)
+                {
+                    br.close();
+                }
+            }
+            catch (IOException ignore) {}
         }
         return null;
     }
