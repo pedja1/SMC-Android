@@ -6,7 +6,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -332,11 +331,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             object.render(spriteBatch);
         }
+        world.rectPool.free(maryoBWO);
     }
 
 	private void drawDebug() 
 	{
-        //TODO ALLOC "new Color"
 		// render blocks
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -344,20 +343,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		{
             Rectangle body = go.body;
             Rectangle bounds = go.bounds;
-            shapeRenderer.setColor(new Color(0, 1, 0, 1));
+            shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.rect(body.x, body.y, body.width, body.height);
-            shapeRenderer.setColor(new Color(1, 0, 0, 1));
+            shapeRenderer.setColor(1, 0, 0, 1);
             shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 		// render maryo
 		Maryo maryo = world.maryo;
 		Rectangle body = maryo.body;
         Rectangle bounds = maryo.bounds;
-		shapeRenderer.setColor(new Color(0, 1, 0, 1));
+		shapeRenderer.setColor(0, 1, 0, 1);
 		shapeRenderer.rect(body.x, body.y, body.width, body.height);
-        shapeRenderer.setColor(new Color(1, 0, 0, 1));
+        shapeRenderer.setColor(1, 0, 0, 1);
         shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-        shapeRenderer.setColor(new Color(0, 0, 1, 1));
+        shapeRenderer.setColor(0, 0, 1, 1);
         shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect.height);
 		shapeRenderer.end();
 	}
@@ -606,7 +605,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
-        //TODO ALLOC "new Vector2"
         if(exitDialog.visible)
         {
             exitDialog.touchDown(x, invertY(y));
@@ -618,27 +616,28 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             return false;
         if (pointer < 5)
         {
-            if (Intersector.isPointInPolygon(hud.rightPolygon, new Vector2(x, invertY(y))))//is right
+            Vector2 vect = world.vector2Pool.obtain();
+            if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
             {
                 controller.rightPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
                 touches.get(pointer).clickArea = HUD.Key.right;
                 hud.rightPressed();
             }
-            if (Intersector.isPointInPolygon(hud.leftPolygon, new Vector2(x, invertY(y))))//is left
+            if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
             {
                 controller.leftPressed();
                 //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
                 touches.get(pointer).clickArea = HUD.Key.left;
                 hud.leftPressed();
             }
-            if (Intersector.isPointInPolygon(hud.upPolygon, new Vector2(x, invertY(y))))//is top
+            if (Intersector.isPointInPolygon(hud.upPolygon, vect.set(x, invertY(y))))//is top
             {
                 controller.upPressed();
                 touches.get(pointer).clickArea = HUD.Key.up;
                 hud.upPressed();
             }
-            if (Intersector.isPointInPolygon(hud.downPolygon, new Vector2(x, invertY(y))))//is bottom
+            if (Intersector.isPointInPolygon(hud.downPolygon, vect.set(x, invertY(y))))//is bottom
             {
                 controller.downPressed();
                 touches.get(pointer).clickArea = HUD.Key.down;
@@ -670,6 +669,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 				touches.get(pointer).clickArea = HUD.Key.play;
                 hud.playPressed();
             }
+            world.vector2Pool.free(vect);
         }
 
         return true;

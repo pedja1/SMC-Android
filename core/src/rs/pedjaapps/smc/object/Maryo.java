@@ -302,6 +302,7 @@ public class Maryo extends DynamicObject
 			{
 				position.y -= 0.1f;
 			}
+            world.rectPool.free(rect);
 		}
 	}
 

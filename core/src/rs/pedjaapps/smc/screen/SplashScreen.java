@@ -66,10 +66,9 @@ public class SplashScreen implements Screen
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //TODO ALLOC "new Collor"
         batch.setProjectionMatrix(camera.combined);
         bgRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        bgRenderer.setColor(new Color(255, 255, 255, 1));
+        bgRenderer.setColor(255, 255, 255, 1);
         bgRenderer.rect(0, 0, width, height);
         bgRenderer.end();
 

@@ -1,10 +1,10 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
-import java.util.ArrayList;
-import java.util.List;
+
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -21,8 +21,9 @@ public class World
      * A world has a level through which Mario needs to go through *
      */
     public Level level;
-    private Array<GameObject> visibleObjects;
-	
+    private Array<GameObject> visibleObjects = new Array<>(50);
+    private Array<GameObject> tmpObjects = new Array<>();
+
 	/**
 	 * 
 	 */
@@ -39,6 +40,15 @@ public class World
 			return new Rectangle();
 		}
 	};
+
+    public Pool<Vector2> vector2Pool = new Pool<Vector2>()
+    {
+        @Override
+        protected Vector2 newObject()
+        {
+            return new Vector2();
+        }
+    };
     
     /**
      * Return only the blocks that need to be drawn *
@@ -46,8 +56,7 @@ public class World
      */
     public Array<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
     {
-        //TODO ALLOC
-        Array<GameObject> objects = new Array<>();
+        visibleObjects.clear();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
@@ -59,17 +68,16 @@ public class World
             Rectangle bounds = object.bounds;
             if (bounds.overlaps(worldBounds)/* || object instanceof Enemy*/)
             {
-                objects.add(object);
+                visibleObjects.add(object);
             }
         }
-        visibleObjects = objects;
-        return objects;
+        rectPool.free(worldBounds);
+        return visibleObjects;
     }
 
-	public List<GameObject> getSurroundingObjects(GameObject center, float offset)
+	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
     {
-        //TODO ALLOC
-        List<GameObject> objects = new ArrayList<GameObject>();
+        tmpObjects.clear();
         float wX = center.body.x - offset;
         float wY = center.body.y - offset;
         float wW = center.body.x + center.body.width + offset * 2;
@@ -81,10 +89,11 @@ public class World
             Rectangle bounds = object.bounds;
             if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
             {
-                objects.add(object);
+                tmpObjects.add(object);
             }
         }
-        return objects;
+        rectPool.free(offsetBounds);
+        return tmpObjects;
     }
 	
 	public Rectangle createMaryoRectWithOffset(float offset)
@@ -125,6 +134,8 @@ public class World
         float wH = Constants.CAMERA_HEIGHT + 1;
         Rectangle worldBounds = rectPool.obtain();
         worldBounds.set(wX, wY, wW, wH);
-        return object.bounds.overlaps(worldBounds);
+        boolean result = object.bounds.overlaps(worldBounds);
+        rectPool.free(worldBounds);
+        return result;
     }
 }

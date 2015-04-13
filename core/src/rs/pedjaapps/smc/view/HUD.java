@@ -280,8 +280,6 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-            //TODO ALLOC String.format creates new Formatter, ArrayList, new Matcher each time. That is a lot of alloc in one game loop iteration
-			//String points = String.format("Points %08d", GameSaveUtility.getInstance().save.points);
 			String points = formatPointsString(GameSaveUtility.getInstance().save.points);
 			BitmapFont.TextBounds bounds = font.getBounds(points);
 			float pointsX = C_W * 0.03f;
@@ -321,40 +319,20 @@ public class HUD
 			font.draw(batch, lifes, lifesX, pointsY);
 			
 			batch.end();
-
-            //drawDebug();
 		}
 	}
 
     private String formatPointsString(int points)
     {
-        //TODO is this fast enough for game loop
+        //TODO is this fast enough for game loop?
         String pointsPrefix = "Points ";
         String pointsString = points + "";
         int zeroCount = 8 - pointsString.length();
         for(int i = 0; i < zeroCount; i++)
         {
-            pointsString += "0";
+            pointsPrefix += "0";
         }
         return pointsPrefix + pointsString;
-    }
-
-    private void drawDebug()
-    {
-        //TODO ALLOC "new float[]"
-        shapeRenderer.setProjectionMatrix(cam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 0, 0, 1);
-        float[] vertices = new float[rightPolygon.size * 2];
-        int offset = 0;
-        for(Vector2 vect : rightPolygon)
-        {
-            vertices[offset] = vect.x;
-            vertices[offset + 1] = vect.y;
-            offset += 2;
-        }
-        shapeRenderer.polygon(vertices);
-        shapeRenderer.end();
     }
 
     private void drawPauseOverlay()
