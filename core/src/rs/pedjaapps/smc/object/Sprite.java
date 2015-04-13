@@ -1,7 +1,11 @@
 package rs.pedjaapps.smc.object;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+
+import org.json.JSONObject;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -10,6 +14,7 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
+    public boolean hasFlip, flipX, flipY;
 
     @Override
     public void render(SpriteBatch spriteBatch)
@@ -25,9 +30,77 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
+        //load all assets
+        TextureAtlas atlas = null;
+        if (textureAtlas != null && textureAtlas.length() > 0)
+        {
+            atlas = Assets.manager.get(textureAtlas);
+        }
 
+        if (hasFlip)
+        {
+            String newTextureName = null;
+            if (flipX && !flipY)
+            {
+                newTextureName = textureName + "-flip_x";
+            }
+            else if (flipY && !flipX)
+            {
+                newTextureName = textureName + "-flip_y";
+            }
+            else if (flipY && flipX)
+            {
+                newTextureName = textureName + "-flip_xy";
+            }
+
+            if (newTextureName != null && Assets.loadedRegions.get(newTextureName) == null)
+            {
+                TextureRegion orig;
+                if (Assets.loadedRegions.get(textureName) == null)
+                {
+                    if (atlas == null)
+                    {
+                        orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
+                    }
+                    else
+                    {
+                        orig = atlas.findRegion(textureName.split(":")[1]);
+                    }
+                    Assets.loadedRegions.put(textureName, orig);
+                }
+                else
+                {
+                    orig = Assets.loadedRegions.get(textureName);
+                }
+                TextureRegion flipped = new TextureRegion(orig);
+                flipped.flip(flipX, flipY);
+                textureName = newTextureName;
+                Assets.loadedRegions.put(newTextureName, flipped);
+
+            }
+            else
+            {
+                textureName = newTextureName;
+            }
+        }
+        else
+        {
+            if (Assets.loadedRegions.get(textureName) == null)
+            {
+                TextureRegion textureRegion;
+                if (atlas == null)
+                {
+                    textureRegion = new TextureRegion(Assets.manager.get(textureName, Texture.class));
+                }
+                else
+                {
+                    textureRegion = atlas.findRegion(textureName.split(":")[1]);
+                }
+                Assets.loadedRegions.put(textureName, textureRegion);
+            }
+        }
     }
 
     /**

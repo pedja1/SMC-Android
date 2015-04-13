@@ -30,7 +30,7 @@ public class Flyon extends Enemy
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();

@@ -3,6 +3,7 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -66,7 +67,7 @@ public class Box extends Sprite
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         txDisabled = new TextureRegion(Assets.manager.get("data/game/box/brown1_1.png", Texture.class));
         if (animation == null || "default".equalsIgnoreCase(animation))
@@ -160,28 +161,22 @@ public class Box extends Sprite
         box.item = jBox.optInt(LevelLoader.KEY.item.toString(), 0);
 
         box.textureName = jBox.optString(LevelLoader.KEY.texture_name.toString(), null);
+        if(box.textureAtlas != null && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
+        {
+            Assets.manager.load(box.textureName, Texture.class, Assets.textureParameter);
+        }
         if (jBox.has(LevelLoader.KEY.texture_atlas.toString()))
         {
             box.textureAtlas = jBox.getString(LevelLoader.KEY.texture_atlas.toString());
-            if (!Assets.manager.isLoaded(box.textureAtlas))
-            {
-                if(loader.fixDependencies)
-                {
-                    loader.builder.append("atl:").append(box.textureAtlas).append("\n");
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data (" + box.textureAtlas + ")");
-                }
-            }
+            Assets.manager.load(box.textureAtlas, TextureAtlas.class);
         }
-        if(!loader.fixDependencies)box.loadTextures();
+        Assets.manager.load("data/game/box/yellow/default.png", Texture.class, Assets.textureParameter);
+        addBoxItem(box, true);
         //addBoxItem(box, loader.getLevel());
         return box;
     }
 
-    private static void addBoxItem(Box box)
+    private static void addBoxItem(Box box, boolean loadAssets)
     {
         //create item contained in box
         if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
@@ -190,33 +185,62 @@ public class Box extends Sprite
                         || GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.ice))))
         {
             box.item = Item.TYPE_MUSHROOM_DEFAULT;
-            createMushroom(box);
+            createMushroom(box, loadAssets);
         }
         else if(box.item == Item.TYPE_GOLDPIECE)
         {
-            createCoin(box);
+            if(loadAssets)
+            {
+                Assets.manager.load(Coin.DEF_ATL, TextureAtlas.class);
+            }
+            else
+            {
+                createCoin(box);
+            }
         }
         else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
                 || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_GHOST
                 || box.item == Item.TYPE_MUSHROOM_POISON)
         {
-            createMushroom(box);
+            createMushroom(box, loadAssets);
         }
         else if(box.item == Item.TYPE_FIREPLANT)
         {
-            createFireplant(box);
+            if(loadAssets)
+            {
+                Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
+                Assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+            }
+            else
+            {
+                createFireplant(box);
+            }
         }
         else if(box.item == Item.TYPE_STAR)
         {
+            if(loadAssets)
+            {
+                //Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
+            }
+            else
+            {
 
+            }
         }
         else if(box.item == Item.TYPE_MOON)
         {
-            createMoon(box);
+            if(loadAssets)
+            {
+                Assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
+            }
+            else
+            {
+                createMoon(box);
+            }
         }
     }
 
-    public static void createMushroom(Box box)
+    public static void createMushroom(Box box, boolean loadAssets)
     {
         Mushroom mushroom;
         switch (box.item)
@@ -241,7 +265,14 @@ public class Box extends Sprite
 
         mushroom.visible = false;
 
-        box.itemObject = mushroom;
+        if(loadAssets)
+        {
+            Assets.manager.load(mushroom.textureName, Texture.class, Assets.textureParameter);
+        }
+        else
+        {
+            box.itemObject = mushroom;
+        }
     }
 
     public static void createCoin(Box box)
@@ -249,15 +280,7 @@ public class Box extends Sprite
         Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position));
         String ta = Coin.DEF_ATL;
         coin.textureAtlas = ta;
-        if (Assets.manager.isLoaded(coin.textureAtlas))
-        {
-            coin.loadTextures();
-        }
-        else
-        {
-            throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                    + "in [level].smclvl must also be included in [level].data (" + coin.textureAtlas + ")");
-        }
+        coin.initAssets();
         coin.collectible = false;
         coin.visible = false;
 
@@ -267,15 +290,7 @@ public class Box extends Sprite
     public static void createFireplant(Box box)
     {
         Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
-        if (Assets.manager.isLoaded(fireplant.textureAtlas))
-        {
-            fireplant.loadTextures();
-        }
-        else
-        {
-            throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                    + "in [level].smclvl must also be included in [level].data (" + fireplant.textureAtlas + ")");
-        }
+        fireplant.initAssets();
         fireplant.visible = false;
 
         box.itemObject = fireplant;
@@ -284,15 +299,7 @@ public class Box extends Sprite
     public static void createMoon(Box box)
     {
         Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position));
-        if (Assets.manager.isLoaded(moon.textureAtlas))
-        {
-            moon.loadTextures();
-        }
-        else
-        {
-            throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                    + "in [level].smclvl must also be included in [level].data (" + moon.textureAtlas + ")");
-        }
+        moon.initAssets();
         moon.visible = false;
 
         box.itemObject = moon;
@@ -308,7 +315,7 @@ public class Box extends Sprite
             if (usableCount != -1) usableCount--;
             hitByPlayer = true;
             velocity.y = 3f;
-            addBoxItem(this/*, world.getLevel()*/);
+            addBoxItem(this, false);
             if (itemObject != null)
             {
                 itemObject.popOutFromBox(position.y + bounds.height);
@@ -339,14 +346,14 @@ public class Box extends Sprite
     @Override
     public void update(float delta)
     {
-
         if (itemObject != null && world.isObjectVisible(itemObject, true))
         {
             itemObject.update(delta);
         }
         else
         {
-            itemObject = null;
+            if(!(itemObject instanceof Fireplant))
+                itemObject = null;
         }
         if (hitByPlayer)
         {

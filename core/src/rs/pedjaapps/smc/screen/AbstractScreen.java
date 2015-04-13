@@ -40,10 +40,12 @@ public abstract class AbstractScreen implements Screen
     {
         game.exit();
     }
-	
+
+    /**
+     * Override this method to add assets to loading queue using AssetManager.load()*/
 	public abstract void loadAssets();
 
     /**
      * Called after after all assets has been loaded, use it to find regions from atlases for example*/
-    public abstract void afterLoadAssets();
+    public abstract void onAssetsLoaded();
 }

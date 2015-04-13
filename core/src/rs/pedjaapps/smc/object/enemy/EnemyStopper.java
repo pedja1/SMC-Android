@@ -26,7 +26,7 @@ public class EnemyStopper extends GameObject
     }
 
     @Override
-	public void loadTextures()
+	public void initAssets()
 	{
 		// TODO: Implement this method
 	}

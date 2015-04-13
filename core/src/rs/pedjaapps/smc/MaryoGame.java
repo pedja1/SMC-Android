@@ -18,7 +18,6 @@ public class MaryoGame extends Game
 	public void create()
 	{
 		setScreen(new SplashScreen(this));
-		LevelLoader.main(new String[0]);
 	}
 
 	@Override

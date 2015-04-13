@@ -29,7 +29,7 @@ public class LevelEntry extends GameObject
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         //invisible
     }

@@ -73,5 +73,5 @@ public abstract class GameObject
 
     public abstract void render(SpriteBatch spriteBatch);
     public abstract void update(float delta);
-    public abstract void loadTextures();
+    public abstract void initAssets();
 }

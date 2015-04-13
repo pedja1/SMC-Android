@@ -162,7 +162,7 @@ public class MarioController
         {
             // left is pressed
             maryo.facingLeft = true;
-            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
@@ -172,7 +172,7 @@ public class MarioController
         {
             // right is pressed
             maryo.facingLeft  = false;
-            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
                 maryo.setWorldState(Maryo.WorldState.WALKING);
             }
@@ -180,14 +180,14 @@ public class MarioController
         }
         else if (keys.contains(Keys.DOWN))
         {
-            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
                 maryo.setWorldState(Maryo.WorldState.DUCKING);
             }
         }
         else
         {
-            if (!maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
+            if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
                 maryo.setWorldState(Maryo.WorldState.IDLE);
             }

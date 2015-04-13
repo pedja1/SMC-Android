@@ -110,7 +110,7 @@ public class Maryo extends DynamicObject
         bounds.y = body.y;
     }
 
-    public void loadTextures()
+    public void initAssets()
     {
         MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ghost, MaryoState.ice};
         for(MaryoState ms : states)

@@ -46,7 +46,8 @@ public class World
      */
     public Array<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
     {
-        Array<GameObject> objects = new Array<GameObject>();
+        //TODO ALLOC
+        Array<GameObject> objects = new Array<>();
         float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
@@ -67,6 +68,7 @@ public class World
 
 	public List<GameObject> getSurroundingObjects(GameObject center, float offset)
     {
+        //TODO ALLOC
         List<GameObject> objects = new ArrayList<GameObject>();
         float wX = center.body.x - offset;
         float wY = center.body.y - offset;

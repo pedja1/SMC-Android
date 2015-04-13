@@ -55,7 +55,7 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> rightFrames = /*atlas.getRegions();//*/new Array<TextureRegion>();

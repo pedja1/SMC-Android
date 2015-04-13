@@ -27,7 +27,7 @@ public class Moon extends Item
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Animation animation = new Animation(2f, atlas.getRegions());

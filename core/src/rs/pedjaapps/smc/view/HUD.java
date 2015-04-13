@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.Formatter;
 import java.util.HashSet;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.World;
@@ -178,7 +180,7 @@ public class HUD
 		
 	}
 
-    public void afterLoadAssets()
+    public void initAssets()
 	{
 		TextureAtlas atlas = Assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		pause = atlas.findRegion("pause");
@@ -278,7 +280,9 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			String points = String.format("Points %08d", GameSaveUtility.getInstance().save.points);
+            //TODO ALLOC String.format creates new Formatter, ArrayList, new Matcher each time. That is a lot of alloc in one game loop iteration
+			//String points = String.format("Points %08d", GameSaveUtility.getInstance().save.points);
+			String points = formatPointsString(GameSaveUtility.getInstance().save.points);
 			BitmapFont.TextBounds bounds = font.getBounds(points);
 			float pointsX = C_W * 0.03f;
 			float pointsY = bounds.height / 2 + maryoLR.y + maryoLR.height / 2;
@@ -322,8 +326,22 @@ public class HUD
 		}
 	}
 
+    private String formatPointsString(int points)
+    {
+        //TODO is this fast enough for game loop
+        String pointsPrefix = "Points ";
+        String pointsString = points + "";
+        int zeroCount = 8 - pointsString.length();
+        for(int i = 0; i < zeroCount; i++)
+        {
+            pointsString += "0";
+        }
+        return pointsPrefix + pointsString;
+    }
+
     private void drawDebug()
     {
+        //TODO ALLOC "new float[]"
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(1, 0, 0, 1);

@@ -40,7 +40,7 @@ public class Coin extends Item
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = new Array<TextureAtlas.AtlasRegion>();

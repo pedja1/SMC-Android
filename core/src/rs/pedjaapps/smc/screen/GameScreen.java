@@ -336,6 +336,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
 	private void drawDebug() 
 	{
+        //TODO ALLOC "new Color"
 		// render blocks
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -441,23 +442,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData();
-
-        for (String[] s : data)
-        {
-            if (LevelLoader.isTexture(s[0]))
-            {
-                Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
-            }
-            else if(LevelLoader.isParticle(s[0]))
-            {
-                Assets.manager.load(s[1], ParticleEffect.class, Assets.particleEffectParameter);
-            }
-            else
-            {
-                Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
-            }
-        }
+        loader.parseLevel(world, controller);
         for(Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
@@ -485,6 +470,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/item/mushroom_blue.wav", Sound.class);
         Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
         Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
+
+        Assets.manager.load("data/sounds/enemy/furball/die.ogg", Sound.class);
         //Assets.manager.load("data/sounds/item/feather.wav", Sound.class);
         //TODO this is missing somehow
 
@@ -513,16 +500,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public void afterLoadAssets()
+    public void onAssetsLoaded()
     {
-        loader.parseLevel(world, controller);
-        hud.afterLoadAssets();
+        hud.initAssets();
         world.level = loader.level;
 		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
-        exitDialog.afterLoadAssets();
+        exitDialog.initAssets();
 
         debugFont = Assets.manager.get("debug.ttf");
         debugFont.setColor(1, 0, 0, 1);
+
+        for(GameObject go : loader.level.gameObjects)
+            go.initAssets();
     }
 
     // * InputProcessor methods ***************************//
@@ -617,6 +606,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
+        //TODO ALLOC "new Vector2"
         if(exitDialog.visible)
         {
             exitDialog.touchDown(x, invertY(y));

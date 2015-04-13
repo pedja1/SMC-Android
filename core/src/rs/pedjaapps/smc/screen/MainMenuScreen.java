@@ -202,7 +202,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Assets.dispose();
         bgColor.dispose();
         batch.dispose();
-        bgr1.dispose();
         exitDialog.dispose();
         music.stop();
     }
@@ -210,44 +209,26 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        Array<String[]> data = loader.parseLevelData();
-
-        for (String[] s : data)
-        {
-            if (LevelLoader.isTexture(s[0]))
-            {
-                Assets.manager.load(s[1], Texture.class, Assets.textureParameter);
-            }
-            else if(LevelLoader.isParticle(s[0]))
-            {
-                Assets.manager.load(s[1], ParticleEffect.class, Assets.particleEffectParameter);
-            }
-            else
-            {
-                Assets.manager.load(s[1], LevelLoader.getTextureClassForKey(s[0]));
-            }
-        }
+        loader.parseLevel(world, null);
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
-		Assets.manager.load("data/hud/option.png", Texture.class);
-		Assets.manager.load("data/hud/option_selected.png", Texture.class);
+		Assets.manager.load("data/hud/option.png", Texture.class, Assets.textureParameter);
+		Assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, Assets.textureParameter);
+		Assets.manager.load("data/hud/option_selected.png", Texture.class, Assets.textureParameter);
+		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         cloudsPEffect.start();
 
-		Assets.manager.load("data/fonts/dejavu_sans.png", Texture.class);
-		Assets.manager.load("data/fonts/dejavu_sans.fnt", BitmapFont.class);
-		Assets.manager.load("data/hud/lock.png", Texture.class);
+        Assets.manager.load("data/hud/lock.png", Texture.class, Assets.textureParameter);
         exitDialog.loadAssets();
 		
     }
 
     @Override
-    public void afterLoadAssets()
+    public void onAssetsLoaded()
     {
-        loader.parseLevel(world, null);
-
         TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
         playP = controlsAtlas.findRegion("play-pressed");
@@ -268,9 +249,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        Texture bgTexture = Assets.manager.get("data/game/background/more_hills.png");
-        bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        bgr1 = new Background(new Vector2(0, 0), bgTexture);
+        bgr1 = new Background(new Vector2(0, 0), "data/game/background/more_hills.png");
         bgr1.width = 8.7f;
         bgr1.height = 4.5f;
         bgr2 = new Background(bgr1);
@@ -289,11 +268,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
         Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));
 
-
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 
-		selectionAdapter.loadAssets();
-        exitDialog.afterLoadAssets();
+		selectionAdapter.initAssets();
+        exitDialog.initAssets();
+
+        for(GameObject go : loader.level.gameObjects)
+            go.initAssets();
     }
 
     @Override

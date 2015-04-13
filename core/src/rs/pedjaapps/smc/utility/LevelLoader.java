@@ -2,26 +2,16 @@ package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,9 +42,9 @@ import rs.pedjaapps.smc.object.items.Item;
  */
 public class LevelLoader
 {
+    public static final Pattern TXT_NAME_IN_ATLAS = Pattern.compile(".+\\.pack:.+");
     public Level level;
-    public boolean fixDependencies = false;
-    public final StringBuilder builder;
+    boolean levelParsed = false;
 
     public enum KEY
     {
@@ -63,30 +53,6 @@ public class LevelLoader
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class,
         massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
         force_best_item, max_downgrade_count, direction, level_name, name, camera_motion, entry
-    }
-
-    private enum DATA_KEY
-    {
-        /**
-         * Texture
-         */
-        txt,
-        /**
-         * TextureAtlas
-         */
-        atl,
-        /**
-         * Music
-         */
-        mus,
-        /**
-         * Sound
-         */
-        snd,
-        /**
-         * PartcileEfect
-         */
-        pce
     }
 
     private enum ObjectClass
@@ -99,115 +65,20 @@ public class LevelLoader
     private static final float m_pos_z_front_passive_start = 0.1f;
     private static final float m_pos_z_halfmassive_start = 0.04f;
 
-    public static void main(String[] args)
-    {
-        String levelName = "lvl_2";
-        File file = new File("/home/pedja/workspace/SMC-Android/android/assets/data/levels", levelName + Level.LEVEL_DATA_EXT);
-        LevelLoader loader = new LevelLoader(levelName, true);
-        loader.parseLevel(null, null);
-
-        Array<String[]> existingData = loader.parseLevelData();
-        Array<String[]> newData = loader.parseLevelData(loader.builder.toString());
-        Set<String> set = new HashSet<>();
-        addArrayToSet(set, existingData);
-        addArrayToSet(set, newData);
-
-        String data = setString(set);
-
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(file, false))))
-        {
-            out.println();
-            out.println(data);
-        }
-        catch (IOException e)
-        {
-            //exception handling left as an exercise for the reader
-            e.printStackTrace();
-        }
-    }
-
-    public static void addArrayToSet(Set<String> set, Array<String[]> array)
-    {
-        for(String[] strings : array)
-        {
-            set.add(strings[0] + ":" + strings[1]);
-        }
-    }
-
-    public static String setString(Set<String> set)
-    {
-        StringBuilder builder = new StringBuilder();
-        for(String s : set)
-        {
-            builder.append(s).append("\n");
-        }
-        return builder.toString();
-    }
-
-    private static String readFileContents(File file)
-    {
-        BufferedReader br = null;
-        try
-        {
-            br = new BufferedReader(new FileReader(file));
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null)
-            {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            return sb.toString();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                if (br != null)
-                {
-                    br.close();
-                }
-            }
-            catch (IOException ignore) {}
-        }
-        return null;
-    }
-
-
-    public LevelLoader(String levelName)
-    {
-        this(levelName, false);
-    }
-
     /**
      * Use this constructor only from pc when you want to automatically fix assets dependencies
      */
-    private LevelLoader(String levelName, boolean fixDependencies)
+    public LevelLoader(String levelName)
     {
         level = new Level(levelName);
-        this.fixDependencies = fixDependencies;
-        builder = new StringBuilder();
     }
 
-    public void parseLevel(World world, MarioController controller)
+    public synchronized void parseLevel(World world, MarioController controller)
     {
         JSONObject jLevel;
         try
         {
-            if(fixDependencies)
-            {
-                jLevel = new JSONObject(readFileContents(new File("/home/pedja/workspace/SMC-Android/android/assets/data/levels", level.levelName + Level.LEVEL_EXT)));
-            }
-            else
-            {
-                jLevel = new JSONObject(Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_EXT).readString());
-            }
+            jLevel = new JSONObject(Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_EXT).readString());
             parseInfo(jLevel);
             parseBg(jLevel);
             parseGameObjects(world, controller, jLevel);
@@ -217,6 +88,7 @@ public class LevelLoader
             e.printStackTrace();
             throw new RuntimeException("Unable to load level! " + e.getMessage());
         }
+        levelParsed = true;
     }
 
     private void parseGameObjects(World world, MarioController controller, JSONObject level) throws JSONException
@@ -258,62 +130,6 @@ public class LevelLoader
         Collections.sort(this.level.gameObjects, new ZSpriteComparator());
     }
 
-    public Array<String[]> parseLevelData()
-    {
-        String levelData = fixDependencies ? readFileContents(new File("/home/pedja/workspace/SMC-Android/android/assets/data/levels", level.levelName + Level.LEVEL_DATA_EXT)) : Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_DATA_EXT).readString();
-        return parseLevelData(levelData);
-    }
-
-    public Array<String[]> parseLevelData(String levelData)
-    {
-        if (levelData == null || levelData.trim().isEmpty())
-        {
-            if(fixDependencies)
-            {
-                return new Array<>();
-            }
-            else
-            {
-                throw new IllegalArgumentException("levelData cannot be null or empty");
-            }
-        }
-
-        Array<String[]> data = new Array<String[]>();
-        String[] lines = levelData.split("\n");
-        for (String line : lines)
-        {
-            if (line.startsWith("#")) continue;//skip comments
-            String[] item = line.split(":");
-            if(item.length != 2)continue;//empty line, probably
-            if (item[0] == null || item[1] == null)// both value and key must not be null
-            {
-                throw new IllegalArgumentException("failed to read data, null");
-            }
-            else if (!isDataKeyValid(item[0]))// check if we recognize key
-            {
-                throw new IllegalArgumentException("invalid key found in data: " + item[0]);
-            }
-            else if (item[1].trim().isEmpty())//check if value is empty string
-            {
-                throw new IllegalArgumentException("value with key:" + item[0] + "is invalid.");
-            }
-            data.add(item);
-        }
-        return data;
-    }
-
-    private boolean isDataKeyValid(String key)
-    {
-        for (DATA_KEY dk : DATA_KEY.values())
-        {
-            if (key.equals(dk.toString()))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void parseInfo(JSONObject jLevel) throws JSONException
     {
         JSONObject jInfo = jLevel.getJSONObject(KEY.info.toString());
@@ -328,25 +144,10 @@ public class LevelLoader
             for (int i = 0; i < jMusic.length(); i++)
             {
                 String tmp = jMusic.getString(i);
-                if(Assets.manager.isLoaded(tmp))
-                {
-                    music.add(jMusic.getString(i));
-                }
-                else
-                {
-                    if (fixDependencies)
-                    {
-                        builder.append("mus:").append(tmp).append("\n");
-                        return;
-                    }
-                    else
-                    {
-                        throw new IllegalArgumentException("Music not found in AssetManager. Every Music used"
-                                + "in [level].smclvl must also be included in [level].data (" + tmp + ")");
-                    }
-                }
+                Assets.manager.load(tmp, Music.class);
+                if(!levelParsed)music.add(jMusic.getString(i));
             }
-            level.music = music;
+            if(!levelParsed)level.music = music;
         }
     }
 
@@ -356,28 +157,15 @@ public class LevelLoader
         {
             JSONObject jBg = jLevel.getJSONObject(KEY.background.toString());
             String textureName = jBg.getString(KEY.texture_name.toString());
-            if (Assets.manager.isLoaded(textureName))
-            {
-                Texture bgTexture = Assets.manager.get(textureName);
-                Background bg = new Background(new Vector2(0, 0), bgTexture);
-                level.bg1 = bg;
-                bg = new Background(new Vector2(Background.WIDTH, 0), bgTexture);
-                level.bg2 = bg;
-                //TODO this is stupid, we should dinamically repeat background
-            }
-            else
-            {
-                if (fixDependencies)
-                {
-                    builder.append("txt:").append(textureName).append("\n");
-                    return;
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Texture not found in AssetManager. Every Texture used"
-                            + "in [level].smclvl must also be included in [level].data (" + textureName + ")");
-                }
-            }
+            Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
+            if(levelParsed)return;
+
+            Background bg = new Background(new Vector2(0, 0), textureName);
+            level.bg1 = bg;
+            bg = new Background(new Vector2(Background.WIDTH, 0), textureName);
+            level.bg2 = bg;
+            //TODO this is stupid, we should dinamically repeat background
+
             float r1 = (float) jBg.getDouble(KEY.r_1.toString()) / 255;//convert from 0-255 range to 0-1 range
             float r2 = (float) jBg.getDouble(KEY.r_2.toString()) / 255;
             float g1 = (float) jBg.getDouble(KEY.g_1.toString()) / 255;
@@ -398,13 +186,13 @@ public class LevelLoader
 
     private void parsePlayer(JSONObject jPlayer, World world, MarioController controller) throws JSONException
     {
+        if(levelParsed)return;
         float x = (float) jPlayer.getDouble(KEY.posx.toString());
         float y = (float) jPlayer.getDouble(KEY.posy.toString());
         level.spanPosition = new Vector3(x, y, 0.0999f);
         if (controller != null)
         {
             Maryo maryo = new Maryo(world, level.spanPosition, new Vector2(0.9f, 0.9f));
-            maryo.loadTextures();
             world.maryo = maryo;
             level.gameObjects.add(maryo);
             controller.setMaryo(maryo);
@@ -413,7 +201,6 @@ public class LevelLoader
 
     private void parseSprite(World world, JSONObject jSprite) throws JSONException
     {
-
         Vector3 position = new Vector3((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()), 0);
         Sprite.Type sType = null;
         if (jSprite.has(KEY.massive_type.toString()))
@@ -451,189 +238,30 @@ public class LevelLoader
         {
             throw new IllegalArgumentException("texture name is invalid: \"" + sprite.textureName + "\"");
         }
+
+        if(!TXT_NAME_IN_ATLAS.matcher(sprite.textureName).matches())
+        {
+            Assets.manager.load(sprite.textureName, Texture.class, Assets.textureParameter);
+        }
         if (jSprite.has(KEY.is_front.toString()))
         {
             sprite.isFront = jSprite.getBoolean(KEY.is_front.toString());
         }
 
-        //load all assets
-        TextureAtlas atlas = null;
-        if (jSprite.has(KEY.texture_atlas.toString()))
+        sprite.textureAtlas = jSprite.optString(KEY.texture_atlas.toString(), null);
+        if(sprite.textureAtlas != null)
         {
-            sprite.textureAtlas = jSprite.getString(KEY.texture_atlas.toString());
-            if (Assets.manager.isLoaded(sprite.textureAtlas))
-            {
-                atlas = Assets.manager.get(sprite.textureAtlas);
-            }
-            else
-            {
-                if (fixDependencies)
-                {
-                    builder.append("atl:").append(sprite.textureAtlas).append("\n");
-                    return;
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data ("
-                            + sprite.textureAtlas + ")");
-                }
-            }
+            Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
-        boolean hasFlipData = jSprite.has(KEY.flip_data.toString());
-
-        if (hasFlipData)
+        sprite.hasFlip = jSprite.has(KEY.flip_data.toString());
+        if (sprite.hasFlip)
         {
             JSONObject flipData = jSprite.getJSONObject(KEY.flip_data.toString());
-            boolean flipX = flipData.getBoolean(KEY.flip_x.toString());
-            boolean flipY = flipData.getBoolean(KEY.flip_y.toString());
-            String newTextureName = null;
-            if (flipX && !flipY)
-            {
-                newTextureName = sprite.textureName + "-flip_x";
-            }
-            else if (flipY && !flipX)
-            {
-                newTextureName = sprite.textureName + "-flip_y";
-            }
-            else if (flipY && flipX)
-            {
-                newTextureName = sprite.textureName + "-flip_xy";
-            }
-
-            if (newTextureName != null) if (Assets.loadedRegions.get(newTextureName) == null)
-            {
-                TextureRegion orig = null;
-                if (Assets.loadedRegions.get(sprite.textureName) == null)
-                {
-                    if (atlas == null)
-                    {
-                        if (Assets.manager.isLoaded(sprite.textureName))
-                        {
-                            orig = new TextureRegion(Assets.manager.get(sprite.textureName, Texture.class));
-                        }
-                        else
-                        {
-                            if (fixDependencies)
-                            {
-                                builder.append("txt:").append(sprite.textureName).append("\n");
-                                return;
-                            }
-                            else
-                            {
-                                throw new IllegalArgumentException("Texture(" + sprite.textureName + ") not found in AssetManager. Every Texture used"
-                                        + "in [level].smclvl must also be included in [level].data (" + sprite.textureName + ")");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        orig = atlas.findRegion(sprite.textureName.split(":")[1]);
-                    }
-                    Assets.loadedRegions.put(sprite.textureName, orig);
-                }
-                else
-                {
-                    orig = Assets.loadedRegions.get(sprite.textureName);
-                }
-                TextureRegion flipped = new TextureRegion(orig);
-                flipped.flip(flipX, flipY);
-                sprite.textureName = newTextureName;
-                Assets.loadedRegions.put(newTextureName, flipped);
-
-            }
-            else
-            {
-                sprite.textureName = newTextureName;
-            }
+            sprite.flipX = flipData.getBoolean(KEY.flip_x.toString());
+            sprite.flipY = flipData.getBoolean(KEY.flip_y.toString());
         }
-        else
-        {
-            if (Assets.loadedRegions.get(sprite.textureName) == null)
-            {
-                TextureRegion textureRegion = null;
-                if (atlas == null)
-                {
-                    if (Assets.manager.isLoaded(sprite.textureName))
-                    {
-                        textureRegion = new TextureRegion(Assets.manager.get(sprite.textureName, Texture.class));
-                    }
-                    else
-                    {
-                        if (fixDependencies)
-                        {
-                            builder.append("txt:").append(sprite.textureName).append("\n");
-                            return;
-                        }
-                        else
-                        {
-                            throw new IllegalArgumentException("Texture (" + sprite.textureName + ") not found in AssetManager. Every Texture used"
-                                    + "in [level].smclvl must also be included in [level].data ( " + sprite.textureName + " )");
-                        }
-                    }
-                }
-                else
-                {
-                    textureRegion = atlas.findRegion(sprite.textureName.split(":")[1]);
-                }
-                Assets.loadedRegions.put(sprite.textureName, textureRegion);
-            }
-        }
+        if(!levelParsed)level.gameObjects.add(sprite);
 
-        level.gameObjects.add(sprite);
-
-    }
-
-    /*public Body createBody(World world, Vector2 position, float width, float height, boolean enemyFilter)
-    {
-        BodyDef groundBodyDef = new BodyDef();
-        groundBodyDef.position.set(position.x + width / 2, position.y + height / 2);
-
-		Body body = world.createBody(groundBodyDef);
-
-		PolygonShape groundBox = new PolygonShape();
-
-		groundBox.setAsBox(width / 2, height / 2);
-
-		body.createFixture(groundBox, 0.0f);
-        if(enemyFilter)body.setUserData(new Collider());
-
-		groundBox.dispose();
-        return body;
-    }*/
-
-    public static Class getTextureClassForKey(String key)
-    {
-        if (key.equals(DATA_KEY.txt.toString()))
-        {
-            return Texture.class;
-        }
-        else if (key.equals(DATA_KEY.atl.toString()))
-        {
-            return TextureAtlas.class;
-        }
-        else if (key.equals(DATA_KEY.mus.toString()))
-        {
-            return Music.class;
-        }
-        else if (key.equals(DATA_KEY.snd.toString()))
-        {
-            return Sound.class;
-        }
-        else
-        {
-            throw new IllegalArgumentException("Key: " + key + " is invalid!");
-        }
-    }
-
-    public static boolean isTexture(String key)
-    {
-        return key.equals(DATA_KEY.txt.toString());
-    }
-
-    public static boolean isParticle(String key)
-    {
-        return key.equals(DATA_KEY.pce.toString());
     }
 
     private void parseEnemy(World world, JSONObject jEnemy) throws JSONException
@@ -645,29 +273,14 @@ public class LevelLoader
         if (jEnemy.has(KEY.texture_atlas.toString()))
         {
             enemy.textureAtlas = jEnemy.getString(KEY.texture_atlas.toString());
-            if (Assets.manager.isLoaded(enemy.textureAtlas))
-            {
-                enemy.loadTextures();
-            }
-            else
-            {
-                if (fixDependencies)
-                {
-                    builder.append("atl:").append(enemy.textureAtlas).append("\n");
-                    return;
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data (" + enemy.textureAtlas + ")");
-                }
-            }
+            Assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
         }
-        level.gameObjects.add(enemy);
+        if(!levelParsed)level.gameObjects.add(enemy);
     }
 
     private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
     {
+        if(levelParsed)return;
         Vector3 position = new Vector3((float) jEnemyStopper.getDouble(KEY.posx.toString()), (float) jEnemyStopper.getDouble(KEY.posy.toString()), 0);
         float width = (float) jEnemyStopper.getDouble(KEY.width.toString());
         float height = (float) jEnemyStopper.getDouble(KEY.height.toString());
@@ -679,6 +292,7 @@ public class LevelLoader
 
     private void parseLevelEntry(World world, JSONObject jEntry) throws JSONException
     {
+        if(levelParsed)return;
         Vector3 position = new Vector3((float) jEntry.getDouble(KEY.posx.toString()), (float) jEntry.getDouble(KEY.posy.toString()), 0);
         float width = 0.2f;
         float height = 0.2f;
@@ -693,6 +307,7 @@ public class LevelLoader
 
     private void parseLevelExit(World world, JSONObject jExit) throws JSONException
     {
+        if(levelParsed)return;
         Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
         float width = (float) jExit.getDouble(KEY.width.toString());
         float height = (float) jExit.getDouble(KEY.height.toString());
@@ -716,31 +331,15 @@ public class LevelLoader
         if (jItem.has(KEY.texture_atlas.toString()))
         {
             item.textureAtlas = jItem.getString(KEY.texture_atlas.toString());
-            if (Assets.manager.isLoaded(item.textureAtlas))
-            {
-                item.loadTextures();
-            }
-            else
-            {
-                if (fixDependencies)
-                {
-                    builder.append("atl:").append(item.textureAtlas).append("\n");
-                    return;
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Atlas not found in AssetManager. Every TextureAtlas used"
-                            + "in [level].smclvl must also be included in [level].data (" + item.textureAtlas + ")");
-                }
-            }
+            Assets.manager.load(item.textureAtlas, TextureAtlas.class);
         }
-        level.gameObjects.add(item);
+        if(!levelParsed)level.gameObjects.add(item);
     }
 
     private void parseBox(World world, JSONObject jBox) throws JSONException
     {
         Box box = Box.initBox(world, jBox, this);
-        level.gameObjects.add(box);
+        if(!levelParsed)level.gameObjects.add(box);
     }
 
     /**

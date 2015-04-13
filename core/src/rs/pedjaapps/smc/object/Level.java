@@ -21,13 +21,12 @@ public class Level
 	public String levelName;
 
 	public static final String LEVEL_EXT = ".smclvl";
-	public static final String LEVEL_DATA_EXT = ".data";
 
 	public static final String[] levels = {"lvl_1", "lvl_2"};
 
 	public Level(String levelName)
 	{
-		this.gameObjects = new ArrayList<>();
+		this.gameObjects = new ArrayList<>(5000);//set initial capacity so that we avoid alloc during game loop
 		this.levelName = levelName;
 	}
 }

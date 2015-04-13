@@ -41,7 +41,7 @@ public class Turtle extends Enemy
     }
 
     @Override
-    public void loadTextures()
+    public void initAssets()
     {
         isBoss = textureAtlas.contains("red");
         TextureAtlas atlas = Assets.manager.get(textureAtlas);

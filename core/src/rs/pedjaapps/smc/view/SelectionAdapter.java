@@ -78,7 +78,7 @@ public class SelectionAdapter
 		backBounds = new Rectangle();
 	}
 
-	public void loadAssets()
+	public void initAssets()
 	{
 		txItemBg = Assets.manager.get("data/hud/option.png");
 		txItemBgSelected = Assets.manager.get("data/hud/option_selected.png");
@@ -167,6 +167,7 @@ public class SelectionAdapter
 			shapeRenderer.setProjectionMatrix(cam.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+			//TODO ALLOC "new Color"
 			shapeRenderer.setColor(new Color(0, 1, 0, 1));
 			shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
 

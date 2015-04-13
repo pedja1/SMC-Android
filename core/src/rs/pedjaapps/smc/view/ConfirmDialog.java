@@ -85,7 +85,7 @@ public class ConfirmDialog
         Assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
     }
 
-    public void afterLoadAssets()
+    public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get("data/hud/SMCLook512.pack");
         back = atlas.findRegion("ClientBrush");

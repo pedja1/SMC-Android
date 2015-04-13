@@ -63,14 +63,4 @@ public class Assets
 		manager.clear();
     }
 
-    public enum TR
-    {
-
-    }
-
-    public enum Asset
-    {
-
-    }
-
 }
