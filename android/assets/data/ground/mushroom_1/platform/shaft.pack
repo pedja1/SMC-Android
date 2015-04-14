@@ -1,9 +1,9 @@
 
 shaft.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
-shaft-bottom
+shaft
   rotate: false
   xy: 2, 2
   size: 64, 64
@@ -34,6 +34,13 @@ shaft-riffle-top
 shaft-top
   rotate: false
   xy: 266, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+shaft_bottom
+  rotate: false
+  xy: 332, 2
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

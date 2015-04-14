@@ -10,8 +10,8 @@ public class TextureAtlasGenerator
 {
     public static void main(String[] args)
     {
-        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/game/items/fireplant";
-        TexturePacker2.process(path, path, "fireplant.pack");
+        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/ground/mushroom_1/platform/tmp";
+        TexturePacker2.process(path, path, "shaft.pack");
     }
 }
 
