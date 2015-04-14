@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -164,6 +165,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
 		music = Assets.manager.get(loader.level.music.first());
         if(Assets.playMusic)music.play();
+		GLProfiler.enable();
     }
 
     @Override
@@ -215,6 +217,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 			world.level.gameObjects.add(obj);
 		}
         world.newObjects.clear();
+        GLProfiler.reset();
     }
 
 	private void handleGameOver(float delta)
@@ -377,6 +380,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
             + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
             + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
+            + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
+            + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
             + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
