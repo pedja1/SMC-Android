@@ -20,7 +20,7 @@ public class Sprite extends GameObject
     public void render(SpriteBatch spriteBatch)
     {
 		TextureRegion region = Assets.loadedRegions.get(textureName);
-		Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
+		if (region != null)Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
     }
 
     @Override
@@ -55,35 +55,33 @@ public class Sprite extends GameObject
                 newTextureName = textureName + "-flip_xy";
             }
 
-            if (newTextureName != null && Assets.loadedRegions.get(newTextureName) == null)
+            if (newTextureName != null)
             {
-                TextureRegion orig;
-                if (Assets.loadedRegions.get(textureName) == null)
-                {
-                    if (atlas == null)
-                    {
-                        orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
-                    }
-                    else
-                    {
-                        orig = atlas.findRegion(textureName.split(":")[1]);
-                    }
-                    Assets.loadedRegions.put(textureName, orig);
-                }
-                else
-                {
-                    orig = Assets.loadedRegions.get(textureName);
-                }
-                TextureRegion flipped = new TextureRegion(orig);
-                flipped.flip(flipX, flipY);
-                textureName = newTextureName;
-                Assets.loadedRegions.put(newTextureName, flipped);
-
-            }
-            else
-            {
-                textureName = newTextureName;
-            }
+				if(Assets.loadedRegions.get(newTextureName) == null)
+				{
+					TextureRegion orig = Assets.loadedRegions.get(textureName);
+					if (orig == null)
+					{
+						if (atlas == null)
+						{
+							orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
+						}
+						else
+						{
+							orig = atlas.findRegion(textureName.split(":")[1]);
+						}
+						Assets.loadedRegions.put(textureName, orig);
+					}
+					TextureRegion flipped = new TextureRegion(orig);
+					flipped.flip(flipX, flipY);
+					textureName = newTextureName;
+					Assets.loadedRegions.put(newTextureName, flipped);
+				}
+				else
+				{
+					textureName = newTextureName;
+				}
+			}
         }
         else
         {
@@ -112,7 +110,7 @@ public class Sprite extends GameObject
     public enum Type
     {
         massive, passive, front_passive, halfmassive, climbable
-    }
+		}
 
     public Sprite(World world, Vector2 size, Vector3 position)
     {
