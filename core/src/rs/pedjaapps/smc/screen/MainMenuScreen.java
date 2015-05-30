@@ -18,6 +18,7 @@ import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
@@ -28,6 +29,7 @@ import rs.pedjaapps.smc.view.SelectionAdapter;
  */
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
+    private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
     Texture gameLogo;
     TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
     Rectangle playR, musicR, soundR;
@@ -39,7 +41,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     LevelLoader loader;
     private BitmapFont debugFont;
     private boolean playT = false, musicT = false, soundT = false;
-	public boolean debug = false;
+	public boolean debug = true;
+    private static final String FPS_STRING = "FPS: ";
+    private static final NATypeConverter<Integer> fpsCounter = new NATypeConverter<>();
 
     int screenWidth = Gdx.graphics.getWidth();
     int screenHeight = Gdx.graphics.getHeight();
@@ -121,7 +125,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
 
-        TextureRegion marioFrame = Assets.loadedRegions.get(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small);
+        TextureRegion marioFrame = Assets.loadedRegions.get(MARIO_TEXTURE_REGION_KEY);
         batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
@@ -146,7 +150,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             batch.setProjectionMatrix(debugCam.combined);
             batch.begin();
-            debugFont.drawMultiLine(batch, "FPS: " + Gdx.graphics.getFramesPerSecond(), 50f, 670f);
+            debugFont.drawMultiLine(batch, FPS_STRING, 50f, 670f);
+            BitmapFont.TextBounds bounds = debugFont.getBounds(FPS_STRING);
+            debugFont.drawMultiLine(batch, fpsCounter.toString(Gdx.graphics.getFramesPerSecond()), bounds.width + 60f, 670f);
             batch.end();
         }
 
@@ -155,8 +161,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
     private void drawObjects(float deltaTime)
     {
-        for (GameObject gameObject : loader.level.gameObjects)
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < loader.level.gameObjects.size(); i++)
+        //for (GameObject gameObject : loader.level.gameObjects)
         {
+            GameObject gameObject = loader.level.gameObjects.get(i);
 			gameObject.update(deltaTime);
             gameObject.render(batch);
         }
@@ -287,7 +296,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
         else if (keycode == Input.Keys.D)
         {
-            debug = !debug;
+            debug = !debug;debug = !debug;
         }
         return false;
     }

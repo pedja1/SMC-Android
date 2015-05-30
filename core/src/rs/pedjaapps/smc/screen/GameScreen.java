@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -88,7 +89,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private GAME_STATE gameState;
 
-    private HashMap<Integer, TouchInfo> touches = new HashMap<Integer, TouchInfo>();
+    private HashMap<Integer, TouchInfo> touches = new HashMap<>();
     LevelLoader loader;
 	
 	Sound audioOn;
@@ -207,14 +208,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.render(spriteBatch);
 
 		//cleanup
-		for(GameObject obj : world.trashObjects)
+		//for(GameObject obj : world.trashObjects)
+		for(int i = 0; i < world.trashObjects.size; i++)
 		{
-			world.level.gameObjects.remove(obj);
+			world.level.gameObjects.remove(world.trashObjects.get(i));
 		}
         world.trashObjects.clear();
-		for(GameObject obj : world.newObjects)
-		{
-			world.level.gameObjects.add(obj);
+		//for(GameObject obj : world.newObjects)
+        for(int i = 0; i < world.newObjects.size; i++)
+        {
+            world.level.gameObjects.remove(world.newObjects.get(i));
 		}
         world.newObjects.clear();
         GLProfiler.reset();
@@ -319,8 +322,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void drawObjects(float delta)
     {
 		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
-		for (GameObject go : world.level.gameObjects)
+        for(int i = 0; i < world.level.gameObjects.size(); i++)
+		//for (GameObject go : world.level.gameObjects)
 		{
+            GameObject go = world.level.gameObjects.get(i);
 			if (maryoBWO.overlaps(go.body))
 			{
 				if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
@@ -330,8 +335,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 			}
 		}
         Array<GameObject> drawableObjects = world.getDrawableObjects(cam.position.x, cam.position.y);
-		for (GameObject object : drawableObjects)
+        for(int i = 0; i < drawableObjects.size; i++)
+		//for (GameObject object : drawableObjects)
         {
+            GameObject object = drawableObjects.get(i);
             object.render(spriteBatch);
         }
         world.rectPool.free(maryoBWO);
@@ -342,8 +349,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		// render blocks
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		for (GameObject go : world.getVisibleObjects()) 
+        for(int i = 0; i < world.getVisibleObjects().size; i++)
+		//for (GameObject go : world.getVisibleObjects())
 		{
+            GameObject go = world.getVisibleObjects().get(i);
             Rectangle body = go.body;
             Rectangle bounds = go.bounds;
             shapeRenderer.setColor(0, 1, 0, 1);

@@ -22,6 +22,9 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.HUDTimeText;
+import rs.pedjaapps.smc.utility.NAHudText;
+import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class HUD
@@ -55,15 +58,20 @@ public class HUD
 		none, pause, fire, jump, left, right, up, down, play, sound, music
 	}
 
-	public HashSet<Key> pressedKeys = new HashSet<Key>();
+	public HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
 	
 	float stateTime;
 	public boolean updateTimer = true;
 	
-	String ttsText = "TOUCH ANYWHERE TO START";
+	private static final String ttsText = "TOUCH ANYWHERE TO START";
 	BitmapFont.TextBounds ttsBounds;
 	boolean ttsFadeIn;
 	float ttsAlpha = 1;
+	private int points;
+	private String pointsText;
+	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
+	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
+	private final HUDTimeText time = new HUDTimeText();
 
 	public HUD(World world)
 	{
@@ -280,43 +288,43 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			String points = formatPointsString(GameSaveUtility.getInstance().save.points);
-			BitmapFont.TextBounds bounds = font.getBounds(points);
+			pointsText = formatPointsString(GameSaveUtility.getInstance().save.points);
+			BitmapFont.TextBounds bounds = font.getBounds(pointsText);
 			float pointsX = C_W * 0.03f;
 			float pointsY = bounds.height / 2 + maryoLR.y + maryoLR.height / 2;
 			font.setColor(0, 0, 0, 1);
-			font.draw(batch, points, pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.draw(batch, pointsText, pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
-			font.draw(batch, points, pointsX, pointsY);
+			font.draw(batch, pointsText, pointsX, pointsY);
 			
 			//coins
 			float goldHeight = bounds.height * 1.1f;
 			float goldX = pointsX + bounds.width + goldHeight;
 			batch.draw(goldM, goldX, pointsY - bounds.height, goldHeight * 2, goldHeight);
 			
-			String coins = GameSaveUtility.getInstance().save.coins + "";
+			String coins =  this.coins.toString(GameSaveUtility.getInstance().save.coins);
 			font.setColor(0, 0, 0, 1);
 			font.draw(batch, coins, goldX + goldHeight * 2 + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
 			//time
-			String time = Utility.millisToString(stateTime);
-			bounds = font.getBounds("Time " + time);
+			time.update(stateTime);
+			bounds = font.getBounds(time);
 			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - bounds.width / 2;
 			font.setColor(0, 0, 0, 1);
-			font.draw(batch, "Time " + time, timeX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.draw(batch, time, timeX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
-			font.draw(batch, "Time " + time, timeX, pointsY);
+			font.draw(batch, time, timeX, pointsY);
 			
-			//lifes
-			String lifes = Math.max(GameSaveUtility.getInstance().save.lifes, 0) + "x";
-			bounds = font.getBounds(lifes);
+			//lives
+			String lives = this.lives.toString(Math.max(GameSaveUtility.getInstance().save.lifes, 0));
+			bounds = font.getBounds(lives);
 			float lifesX = maryoLR.x - bounds.width;
 			font.setColor(0, 0, 0, 1);
-			font.draw(batch, lifes, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
+			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);
-			font.draw(batch, lifes, lifesX, pointsY);
+			font.draw(batch, lives, lifesX, pointsY);
 			
 			batch.end();
 		}
@@ -324,15 +332,22 @@ public class HUD
 
     private String formatPointsString(int points)
     {
-        //TODO is this fast enough for game loop?
-        String pointsPrefix = "Points ";
-        String pointsString = points + "";
-        int zeroCount = 8 - pointsString.length();
-        for(int i = 0; i < zeroCount; i++)
-        {
-            pointsPrefix += "0";
-        }
-        return pointsPrefix + pointsString;
+        if(pointsText != null && this.points == points)
+		{
+			return pointsText;
+		}
+		else
+		{
+			this.points = points;
+			String pointsPrefix = "Points ";
+			String pointsString = points + "";
+			int zeroCount = 8 - pointsString.length();
+			for (int i = 0; i < zeroCount; i++)
+			{
+				pointsPrefix += "0";
+			}
+			return (pointsText = pointsPrefix + pointsString);
+		}
     }
 
     private void drawPauseOverlay()

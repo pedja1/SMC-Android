@@ -21,6 +21,7 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Turtle extends Enemy
 {
 
+    private String KEY_TURN, KEY_LEFT;
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.091f;
@@ -43,6 +44,8 @@ public class Turtle extends Enemy
     @Override
     public void initAssets()
     {
+        KEY_TURN = textureAtlas + ":turn";
+        KEY_LEFT = textureAtlas + "_l";
         isBoss = textureAtlas.contains("red");
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>();
@@ -68,8 +71,8 @@ public class Turtle extends Enemy
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
-        frame = (turn && !isBoss) ? Assets.loadedRegions.get(textureAtlas + ":turn")
-                : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
+        frame = (turn && !isBoss) ? Assets.loadedRegions.get(KEY_TURN)
+                : Assets.animations.get(direction == Direction.right ? textureAtlas : KEY_LEFT).getKeyFrame(stateTime, true);
         Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
     }
 

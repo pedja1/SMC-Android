@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.ETC1;
 import com.badlogic.gdx.tools.FileProcessor;
+import com.badlogic.gdx.tools.ktx.KTXProcessor;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 
 import java.io.File;
@@ -16,14 +17,15 @@ public class Tools
 {
     public static void main(String[] args)
     {
-        try
+        /*try
         {
             process("/home/pedja/workspace/SMC-Android/android/assets/data/", "/home/pedja/workspace/SMC-Android/android/assets/data_etc/", true, false);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
+        KTXProcessor.main(new String[]{"/home/pedja/workspace/SMC-Android/android/assets/data/game/logo/smc_big_1.png", "/home/pedja/workspace/SMC-Android/android/assets/data/game/logo/smc_big_1.zktx", "-etc1a" });
     }
 
     static class ETC1FileProcessor extends FileProcessor

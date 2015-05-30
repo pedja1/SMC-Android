@@ -47,11 +47,18 @@ public class Furball extends Enemy
 
     Type type = Type.brown;
 
+    private final String keyDead, keyLeft, keyDeadRight, keyTurn, keyHit;
+
     public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
     {
         super(world, size, position);
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
+        keyDead = textureAtlas + ":dead";
+        keyDeadRight = textureAtlas + ":dead_r";
+        keyLeft = textureAtlas + "_l";
+        keyTurn = textureAtlas + ":turn";
+        keyHit = textureAtlas + ":hit";
     }
 
     @Override
@@ -72,13 +79,13 @@ public class Furball extends Enemy
 
 
         Assets.animations.put(textureAtlas, new Animation(0.07f, rightFrames));
-        Assets.animations.put(textureAtlas + "_l", new Animation(0.07f, leftFrames));
-        Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
+        Assets.animations.put(keyLeft, new Animation(0.07f, leftFrames));
+        Assets.loadedRegions.put(keyTurn, atlas.findRegion("turn"));
         TextureRegion tmp = atlas.findRegion("dead");
-        Assets.loadedRegions.put(textureAtlas + ":dead", tmp);
+        Assets.loadedRegions.put(keyDead, tmp);
         tmp = new TextureRegion(tmp);
         tmp.flip(true, false);
-        Assets.loadedRegions.put(textureAtlas + ":dead_r", tmp);
+        Assets.loadedRegions.put(keyDeadRight, tmp);
 
         if(textureAtlas.contains("brown"))
         {
@@ -103,7 +110,7 @@ public class Furball extends Enemy
             fireResistant = true;
             iceResistance = 1f;
             canBeHitFromShell = false;
-            Assets.loadedRegions.put(textureAtlas + ":hit", atlas.findRegion("hit"));
+            Assets.loadedRegions.put(keyHit, atlas.findRegion("hit"));
         }
     }
 
@@ -113,17 +120,18 @@ public class Furball extends Enemy
         TextureRegion frame;
         if (!dying)
         {
-            frame = turn ? Assets.loadedRegions.get(textureAtlas + ":turn")
-                    : Assets.animations.get(direction == Direction.right ? textureAtlas : textureAtlas + "_l").getKeyFrame(stateTime, true);
+            frame = turn ? Assets.loadedRegions.get(keyTurn)
+                    : Assets.animations.get(direction == Direction.right ? textureAtlas : keyLeft).getKeyFrame(stateTime, true);
             Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
         }
         else
         {
-            frame = direction == Direction.right ? Assets.loadedRegions.get(textureAtlas + ":dead") : Assets.loadedRegions.get(textureAtlas + ":dead_r");
+            frame = direction == Direction.right ? Assets.loadedRegions.get(keyDead) : Assets.loadedRegions.get(keyDeadRight);
             spriteBatch.draw(frame, bounds.x ,bounds.y ,bounds.width, bounds.height);
         }
     }
 
+    @Override
     public void update(float deltaTime)
     {
         stateTime += deltaTime;

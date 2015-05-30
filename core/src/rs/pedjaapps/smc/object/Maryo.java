@@ -27,6 +27,87 @@ public class Maryo extends DynamicObject
         small, big, fire, ice, ghost, flying
     }
 
+    //this could be all done dynamically, but this way we minimize allocation in game loop
+    //omg, this is a lot of constants :D
+    private static final String KEY_WALKING_LEFT_SMALL = AKey.walk_left + ":" + MaryoState.small;
+    private static final String KEY_WALKING_RIGHT_SMALL = AKey.walk_right + ":" + MaryoState.small;
+    private static final String KEY_WALKING_LEFT_BIG = AKey.walk_left + ":" + MaryoState.big;
+    private static final String KEY_WALKING_RIGHT_BIG = AKey.walk_right + ":" + MaryoState.big;
+    private static final String KEY_WALKING_LEFT_FIRE = AKey.walk_left + ":" + MaryoState.fire;
+    private static final String KEY_WALKING_RIGHT_FIRE = AKey.walk_right + ":" + MaryoState.fire;
+    private static final String KEY_WALKING_LEFT_FLYING = AKey.walk_left + ":" + MaryoState.flying;
+    private static final String KEY_WALKING_RIGHT_FLYING = AKey.walk_right + ":" + MaryoState.flying;
+    private static final String KEY_WALKING_LEFT_GHOST = AKey.walk_left + ":" + MaryoState.ghost;
+    private static final String KEY_WALKING_RIGHT_GHOST = AKey.walk_right + ":" + MaryoState.ghost;
+    private static final String KEY_WALKING_LEFT_ICE = AKey.walk_left + ":" + MaryoState.ice;
+    private static final String KEY_WALKING_RIGHT_ICE = AKey.walk_right + ":" + MaryoState.ice;
+
+    private static final String KEY_DUCK_LEFT_SMALL = TKey.duck_left + ":" + MaryoState.small;
+    private static final String KEY_DUCK_RIGHT_SMALL = TKey.duck_right + ":" + MaryoState.small;
+    private static final String KEY_JUMP_LEFT_SMALL = TKey.jump_left + ":" + MaryoState.small;
+    private static final String KEY_JUMP_RIGHT_SMALL = TKey.jump_right + ":" + MaryoState.small;
+    private static final String KEY_FALL_LEFT_SMALL = TKey.fall_left + ":" + MaryoState.small;
+    private static final String KEY_FALL_RIGHT_SMALL = TKey.fall_right + ":" + MaryoState.small;
+    private static final String KEY_DEAD_LEFT_SMALL = TKey.dead_left + ":" + MaryoState.small;
+    private static final String KEY_DEAD_RIGHT_SMALL = TKey.dead_right + ":" + MaryoState.small;
+    private static final String KEY_STAND_LEFT_SMALL = TKey.stand_left + ":" + MaryoState.small;
+    private static final String KEY_STAND_RIGHT_SMALL = TKey.stand_right + ":" + MaryoState.small;
+
+    private static final String KEY_DUCK_LEFT_BIG = TKey.duck_left + ":" + MaryoState.big;
+    private static final String KEY_DUCK_RIGHT_BIG = TKey.duck_right + ":" + MaryoState.big;
+    private static final String KEY_JUMP_LEFT_BIG = TKey.jump_left + ":" + MaryoState.big;
+    private static final String KEY_JUMP_RIGHT_BIG = TKey.jump_right + ":" + MaryoState.big;
+    private static final String KEY_FALL_LEFT_BIG = TKey.fall_left + ":" + MaryoState.big;
+    private static final String KEY_FALL_RIGHT_BIG = TKey.fall_right + ":" + MaryoState.big;
+    private static final String KEY_DEAD_LEFT_BIG = TKey.dead_left + ":" + MaryoState.big;
+    private static final String KEY_DEAD_RIGHT_BIG = TKey.dead_right + ":" + MaryoState.big;
+    private static final String KEY_STAND_LEFT_BIG = TKey.stand_left + ":" + MaryoState.big;
+    private static final String KEY_STAND_RIGHT_BIG = TKey.stand_right + ":" + MaryoState.big;
+
+    private static final String KEY_DUCK_LEFT_FIRE = TKey.duck_left + ":" + MaryoState.fire;
+    private static final String KEY_DUCK_RIGHT_FIRE = TKey.duck_right + ":" + MaryoState.fire;
+    private static final String KEY_JUMP_LEFT_FIRE = TKey.jump_left + ":" + MaryoState.fire;
+    private static final String KEY_JUMP_RIGHT_FIRE = TKey.jump_right + ":" + MaryoState.fire;
+    private static final String KEY_FALL_LEFT_FIRE = TKey.fall_left + ":" + MaryoState.fire;
+    private static final String KEY_FALL_RIGHT_FIRE = TKey.fall_right + ":" + MaryoState.fire;
+    private static final String KEY_DEAD_LEFT_FIRE = TKey.dead_left + ":" + MaryoState.fire;
+    private static final String KEY_DEAD_RIGHT_FIRE = TKey.dead_right + ":" + MaryoState.fire;
+    private static final String KEY_STAND_LEFT_FIRE = TKey.stand_left + ":" + MaryoState.fire;
+    private static final String KEY_STAND_RIGHT_FIRE = TKey.stand_right + ":" + MaryoState.fire;
+
+    private static final String KEY_DUCK_LEFT_FLYING = TKey.duck_left + ":" + MaryoState.flying;
+    private static final String KEY_DUCK_RIGHT_FLYING = TKey.duck_right + ":" + MaryoState.flying;
+    private static final String KEY_JUMP_LEFT_FLYING = TKey.jump_left + ":" + MaryoState.flying;
+    private static final String KEY_JUMP_RIGHT_FLYING = TKey.jump_right + ":" + MaryoState.flying;
+    private static final String KEY_FALL_LEFT_FLYING = TKey.fall_left + ":" + MaryoState.flying;
+    private static final String KEY_FALL_RIGHT_FLYING = TKey.fall_right + ":" + MaryoState.flying;
+    private static final String KEY_DEAD_LEFT_FLYING = TKey.dead_left + ":" + MaryoState.flying;
+    private static final String KEY_DEAD_RIGHT_FLYING = TKey.dead_right + ":" + MaryoState.flying;
+    private static final String KEY_STAND_LEFT_FLYING = TKey.stand_left + ":" + MaryoState.flying;
+    private static final String KEY_STAND_RIGHT_FLYING = TKey.stand_right + ":" + MaryoState.flying;
+
+    private static final String KEY_DUCK_LEFT_GHOST = TKey.duck_left + ":" + MaryoState.ghost;
+    private static final String KEY_DUCK_RIGHT_GHOST = TKey.duck_right + ":" + MaryoState.ghost;
+    private static final String KEY_JUMP_LEFT_GHOST = TKey.jump_left + ":" + MaryoState.ghost;
+    private static final String KEY_JUMP_RIGHT_GHOST = TKey.jump_right + ":" + MaryoState.ghost;
+    private static final String KEY_FALL_LEFT_GHOST = TKey.fall_left + ":" + MaryoState.ghost;
+    private static final String KEY_FALL_RIGHT_GHOST = TKey.fall_right + ":" + MaryoState.ghost;
+    private static final String KEY_DEAD_LEFT_GHOST = TKey.dead_left + ":" + MaryoState.ghost;
+    private static final String KEY_DEAD_RIGHT_GHOST = TKey.dead_right + ":" + MaryoState.ghost;
+    private static final String KEY_STAND_LEFT_GHOST = TKey.stand_left + ":" + MaryoState.ghost;
+    private static final String KEY_STAND_RIGHT_GHOST = TKey.stand_right + ":" + MaryoState.ghost;
+
+    private static final String KEY_DUCK_LEFT_ICE = TKey.duck_left + ":" + MaryoState.ice;
+    private static final String KEY_DUCK_RIGHT_ICE = TKey.duck_right + ":" + MaryoState.ice;
+    private static final String KEY_JUMP_LEFT_ICE = TKey.jump_left + ":" + MaryoState.ice;
+    private static final String KEY_JUMP_RIGHT_ICE = TKey.jump_right + ":" + MaryoState.ice;
+    private static final String KEY_FALL_LEFT_ICE = TKey.fall_left + ":" + MaryoState.ice;
+    private static final String KEY_FALL_RIGHT_ICE = TKey.fall_right + ":" + MaryoState.ice;
+    private static final String KEY_DEAD_LEFT_ICE = TKey.dead_left + ":" + MaryoState.ice;
+    private static final String KEY_DEAD_RIGHT_ICE = TKey.dead_right + ":" + MaryoState.ice;
+    private static final String KEY_STAND_LEFT_ICE = TKey.stand_left + ":" + MaryoState.ice;
+    private static final String KEY_STAND_RIGHT_ICE = TKey.stand_right + ":" + MaryoState.ice;
+
     private static final float RUNNING_FRAME_DURATION = 0.08f;
     private static final float RESIZE_ANIMATION_DURATION = 0.977f;
     private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 8f;
@@ -200,30 +281,30 @@ public class Maryo extends DynamicObject
         }
         else if (worldState.equals(WorldState.WALKING))
         {
-            marioFrame = facingLeft ? Assets.animations.get(AKey.walk_left + ":" + maryoState).getKeyFrame(stateTime, true) : Assets.animations.get(AKey.walk_right + ":" + maryoState).getKeyFrame(stateTime, true);
+            marioFrame = facingLeft ? Assets.animations.get(getAnimationKey(AKey.walk_left)).getKeyFrame(stateTime, true) : Assets.animations.get(getAnimationKey(AKey.walk_right)).getKeyFrame(stateTime, true);
         }
         else if(worldState == WorldState.DUCKING)
         {
-            marioFrame = facingLeft ? Assets.loadedRegions.get(TKey.duck_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.duck_right + ":" + maryoState);
+            marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.duck_left)) : Assets.loadedRegions.get(getTextureKey(TKey.duck_right));
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (velocity.y > 0)
             {
-                marioFrame = facingLeft ? Assets.loadedRegions.get(TKey.jump_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.jump_right + ":" + maryoState);
+                marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.jump_left)) : Assets.loadedRegions.get(getTextureKey(TKey.jump_right));
             }
             else
             {
-                marioFrame = facingLeft ? Assets.loadedRegions.get(TKey.fall_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.fall_right + ":" + maryoState);
+                marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.fall_left)) : Assets.loadedRegions.get(getTextureKey(TKey.fall_right));
             }
         }
 		else if(worldState == WorldState.DYING)
 		{
-			marioFrame = facingLeft ? Assets.loadedRegions.get(TKey.dead_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.dead_right + ":" + maryoState);
+			marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.dead_left)) : Assets.loadedRegions.get(getTextureKey(TKey.dead_right));
 		}
         else
         {
-            marioFrame = facingLeft ? Assets.loadedRegions.get(TKey.stand_left + ":" + maryoState) : Assets.loadedRegions.get(TKey.stand_right + ":" + maryoState);
+            marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.stand_left)) : Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
         }
 		
 		//if god mode, make player half-transparent
@@ -244,6 +325,247 @@ public class Maryo extends DynamicObject
 		{
         	spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
 		}
+    }
+
+    private String getTextureKey(TKey tkey)
+    {
+        //and another OMG, can this be done differently?
+        switch (tkey)
+        {
+            case stand_right:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_STAND_RIGHT_SMALL;
+                    case big:
+                        return KEY_STAND_RIGHT_BIG;
+                    case fire:
+                        return KEY_STAND_RIGHT_FIRE;
+                    case ice:
+                        return KEY_STAND_RIGHT_ICE;
+                    case ghost:
+                        return KEY_STAND_RIGHT_GHOST;
+                    case flying:
+                        return KEY_STAND_RIGHT_FLYING;
+                }
+                break;
+            case stand_left:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_STAND_LEFT_SMALL;
+                    case big:
+                        return KEY_STAND_LEFT_BIG;
+                    case fire:
+                        return KEY_STAND_LEFT_FIRE;
+                    case ice:
+                        return KEY_STAND_LEFT_ICE;
+                    case ghost:
+                        return KEY_STAND_LEFT_GHOST;
+                    case flying:
+                        return KEY_STAND_LEFT_FLYING;
+                }
+                break;
+            case jump_right:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_JUMP_RIGHT_SMALL;
+                    case big:
+                        return KEY_JUMP_RIGHT_BIG;
+                    case fire:
+                        return KEY_JUMP_RIGHT_FIRE;
+                    case ice:
+                        return KEY_JUMP_RIGHT_ICE;
+                    case ghost:
+                        return KEY_JUMP_RIGHT_GHOST;
+                    case flying:
+                        return KEY_JUMP_RIGHT_FLYING;
+                }
+                break;
+            case jump_left:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_JUMP_LEFT_SMALL;
+                    case big:
+                        return KEY_JUMP_LEFT_BIG;
+                    case fire:
+                        return KEY_JUMP_LEFT_FIRE;
+                    case ice:
+                        return KEY_JUMP_LEFT_ICE;
+                    case ghost:
+                        return KEY_JUMP_LEFT_GHOST;
+                    case flying:
+                        return KEY_JUMP_LEFT_FLYING;
+                }
+                break;
+            case fall_right:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_FALL_RIGHT_SMALL;
+                    case big:
+                        return KEY_FALL_RIGHT_BIG;
+                    case fire:
+                        return KEY_FALL_RIGHT_FIRE;
+                    case ice:
+                        return KEY_FALL_RIGHT_ICE;
+                    case ghost:
+                        return KEY_FALL_RIGHT_GHOST;
+                    case flying:
+                        return KEY_FALL_RIGHT_FLYING;
+                }
+                break;
+            case fall_left:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_FALL_LEFT_SMALL;
+                    case big:
+                        return KEY_FALL_LEFT_BIG;
+                    case fire:
+                        return KEY_FALL_LEFT_FIRE;
+                    case ice:
+                        return KEY_FALL_LEFT_ICE;
+                    case ghost:
+                        return KEY_FALL_LEFT_GHOST;
+                    case flying:
+                        return KEY_FALL_LEFT_FLYING;
+                }
+                break;
+            case dead_right:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_DEAD_RIGHT_SMALL;
+                    case big:
+                        return KEY_DEAD_RIGHT_BIG;
+                    case fire:
+                        return KEY_DEAD_RIGHT_FIRE;
+                    case ice:
+                        return KEY_DEAD_RIGHT_ICE;
+                    case ghost:
+                        return KEY_DEAD_RIGHT_GHOST;
+                    case flying:
+                        return KEY_DEAD_RIGHT_FLYING;
+                }
+                break;
+            case dead_left:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_DEAD_LEFT_SMALL;
+                    case big:
+                        return KEY_DEAD_LEFT_BIG;
+                    case fire:
+                        return KEY_DEAD_LEFT_FIRE;
+                    case ice:
+                        return KEY_DEAD_LEFT_ICE;
+                    case ghost:
+                        return KEY_DEAD_LEFT_GHOST;
+                    case flying:
+                        return KEY_DEAD_LEFT_FLYING;
+                }
+                break;
+            case duck_right:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_DUCK_RIGHT_SMALL;
+                    case big:
+                        return KEY_DUCK_RIGHT_BIG;
+                    case fire:
+                        return KEY_DUCK_RIGHT_FIRE;
+                    case ice:
+                        return KEY_DUCK_RIGHT_ICE;
+                    case ghost:
+                        return KEY_DUCK_RIGHT_GHOST;
+                    case flying:
+                        return KEY_DUCK_RIGHT_FLYING;
+                }
+                break;
+            case duck_left:
+                switch (maryoState)
+                {
+                    case small:
+                        return KEY_DUCK_LEFT_SMALL;
+                    case big:
+                        return KEY_DUCK_LEFT_BIG;
+                    case fire:
+                        return KEY_DUCK_LEFT_FIRE;
+                    case ice:
+                        return KEY_DUCK_LEFT_ICE;
+                    case ghost:
+                        return KEY_DUCK_LEFT_GHOST;
+                    case flying:
+                        return KEY_DUCK_LEFT_FLYING;
+                }
+                break;
+        }
+        throw new IllegalArgumentException("Unknown texture key '" + tkey + "' or maryoState '" + maryoState + "'");
+    }
+
+    private String getAnimationKey(AKey akey)
+    {
+        switch (maryoState)
+        {
+            case small:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_SMALL;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_SMALL;
+                }
+                break;
+            case big:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_BIG;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_BIG;
+                }
+                break;
+            case fire:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_FIRE;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_FIRE;
+                }
+                break;
+            case ice:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_ICE;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_ICE;
+                }
+                break;
+            case ghost:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_GHOST;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_GHOST;
+                }
+                break;
+            case flying:
+                switch (akey)
+                {
+                    case walk_left:
+                        return KEY_WALKING_LEFT_FLYING;
+                    case walk_right:
+                        return KEY_WALKING_RIGHT_FLYING;
+                }
+                break;
+        }
+        throw new IllegalArgumentException("Unknown animation key '" + akey + "' or maryoState '" + maryoState + "'");
     }
 
 	@Override
@@ -274,8 +596,10 @@ public class Maryo extends DynamicObject
             float tmpGroundY = 0;
             float distance = body.y;
 			GameObject closestObject = null;
-            for(GameObject go : objects)
+            //for(GameObject go : objects)
+            for(int i = 0; i < objects.size; i++)
             {
+                GameObject go = objects.get(i);
                 if(go == null)continue;
                 if(go instanceof Sprite
                         && (((Sprite)go).type == Sprite.Type.massive || ((Sprite)go).type == Sprite.Type.halfmassive)

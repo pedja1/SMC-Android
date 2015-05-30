@@ -96,19 +96,9 @@ public class Utility
 	
 	public static String millisToString(float millis)
 	{
-		//String timeString;
         int s = (int) millis % 60;
         int m = ((int) ((millis / 60) % 60));
-        
-		/*StringBuilder builder = new StringBuilder();
-        if (m != 0)
-        {
-            builder.append(m).append("m:");
-        }
 
-        builder.append(s).append("s");
-        timeString = builder.toString();
-        return timeString;*/
 		return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 	}
 	

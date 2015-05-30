@@ -15,6 +15,7 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.view.HUD;
 
 public class MarioController
 {
@@ -33,7 +34,7 @@ public class MarioController
 
     private long jumpClickTime;
 
-    static Set<Keys> keys = new HashSet<Keys>();
+    static Set<Keys> keys = new HashSet<>(Keys.values().length);
 
     public MarioController(World world)
     {

@@ -78,8 +78,11 @@ public abstract class DynamicObject extends GameObject
 
 		List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
-        for (GameObject object : surroundingObjects) 
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < surroundingObjects.size(); i++)
+        //for (GameObject object : surroundingObjects)
 		{
+            GameObject object = surroundingObjects.get(i);
             if (object == null) continue;
             if (body.overlaps(object.body))
 			{
@@ -102,8 +105,11 @@ public abstract class DynamicObject extends GameObject
 
         body.y += velocity.y;
 
-        for (GameObject object : surroundingObjects)
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0; i < surroundingObjects.size(); i++)
+        //for (GameObject object : surroundingObjects)
 		{
+            GameObject object = surroundingObjects.get(i);
             if (object == null) continue;
             if (body.overlaps(object.body))
 			{
