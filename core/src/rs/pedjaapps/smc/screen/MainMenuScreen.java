@@ -40,6 +40,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	BackgroundColor bgColor;
     LevelLoader loader;
     private BitmapFont debugFont;
+    private GlyphLayout debugGlyph;
     private boolean playT = false, musicT = false, soundT = false;
 	public boolean debug = true;
     private static final String FPS_STRING = "FPS: ";
@@ -76,7 +77,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         loader = new LevelLoader("main_menu");
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
-        debugFont.setScale(1.3f);
+        debugFont.getData().setScale(1.3f);
+        debugGlyph = new GlyphLayout();
         world = new World(this);
 
 		selectionAdapter = new SelectionAdapter(loadSelectionItems(), this);
@@ -150,9 +152,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             batch.setProjectionMatrix(debugCam.combined);
             batch.begin();
-            debugFont.drawMultiLine(batch, FPS_STRING, 50f, 670f);
-            BitmapFont.TextBounds bounds = debugFont.getBounds(FPS_STRING);
-            debugFont.drawMultiLine(batch, fpsCounter.toString(Gdx.graphics.getFramesPerSecond()), bounds.width + 60f, 670f);
+            debugFont.draw(batch, FPS_STRING, 50f, 670f);
+            debugGlyph.setText(debugFont, FPS_STRING);
+            debugFont.draw(batch, fpsCounter.toString(Gdx.graphics.getFramesPerSecond()), debugGlyph.width + 60f, 670f);
             batch.end();
         }
 

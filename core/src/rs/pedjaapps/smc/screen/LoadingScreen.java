@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.Assets;
 
@@ -44,7 +45,7 @@ public class LoadingScreen extends AbstractScreen
         fontTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         font = new BitmapFont(Gdx.files.internal("data/fonts/dejavu_sans.fnt"), new TextureRegion(fontTexture), false);
         font.setColor(Color.WHITE);
-        font.setScale(0.25f);
+        font.getData().setScale(0.25f);
         batch = new SpriteBatch();
         Texture bgTexture = new Texture(Gdx.files.internal("data/loading/loading_bg.jpg"));
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -81,7 +82,7 @@ public class LoadingScreen extends AbstractScreen
         batch.begin();
         bgSprite.draw(batch);
 
-        font.drawMultiLine(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth/2+(0.07f * cam.viewportWidth), -cam.viewportHeight/2+(0.08f * cam.viewportHeight), 0, BitmapFont.HAlignment.LEFT);
+        font.draw(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
 
         batch.end();
     }

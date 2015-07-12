@@ -1,28 +1,30 @@
 package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
 import java.util.HashMap;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
@@ -31,12 +33,12 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
@@ -58,6 +60,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private boolean debug = PrefsManager.isDebug();
 
     private BitmapFont debugFont;
+    private GlyphLayout debugGlyph;
 
     Vector2 camMin = new Vector2();
     Vector2 camMax = new Vector2();
@@ -376,8 +379,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void drawDebugText()
     {
         String debugMessage = generateDebugMessage();
-        BitmapFont.TextBounds tb = debugFont.getBounds(debugMessage);
-        debugFont.drawMultiLine(spriteBatch, debugMessage, 20, height - 20);
+        debugGlyph.setText(debugFont, debugMessage);
+        debugFont.draw(spriteBatch, debugMessage, 20, height - 20);
     }
 
     private String generateDebugMessage()
@@ -522,6 +525,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         debugFont = Assets.manager.get("debug.ttf");
         debugFont.setColor(1, 0, 0, 1);
+        debugGlyph = new GlyphLayout();
 
         for(GameObject go : loader.level.gameObjects)
             go.initAssets();

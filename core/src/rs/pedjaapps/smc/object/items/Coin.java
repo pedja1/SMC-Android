@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -54,21 +55,21 @@ public class Coin extends Item
         if (Assets.manager.isLoaded("coin.ttf"))
         {
             BitmapFont font = Assets.manager.get("coin.ttf");
-            font.scale(Constants.CAMERA_WIDTH / Gdx.graphics.getWidth());
-            BitmapFont.TextBounds textBounds;
+            font.getData().scale(Constants.CAMERA_WIDTH / Gdx.graphics.getWidth());
+			GlyphLayout layout;
             if(textureAtlas.contains("yellow"))
             {
                 points = 5;
-                textBounds = font.getBounds("5");
+                layout = new GlyphLayout(font, "5");
             }
             else
             {
                 points = 100;
-                textBounds = font.getBounds("100");
+				layout = new GlyphLayout(font, "100");
             }
 
-            pointsTextPosition.x = (bounds.x + bounds.width / 2) - textBounds.width / 2;
-            pointsTextPosition.y = (bounds.y + bounds.height / 2) + textBounds.height / 2;
+            pointsTextPosition.x = (bounds.x + bounds.width / 2) - layout.width / 2;
+            pointsTextPosition.y = (bounds.y + bounds.height / 2) + layout.height / 2;
         }
     }
 

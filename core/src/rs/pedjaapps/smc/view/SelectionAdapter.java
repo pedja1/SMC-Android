@@ -1,15 +1,17 @@
 package rs.pedjaapps.smc.view;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
@@ -35,6 +37,7 @@ public class SelectionAdapter
 	txPrevEnabled, txPrevDisabled,
 	txItemBg, txItemBgSelected, txLock;
     BitmapFont font96, font32;
+	GlyphLayout font96Glyph, font32Glyph;
 
     private float selectionWidth;
 	private float selectionHeight;
@@ -91,6 +94,7 @@ public class SelectionAdapter
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
         font96 = generator.generateFont(parameter);
+		font96Glyph = new GlyphLayout();
 
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 36;
@@ -98,6 +102,7 @@ public class SelectionAdapter
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
         font32 = generator.generateFont(parameter);
+		font32Glyph = new GlyphLayout();
         generator.dispose();
 	}
 
@@ -116,9 +121,9 @@ public class SelectionAdapter
 		batch.begin();
 
         font96.setColor(.5f, .5f, .5f, 1);
-        font96.drawMultiLine(batch, "SELECT LEVEL", CAM_WIDTH / 2 + 2, CAM_HEIGHT * 0.9f - 2, 0, BitmapFont.HAlignment.CENTER);
+        font96.draw(batch, "SELECT LEVEL", CAM_WIDTH / 2 + 2, CAM_HEIGHT * 0.9f - 2, 0, Align.center, false);
         font96.setColor(1, 1, 1, 1);
-        font96.drawMultiLine(batch, "SELECT LEVEL", CAM_WIDTH / 2, CAM_HEIGHT * 0.9f, 0, BitmapFont.HAlignment.CENTER);
+        font96.draw(batch, "SELECT LEVEL", CAM_WIDTH / 2, CAM_HEIGHT * 0.9f, 0, Align.center, false);
 
 		int row = 0;
 		int column = 0;
@@ -140,8 +145,9 @@ public class SelectionAdapter
 				batch.draw(txLock, x + cellSize - lockSize, y, lockSize, lockSize);
 			}
 
-			BitmapFont.TextBounds bounds = font32.getBounds(offset + 1 + "");
-			font32.draw(batch, offset + 1 + "", x + cellSize / 2 - bounds.width / 2, y + cellSize / 2 + bounds.height / 2);
+			//BitmapFont.TextBounds bounds = font32.getBounds(offset + 1 + "");
+			font32Glyph.setText(font32, offset + 1 + "");
+			font32.draw(batch, offset + 1 + "", x + cellSize / 2 - font32Glyph.width / 2, y + cellSize / 2 + font32Glyph.height / 2);
 
 			if (column == 7)
 			{
@@ -155,9 +161,10 @@ public class SelectionAdapter
 			offset++;
 		}
 
-		BitmapFont.TextBounds bounds = font32.getBounds("BACK");
-		backBounds.set(20, 20, bounds.width + 40, bounds.height + 40);
-		font32.draw(batch, "BACK", 40f, 40 + bounds.height);
+		//BitmapFont.TextBounds bounds = font32.getBounds("BACK");
+		font32Glyph.setText(font32, "BACK");
+		backBounds.set(20, 20, font32Glyph.width + 40, font32Glyph.height + 40);
+		font32.draw(batch, "BACK", 40f, 40 + font32Glyph.height);
 
 		batch.end();
 

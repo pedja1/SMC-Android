@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,8 +16,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Formatter;
 import java.util.HashSet;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -25,7 +26,6 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
-import rs.pedjaapps.smc.utility.Utility;
 
 public class HUD
 {
@@ -49,6 +49,7 @@ public class HUD
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 
 	public BitmapFont font, tts;
+	GlyphLayout ttsGlyphLayout, fontGlyphLayout;
 
 	public static float C_W = Gdx.graphics.getWidth();
 	public static float C_H = Gdx.graphics.getHeight();
@@ -64,7 +65,6 @@ public class HUD
 	public boolean updateTimer = true;
 	
 	private static final String ttsText = "TOUCH ANYWHERE TO START";
-	BitmapFont.TextBounds ttsBounds;
 	boolean ttsFadeIn;
 	float ttsAlpha = 1;
 	private int points;
@@ -239,12 +239,13 @@ public class HUD
         parameter.minFilter = Texture.TextureFilter.Linear;
         font = generator.generateFont(parameter);
 		font.setColor(1, 1, 1, 1);//white
+		fontGlyphLayout = new GlyphLayout();
 		
 		generator.dispose();
 		
 		tts = Assets.manager.get("touch_to_start.ttf");
 		tts.setColor(1, 1, 1, 1);
-		ttsBounds = tts.getBounds(ttsText);
+		ttsGlyphLayout = new GlyphLayout(font, ttsText);
 		
 	}
 
@@ -264,8 +265,8 @@ public class HUD
 				ttsFadeIn = true;
 			}
 			tts.setColor(1, 1, 1, ttsFadeIn ? (ttsAlpha += 0.02f) : (ttsAlpha -= 0.02f));
-			
-			tts.draw(batch, ttsText, C_W / 2 - ttsBounds.width / 2, C_H / 2 + ttsBounds.height / 2);
+			ttsGlyphLayout.setText(tts, ttsText);
+			tts.draw(batch, ttsText, C_W / 2 - ttsGlyphLayout.width / 2, C_H / 2 + ttsGlyphLayout.height / 2);
 			batch.end();
 		}
 		else if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
@@ -289,18 +290,18 @@ public class HUD
 			
 			// points
 			pointsText = formatPointsString(GameSaveUtility.getInstance().save.points);
-			BitmapFont.TextBounds bounds = font.getBounds(pointsText);
+			fontGlyphLayout.setText(font, pointsText);
 			float pointsX = C_W * 0.03f;
-			float pointsY = bounds.height / 2 + maryoLR.y + maryoLR.height / 2;
+			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
 			font.setColor(0, 0, 0, 1);
 			font.draw(batch, pointsText, pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, pointsText, pointsX, pointsY);
 			
 			//coins
-			float goldHeight = bounds.height * 1.1f;
-			float goldX = pointsX + bounds.width + goldHeight;
-			batch.draw(goldM, goldX, pointsY - bounds.height, goldHeight * 2, goldHeight);
+			float goldHeight = fontGlyphLayout.height * 1.1f;
+			float goldX = pointsX + fontGlyphLayout.width + goldHeight;
+			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
 			
 			String coins =  this.coins.toString(GameSaveUtility.getInstance().save.coins);
 			font.setColor(0, 0, 0, 1);
@@ -310,8 +311,8 @@ public class HUD
 			
 			//time
 			time.update(stateTime);
-			bounds = font.getBounds(time);
-			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - bounds.width / 2;
+			fontGlyphLayout.setText(font, time);
+			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - fontGlyphLayout.width / 2;
 			font.setColor(0, 0, 0, 1);
 			font.draw(batch, time, timeX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
@@ -319,8 +320,8 @@ public class HUD
 			
 			//lives
 			String lives = this.lives.toString(Math.max(GameSaveUtility.getInstance().save.lifes, 0));
-			bounds = font.getBounds(lives);
-			float lifesX = maryoLR.x - bounds.width;
+			fontGlyphLayout.setText(font, lives);
+			float lifesX = maryoLR.x - fontGlyphLayout.width;
 			font.setColor(0, 0, 0, 1);
 			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);

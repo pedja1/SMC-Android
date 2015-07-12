@@ -1,24 +1,18 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
@@ -48,6 +42,7 @@ public class ConfirmDialog
     float dialogPadding;
 
     BitmapFont font;
+    GlyphLayout fontGlyph;
 
     String title = "Quit?";
     String text;
@@ -93,6 +88,7 @@ public class ConfirmDialog
         TextureRegion buttonPressed = atlas.findRegion("button-pressed");
 
         font = Assets.manager.get("confirm_dialog.ttf");
+        fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();
         buttonNo.rect.width = dialogWidth / 4;
@@ -108,18 +104,19 @@ public class ConfirmDialog
         buttonYes.rect.x = buttonNo.rect.x - dialogPadding - buttonNo.rect.width;
         buttonYes.text = "YES";
 
-        BitmapFont.TextBounds bounds = font.getBounds(title);
-        titleR = new Rectangle(dialogX + dialogWidth / 2 - bounds.width / 2,
+        fontGlyph.setText(font, title);
+        titleR = new Rectangle(dialogX + dialogWidth / 2 - fontGlyph.width / 2,
                 dialogY + dialogHeight - dialogPadding,
-                bounds.width, bounds.height);
+                fontGlyph.width, fontGlyph.height);
 
-        bounds = font.getWrappedBounds(text, dialogWidth - dialogPadding * 2);
+        fontGlyph.setText(font, text, font.getColor(), dialogWidth - dialogPadding * 2, Align.center, true);
+        //bounds = font.getWrappedBounds(text, dialogWidth - dialogPadding * 2);
         float top = titleR.y - titleR.height - dialogPadding;
         float bottom = buttonNo.rect.y + buttonNo.rect.height + dialogPadding;
         float centerVer = top - ((top - bottom) / 2);
-        textR = new Rectangle(dialogX + dialogWidth / 2 - bounds.width / 2,
-                centerVer + bounds.height / 2,
-                bounds.width, bounds.height);
+        textR = new Rectangle(dialogX + dialogWidth / 2 - fontGlyph.width / 2,
+                centerVer + fontGlyph.height / 2,
+                fontGlyph.width, fontGlyph.height);
 
     }
 
@@ -154,7 +151,7 @@ public class ConfirmDialog
             buttonYes.render(batch);
             font.setColor(1, 1, 1, 1);
             font.draw(batch, title, titleR.x, titleR.y);
-            font.drawWrapped(batch, text, textR.x, textR.y, textR.width, BitmapFont.HAlignment.CENTER);
+            font.draw(batch, text, textR.x, textR.y, textR.width, Align.center, true);
             batch.end();
 
             /*shapeRenderer.setProjectionMatrix(cam.combined);
@@ -251,6 +248,7 @@ public class ConfirmDialog
         TextureRegion bgPressed, bgNormal;
         String text;
         BitmapFont font;
+        GlyphLayout fontGlyph;
 
         boolean pressed;
 
@@ -258,8 +256,8 @@ public class ConfirmDialog
         {
             batch.draw(pressed ? bgPressed : bgNormal, rect.x, rect.y, rect.width, rect.height);
             font.setColor(0.368627451f, 0.141176471f, 0.050980392f, 1);
-            BitmapFont.TextBounds bounds = font.getBounds(text);
-            font.draw(batch, text, rect.x + rect.width / 2 - bounds.width / 2, rect.y + rect.height / 2 + bounds.height / 2);
+            fontGlyph.setText(font, text);
+            font.draw(batch, text, rect.x + rect.width / 2 - fontGlyph.width / 2, rect.y + rect.height / 2 + fontGlyph.height / 2);
         }
 
         public Button(Button button)
@@ -269,6 +267,7 @@ public class ConfirmDialog
             bgPressed = button.bgPressed;
             text = button.text;
             font = button.font;
+            fontGlyph = new GlyphLayout();
         }
 
         public Button()
