@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 
 import java.util.HashMap;
+
 import rs.pedjaapps.smc.utility.MyFileHandleResolver;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
@@ -24,6 +26,7 @@ public class Assets
 {
     public static AssetManager manager;
     public static TextureLoader.TextureParameter textureParameter;
+    public static SMCTextureAtlasLoader.TextureAtlasParameter atlasTextureParameter;
     public static ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
     public static HashMap<String, TextureRegion> loadedRegions;
     public static HashMap<String, Animation> animations;
@@ -38,6 +41,11 @@ public class Assets
         textureParameter.magFilter = Texture.TextureFilter.Linear;
         textureParameter.minFilter = Texture.TextureFilter.Linear;
 
+        atlasTextureParameter = new SMCTextureAtlasLoader.TextureAtlasParameter(true);
+        atlasTextureParameter.magFilter = Texture.TextureFilter.Linear;
+        atlasTextureParameter.minFilter = Texture.TextureFilter.Linear;
+        //atlasTextureParameter.genMipMaps = true;
+
         particleEffectParameter = new ParticleEffectLoader.ParticleEffectParameter();
         particleEffectParameter.imagesDir = Gdx.files.internal("data/animation/particles");
 
@@ -49,6 +57,7 @@ public class Assets
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         manager.setLoader(ParticleEffect.class, ".p", new ParticleEffectLoader(resolver));
+        manager.setLoader(TextureAtlas.class, ".pack", new SMCTextureAtlasLoader(resolver));
 
         loadedRegions = new HashMap<>();
         animations = new HashMap<>();

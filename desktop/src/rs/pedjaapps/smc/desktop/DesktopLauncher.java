@@ -5,15 +5,16 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 import rs.pedjaapps.smc.MaryoGame;
-import rs.pedjaapps.smc.utility.LevelLoader;
 
 public class DesktopLauncher
 {
     public static void main(String[] arg)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 640;//1024;
-        config.height = 360;//576;
+        config.width = 1024;
+        config.height = 576;
+        config.resizable = false;
+        config.allowSoftwareMode = false;
         //config.vSyncEnabled = false;
         //config.foregroundFPS = 0;
         //config.backgroundFPS = 0;

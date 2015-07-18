@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.utility;
-import rs.pedjaapps.smc.object.Maryo;
 import java.util.HashMap;
+
+import rs.pedjaapps.smc.object.Maryo;
 
 public class GameSaveUtility
 {
@@ -23,7 +24,7 @@ public class GameSaveUtility
 		save.coins = 0;
 		save.points = 0;
 		save.lifes = 3;
-		save.playerState = Maryo.MaryoState.big;
+		save.playerState = Maryo.MaryoState.small;
 	}
 	
 	public static GameSaveUtility getInstance()
