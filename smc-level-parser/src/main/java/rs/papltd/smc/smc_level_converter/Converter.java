@@ -23,7 +23,7 @@ public class Converter
     {
         try
         {
-            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/android/assets/data/levels/levels_smc_original/levels");
+            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
             File[] files = levelsFolder.listFiles();
             for(File file : files)
             {
@@ -152,6 +152,8 @@ public class Converter
             else if(obj instanceof Box)
             {
                 Box box = (Box)obj;
+                if("text".equals(box.type))
+                    continue;
                 JSONObject jBox = new JSONObject();
                 jBox.put("posx", box.posx);
                 jBox.put("posy", box.posy);

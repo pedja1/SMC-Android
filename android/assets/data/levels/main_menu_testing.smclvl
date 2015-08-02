@@ -1,0 +1,40 @@
+{
+    "objects": [
+        {
+            "height": 0.78125,
+            "posy": 1,
+            "width": 1.5625,
+            "posx": 9.6875,
+            "texture_atlas": "data/pipes/orange/orange.pack",
+            "massive_type": "massive",
+            "obj_class": "sprite",
+            "texture_name": "data/pipes/orange/orange.pack:ver"
+        },
+        {
+            "height": 0.78125,
+            "posy": 1.78125,
+            "width": 1.5625,
+            "posx": 9.6875,
+            "texture_atlas": "data/pipes/orange/orange.pack",
+            "massive_type": "massive",
+            "obj_class": "sprite",
+            "texture_name": "data/pipes/orange/orange.pack:ver"
+        }
+    ],
+    "background": {
+        "g_1": 187,
+        "g_2": 154,
+        "r_2": 66,
+        "r_1": 78,
+        "b_1": 55,
+        "b_2": 0,
+        "texture_name": "data/game/background/more_hills.png"
+    },
+    "info": {
+        "level_height": 62,
+        "level_width": 312,
+        "level_music": [
+            "data/music/game/menu.ogg"
+        ]
+    }
+}

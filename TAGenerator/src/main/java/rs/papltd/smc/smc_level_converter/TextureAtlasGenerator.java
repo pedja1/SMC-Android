@@ -10,8 +10,12 @@ public class TextureAtlasGenerator
 {
     public static void main(String[] args)
     {
-        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/ground/mushroom_1/platform/tmp";
-        TexturePacker2.process(path, path, "shaft.pack");
+        TexturePacker2.Settings settings = new TexturePacker2.Settings();
+        settings.maxWidth = 1024;
+        settings.maxHeight = 1024;
+        settings.duplicatePadding = true;
+        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/pipes/orange/tmp";
+        TexturePacker2.process(settings, path, path, "orange.pack");
     }
 }
 

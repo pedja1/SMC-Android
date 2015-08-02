@@ -1,10 +1,11 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.*;
-
-import org.json.JSONObject;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Utility;
@@ -20,7 +21,7 @@ public class Sprite extends GameObject
     public void render(SpriteBatch spriteBatch)
     {
 		TextureRegion region = Assets.loadedRegions.get(textureName);
-		if (region != null)Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
+		if (region != null) Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
     }
 
     @Override

@@ -68,7 +68,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     
     public HUD hud;
 
-    private int width, height;
+    private float width, height;
 
     private String levelName;
 
@@ -499,7 +499,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        debugFontParams.fontParameters.size = height / 20;
+        debugFontParams.fontParameters.size = (int) (height / 20f);
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
         Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
 
@@ -693,7 +693,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return true;
     }
 
-    private float invertY(int y)
+    private float invertY(float y)
     {
         return height - y;
     }
@@ -812,22 +812,22 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.world = world;
     }
 
-    public int getWidth()
+    public float getWidth()
     {
         return width;
     }
 
-    public void setWidth(int width)
+    public void setWidth(float width)
     {
         this.width = width;
     }
 
-    public int getHeight()
+    public float getHeight()
     {
         return height;
     }
 
-    public void setHeight(int height)
+    public void setHeight(float height)
     {
         this.height = height;
     }

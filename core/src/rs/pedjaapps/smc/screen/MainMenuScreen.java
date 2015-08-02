@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 
@@ -58,6 +59,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	public boolean isSelection;
 
     ConfirmDialog exitDialog;
+
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -159,6 +162,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
 
         exitDialog.render(batch);
+        if (debug)drawDebug();
     }
 
     private void drawObjects(float deltaTime)
@@ -172,6 +176,26 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             gameObject.render(batch);
         }
     }
+
+    private void drawDebug()
+    {
+        // render blocks
+        shapeRenderer.setProjectionMatrix(drawCam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for(int i = 0; i < loader.level.gameObjects.size(); i++)
+        //for (GameObject go : world.getVisibleObjects())
+        {
+            GameObject go = loader.level.gameObjects.get(i);
+            Rectangle body = go.body;
+            Rectangle bounds = go.bounds;
+            shapeRenderer.setColor(0, 1, 0, 1);
+            shapeRenderer.rect(body.x, body.y, body.width, body.height);
+            shapeRenderer.setColor(1, 0, 0, 1);
+            shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+        }
+        shapeRenderer.end();
+    }
+
 
     @Override
     public void resize(int width, int height)
@@ -310,6 +334,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             if(exitDialog.visible)exitDialog.hide();
             else exitDialog.show();
+        }
+        else if(keycode == Input.Keys.D)
+        {
+            debug = !debug;
         }
         return true;
     }

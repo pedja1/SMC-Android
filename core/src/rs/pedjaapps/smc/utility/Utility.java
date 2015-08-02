@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.utility;
 
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +10,6 @@ import com.badlogic.gdx.utils.Base64Coder;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.screen.GameScreen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 
 /**
  * Created by pedja on 2/27/14.
@@ -68,7 +68,7 @@ public class Utility
 
     public static void draw(SpriteBatch batch, TextureRegion region, float x, float y, float height)
     {
-        batch.draw(region, x, y, height * region.getRegionWidth()/region.getRegionHeight(), height);
+        batch.draw(region, x, y, height * region.getRegionWidth() / region.getRegionHeight(), height);
     }
     /*(+x\y-height)/64*/
 	

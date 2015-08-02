@@ -1,18 +1,18 @@
 
 orange.png
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 up
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
 ver
   rotate: false
-  xy: 260, 2
+  xy: 259, 1
   size: 256, 128
   orig: 256, 128
   offset: 0, 0

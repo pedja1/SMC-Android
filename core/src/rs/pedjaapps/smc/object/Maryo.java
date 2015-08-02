@@ -642,21 +642,24 @@ public class Maryo extends DynamicObject
 		}
 		else if(object instanceof Enemy && ((Enemy)object).handleCollision)
 		{
-            boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
-            if(deadAnyway)
+            if(!godMode)
             {
-                if(!godMode)downgradeOrDie(false);
-            }
-            else
-            {
-                if(velocity.y < 0 && vertical && body.y > object.body.y)//enemy death from above
+                boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
+                if (deadAnyway)
                 {
-                    velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                    ((Enemy)object).hitByPlayer();
+                    downgradeOrDie(false);
                 }
                 else
                 {
-                    if(!godMode)downgradeOrDie(false);
+                    if (velocity.y < 0 && vertical && body.y > object.body.y)//enemy death from above
+                    {
+                        velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                        ((Enemy) object).hitByPlayer();
+                    }
+                    else
+                    {
+                        downgradeOrDie(false);
+                    }
                 }
             }
 		}
