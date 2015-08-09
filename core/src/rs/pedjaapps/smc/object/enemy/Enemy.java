@@ -70,12 +70,14 @@ public abstract class Enemy extends DynamicObject
         if(killedBy instanceof Turtle)
         {
             deadByBullet = true;
+            handleCollision = false;
         }
         else
         {
             handleCollision = false;
             world.trashObjects.add(this);
         }
+
     }
 
     public enum Direction
@@ -143,6 +145,7 @@ public abstract class Enemy extends DynamicObject
 
     protected abstract TextureRegion getDeadTextureRegion();
     protected abstract void draw(SpriteBatch spriteBatch);
+    //protected abstract int getKilledPoints(SpriteBatch spriteBatch);
 
     @Override
     public void update(float delta)

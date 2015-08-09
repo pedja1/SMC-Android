@@ -129,4 +129,21 @@ public class Utility
 		gameObject.body.width = gameObject.bounds.width = gameObject.bounds.width * widthMul;
 		gameObject.body.height = gameObject.bounds.height = gameObject.bounds.height * heightMul;
 	}
+
+    public static float gamePositionToGuiPosition(GameObject gameObject, GameScreen gameScreen, boolean x)
+    {
+        OrthographicCamera cam = gameScreen.cam;
+        OrthographicCamera guiCam = gameScreen.hud.cam;
+        float widthMul = guiCam.viewportWidth / cam.viewportWidth;
+        float heightMul = guiCam.viewportHeight / cam.viewportHeight;
+
+        if(x)
+        {
+            return  (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
+        }
+        else
+        {
+            return (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
+        }
+    }
 }

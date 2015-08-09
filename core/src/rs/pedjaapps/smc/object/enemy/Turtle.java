@@ -212,7 +212,7 @@ public class Turtle extends Enemy
 				//CollisionManager.resolve_objects(this, object, true);
                 handleCollision(ContactType.stopper);
 			}
-            else if(object instanceof Enemy && object != this && isShell && isShellMoving)
+            else if(object instanceof Enemy && object != this && isShell && isShellMoving && ((Enemy)object).handleCollision)
             {
                 ((Enemy)object).downgradeOrDie(this);
             }

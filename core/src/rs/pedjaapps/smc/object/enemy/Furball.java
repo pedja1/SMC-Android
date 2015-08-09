@@ -14,6 +14,7 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -227,6 +228,8 @@ public class Furball extends Enemy
     {
         if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
         {
+            System.out.println("hitByPlayer");
+            ((GameScreen)world.screen).hud.killPointsTextHandler.add(killPoints, Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, true), Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, false));
             if (type == Type.boss && downgradeCount >= maxDowngradeCount)
             {
                 downgradeCount++;
@@ -252,5 +255,13 @@ public class Furball extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return Assets.loadedRegions.get(keyDead);
+    }
+
+    @Override
+    public void downgradeOrDie(GameObject killedBy)
+    {
+        System.out.println("downgradeOrDie");
+        super.downgradeOrDie(killedBy);
+        ((GameScreen)world.screen).hud.killPointsTextHandler.add(killPoints, Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, true), Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, false));
     }
 }

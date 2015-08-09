@@ -71,6 +71,7 @@ public class HUD
 	private String pointsText;
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
+	public KillPointsTextHandler killPointsTextHandler;
 	private final HUDTimeText time = new HUDTimeText();
 
 	public HUD(World world)
@@ -185,6 +186,12 @@ public class HUD
         ttsTextParams.fontParameters.size = (int) C_H / 15;
         ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
         Assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
+
+		FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        pointsParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
+        pointsParams.fontParameters.size = (int) C_H / 35;
+        pointsParams.fontParameters.characters = "0123456789";
+        Assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
 		
 	}
 
@@ -246,7 +253,10 @@ public class HUD
 		tts = Assets.manager.get("touch_to_start.ttf");
 		tts.setColor(1, 1, 1, 1);
 		ttsGlyphLayout = new GlyphLayout(font, ttsText);
-		
+
+		BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
+		pointsFont.setColor(1, 1, 1, 1);
+		killPointsTextHandler = new KillPointsTextHandler(pointsFont);
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
@@ -326,6 +336,8 @@ public class HUD
 			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);
 			font.draw(batch, lives, lifesX, pointsY);
+
+			killPointsTextHandler.render(batch, deltaTime);
 			
 			batch.end();
 		}
@@ -483,4 +495,61 @@ public class HUD
     {
         pressedKeys.remove(Key.music);
     }
+
+	public static class KillPointsTextHandler
+	{
+		private final Array<KillPoint> pointsTextsPool = new Array<>();
+		private BitmapFont font;
+		NAHudText<Integer> text = new NAHudText<>(null, null);
+
+		public KillPointsTextHandler(BitmapFont font)
+		{
+			this.font = font;
+		}
+
+		public void add(int points, float positionX, float positionY)
+		{
+			for(KillPoint point : pointsTextsPool)
+			{
+				if(point.recycled)
+				{
+					point.points = points;
+					point.positionX = positionX;
+					point.positionY = positionY;
+					point.recycled = false;
+					return;
+				}
+			}
+			KillPoint point = new KillPoint();
+			point.points = points;
+			point.positionX = positionX;
+			point.positionY = positionY;
+			point.recycled = false;
+			pointsTextsPool.add(point);
+		}
+
+		public void render(SpriteBatch batch, float deltaTime)
+		{
+			for(KillPoint point : pointsTextsPool)
+			{
+				if(!point.recycled)
+				{
+					point.draw(batch, deltaTime, font, text);
+				}
+			}
+		}
+
+		private static class KillPoint
+		{
+			boolean recycled = false;
+			int points;
+			float positionX, positionY;
+
+			public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text)
+			{
+				//TODO move/fade up a bit and remove after timeout
+				font.draw(spriteBatch, text.toString(points), positionX, positionY);
+			}
+		}
+	}
 }
