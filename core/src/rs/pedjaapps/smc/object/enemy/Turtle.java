@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
@@ -20,24 +22,38 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Turtle extends Enemy
 {
-
-    private String KEY_TURN, KEY_LEFT;
-    public static final float VELOCITY = 1.5f;
+    private String KEY_TURN, KEY_LEFT, KEY_SHELL;
+    public final float mVelocity;
     public static final float VELOCITY_TURN = 0.75f;
+    public final float mVelocityShell;
     public static final float POS_Z = 0.091f;
 
     private boolean turn;
     private float turnStartTime;
 
+    private float mShellRotation;
+
+    public final int mKillPoints;
+
     private boolean turned = false;
 
-    boolean isShell = false;
+    boolean isShell = false, isShellMoving = false;
 
-    boolean isBoss;
-
-    public Turtle(World world, Vector2 size, Vector3 position)
+    public Turtle(World world, Vector2 size, Vector3 position, String color)
     {
         super(world, size, position);
+        if(!"green".equals(color))
+        {
+            mKillPoints = 50;
+            mVelocity = 1.5f;
+            mVelocityShell = 5.8f;
+        }
+        else
+        {
+            mKillPoints = 150;
+            mVelocity = 1.875f;
+            mVelocityShell = 7.1f;
+        }
         setupBoundingBox();
     }
 
@@ -46,12 +62,12 @@ public class Turtle extends Enemy
     {
         KEY_TURN = textureAtlas + ":turn";
         KEY_LEFT = textureAtlas + "_l";
-        isBoss = textureAtlas.contains("red");
+        KEY_SHELL = textureAtlas + ":shell";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>();
         Array<TextureRegion> leftFrames = new Array<TextureRegion>();
 
-        for(int i = isBoss ? 0 : 1; i < (isBoss ? 3 : 9); i++)
+        for(int i = 1; i < 9; i++)
         {
             TextureRegion region = atlas.findRegion("walk-" + i);
             rightFrames.add(region);
@@ -63,7 +79,8 @@ public class Turtle extends Enemy
 
         Assets.animations.put(textureAtlas, new Animation(0.07f, rightFrames));
         Assets.animations.put(textureAtlas + "_l", new Animation(0.07f, leftFrames));
-        if(!isBoss)Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
+        Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
+        Assets.loadedRegions.put(textureAtlas + ":shell", atlas.findRegion("shell"));
 
     }
 
@@ -71,9 +88,53 @@ public class Turtle extends Enemy
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
-        frame = (turn && !isBoss) ? Assets.loadedRegions.get(KEY_TURN)
-                : Assets.animations.get(direction == Direction.right ? textureAtlas : KEY_LEFT).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
+        if(!isShell && turn)
+        {
+            frame = Assets.loadedRegions.get(KEY_TURN);
+        }
+        else
+        {
+            if(isShell)
+            {
+                frame = Assets.loadedRegions.get(KEY_SHELL);
+            }
+            else
+            {
+                frame = Assets.animations.get(direction == Direction.right ? textureAtlas : KEY_LEFT).getKeyFrame(stateTime, true);
+            }
+        }
+        if(frame != null)
+        {
+            float width = Utility.getWidth(frame, bounds.height);
+            float originX = width * 0.5f;
+            float originY = bounds.height * 0.5f;
+            spriteBatch.draw(frame, bounds.x, bounds.y, originX, originY, width, bounds.height, 1, 1, mShellRotation);
+        }
+    }
+
+    private float getRotation()
+    {
+        if(isShellMoving)
+        {
+            float circumference = (float) Math.PI * (body.width);
+            float deltaVelocity = mVelocityShell * Gdx.graphics.getDeltaTime();
+
+            float step = circumference / deltaVelocity;
+
+
+            float frameRotation = 360 / step;//degrees
+            mShellRotation += frameRotation;
+            if(mShellRotation > 360)mShellRotation = mShellRotation - 360;
+            System.out.println("mShellRotation: " + mShellRotation);
+            System.out.println("circumference: " + circumference);
+            System.out.println("step: " + step);
+            System.out.println("frameRotation: " + frameRotation);
+        }
+        else
+        {
+            mShellRotation = 0;
+        }
+        return direction == Direction.right ? mShellRotation : -mShellRotation;
     }
 
     public void update(float deltaTime)
@@ -100,16 +161,43 @@ public class Turtle extends Enemy
 		switch(direction)
 		{
 			case right:
-				velocity.set(velocity.x =- (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
+				velocity.set(velocity.x = -getVelocityX(), velocity.y, velocity.z);
 				break;
 			case left:
-				velocity.set(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
+				velocity.set(velocity.x = +getVelocityX(), velocity.y, velocity.z);
 				break;
 		}
 		turned = false;
+        mShellRotation = getRotation();
     }
 
-	@Override
+    private float getVelocityX()
+    {
+        if(isShell)
+        {
+            if(isShellMoving)
+            {
+                return mVelocityShell;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            if(turn)
+            {
+                return VELOCITY_TURN;
+            }
+            else
+            {
+                return mVelocity;
+            }
+        }
+    }
+
+    @Override
 	protected void handleCollision(GameObject object, boolean vertical)
 	{
         super.handleCollision(object, vertical);
@@ -117,14 +205,21 @@ public class Turtle extends Enemy
 		{
 			if(((object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive
 					&& object.body.y + object.body.height > body.y + 0.1f)
-					|| object instanceof EnemyStopper
-					|| (object instanceof Enemy && object != this))
+					|| (object instanceof EnemyStopper && !isShellMoving))
                     && !turned)
 			{
 				//CollisionManager.resolve_objects(this, object, true);
                 handleCollision(ContactType.stopper);
 			}
+            else if(object instanceof Enemy && object != this && isShell && isShellMoving)
+            {
+                ((Enemy)object).downgradeOrDie(this);
+            }
 		}
+        else
+        {
+
+        }
 	}
 
 	@Override
@@ -134,26 +229,67 @@ public class Turtle extends Enemy
 		{
 			case stopper:
 				direction = direction == Direction.right ? Direction.left : Direction.right;
-                if (!isBoss)
-                {
                     turnStartTime = stateTime;
                     turn = true;
-                }
                 velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
                 turned = true;
 				break;
+            case player:
+
+                break;
 		}
 	}
 
     private void setupBoundingBox()
     {
-        body.height = body.height - 0.2f;
+        if(!isShell)body.height = body.height - 0.2f;
     }
 
     @Override
     public void updateBounds()
     {
-        bounds.height = body.height + 0.2f;
-        super.updateBounds();
+        if(!isShell)
+        {
+            bounds.height = body.height + 0.2f;
+            super.updateBounds();
+        }
+        else
+        {
+            bounds.x = body.x - ((bounds.width - body.width) - body.width / 2);
+            bounds.y = body.y - ((bounds.height - body.height) - body.height / 2);
+        }
+    }
+
+    @Override
+    public int hitByPlayer(Maryo maryo, boolean vertical)
+    {
+        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
+        {
+            //transform to shell if not shell
+            //if shell make it move
+            // if shell and moving make it stop
+            if (!isShell)
+            {
+                isShell = true;
+                velocity.x = 0;
+                bounds.height = bounds.height * 0.60f;
+                bounds.width = bounds.width * 0.60f;
+                body.height = bounds.height / 2;
+                body.width = bounds.width / 2;
+            }
+            else
+            {
+                direction = (maryo.position.x + maryo.body.width * 0.5f) > (position.x + body.width * 0.5f) ? Direction.right : Direction.left;
+                isShellMoving = !isShellMoving;
+            }
+            //TODO (v2.0)turtle should automatically transform back from shell after timeout if shell is standing
+            return HIT_RESOLUTION_ENEMY_DIED;
+        }
+        //TODO (v2.0)player can also pick up shell if player is "not small" and if shell is not moving, if shell is moving than player dies
+        else
+        {
+
+            return HIT_RESOLUTION_PLAYER_DIED;
+        }
     }
 }

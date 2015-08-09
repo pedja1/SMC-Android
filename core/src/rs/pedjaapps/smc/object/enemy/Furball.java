@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
@@ -219,20 +220,28 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void hitByPlayer()
+    public int hitByPlayer(Maryo maryo, boolean vertical)
     {
-        if(type == Type.boss && downgradeCount >= maxDowngradeCount)
+        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
         {
-            downgradeCount++;
-            return;
+            if (type == Type.boss && downgradeCount >= maxDowngradeCount)
+            {
+                downgradeCount++;
+                return HIT_RESOLUTION_ENEMY_DIED;
+            }
+            stateTime = 0;
+            handleCollision = false;
+            dying = true;
+            Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.ogg");
+            if (sound != null && Assets.playSounds)
+            {
+                sound.play();
+            }
+            return HIT_RESOLUTION_ENEMY_DIED;
         }
-        stateTime = 0;
-        handleCollision = false;
-        dying = true;
-        Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.ogg");
-        if (sound != null && Assets.playSounds)
+        else
         {
-            sound.play();
+            return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
 }

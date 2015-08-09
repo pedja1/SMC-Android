@@ -651,14 +651,18 @@ public class Maryo extends DynamicObject
                 }
                 else
                 {
-                    if (velocity.y < 0 && vertical && body.y > object.body.y)//enemy death from above
+                    int resolution = ((Enemy) object).hitByPlayer(this, vertical);
+                    if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
                     {
                         velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                        ((Enemy) object).hitByPlayer();
+                    }
+                    else if(resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
+                    {
+                        downgradeOrDie(false);
                     }
                     else
                     {
-                        downgradeOrDie(false);
+                        //TODO handle this here or in enemy???????
                     }
                 }
             }

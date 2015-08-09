@@ -135,6 +135,7 @@ public class Converter
                 jEnemy.put("height", enemy.height);
                 jEnemy.put("texture_atlas", enemy.texture_atlas);
                 jEnemy.put("enemy_class", enemy.type);
+                jEnemy.put("color", enemy.color);
                 jEnemy.put("obj_class", "enemy");
                 if("furball".equals(enemy.type))
                 {

@@ -9,7 +9,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -766,8 +765,8 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("turtle".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/turtle/" + enemy.color + ".pack";
-            enemy.image_dir = "enemy/turtle/" + enemy.color + "/";
+            enemy.texture_atlas = "data/enemy/turtle/green.pack";
+            enemy.image_dir = "enemy/turtle/green/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "walk_1.settings");
         }

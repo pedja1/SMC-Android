@@ -70,6 +70,12 @@ public class Utility
     {
         batch.draw(region, x, y, height * region.getRegionWidth() / region.getRegionHeight(), height);
     }
+
+    public static float getWidth(TextureRegion region, float height)
+    {
+        return height * region.getRegionWidth() / region.getRegionHeight();
+    }
+
     /*(+x\y-height)/64*/
 	
 	public static String base64Encode(final String input) 

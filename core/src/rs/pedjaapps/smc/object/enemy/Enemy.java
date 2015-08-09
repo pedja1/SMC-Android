@@ -3,6 +3,8 @@ package rs.pedjaapps.smc.object.enemy;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.object.DynamicObject;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 
 /**
@@ -10,6 +12,21 @@ import rs.pedjaapps.smc.object.World;
  */
 public abstract class Enemy extends DynamicObject
 {
+    /**
+     * Used with {@link #hitByPlayer(Maryo, boolean)}
+     * Player has killed the enemy(or downgraded it/decrease lives count...)*/
+    public static final int HIT_RESOLUTION_ENEMY_DIED = 0;
+
+    /**
+     * Used with {@link #hitByPlayer(Maryo, boolean)}
+     * Enemy has killed the player (or downgraded)*/
+    public static final int HIT_RESOLUTION_PLAYER_DIED = 1;
+
+    /**
+     * Used with {@link #hitByPlayer(Maryo, boolean)}
+     * For example player has picked up the shell of turtle*/
+    public static final int HIT_RESOLUTION_CUSTOM = 2;
+
     public String textureAtlas;
     public String textureName;//name of texture from pack
 	protected Direction direction = Direction.right;
@@ -25,9 +42,27 @@ public abstract class Enemy extends DynamicObject
 		return direction;
 	}
 
-    public void hitByPlayer()
+    /**
+     * Called when player has hit an enemy(most likely by jumping on top of it), and should disable/kill it
+     * @return true if */
+    public int hitByPlayer(Maryo maryo, boolean vertical)
     {
         //TODO implement this in subclasses and dont call super
+        //TODO this is just here to remove enemies that aren't finished yet
+        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
+        {
+            downgradeOrDie(maryo);
+            return HIT_RESOLUTION_ENEMY_DIED;
+        }
+        else
+        {
+            return HIT_RESOLUTION_PLAYER_DIED;
+        }
+    }
+
+    public void downgradeOrDie(GameObject killedBy)
+    {
+        //TODO implement in subclasses and add animation...
         handleCollision = false;
         world.trashObjects.add(this);
     }
@@ -54,32 +89,7 @@ public abstract class Enemy extends DynamicObject
         super(world, size, position);
     }
 
-    /*public Body createBody(World world, Vector3 position, float width, float height)
-    {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = getBodyType();
-        bodyDef.position.set(position.x + width / 2, position.y + height / 2);
-
-        Body body = world.createBody(bodyDef);
-
-        PolygonShape polygonShape = new PolygonShape();
-
-        polygonShape.setAsBox(width / 2, height / 2);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = polygonShape;
-        fixtureDef.density = 1062;
-        fixtureDef.friction = 0;
-        fixtureDef.restitution = 0.1f;
-
-        body.createFixture(fixtureDef);
-		body.setUserData(this);
-
-        polygonShape.dispose();
-        return body;
-    }*/
-
-    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position, int maxDowngradeCount)
+    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position, int maxDowngradeCount, String color)
     {
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;
@@ -97,7 +107,7 @@ public abstract class Enemy extends DynamicObject
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;
-                enemy = new Turtle(world, size, position);
+                enemy = new Turtle(world, size, position, color);
                 break;
         }
         return enemy;
