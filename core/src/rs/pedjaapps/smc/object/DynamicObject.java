@@ -65,68 +65,80 @@ public abstract class DynamicObject extends GameObject
         stateTime += delta;
     }
 
+    protected void checkCollisionWithBlocks(float delta)
+    {
+        checkCollisionWithBlocks(delta, true, true);
+    }
+
     /** Collision checking **/
-    protected void checkCollisionWithBlocks(float delta) 
+    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY)
     {
         // scale velocity to frame units 
         velocity.scl(delta);
 
-        // we first check the movement on the horizontal X axis
-
-        // simulate maryos's movement on the X
-        body.x += velocity.x;
-
-		List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
-        // if m collides, make his horizontal velocity 0
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < surroundingObjects.size(); i++)
-        //for (GameObject object : surroundingObjects)
-		{
-            GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
-            if (body.overlaps(object.body))
-			{
-				handleCollision(object, false);
-            }
-            else if((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
-            {
-                handleCollision(((Box) object).itemObject, false);
-            }
-        }
-        if(body.x < 0 || body.x + body.width > world.level.width)
+        if(checkX)
         {
-            velocity.x = 0;
-        }
+            // we first check the movement on the horizontal X axis
 
-        // reset the x position of the collision box
-        body.x = position.x;
+            // simulate maryos's movement on the X
+            body.x += velocity.x;
 
-        // the same thing but on the vertical Y axis
-
-        body.y += velocity.y;
-
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < surroundingObjects.size(); i++)
-        //for (GameObject object : surroundingObjects)
-		{
-            GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
-            if (body.overlaps(object.body))
-			{
-				handleCollision(object, true);
-            }
-            else if((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+            List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+            // if m collides, make his horizontal velocity 0
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0; i < surroundingObjects.size(); i++)
+            //for (GameObject object : surroundingObjects)
             {
-                handleCollision(((Box) object).itemObject, true);
+                GameObject object = surroundingObjects.get(i);
+                if (object == null) continue;
+                if (body.overlaps(object.body))
+                {
+                    handleCollision(object, false);
+                }
+                else if ((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+                {
+                    handleCollision(((Box) object).itemObject, false);
+                }
             }
-        }
-        if(body.y < 0)
-        {
-            handleDroppedBelowWorld();
+            if (body.x < 0 || body.x + body.width > world.level.width)
+            {
+                velocity.x = 0;
+            }
+
+            // reset the x position of the collision box
+            body.x = position.x;
         }
 
-        // reset the collision box's position on Y
-        body.y = position.y;
+        if(checkY)
+        {
+            // the same thing but on the vertical Y axis
+
+            body.y += velocity.y;
+
+            List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0; i < surroundingObjects.size(); i++)
+            //for (GameObject object : surroundingObjects)
+            {
+                GameObject object = surroundingObjects.get(i);
+                if (object == null) continue;
+                if (body.overlaps(object.body))
+                {
+                    handleCollision(object, true);
+                }
+                else if ((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+                {
+                    handleCollision(((Box) object).itemObject, true);
+                }
+            }
+            if (body.y < 0)
+            {
+                handleDroppedBelowWorld();
+            }
+
+            // reset the collision box's position on Y
+            body.y = position.y;
+        }
 
         // update position
         position.add(velocity);

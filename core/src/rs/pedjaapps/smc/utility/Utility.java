@@ -76,6 +76,11 @@ public class Utility
         return height * region.getRegionWidth() / region.getRegionHeight();
     }
 
+    public static float getWidth(Texture texture, float height)
+    {
+        return height * texture.getWidth() / texture.getHeight();
+    }
+
     /*(+x\y-height)/64*/
 	
 	public static String base64Encode(final String input) 

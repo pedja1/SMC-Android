@@ -116,7 +116,7 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
         if (!dying)
@@ -154,7 +154,7 @@ public class Furball extends Enemy
         // apply acceleration to change velocity
         velocity.add(acceleration);
 
-        checkCollisionWithBlocks(deltaTime);
+        checkCollisionWithBlocks(deltaTime, !deadByBullet, !deadByBullet);
 
         if(stateTime - turnStartTime > 0.15f)
         {
@@ -162,16 +162,19 @@ public class Furball extends Enemy
             turn = false;
         }
 
-		switch(direction)
-		{
-			case right:
-				velocity.set(velocity.x =- (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
-				break;
-			case left:
-				velocity.set(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
-				break;
-		}
-		turned = false;
+        if (!deadByBullet)
+        {
+            switch(direction)
+            {
+                case right:
+                    velocity.set(velocity.x =- (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
+                    break;
+                case left:
+                    velocity.set(velocity.x =+ (turn ? VELOCITY_TURN : VELOCITY), velocity.y, velocity.z);
+                    break;
+            }
+        }
+        turned = false;
     }
 	
 	@Override
@@ -243,5 +246,11 @@ public class Furball extends Enemy
         {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
+    }
+
+    @Override
+    protected TextureRegion getDeadTextureRegion()
+    {
+        return Assets.loadedRegions.get(keyDead);
     }
 }

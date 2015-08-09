@@ -22,7 +22,7 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Turtle extends Enemy
 {
-    private String KEY_TURN, KEY_LEFT, KEY_SHELL;
+    private String KEY_TURN, KEY_LEFT, KEY_SHELL, KEY_DEAD;
     public final float mVelocity;
     public static final float VELOCITY_TURN = 0.75f;
     public final float mVelocityShell;
@@ -63,6 +63,7 @@ public class Turtle extends Enemy
         KEY_TURN = textureAtlas + ":turn";
         KEY_LEFT = textureAtlas + "_l";
         KEY_SHELL = textureAtlas + ":shell";
+        KEY_DEAD = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> rightFrames = new Array<TextureRegion>();
         Array<TextureRegion> leftFrames = new Array<TextureRegion>();
@@ -81,11 +82,12 @@ public class Turtle extends Enemy
         Assets.animations.put(textureAtlas + "_l", new Animation(0.07f, leftFrames));
         Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
         Assets.loadedRegions.put(textureAtlas + ":shell", atlas.findRegion("shell"));
+        Assets.loadedRegions.put(textureAtlas + ":dead", atlas.findRegion("walk-1"));
 
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
         if(!isShell && turn)
@@ -125,10 +127,6 @@ public class Turtle extends Enemy
             float frameRotation = 360 / step;//degrees
             mShellRotation += frameRotation;
             if(mShellRotation > 360)mShellRotation = mShellRotation - 360;
-            System.out.println("mShellRotation: " + mShellRotation);
-            System.out.println("circumference: " + circumference);
-            System.out.println("step: " + step);
-            System.out.println("frameRotation: " + frameRotation);
         }
         else
         {
@@ -150,7 +148,7 @@ public class Turtle extends Enemy
         // apply acceleration to change velocity
         velocity.add(acceleration);
 
-        checkCollisionWithBlocks(deltaTime);
+        checkCollisionWithBlocks(deltaTime, !deadByBullet, !deadByBullet);
 
         if(stateTime - turnStartTime > 0.15f)
         {
@@ -158,16 +156,19 @@ public class Turtle extends Enemy
             turn = false;
         }
 
-		switch(direction)
-		{
-			case right:
-				velocity.set(velocity.x = -getVelocityX(), velocity.y, velocity.z);
-				break;
-			case left:
-				velocity.set(velocity.x = +getVelocityX(), velocity.y, velocity.z);
-				break;
-		}
-		turned = false;
+        if (!deadByBullet)
+        {
+            switch(direction)
+            {
+                case right:
+                    velocity.set(velocity.x = -getVelocityX(), velocity.y, velocity.z);
+                    break;
+                case left:
+                    velocity.set(velocity.x = +getVelocityX(), velocity.y, velocity.z);
+                    break;
+            }
+        }
+        turned = false;
         mShellRotation = getRotation();
     }
 
@@ -291,5 +292,11 @@ public class Turtle extends Enemy
 
             return HIT_RESOLUTION_PLAYER_DIED;
         }
+    }
+
+    @Override
+    protected TextureRegion getDeadTextureRegion()
+    {
+        return Assets.loadedRegions.get(KEY_DEAD);
     }
 }

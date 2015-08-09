@@ -1,11 +1,15 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
@@ -31,6 +35,7 @@ public abstract class Enemy extends DynamicObject
     public String textureName;//name of texture from pack
 	protected Direction direction = Direction.right;
     public boolean handleCollision = true;
+    boolean deadByBullet;
 
 	public void setDirection(Direction direction)
 	{
@@ -62,9 +67,15 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy)
     {
-        //TODO implement in subclasses and add animation...
-        handleCollision = false;
-        world.trashObjects.add(this);
+        if(killedBy instanceof Turtle)
+        {
+            deadByBullet = true;
+        }
+        else
+        {
+            handleCollision = false;
+            world.trashObjects.add(this);
+        }
     }
 
     public enum Direction
@@ -112,6 +123,26 @@ public abstract class Enemy extends DynamicObject
         }
         return enemy;
     }
+
+    @Override
+    public void render(SpriteBatch spriteBatch)
+    {
+        if(deadByBullet)
+        {
+            TextureRegion frame = getDeadTextureRegion();
+            float width = Utility.getWidth(frame, bounds.height);
+            float originX = width * 0.5f;
+            float originY = bounds.height * 0.5f;
+            spriteBatch.draw(frame, bounds.x, bounds.y, originX, originY, width, bounds.height, 1, 1, 180);
+        }
+        else
+        {
+            draw(spriteBatch);
+        }
+    }
+
+    protected abstract TextureRegion getDeadTextureRegion();
+    protected abstract void draw(SpriteBatch spriteBatch);
 
     @Override
     public void update(float delta)
