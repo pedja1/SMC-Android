@@ -39,6 +39,7 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
+import rs.pedjaapps.smc.utility.NAHudText;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
@@ -118,6 +119,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     ConfirmDialog exitDialog;
+	
+	public KillPointsTextHandler killPointsTextHandler;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -188,6 +191,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
         drawObjects(delta);
+		killPointsTextHandler.render(spriteBatch, delta);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(pCamera.combined);
@@ -505,6 +509,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         exitDialog.loadAssets();
         
+		FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        pointsParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
+        pointsParams.fontParameters.size = (int) HUD.C_H / 35;
+        pointsParams.fontParameters.characters = "0123456789";
+        Assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
+		
     }
 
 	private void loadTextures()
@@ -529,6 +539,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         for(GameObject go : loader.level.gameObjects)
             go.initAssets();
+			
+		BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
+		pointsFont.setColor(1, 1, 1, 1);
+		killPointsTextHandler = new KillPointsTextHandler(pointsFont);
     }
 
     // * InputProcessor methods ***************************//
@@ -839,4 +853,83 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         public boolean touched = false;
         HUD.Key clickArea = HUD.Key.none;
     }
+	
+	public static class KillPointsTextHandler
+	{
+		private final Array<KillPoint> pointsTextsPool = new Array<>();
+		private BitmapFont font;
+		NAHudText<Integer> text = new NAHudText<>(null, null);
+
+		public KillPointsTextHandler(BitmapFont font)
+		{
+			this.font = font;
+			font.getData().setScale(0.01f);
+		}
+
+		public void add(int points, float positionX, float positionY)
+		{
+			for(KillPoint point : pointsTextsPool)
+			{
+				if(point.recycled)
+				{
+					point.reset(positionX, positionY, points);
+					return;
+				}
+			}
+			KillPoint point = new KillPoint(points, positionX, positionY);
+			pointsTextsPool.add(point);
+		}
+
+		public void render(SpriteBatch batch, float deltaTime)
+		{
+			for(KillPoint point : pointsTextsPool)
+			{
+				if(!point.recycled)
+				{
+					point.draw(batch, deltaTime, font, text);
+				}
+			}
+		}
+
+		private static class KillPoint
+		{
+			static final float velocity = 0.8f;
+			static final float maxDistance = 0.4f;
+			private boolean recycled = false;
+			private int points;
+			private float positionX, positionY, origPosY;
+
+			public KillPoint(int points, float positionX, float positionY)
+			{
+				this.points = points;
+				this.positionX = positionX;
+				this.positionY = positionY;
+				this.origPosY = positionY;
+			}
+			
+			public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text)
+			{
+				if(positionY >= origPosY + maxDistance)
+				{
+					recycled = true;
+					return;
+				}
+				float velDelta = velocity * deltaTime;
+				positionY += maxDistance * velDelta;
+				float alpha = font.getColor().a;
+				alpha -= 1 / (maxDistance / (maxDistance * velDelta));
+				font.getColor().set(1, 1, 1, alpha);
+				font.draw(spriteBatch, text.toString(points), positionX, positionY);
+			}
+			
+			public void reset(float posX, float posY, int points)
+			{
+				recycled = false;
+				positionX = posX;
+				positionY = posY;
+				this.points = points;
+				origPosY = posY;
+			}
+		}
+	}
 }

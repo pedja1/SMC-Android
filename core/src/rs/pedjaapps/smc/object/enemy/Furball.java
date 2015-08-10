@@ -229,7 +229,7 @@ public class Furball extends Enemy
         if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
         {
             System.out.println("hitByPlayer");
-            ((GameScreen)world.screen).hud.killPointsTextHandler.add(killPoints, Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, true), Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, false));
+            ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + bounds.height);
             if (type == Type.boss && downgradeCount >= maxDowngradeCount)
             {
                 downgradeCount++;
@@ -262,6 +262,6 @@ public class Furball extends Enemy
     {
         System.out.println("downgradeOrDie");
         super.downgradeOrDie(killedBy);
-        ((GameScreen)world.screen).hud.killPointsTextHandler.add(killPoints, Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, true), Utility.gamePositionToGuiPosition(this, (GameScreen) world.screen, false));
+        ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + bounds.height);
     }
 }
