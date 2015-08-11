@@ -893,7 +893,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
 		private static class KillPoint
 		{
-			static final float velocity = 0.8f;
+			static final float velocity = 0.9f;
 			static final float maxDistance = 0.4f;
 			private boolean recycled = false;
 			private int points;

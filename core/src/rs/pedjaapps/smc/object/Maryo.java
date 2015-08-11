@@ -11,14 +11,16 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-
+import java.util.Collections;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.Flyon;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.LevelLoader;
 
 public class Maryo extends DynamicObject
 {
@@ -140,6 +142,13 @@ public class Maryo extends DynamicObject
     float resizeAnimStartTime;
     private MaryoState newState;//used with resize animation
     private MaryoState oldState;//used with resize animation
+	
+	//exit, enter
+	private boolean exiting, entering;
+	private LevelExit exit;
+	private Vector3 exitStartPosition = new Vector3();
+	private float exitVelocity = 0.5f;
+	private int rotation = 0;
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -252,6 +261,16 @@ public class Maryo extends DynamicObject
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion marioFrame;
+		if(exiting)
+		{
+			marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.stand_left)) : Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
+			
+            float originX = bounds.width * 0.5f;
+            float originY = bounds.height * 0.5f;
+            spriteBatch.draw(marioFrame, bounds.x, bounds.y, originX, originY, bounds.width, bounds.height, 1, 1, rotation);
+			
+			return;
+		}
         if(resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
         {
             resizeAnimStartTime = 0;
@@ -571,6 +590,78 @@ public class Maryo extends DynamicObject
 	@Override
 	public void update(float delta)
 	{
+		if(exiting)
+		{
+			boolean isDone = false;
+			float velDelta = exitVelocity * delta;
+			if("up".equals(exit.direction))
+			{
+				if(position.y >= exitStartPosition.y + bounds.height)
+				{
+					isDone = true;
+				}
+				else
+				{
+					body.y = position.y += bounds.height * velDelta;
+				}
+			}
+			else if("down".equals(exit.direction))
+			{
+				if(position.y <= exitStartPosition.y - bounds.height)
+				{
+					isDone = true;
+				}
+				else
+				{
+					body.y = position.y -= bounds.height * velDelta;
+				}
+			}
+			else if("right".equals(exit.direction))
+			{
+				if(position.x >= exitStartPosition.x + bounds.width)
+				{
+					isDone = true;
+				}
+				else
+				{
+					rotation = -90;
+					body.x = position.x += bounds.width * velDelta;
+				}
+			}
+			else if("left".equals(exit.direction))
+			{
+				if(position.x <= exitStartPosition.x + bounds.width)
+				{
+					isDone = true;
+				}
+				else
+				{
+					rotation = 90;
+					body.x = position.x -= bounds.width * velDelta;
+				}
+			}
+			if(isDone)
+			{
+				//exiting = false;
+				//((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
+				
+				String nextLevelName;
+				if(exit.levelName == null)
+				{
+					nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+				}
+				else
+				{
+					nextLevelName = exit.levelName;
+				}
+				world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+			}
+			else
+			{
+				updateBounds();
+			}
+			return;
+		}
 		//disable godmod after timeot
 		if(godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
 		{
@@ -889,4 +980,42 @@ public class Maryo extends DynamicObject
         this.maryoState = marioState;
         setJumpSound();
     }
+	
+	public void enterLevel()
+	{
+		
+	}
+	
+	public void exitLevel(LevelExit exit)
+	{
+		System.out.println("level: " + exit.levelName);
+		
+		switch(exit.type)
+		{
+			case LevelExit.LEVEL_EXIT_BEAM:
+				//just change level
+				String nextLevelName;
+				if(exit.levelName == null)
+				{
+					nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+				}
+				else
+				{
+					nextLevelName = exit.levelName;
+				}
+				world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+				break;
+			case LevelExit.LEVEL_EXIT_WARP:
+				if(exiting)return;
+				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+				exiting = true;
+				this.exit = exit;
+				exitStartPosition.set(position);
+				position.z = LevelLoader.m_pos_z_passive_start;
+				Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+				
+				//todo sound
+				break;
+		}
+	}
 }

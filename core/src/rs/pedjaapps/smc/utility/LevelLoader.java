@@ -60,7 +60,7 @@ public class LevelLoader
         sprite, item, box, player, enemy, moving_platform, enemy_stopper, level_entry, level_exit,
     }
 
-    private static final float m_pos_z_passive_start = 0.01f;
+    public static final float m_pos_z_passive_start = 0.01f;
     private static final float m_pos_z_massive_start = 0.08f;
     private static final float m_pos_z_front_passive_start = 0.1f;
     private static final float m_pos_z_halfmassive_start = 0.04f;
@@ -315,7 +315,7 @@ public class LevelLoader
         LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
         exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
         exit.type = jExit.optInt(KEY.type.toString());
-        exit.levelName = jExit.optString(KEY.level_name.toString());
+        exit.levelName = jExit.optString(KEY.level_name.toString(), null);
         exit.entry = jExit.optString(KEY.entry.toString());
         exit.direction = jExit.optString(KEY.direction.toString());
 
@@ -347,7 +347,7 @@ public class LevelLoader
      *
      * @author mzechner
      */
-    public class ZSpriteComparator implements Comparator<GameObject>
+    public static class ZSpriteComparator implements Comparator<GameObject>
     {
         @Override
         public int compare(GameObject sprite1, GameObject sprite2)

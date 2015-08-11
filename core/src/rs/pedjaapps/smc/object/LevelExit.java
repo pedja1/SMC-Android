@@ -9,6 +9,9 @@ import com.badlogic.gdx.math.Vector3;
  */
 public class LevelExit extends GameObject
 {
+	public static final int LEVEL_EXIT_BEAM = 0;	// no animation ( f.e. a door or hole )
+	public static final int LEVEL_EXIT_WARP = 1;	// rotated player moves slowly into the destination direction
+
     public int type, cameraMotion;
     public String direction, levelName, entry;
     public LevelExit(World world, Vector2 size, Vector3 position)

@@ -16,6 +16,7 @@ import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.view.HUD;
+import rs.pedjaapps.smc.object.LevelEntry;
 
 public class MarioController
 {
@@ -47,30 +48,46 @@ public class MarioController
     public void leftPressed()
     {
         keys.add(Keys.LEFT);
+		checkLeave("left");
     }
 
     public void rightPressed()
     {
         keys.add(Keys.RIGHT);
+		checkLeave("right");
+		//TODO this is called only when key is pressed, not continusly
+		//if player holds the key and walks to the exit, he will have to press it again to exit
     }
 
     public void upPressed()
     {
         keys.add(Keys.UP);
-        for(GameObject go : world.getVisibleObjects())
+        checkLeave("up");
+    }
+
+	private void checkLeave(String dir)
+	{
+		Array<GameObject> vo = world.getVisibleObjects();
+		//for(GameObject go : world.getVisibleObjects())
+		for(int i = 0; i < vo.size; i++)
         {
-            if(go instanceof LevelExit && go.body.overlaps(maryo.body))
+			GameObject go = vo.get(i);
+            if(go instanceof LevelExit 
+				&& go.body.overlaps(maryo.body) 
+				&& (((LevelExit)go).type == LevelExit.LEVEL_EXIT_BEAM || (((LevelExit)go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit)go).direction))))
             {
-                String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
-                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
-                return;
+                /*String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));*/
+                maryo.exitLevel((LevelExit)go);
+				return;
             }
         }
-    }
+	}
 
     public void downPressed()
     {
         keys.add(Keys.DOWN);
+		checkLeave("down");
     }
 
     public void jumpPressed()
