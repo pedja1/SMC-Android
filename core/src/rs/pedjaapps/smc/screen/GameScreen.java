@@ -295,8 +295,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         bgCam.update();
         spriteBatch.setProjectionMatrix(bgCam.combined);
         spriteBatch.begin();
-		world.level.bg1.render(spriteBatch);
-		world.level.bg2.render(spriteBatch);
+		if(world.level.bg1 != null)world.level.bg1.render(spriteBatch);
+		if(world.level.bg2 != null)world.level.bg2.render(spriteBatch);
         spriteBatch.end();
 	}
 
@@ -348,7 +348,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             GameObject object = drawableObjects.get(i);
             object.render(spriteBatch);
         }
-        world.rectPool.free(maryoBWO);
+        world.RECT_POOL.free(maryoBWO);
     }
 
 	private void drawDebug() 
@@ -648,7 +648,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             return false;
         if (pointer < 5)
         {
-            Vector2 vect = world.vector2Pool.obtain();
+            Vector2 vect = world.VECTOR2_POOL.obtain();
             if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
             {
                 controller.rightPressed();
@@ -701,7 +701,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 				touches.get(pointer).clickArea = HUD.Key.play;
                 hud.playPressed();
             }
-            world.vector2Pool.free(vect);
+            world.VECTOR2_POOL.free(vect);
         }
 
         return true;

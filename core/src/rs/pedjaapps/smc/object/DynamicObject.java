@@ -6,6 +6,7 @@ import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Constants;
+import com.badlogic.gdx.math.Rectangle;
 
 public abstract class DynamicObject extends GameObject
 {
@@ -91,7 +92,7 @@ public abstract class DynamicObject extends GameObject
             {
                 GameObject object = surroundingObjects.get(i);
                 if (object == null) continue;
-                if (body.overlaps(object.body))
+                if (body.overlaps(object.body, this instanceof Maryo))
                 {
                     handleCollision(object, false);
                 }
@@ -122,7 +123,7 @@ public abstract class DynamicObject extends GameObject
             {
                 GameObject object = surroundingObjects.get(i);
                 if (object == null) continue;
-                if (body.overlaps(object.body))
+                if (body.overlaps(object.body, this instanceof Maryo))
                 {
                     handleCollision(object, true);
                 }

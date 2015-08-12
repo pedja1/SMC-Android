@@ -882,6 +882,8 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.texture_atlas = sprite.image.contains("small") ? "data/pipes/orange/yellow.pack" : "data/pipes/yellow/yellow.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+			sprite.image = sprite.image.replaceAll(sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")), "up");
+			System.out.println(sprite.image);
         }
         else if(sprite.image.startsWith("ground/mushroom_1/platform"))
         {

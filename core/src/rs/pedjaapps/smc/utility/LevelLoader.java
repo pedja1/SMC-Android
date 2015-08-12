@@ -156,14 +156,17 @@ public class LevelLoader
         if (jLevel.has(KEY.background.toString()))
         {
             JSONObject jBg = jLevel.getJSONObject(KEY.background.toString());
-            String textureName = jBg.getString(KEY.texture_name.toString());
-            Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
+            String textureName = jBg.optString(KEY.texture_name.toString(), null);
+            if(textureName != null)Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
             if(levelParsed)return;
 
-            Background bg = new Background(new Vector2(0, 0), textureName);
-            level.bg1 = bg;
-            bg = new Background(new Vector2(Background.WIDTH, 0), textureName);
-            level.bg2 = bg;
+			if(textureName != null)
+			{
+            	Background bg = new Background(new Vector2(0, 0), textureName);
+            	level.bg1 = bg;
+            	bg = new Background(new Vector2(Background.WIDTH, 0), textureName);
+            	level.bg2 = bg;
+			}
             //TODO this is stupid, we should dinamically repeat background
 
             float r1 = (float) jBg.getDouble(KEY.r_1.toString()) / 255;//convert from 0-255 range to 0-1 range
@@ -309,9 +312,9 @@ public class LevelLoader
     {
         if(levelParsed)return;
         Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
-        float width = (float) jExit.getDouble(KEY.width.toString());
-        float height = (float) jExit.getDouble(KEY.height.toString());
-
+        float width = .2f;//(float) jExit.getDouble(KEY.width.toString());
+        float height = 1f;//(float) jExit.getDouble(KEY.height.toString());
+		//position.y -= height * .5f;
         LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
         exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
         exit.type = jExit.optInt(KEY.type.toString());

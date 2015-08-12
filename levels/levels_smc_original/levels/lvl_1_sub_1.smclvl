@@ -1094,5 +1094,5 @@
 		<Property name="level_name" value="lvl_1" />
 		<Property name="entry" value="1" />
 		<Property name="direction" value="up" />
-	</levelexit>
+>
 </level>

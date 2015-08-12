@@ -2,14 +2,15 @@ package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
+import rs.pedjaapps.smc.Rect;
 
 /**
  * Created by pedja on 18.5.14..
  */
 public abstract class GameObject
 {
-    public Rectangle bounds = new Rectangle();//used for draw
-    public Rectangle body = new Rectangle();//used for collision detection
+    public Rect bounds = new Rect();//used for draw
+    public Rect body = new Rect();//used for collision detection
 	public Vector3 position = new Vector3();
     public Vector3 velocity = new Vector3();
     public Vector3 acceleration = new Vector3();
@@ -59,8 +60,8 @@ public abstract class GameObject
 
     public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.bounds = new Rectangle(position.x, position.y, size.x, size.y);
-        body = new Rectangle(bounds);
+        this.bounds = new Rect(position.x, position.y, size.x, size.y);
+        body = new Rect(bounds);
 		this.position = position;
         this.world = world;
     }

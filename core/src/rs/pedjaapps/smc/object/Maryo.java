@@ -681,7 +681,7 @@ public class Maryo extends DynamicObject
 			super.update(delta);
             //check where ground is
             Array<GameObject> objects = world.getVisibleObjects();
-            Rectangle rect = world.rectPool.obtain();
+            Rectangle rect = world.RECT_POOL.obtain();
             debugRayRect = rect;
             rect.set(position.x, 0, body.width, position.y);
             float tmpGroundY = 0;
@@ -717,7 +717,7 @@ public class Maryo extends DynamicObject
 			{
 				position.y -= 0.1f;
 			}
-            world.rectPool.free(rect);
+            world.RECT_POOL.free(rect);
 		}
 	}
 

@@ -32,7 +32,7 @@ public class World
 
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame
-	public Pool<Rectangle> rectPool = new Pool<Rectangle>()
+	public static Pool<Rectangle> RECT_POOL = new Pool<Rectangle>()
 	{
 		@Override
 		protected Rectangle newObject() 
@@ -41,7 +41,7 @@ public class World
 		}
 	};
 
-    public Pool<Vector2> vector2Pool = new Pool<Vector2>()
+    public static Pool<Vector2> VECTOR2_POOL = new Pool<Vector2>()
     {
         @Override
         protected Vector2 newObject()
@@ -61,7 +61,7 @@ public class World
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
         float wH = Constants.CAMERA_HEIGHT + 1;
-        Rectangle worldBounds = rectPool.obtain();
+        Rectangle worldBounds = RECT_POOL.obtain();
 		worldBounds.set(wX, wY, wW, wH);
         //for (GameObject object : level.gameObjects)
         for (int i = 0; i < level.gameObjects.size(); i++)
@@ -73,7 +73,7 @@ public class World
                 visibleObjects.add(object);
             }
         }
-        rectPool.free(worldBounds);
+        RECT_POOL.free(worldBounds);
         return visibleObjects;
     }
 
@@ -84,7 +84,7 @@ public class World
         float wY = center.body.y - offset;
         float wW = center.body.x + center.body.width + offset * 2;
         float wH = center.body.y + center.body.height + offset * 2;
-        Rectangle offsetBounds = rectPool.obtain();
+        Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
         for (GameObject object : level.gameObjects)
         {
@@ -94,7 +94,7 @@ public class World
                 tmpObjects.add(object);
             }
         }
-        rectPool.free(offsetBounds);
+        RECT_POOL.free(offsetBounds);
         return tmpObjects;
     }
 	
@@ -104,7 +104,7 @@ public class World
         float wY = maryo.body.y - offset;
         float wW = maryo.body.x + maryo.body.width + offset * 2;
         float wH = maryo.body.y + maryo.body.height + offset * 2;
-        Rectangle offsetBounds = rectPool.obtain();
+        Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
      	return offsetBounds;
 	}
@@ -134,10 +134,10 @@ public class World
         float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
         float wW = Constants.CAMERA_WIDTH + 1;
         float wH = Constants.CAMERA_HEIGHT + 1;
-        Rectangle worldBounds = rectPool.obtain();
+        Rectangle worldBounds = RECT_POOL.obtain();
         worldBounds.set(wX, wY, wW, wH);
         boolean result = object.bounds.overlaps(worldBounds);
-        rectPool.free(worldBounds);
+        RECT_POOL.free(worldBounds);
         return result;
     }
 }
