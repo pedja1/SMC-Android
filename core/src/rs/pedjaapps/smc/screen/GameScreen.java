@@ -348,7 +348,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             GameObject object = drawableObjects.get(i);
             object.render(spriteBatch);
         }
-        world.RECT_POOL.free(maryoBWO);
+        World.RECT_POOL.free(maryoBWO);
     }
 
 	private void drawDebug() 

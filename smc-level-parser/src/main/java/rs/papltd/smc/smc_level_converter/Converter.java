@@ -114,13 +114,11 @@ public class Converter
                     jSprite.put("texture_atlas", sprite.texture_atlas);
                 }
                 jSprite.put("texture_name", sprite.texture_name);
-                if(sprite.hasFlipData)
-                {
-                    JSONObject flipData = new JSONObject();
-                    flipData.put("flip_x", sprite.flipX);
-                    flipData.put("flip_y", sprite.flipY);
-                    jSprite.put("flip_data", flipData);
-                }
+
+                jSprite.put("rotationX", sprite.rotationX);
+                jSprite.put("rotationY", sprite.rotationY);
+                jSprite.put("rotationZ", sprite.rotationZ);
+
                 jSprite.put("obj_class", "sprite");
 				jSprite.put("massive_type", sprite.type);
                 objects.put(jSprite);

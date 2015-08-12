@@ -942,22 +942,19 @@ public class SAXXMLHandler extends DefaultHandler
         {
 			sprite.image = sprite.image.replace("plant_l", "plant_r");
             sprite.texture_name = "data/" + sprite.image;
-            sprite.hasFlipData = true;
-            sprite.flipX = true;
+            sprite.rotationY = 180;
         }
         else if(sprite.image.contains("top/right") || sprite.image.contains("middle/right"))
         {
 			sprite.image = sprite.image.replace("right", "left");
             sprite.texture_name = "data/" + sprite.image;
-            sprite.hasFlipData = true;
-            sprite.flipX = true;
+            sprite.rotationY = 180;
         }
         else if(sprite.image.contains("1_ending_left") && !sprite.image.contains("1_ending_left_up"))
         {
 			sprite.image = sprite.image.replace("_left", "");
             sprite.texture_name = "data/" + sprite.image;
-            sprite.hasFlipData = true;
-            sprite.flipX = true;
+            sprite.rotationY = 180;
         }
         else if(sprite.image.contains("green_1/slider"))
         {
@@ -982,16 +979,14 @@ public class SAXXMLHandler extends DefaultHandler
             if(sprite.texture_name.endsWith("-right"))
             {
                 sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-                sprite.hasFlipData = true;
-                sprite.flipX = true;
+                sprite.rotationY = 180;
             }
         }
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {
             sprite.texture_name = "data/" + sprite.image;
             sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-            sprite.hasFlipData = true;
-            sprite.flipX = true;
+            sprite.rotationY = 180;
         }
         else
         {
@@ -1042,6 +1037,12 @@ public class SAXXMLHandler extends DefaultHandler
             {
                 origHeight = Float.parseFloat(data[1]);
                 sprite.height = origHeight / 64f;
+            }
+            else if("rotation".equals(data[0]))
+            {
+                sprite.rotationX = Integer.parseInt(data[1]);
+                sprite.rotationY = Integer.parseInt(data[2]);
+                sprite.rotationZ = Integer.parseInt(data[3]);
             }
         }
         sprite.posy = convertY(sprite.posy, origHeight);
