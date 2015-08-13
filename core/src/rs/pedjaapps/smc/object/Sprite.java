@@ -20,8 +20,37 @@ public class Sprite extends GameObject
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-		TextureRegion region = Assets.loadedRegions.get(textureName);
-		if (region != null) Utility.draw(spriteBatch, region, position.x, position.y, bounds.height);
+		Texture txt = null;
+        TextureRegion region = null;
+        if(textureAtlas == null)
+        {
+            txt = Assets.manager.get(textureName);
+        }
+        else
+        {
+            region = Assets.loadedRegions.get(textureName);
+        }
+		if (txt != null || region != null)
+        {
+            float width = txt == null ? Utility.getWidth(region, bounds.height) : Utility.getWidth(txt, bounds.height);
+            float originX = bounds.x + width / 2;
+            float originY = bounds.y + bounds.height / 2;
+            float rotation = rotationZ;
+            boolean flipX = rotationX == 180;
+            boolean flipY = rotationY == 180;
+
+            if(txt != null)
+            {
+                spriteBatch.draw(txt, position.x, position.y, originX, originY, width, bounds.height, 1, 1, rotation, 0, 0, txt.getWidth(), txt.getHeight(), flipX, flipY);
+            }
+            else
+            {
+                region.flip(flipX, flipY);//flip it
+                spriteBatch.draw(region, position.x ,position.y, originX, originY, width, bounds.height, 1, 1, rotation);
+                region.flip(flipX, flipY);//return it to original
+            }
+
+        }
     }
 
     @Override
@@ -40,144 +69,15 @@ public class Sprite extends GameObject
             atlas = Assets.manager.get(textureAtlas);
         }
 
-		String newTxName = generateNewTextName();
-		TextureRegion region = Assets.loadedRegions.get(newTxName);
-		if(region == null)
+		if(atlas != null)
 		{
-			TextureRegion orig = Assets.loadedRegions.get(textureName);
-			if (orig == null)
+			TextureRegion region = Assets.loadedRegions.get(textureName);
+			if(region == null)
 			{
-				if (atlas == null)
-				{
-					orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
-				}
-				else
-				{
-					orig = atlas.findRegion(textureName.split(":")[1]);
-				}
-				Assets.loadedRegions.put(textureName, orig);
-			}
-			//x
-			if(rotationX == 180)
-			{
-				orig.flip(true, false);
-			}
-			
-			//y
-			if(rotationY == 180)
-			{
-				orig.flip(false, true);
-			}
-			
-			if(rotationZ == 90)
-			{
-				
-			}
-			else if(rotationZ == 180)
-			{
-
-			}
-			else if(rotationZ == 270)
-			{
-
+				Assets.loadedRegions.put(textureName, atlas.findRegion(textureName.split(":")[1]));
 			}
 		}
-		else if (Assets.loadedRegions.get(textureName) == null)
-		{
-			TextureRegion textureRegion;
-			if (atlas == null)
-			{
-				textureRegion = new TextureRegion(Assets.manager.get(textureName, Texture.class));
-			}
-			else
-			{
-				textureRegion = atlas.findRegion(textureName.split(":")[1]);
-			}
-			Assets.loadedRegions.put(textureName, textureRegion);
-		}
-        /*if (hasFlip)
-        {
-            String newTextureName = null;
-            if (flipX && !flipY)
-            {
-                newTextureName = textureName + "-flip_x";
-            }
-            else if (flipY && !flipX)
-            {
-                newTextureName = textureName + "-flip_y";
-            }
-            else if (flipY && flipX)
-            {
-                newTextureName = textureName + "-flip_xy";
-            }
-
-            if (newTextureName != null)
-            {
-				if(Assets.loadedRegions.get(newTextureName) == null)
-				{
-					TextureRegion orig = Assets.loadedRegions.get(textureName);
-					if (orig == null)
-					{
-						if (atlas == null)
-						{
-							orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
-						}
-						else
-						{
-							orig = atlas.findRegion(textureName.split(":")[1]);
-						}
-						Assets.loadedRegions.put(textureName, orig);
-					}
-					TextureRegion flipped = new TextureRegion(orig);
-					flipped.flip(flipX, flipY);
-					textureName = newTextureName;
-					Assets.loadedRegions.put(newTextureName, flipped);
-				}
-				else
-				{
-					textureName = newTextureName;
-				}
-			}
-        }
-        else
-        {
-            if (Assets.loadedRegions.get(textureName) == null)
-            {
-                TextureRegion textureRegion;
-                if (atlas == null)
-                {
-                    textureRegion = new TextureRegion(Assets.manager.get(textureName, Texture.class));
-                }
-                else
-                {
-                    textureRegion = atlas.findRegion(textureName.split(":")[1]);
-                }
-                Assets.loadedRegions.put(textureName, textureRegion);
-            }
-        }*/
     }
-
-	private String generateNewTextName()
-	{
-		if(rotationZ != 0 || rotationX != 0 | rotationY != 0)
-		{
-			StringBuilder bulder = new StringBuilder(textureName);
-			if(rotationX != 0)
-			{
-				bulder.append("_rotationX" + rotationX);
-			}
-			if(rotationY != 0)
-			{
-				bulder.append("_rotationY" + rotationY);
-			}
-			if(rotationZ != 0)
-			{
-				bulder.append("_rotationZ" + rotationZ);
-			}
-			return bulder.toString();
-		}
-		return textureName;
-	}
 
     /**
      * Type of the block

@@ -474,6 +474,7 @@ public class SAXXMLHandler extends DefaultHandler
         else if("image".equals(name))
         {
             tmpSprite.image = value;
+            tmpSprite.imageOriginal = value;
         }
     }
 
@@ -883,7 +884,7 @@ public class SAXXMLHandler extends DefaultHandler
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
 			sprite.image = sprite.image.replaceAll(sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")), "up");
-			System.out.println(sprite.image);
+			//System.out.println(sprite.image);
         }
         else if(sprite.image.startsWith("ground/mushroom_1/platform"))
         {
@@ -1046,6 +1047,54 @@ public class SAXXMLHandler extends DefaultHandler
             }
         }
         sprite.posy = convertY(sprite.posy, origHeight);
+
+        fileName = sprite.imageOriginal.replaceAll("png", "settings");
+        settings = new File(Const.dataRoot, fileName);
+        settingsData = readFileContents(settings);
+        lines = settingsData.split("\n");
+        for(String s : lines)
+        {
+            String[] data = s.split(" ");
+            if("rotation".equals(data[0]))
+            {
+                sprite.rotationX = Integer.parseInt(data[1]);
+                sprite.rotationY = Integer.parseInt(data[2]);
+                sprite.rotationZ = Integer.parseInt(data[3]);
+            }
+            else if("width".equals(data[0]))
+            {
+                sprite.width = Float.parseFloat(data[1]) / 64f;
+            }
+            else if("height".equals(data[0]))
+            {
+                origHeight = Float.parseFloat(data[1]);
+                sprite.height = origHeight / 64f;
+            }
+        }
+
+        fileName = sprite.imageOriginal.replaceAll("png", "settings");
+        settings = new File(Const.dataRoot, fileName);
+        settingsData = readFileContents(settings);
+        lines = settingsData.split("\n");
+        for(String s : lines)
+        {
+            String[] data = s.split(" ");
+            if("rotation".equals(data[0]))
+            {
+                sprite.rotationX = Integer.parseInt(data[1]);
+                sprite.rotationY = Integer.parseInt(data[2]);
+                sprite.rotationZ = Integer.parseInt(data[3]);
+            }
+            else if("width".equals(data[0]))
+            {
+                sprite.width = Float.parseFloat(data[1]) / 64f;
+            }
+            else if("height".equals(data[0]))
+            {
+                origHeight = Float.parseFloat(data[1]);
+                sprite.height = origHeight / 64f;
+            }
+        }
     }
 
     private String readFileContents(File file)

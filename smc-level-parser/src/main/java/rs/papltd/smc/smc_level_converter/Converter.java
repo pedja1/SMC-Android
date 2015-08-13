@@ -1,6 +1,7 @@
 package rs.papltd.smc.smc_level_converter;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -13,7 +14,6 @@ import java.io.PrintWriter;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import org.json.JSONException;
 
 /**
  * Created by pedja on 22.6.14..
@@ -24,8 +24,8 @@ public class Converter
     {
         try
         {
-            //File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
-            File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
+            File levelsFolder = new File("/home/pedja/workspace/.smc/levels/levels_smc_original/levels");
+            //File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
 			File[] files = levelsFolder.listFiles();
             for(File file : files)
             {
@@ -43,8 +43,8 @@ public class Converter
 
                 String levelJson = convertToJson(level);
                 //System.out.println(levelJson);
-                //PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
-                PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                PrintWriter writer = new PrintWriter("/home/pedja/workspace/.smc/android/assets/data/levels/" + file.getName(), "UTF-8");
+                //PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
                 writer.print(levelJson);
                 writer.flush();
                 writer.close();
