@@ -2,17 +2,16 @@ package rs.papltd.smc.smc_level_converter;
 
 
 import com.badlogic.gdx.math.Rectangle;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Created by pedja on 11/1/13.
@@ -474,7 +473,6 @@ public class SAXXMLHandler extends DefaultHandler
         else if("image".equals(name))
         {
             tmpSprite.image = value;
-            tmpSprite.imageOriginal = value;
         }
     }
 
@@ -883,7 +881,7 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.texture_atlas = sprite.image.contains("small") ? "data/pipes/orange/yellow.pack" : "data/pipes/yellow/yellow.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
-			sprite.image = sprite.image.replaceAll(sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")), "up");
+			//sprite.image = sprite.image.replaceAll(sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")), "up");
 			//System.out.println(sprite.image);
         }
         else if(sprite.image.startsWith("ground/mushroom_1/platform"))
@@ -941,21 +939,20 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if(sprite.image.contains("plant_l"))
         {
-			sprite.image = sprite.image.replace("plant_l", "plant_r");
-            sprite.texture_name = "data/" + sprite.image;
-            sprite.rotationY = 180;
+			String tmp = sprite.image.replace("plant_l", "plant_r");
+            sprite.texture_name = "data/" + tmp;
         }
         else if(sprite.image.contains("top/right") || sprite.image.contains("middle/right"))
         {
-			sprite.image = sprite.image.replace("right", "left");
-            sprite.texture_name = "data/" + sprite.image;
-            sprite.rotationY = 180;
+			String tmp = sprite.image.replace("right", "left");
+            sprite.texture_name = "data/" + tmp;
+            
         }
         else if(sprite.image.contains("1_ending_left") && !sprite.image.contains("1_ending_left_up"))
         {
-			sprite.image = sprite.image.replace("_left", "");
-            sprite.texture_name = "data/" + sprite.image;
-            sprite.rotationY = 180;
+			String tmp = sprite.image.replace("_left", "");
+            sprite.texture_name = "data/" + tmp;
+            
         }
         else if(sprite.image.contains("green_1/slider"))
         {
@@ -980,14 +977,14 @@ public class SAXXMLHandler extends DefaultHandler
             if(sprite.texture_name.endsWith("-right"))
             {
                 sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-                sprite.rotationY = 180;
+                
             }
         }
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {
             sprite.texture_name = "data/" + sprite.image;
             sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-            sprite.rotationY = 180;
+            
         }
         else
         {
@@ -1026,6 +1023,33 @@ public class SAXXMLHandler extends DefaultHandler
         File settings = new File(Const.dataRoot, fileName);
         String settingsData = readFileContents(settings);
         String[] lines = settingsData.split("\n");
+		
+		if(lines.length > 0)
+		{
+			String[] data = lines[0].split(" ");
+			if("base".equals(data[0]))
+			{
+				String baseFileName = fileName.replaceAll(fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf(".")), data[1].replaceAll(".png", ""));
+				File baseFile = new File(Const.dataRoot, baseFileName);
+				if(baseFile.exists())
+				{
+					String baseSettingsData = readFileContents(baseFile);
+					String[] baseLines = baseSettingsData.split("\n");
+					String[] tmp = new String[lines.length + baseLines.length];
+					System.arraycopy(lines, 0, tmp, 0, lines.length);
+					System.arraycopy(baseLines, 0, tmp, lines.length, baseLines.length);
+				
+					lines = tmp;
+					
+					if(sprite.texture_atlas != null)
+					{
+						sprite.texture_name = sprite.texture_atlas + ":" + baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf("."));
+					}
+					System.out.println("fileName" + fileName + ", baseFilename: " + baseFileName + ", lines.length: " + lines.length);
+				}
+			}
+		}
+		
         float origHeight = 1;
         for(String s : lines)
         {
@@ -1044,57 +1068,10 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.rotationX = Integer.parseInt(data[1]);
                 sprite.rotationY = Integer.parseInt(data[2]);
                 sprite.rotationZ = Integer.parseInt(data[3]);
+				System.out.println("rotation: " + Arrays.toString(data));
             }
         }
         sprite.posy = convertY(sprite.posy, origHeight);
-
-        fileName = sprite.imageOriginal.replaceAll("png", "settings");
-        settings = new File(Const.dataRoot, fileName);
-        settingsData = readFileContents(settings);
-        lines = settingsData.split("\n");
-        for(String s : lines)
-        {
-            String[] data = s.split(" ");
-            if("rotation".equals(data[0]))
-            {
-                sprite.rotationX = Integer.parseInt(data[1]);
-                sprite.rotationY = Integer.parseInt(data[2]);
-                sprite.rotationZ = Integer.parseInt(data[3]);
-            }
-            else if("width".equals(data[0]))
-            {
-                sprite.width = Float.parseFloat(data[1]) / 64f;
-            }
-            else if("height".equals(data[0]))
-            {
-                origHeight = Float.parseFloat(data[1]);
-                sprite.height = origHeight / 64f;
-            }
-        }
-
-        fileName = sprite.imageOriginal.replaceAll("png", "settings");
-        settings = new File(Const.dataRoot, fileName);
-        settingsData = readFileContents(settings);
-        lines = settingsData.split("\n");
-        for(String s : lines)
-        {
-            String[] data = s.split(" ");
-            if("rotation".equals(data[0]))
-            {
-                sprite.rotationX = Integer.parseInt(data[1]);
-                sprite.rotationY = Integer.parseInt(data[2]);
-                sprite.rotationZ = Integer.parseInt(data[3]);
-            }
-            else if("width".equals(data[0]))
-            {
-                sprite.width = Float.parseFloat(data[1]) / 64f;
-            }
-            else if("height".equals(data[0]))
-            {
-                origHeight = Float.parseFloat(data[1]);
-                sprite.height = origHeight / 64f;
-            }
-        }
     }
 
     private String readFileContents(File file)
