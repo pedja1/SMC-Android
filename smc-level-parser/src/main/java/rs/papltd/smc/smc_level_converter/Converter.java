@@ -13,20 +13,23 @@ import java.io.PrintWriter;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import org.json.JSONException;
 
 /**
  * Created by pedja on 22.6.14..
  */
 public class Converter
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws JSONException
     {
         try
         {
-            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
-            File[] files = levelsFolder.listFiles();
+            //File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
+            File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
+			File[] files = levelsFolder.listFiles();
             for(File file : files)
             {
+				if(file.isDirectory())continue;
                 System.out.println("Processing: " + file.getName());
                 XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
                 // create a SAXXMLHandler
@@ -40,13 +43,14 @@ public class Converter
 
                 String levelJson = convertToJson(level);
                 //System.out.println(levelJson);
-                PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                //PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
                 writer.print(levelJson);
                 writer.flush();
                 writer.close();
                 fis.close();
             }
-
+			System.out.println("done");
         }
         catch (SAXException | ParserConfigurationException | IOException e)
         {
@@ -55,7 +59,7 @@ public class Converter
     }
 
 
-    private static String convertToJson(Level level)
+    private static String convertToJson(Level level) throws JSONException
     {
         JSONObject jsonLevel = new JSONObject();
 
