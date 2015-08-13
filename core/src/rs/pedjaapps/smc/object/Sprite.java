@@ -15,7 +15,7 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
-    public boolean hasFlip, flipX, flipY;
+    public int rotationX, rotationY, rotationZ;//degrees
 
     @Override
     public void render(SpriteBatch spriteBatch)

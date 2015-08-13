@@ -15,6 +15,5 @@ public class Sprite
     public float posx, posy, width, height;
     public String type, texture_atlas, texture_name;
     public String image;
-    public boolean hasFlipData = false;
-    public boolean flipX, flipY;
+    public int rotationX, rotationY, rotationZ;//degrees
 }

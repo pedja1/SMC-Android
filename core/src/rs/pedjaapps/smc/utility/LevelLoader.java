@@ -49,7 +49,7 @@ public class LevelLoader
     public enum KEY
     {
         sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
-        level_height, collision_bodies, flip_data, flip_x, flip_y, is_front, background, r_1, r_2,
+        level_height, collision_bodies, flip_x, flip_y, is_front, background, r_1, r_2,
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class,
         massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
         force_best_item, max_downgrade_count, direction, level_name, name, camera_motion, entry, color
@@ -256,13 +256,9 @@ public class LevelLoader
         {
             Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
-        sprite.hasFlip = jSprite.has(KEY.flip_data.toString());
-        if (sprite.hasFlip)
-        {
-            JSONObject flipData = jSprite.getJSONObject(KEY.flip_data.toString());
-            sprite.flipX = flipData.getBoolean(KEY.flip_x.toString());
-            sprite.flipY = flipData.getBoolean(KEY.flip_y.toString());
-        }
+        sprite.rotationX = jSprite.optInt("rotationX");
+        sprite.rotationY = jSprite.optInt("rotationY");
+        sprite.rotationZ = jSprite.optInt("rotationZ");
         if(!levelParsed)level.gameObjects.add(sprite);
 
     }
