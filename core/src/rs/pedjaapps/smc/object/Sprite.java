@@ -36,8 +36,8 @@ public class Sprite extends GameObject
             float originX = bounds.x + width / 2;
             float originY = bounds.y + bounds.height / 2;
             float rotation = rotationZ;
-            boolean flipX = rotationX == 180;
-            boolean flipY = rotationY == 180;
+            boolean flipX = rotationY == 180;
+            boolean flipY = rotationX == 180;
 
             if(txt != null)
             {
