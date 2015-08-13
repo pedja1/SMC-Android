@@ -40,7 +40,62 @@ public class Sprite extends GameObject
             atlas = Assets.manager.get(textureAtlas);
         }
 
-        if (hasFlip)
+		String newTxName = generateNewTextName();
+		TextureRegion region = Assets.loadedRegions.get(newTxName);
+		if(region == null)
+		{
+			TextureRegion orig = Assets.loadedRegions.get(textureName);
+			if (orig == null)
+			{
+				if (atlas == null)
+				{
+					orig = new TextureRegion(Assets.manager.get(textureName, Texture.class));
+				}
+				else
+				{
+					orig = atlas.findRegion(textureName.split(":")[1]);
+				}
+				Assets.loadedRegions.put(textureName, orig);
+			}
+			//x
+			if(rotationX == 180)
+			{
+				orig.flip(true, false);
+			}
+			
+			//y
+			if(rotationY == 180)
+			{
+				orig.flip(false, true);
+			}
+			
+			if(rotationZ == 90)
+			{
+				
+			}
+			else if(rotationZ == 180)
+			{
+
+			}
+			else if(rotationZ == 270)
+			{
+
+			}
+		}
+		else if (Assets.loadedRegions.get(textureName) == null)
+		{
+			TextureRegion textureRegion;
+			if (atlas == null)
+			{
+				textureRegion = new TextureRegion(Assets.manager.get(textureName, Texture.class));
+			}
+			else
+			{
+				textureRegion = atlas.findRegion(textureName.split(":")[1]);
+			}
+			Assets.loadedRegions.put(textureName, textureRegion);
+		}
+        /*if (hasFlip)
         {
             String newTextureName = null;
             if (flipX && !flipY)
@@ -99,8 +154,30 @@ public class Sprite extends GameObject
                 }
                 Assets.loadedRegions.put(textureName, textureRegion);
             }
-        }
+        }*/
     }
+
+	private String generateNewTextName()
+	{
+		if(rotationZ != 0 || rotationX != 0 | rotationY != 0)
+		{
+			StringBuilder bulder = new StringBuilder(textureName);
+			if(rotationX != 0)
+			{
+				bulder.append("_rotationX" + rotationX);
+			}
+			if(rotationY != 0)
+			{
+				bulder.append("_rotationY" + rotationY);
+			}
+			if(rotationZ != 0)
+			{
+				bulder.append("_rotationZ" + rotationZ);
+			}
+			return bulder.toString();
+		}
+		return textureName;
+	}
 
     /**
      * Type of the block
