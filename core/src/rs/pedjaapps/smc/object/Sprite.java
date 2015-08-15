@@ -33,8 +33,8 @@ public class Sprite extends GameObject
 		if (txt != null || region != null)
         {
             float width = txt == null ? Utility.getWidth(region, bounds.height) : Utility.getWidth(txt, bounds.height);
-            float originX = bounds.x + width / 2;
-            float originY = bounds.y + bounds.height / 2;
+            float originX = width * 0.5f;
+            float originY = bounds.height * 0.5f;
             float rotation = rotationZ;
             boolean flipX = rotationY == 180;
             boolean flipY = rotationX == 180;
