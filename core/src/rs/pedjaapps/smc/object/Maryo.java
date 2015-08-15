@@ -147,7 +147,7 @@ public class Maryo extends DynamicObject
 	private boolean exiting, entering;
 	private LevelExit exit;
 	private Vector3 exitStartPosition = new Vector3();
-	private float exitVelocity = 0.5f;
+	private float exitVelocity = 0.8f;
 	private int rotation = 0;
     
     public Maryo(World world, Vector3 position, Vector2 size)

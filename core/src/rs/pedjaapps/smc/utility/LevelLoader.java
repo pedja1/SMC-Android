@@ -308,8 +308,8 @@ public class LevelLoader
     {
         if(levelParsed)return;
         Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
-        float width = .2f;//(float) jExit.getDouble(KEY.width.toString());
-        float height = 1f;//(float) jExit.getDouble(KEY.height.toString());
+        float width = .15625f;//(float) jExit.getDouble(KEY.width.toString());
+        float height = .3125f;//(float) jExit.getDouble(KEY.height.toString());
 		//position.y -= height * .5f;
         LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
         exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
