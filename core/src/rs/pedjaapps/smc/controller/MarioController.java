@@ -14,26 +14,27 @@ import rs.pedjaapps.smc.object.World;
 
 public class MarioController
 {
-    private static final long LONG_JUMP_PRESS = 150l;
-    private static final int POWER_JUMP_DELTA = 1000;
-    private static final float MAX_JUMP_SPEED = 1f;
 
-    private float mMaxJumpVelocity = 9.5f;
-    private float mJumpSpeed = MAX_JUMP_SPEED;
-
-    private World world;
-    private Maryo maryo;
-    private boolean mJumped;
-    private long jumpClickTime;
-
-    private long downPressTime;
-
-    enum Key
+    enum Keys
     {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }
+    private static final int POWER_JUMP_DELTA = 1000;
 
-    static Set<Key> keys = new HashSet<>(Key.values().length);
+    private static final long LONG_JUMP_PRESS = 150l;
+    private static final float MAX_JUMP_SPEED = 9f;
+    private static final float POWER_MAX_JUMP_SPEED = 13.5f;
+    private float mMaxJumpSpeed = MAX_JUMP_SPEED;
+    
+    private World world;
+    private Maryo maryo;
+    private boolean jumped;
+
+    private long downPressTime;
+
+    private long jumpClickTime;
+
+    static Set<Keys> keys = new HashSet<>(Keys.values().length);
 
     public MarioController(World world)
     {
@@ -45,13 +46,13 @@ public class MarioController
 
     public void leftPressed()
     {
-        keys.add(Key.LEFT);
+        keys.add(Keys.LEFT);
 		checkLeave("left");
     }
 
     public void rightPressed()
     {
-        keys.add(Key.RIGHT);
+        keys.add(Keys.RIGHT);
 		checkLeave("right");
 		//TODO this is called only when key is pressed, not continusly
 		//if player holds the key and walks to the exit, he will have to press it again to exit
@@ -59,7 +60,7 @@ public class MarioController
 
     public void upPressed()
     {
-        keys.add(Key.UP);
+        keys.add(Keys.UP);
         checkLeave("up");
     }
 
@@ -71,7 +72,7 @@ public class MarioController
         {
 			GameObject go = vo.get(i);
             if(go instanceof LevelExit 
-				&& go.mColRect.overlaps(maryo.mColRect)
+				&& go.mColRect.overlaps(maryo.mColRect) 
 				&& (((LevelExit)go).type == LevelExit.LEVEL_EXIT_BEAM || (((LevelExit)go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit)go).direction))))
             {
                 /*String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
@@ -84,7 +85,7 @@ public class MarioController
 
     public void downPressed()
     {
-        keys.add(Key.DOWN);
+        keys.add(Keys.DOWN);
 		checkLeave("down");
         downPressTime = System.currentTimeMillis();
     }
@@ -93,7 +94,7 @@ public class MarioController
     {
         if(maryo.grounded)
         {
-            keys.add(Key.JUMP);
+            keys.add(Keys.JUMP);
 
             if(Assets.playSounds)
             {
@@ -106,40 +107,39 @@ public class MarioController
 
     public void firePressed()
     {
-        keys.add(Key.FIRE);
+        keys.add(Keys.FIRE);
     }
 
     public void leftReleased()
     {
-        keys.remove(Key.LEFT);
+        keys.remove(Keys.LEFT);
     }
 
     public void rightReleased()
     {
-        keys.remove(Key.RIGHT);
+        keys.remove(Keys.RIGHT);
     }
 
     public void upReleased()
     {
-        keys.remove(Key.UP);
+        keys.remove(Keys.UP);
     }
 
     public void downReleased()
     {
-        keys.remove(Key.DOWN);
+        keys.remove(Keys.DOWN);
         downPressTime = 0;
     }
 
     public void jumpReleased()
     {
-        keys.remove(Key.JUMP);
-        mJumped = false;
-        mJumpSpeed = MAX_JUMP_SPEED;
+        keys.remove(Keys.JUMP);
+        jumped = false;
     }
 
     public void fireReleased()
     {
-        keys.remove(Key.FIRE);
+        keys.remove(Keys.FIRE);
     }
 
     /**
@@ -147,63 +147,45 @@ public class MarioController
      */
     public void update(float delta)
     {
+        if(downPressTime != 0 && System.currentTimeMillis() - downPressTime > POWER_JUMP_DELTA)
+        {
+            mMaxJumpSpeed = POWER_MAX_JUMP_SPEED;
+        }
+        else
+        {
+            mMaxJumpSpeed = MAX_JUMP_SPEED;
+        }
         maryo.grounded = maryo.position.y - maryo.groundY < 0.1f;
 		if(!maryo.grounded)
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
 		}
-        processInput(delta);
+        processInput();
         if (maryo.grounded && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
         {
             maryo.setWorldState(Maryo.WorldState.IDLE);
         }
-        //TODO animation/particles if boost jump
 	}
 
     /**
      * Change Mario's state and parameters based on input controls *
      */
-    private boolean processInput(float delta)
+    private boolean processInput()
     {
         Vector3 vel = maryo.velocity;
         Vector3 pos = maryo.position;
-        if (keys.contains(Key.JUMP))
+        if (keys.contains(Keys.JUMP))
         {
-            if (!mJumped && vel.y < mMaxJumpVelocity/* && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS*/)
+            if (!jumped && vel.y < mMaxJumpSpeed && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS)
             {
-                float jumpSpeed;
-                if(vel.y + mJumpSpeed >= mMaxJumpVelocity)
-                {
-                    jumpSpeed = mMaxJumpVelocity - vel.y;
-                    mJumped = true;
-                }
-                else
-                {
-                    jumpSpeed = mJumpSpeed;
-                }
-                System.out.println(jumpSpeed);
-                System.out.println(vel.y);
-                if(jumpSpeed <= 0)
-                {
-                    mJumped = true;
-                }
-                else
-                {
-                    vel.add(0, jumpSpeed, 0);
-                }
-                mJumpSpeed = mJumpSpeed - MAX_JUMP_SPEED * delta;
-                if(mJumpSpeed <= 0)
-                {
-                    mJumped = true;
-                    mJumpSpeed = MAX_JUMP_SPEED;
-                }
+                maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
             }
             else
             {
-                mJumped = true;
+                jumped = true;
             }
         }
-        if (keys.contains(Key.LEFT))
+        if (keys.contains(Keys.LEFT))
         {
             // left is pressed
             maryo.facingLeft = true;
@@ -213,7 +195,7 @@ public class MarioController
             }
             maryo.velocity.set(vel.x = -4f, vel.y, maryo.velocity.z);
         }
-        else if (keys.contains(Key.RIGHT))
+        else if (keys.contains(Keys.RIGHT))
         {
             // right is pressed
             maryo.facingLeft  = false;
@@ -223,7 +205,7 @@ public class MarioController
             }
             maryo.velocity.set(vel.x = +4f, vel.y, maryo.velocity.z);
         }
-        else if (keys.contains(Key.DOWN))
+        else if (keys.contains(Keys.DOWN))
         {
             if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
