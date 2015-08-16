@@ -1010,6 +1010,17 @@ public class Maryo extends DynamicObject
 				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
 				exiting = true;
 				this.exit = exit;
+                if("up".equals(exit.direction) || "down".equals(exit.direction))
+                {
+                    float exitCenter = exit.mColRect.x + exit.mColRect.width / 2;
+                    position.x = mColRect.x = exitCenter - mColRect.width / 2;
+                }
+                else
+                {
+                    float exitCenter = exit.mColRect.y + exit.mColRect.height / 2;
+                    position.y = mColRect.y = exitCenter - mColRect.height / 2;
+                }
+                updateBounds();
 				exitStartPosition.set(position);
 				position.z = LevelLoader.m_pos_z_passive_start;
 				Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
