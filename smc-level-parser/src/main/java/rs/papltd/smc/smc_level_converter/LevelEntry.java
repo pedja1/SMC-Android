@@ -5,7 +5,7 @@ package rs.papltd.smc.smc_level_converter;
  */
 public class LevelEntry
 {
-    public float posx, posy;
+    public float posx, posy, w = 10, h = 20;
     public int type;
     public String name, direction;
 }

@@ -222,6 +222,8 @@ public class Converter
                 JSONObject jEntry = new JSONObject();
                 jEntry.put("posx", entry.posx);
                 jEntry.put("posy", entry.posy);
+                jEntry.put("width", entry.w);
+                jEntry.put("height", entry.h);
                 jEntry.put("type", entry.type);
                 jEntry.put("name", entry.name);
                 jEntry.put("direction", entry.direction);

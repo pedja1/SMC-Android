@@ -302,7 +302,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public void moveCamera(OrthographicCamera cam, float x, float y)
     {
-        if(gameState == GAME_STATE.PLAYER_UPDATING)return;
+        if(gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting)return;
         cam.position.set(x, y, 0);
         cam.update();
         keepCameraInBounds(cam);
@@ -551,6 +551,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
 		pointsFont.setColor(1, 1, 1, 1);
 		killPointsTextHandler = new KillPointsTextHandler(pointsFont);
+        world.maryo.checkLevelEnter();
     }
 
     // * InputProcessor methods ***************************//

@@ -24,6 +24,7 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 
 public class Maryo extends DynamicObject
 {
+
     public enum MaryoState
     {
         small, big, fire, ice, ghost, flying
@@ -110,6 +111,8 @@ public class Maryo extends DynamicObject
     private static final String KEY_STAND_LEFT_ICE = TKey.stand_left + ":" + MaryoState.ice;
     private static final String KEY_STAND_RIGHT_ICE = TKey.stand_right + ":" + MaryoState.ice;
 
+    public static final float POSITION_Z = 0.0999f;
+
     private static final float RUNNING_FRAME_DURATION = 0.08f;
     private static final float RESIZE_ANIMATION_DURATION = 0.977f;
     private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 8f;
@@ -144,10 +147,12 @@ public class Maryo extends DynamicObject
     private MaryoState oldState;//used with resize animation
 	
 	//exit, enter
-	private boolean exiting, entering;
+    public float enterStartTime;
+	public boolean exiting, entering;
 	private LevelExit exit;
-	private Vector3 exitStartPosition = new Vector3();
-	private static final float exitVelocity = 1.5f;
+	private LevelEntry entry;
+	private Vector3 exitEnterStartPosition = new Vector3();
+	private static final float exitEnterVelocity = 1.3f;
 	private int rotation = 0;
     
     public Maryo(World world, Vector3 position, Vector2 size)
@@ -271,6 +276,16 @@ public class Maryo extends DynamicObject
 			
 			return;
 		}
+        if(entering)
+        {
+            marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.stand_left)) : Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
+
+            float originX = mDrawRect.width * 0.5f;
+            float originY = mDrawRect.height * 0.5f;
+            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, originX, originY, mDrawRect.width, mDrawRect.height, 1, 1, rotation);
+
+            return;
+        }
         if(resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
         {
             resizeAnimStartTime = 0;
@@ -593,10 +608,10 @@ public class Maryo extends DynamicObject
 		if(exiting)
 		{
 			boolean isDone = false;
-			float velDelta = exitVelocity * delta;
+			float velDelta = exitEnterVelocity * delta;
 			if("up".equals(exit.direction))
 			{
-				if(position.y >= exitStartPosition.y + mDrawRect.height)
+				if(position.y >= exitEnterStartPosition.y + mDrawRect.height)
 				{
 					isDone = true;
 				}
@@ -607,7 +622,7 @@ public class Maryo extends DynamicObject
 			}
 			else if("down".equals(exit.direction))
 			{
-				if(position.y <= exitStartPosition.y - mDrawRect.height)
+				if(position.y <= exitEnterStartPosition.y - mDrawRect.height)
 				{
 					isDone = true;
 				}
@@ -618,7 +633,7 @@ public class Maryo extends DynamicObject
 			}
 			else if("right".equals(exit.direction))
 			{
-				if(position.x >= exitStartPosition.x + mDrawRect.width)
+				if(position.x >= exitEnterStartPosition.x + mDrawRect.width)
 				{
 					isDone = true;
 				}
@@ -630,7 +645,7 @@ public class Maryo extends DynamicObject
 			}
 			else if("left".equals(exit.direction))
 			{
-				if(position.x <= exitStartPosition.x + mDrawRect.width)
+				if(exitEnterStartPosition.x - position.x >= mDrawRect.width)
 				{
 					isDone = true;
 				}
@@ -662,6 +677,74 @@ public class Maryo extends DynamicObject
 			}
 			return;
 		}
+        if(entering)
+        {
+            enterStartTime += delta;
+            if(enterStartTime < 1)
+            {
+                return;
+            }
+            boolean isDone = false;
+            float velDelta = exitEnterVelocity * delta;
+            if("up".equals(entry.direction))
+            {
+                if(position.y >= exitEnterStartPosition.y + mDrawRect.height)
+                {
+                    isDone = true;
+                }
+                else
+                {
+                    mColRect.y = position.y += mDrawRect.height * velDelta;
+                }
+            }
+            else if("down".equals(entry.direction))
+            {
+                if(position.y <= exitEnterStartPosition.y - mDrawRect.height)
+                {
+                    isDone = true;
+                }
+                else
+                {
+                    mColRect.y = position.y -= mDrawRect.height * velDelta;
+                }
+            }
+            else if("right".equals(entry.direction))
+            {
+                if(position.x >= exitEnterStartPosition.x + mDrawRect.width)
+                {
+                    isDone = true;
+                }
+                else
+                {
+                    rotation = -90;
+                    mColRect.x = position.x += mDrawRect.width * velDelta;
+                }
+            }
+            else if("left".equals(entry.direction))
+            {
+                if(exitEnterStartPosition.x - position.x >= mDrawRect.width)
+                {
+                    isDone = true;
+                }
+                else
+                {
+                    rotation = 90;
+                    mColRect.x = position.x -= mDrawRect.width * velDelta;
+                }
+            }
+            if(isDone)
+            {
+                position.z = POSITION_Z;
+                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+                entering = false;
+                ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
+            }
+            else
+            {
+                updateBounds();
+            }
+            return;
+        }
 		//disable godmod after timeot
 		if(godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
 		{
@@ -980,10 +1063,84 @@ public class Maryo extends DynamicObject
         this.maryoState = marioState;
         setJumpSound();
     }
+
+    public void checkLevelEnter()
+    {
+        //check if maryo is overlapping level entry and if so call enterLevel
+        for(GameObject go : world.level.gameObjects)
+        {
+            if(go instanceof LevelEntry && mColRect.overlaps(go.mColRect) && ((LevelEntry)go).type == LevelExit.LEVEL_EXIT_WARP)
+            {
+                if( entry.type == LevelExit.LEVEL_EXIT_BEAM )
+                {
+                    float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
+                    position.x = mColRect.x = entryCenter - mColRect.width  * 0.5f;
+                    position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
+                    updateBounds();
+                    return;
+                }
+                else
+                {
+                    enterLevel((LevelEntry) go);
+                    return;
+                }
+            }
+        }
+    }
 	
-	public void enterLevel()
+	public void enterLevel(LevelEntry entry)
 	{
-		
+        ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+        entering = true;
+        this.entry = entry;
+        if( entry.type == LevelExit.LEVEL_EXIT_WARP )
+        {
+            // left
+            if("left".equals(entry.direction))
+            {
+                position.x = mColRect.x = entry.mColRect.x + entry.mColRect.width;
+
+                float entryCenter = entry.mColRect.y + entry.mColRect.height * 0.5f;
+                position.y = mColRect.y = entryCenter - mColRect.height * 0.5f;
+            }
+            // right
+            else if("right".equals(entry.direction))
+            {
+                position.x = mColRect.x = entry.mColRect.x - mColRect.width;
+
+
+                float entryCenter = entry.mColRect.y + entry.mColRect.height * 0.5f;
+                position.y = mColRect.y = entryCenter - mColRect.height * 0.5f;
+            }
+            //up
+            else if("up".equals(entry.direction))
+            {
+                position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height - mColRect.height;
+
+                float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
+                position.x = mColRect.x = entryCenter - mColRect.width  * 0.5f;
+            }
+            // down
+            else if("down".equals(entry.direction))
+            {
+                position.y = mColRect.y = entry.mColRect.y;
+
+                float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
+                position.x = mColRect.x = entryCenter - mColRect.width  * 0.5f;
+            }
+        }
+        else if( entry.type == LevelExit.LEVEL_EXIT_BEAM )
+        {
+            float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
+            position.x = mColRect.x = entryCenter - mColRect.width  * 0.5f;
+            position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
+        }
+        updateBounds();
+        exitEnterStartPosition.set(position);
+        position.z = LevelLoader.m_pos_z_passive_start;
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+
+        //todo sound
 	}
 	
 	public void exitLevel(LevelExit exit)
@@ -1012,16 +1169,16 @@ public class Maryo extends DynamicObject
 				this.exit = exit;
                 if("up".equals(exit.direction) || "down".equals(exit.direction))
                 {
-                    float exitCenter = exit.mColRect.x + exit.mColRect.width / 2;
-                    position.x = mColRect.x = exitCenter - mColRect.width / 2;
+                    float exitCenter = exit.mColRect.x + exit.mColRect.width  * 0.5f;
+                    position.x = mColRect.x = exitCenter - mColRect.width  * 0.5f;
                 }
                 else
                 {
-                    float exitCenter = exit.mColRect.y + exit.mColRect.height / 2;
-                    position.y = mColRect.y = exitCenter - mColRect.height / 2;
+                    float exitCenter = exit.mColRect.y + exit.mColRect.height * 0.5f;
+                    position.y = mColRect.y = exitCenter - mColRect.height * 0.5f;
                 }
                 updateBounds();
-				exitStartPosition.set(position);
+				exitEnterStartPosition.set(position);
 				position.z = LevelLoader.m_pos_z_passive_start;
 				Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
 				

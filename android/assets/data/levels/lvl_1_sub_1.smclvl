@@ -10,7 +10,7 @@
     "objects": [
         {
             "posy": 8.5,
-            "posx": 3.53125,
+            "posx": 2.53125,
             "obj_class": "player"
         },
         {
@@ -2018,11 +2018,13 @@
             "rotationY": 0
         },
         {
-            "direction": "down",
-            "posy": 10.75,
+            "height": 0.3125,
+            "direction": "right",
+            "posy": 8.75,
             "name": "main",
-            "posx": 3.9375,
-            "type": 1,
+            "width": 0.15625,
+            "posx": 2.9375,
+            "type": 0,
             "obj_class": "level_entry"
         },
         {

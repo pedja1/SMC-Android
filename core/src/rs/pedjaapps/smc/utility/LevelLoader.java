@@ -192,7 +192,7 @@ public class LevelLoader
         if(levelParsed)return;
         float x = (float) jPlayer.getDouble(KEY.posx.toString());
         float y = (float) jPlayer.getDouble(KEY.posy.toString());
-        level.spanPosition = new Vector3(x, y, 0.0999f);
+        level.spanPosition = new Vector3(x, y, Maryo.POSITION_Z);
         if (controller != null)
         {
             Maryo maryo = new Maryo(world, level.spanPosition, new Vector2(0.9f, 0.9f));
@@ -293,8 +293,8 @@ public class LevelLoader
     {
         if(levelParsed)return;
         Vector3 position = new Vector3((float) jEntry.getDouble(KEY.posx.toString()), (float) jEntry.getDouble(KEY.posy.toString()), 0);
-        float width = 0.2f;
-        float height = 0.2f;
+        float width = (float) jEntry.getDouble(KEY.width.toString());
+        float height = (float) jEntry.getDouble(KEY.height.toString());
 
         LevelEntry entry = new LevelEntry(world, new Vector2(width, height), position);
         entry.direction = jEntry.optString(KEY.direction.toString());

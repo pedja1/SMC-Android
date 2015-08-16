@@ -712,8 +712,8 @@ public class SAXXMLHandler extends DefaultHandler
     {
         entry.posx = entry.posx / 64;
         entry.posy = convertY(entry.posy, 12f);
-        //entry.height = entry.height / 64;
-        //entry.width = entry.width / 64;
+        entry.h = entry.h / 64;
+        entry.w = entry.w / 64;
     }
 
     private void fixEnemy(Enemy enemy)
