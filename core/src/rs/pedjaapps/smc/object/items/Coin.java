@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -71,6 +72,7 @@ public class Coin extends Item
             pointsTextPosition.x = (mDrawRect.x + mDrawRect.width / 2) - layout.width / 2;
             pointsTextPosition.y = (mDrawRect.y + mDrawRect.height / 2) + layout.height / 2;
         }
+		stateTime = MathUtils.random(1.2f);
     }
 
     @Override
