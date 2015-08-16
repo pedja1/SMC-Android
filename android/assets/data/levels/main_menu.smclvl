@@ -262,6 +262,7 @@
             "texture_atlas": "data/ground/jungle_1/slider/green.pack",
             "massive_type": "massive",
             "obj_class": "sprite",
+            "rotationY": 180,
             "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-left"
         },
         {

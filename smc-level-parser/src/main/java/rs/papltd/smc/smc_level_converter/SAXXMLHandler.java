@@ -975,17 +975,16 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.texture_atlas = "data/ground/jungle_1/slider/green.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
-            if(sprite.texture_name.endsWith("-right"))
+            /*if(sprite.texture_name.endsWith("-right"))
             {
                 sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
                 
-            }
+            }*/
         }
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {
             sprite.texture_name = "data/" + sprite.image;
-            sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-            
+            //sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
         }
         else
         {
@@ -1046,6 +1045,10 @@ public class SAXXMLHandler extends DefaultHandler
 					{
 						sprite.texture_name = sprite.texture_atlas + ":" + baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf("."));
 					}
+                    else
+                    {
+                        sprite.texture_name = sprite.texture_name.replaceAll(sprite.texture_name.substring(sprite.texture_name.lastIndexOf('/') + 1, sprite.texture_name.lastIndexOf('.')), baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf(".")));
+                    }
 					//System.out.println("fileName" + fileName + ", baseFilename: " + baseFileName + ", lines.length: " + lines.length);
 				}
 			}
