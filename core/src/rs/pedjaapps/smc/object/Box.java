@@ -127,19 +127,19 @@ public class Box extends Sprite
         }
         if (usableCount == 0)
         {
-            Utility.draw(spriteBatch, txDisabled, position.x, position.y, bounds.height);
+            Utility.draw(spriteBatch, txDisabled, position.x, position.y, mDrawRect.height);
         }
         else
         {
             if (textureName != null)
             {
                 Texture tx = Assets.manager.get(textureName);
-                Utility.draw(spriteBatch, tx, position.x, position.y, bounds.height);
+                Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
             }
             if (textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
             {
                 TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-                Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+                Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
             }
         }
     }
@@ -318,7 +318,7 @@ public class Box extends Sprite
             addBoxItem(this, false);
             if (itemObject != null)
             {
-                itemObject.popOutFromBox(position.y + bounds.height);
+                itemObject.popOutFromBox(position.y + mDrawRect.height);
                 if (itemObject instanceof Coin)
                 {
                     if (itemObject.textureAtlas.contains("yellow"))
@@ -371,7 +371,7 @@ public class Box extends Sprite
 
             // update position
             position.add(velocity);
-            body.y = position.y;
+            mColRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
@@ -381,7 +381,7 @@ public class Box extends Sprite
             {
                 hitByPlayer = false;
                 position.y = originalPosY;
-                body.y = position.y;
+                mColRect.y = position.y;
                 updateBounds();
             }
         }

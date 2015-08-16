@@ -124,12 +124,12 @@ public class Furball extends Enemy
         {
             frame = turn ? Assets.loadedRegions.get(keyTurn)
                     : Assets.animations.get(direction == Direction.right ? textureAtlas : keyLeft).getKeyFrame(stateTime, true);
-            Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
+            Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
         }
         else
         {
             frame = direction == Direction.right ? Assets.loadedRegions.get(keyDead) : Assets.loadedRegions.get(keyDeadRight);
-            spriteBatch.draw(frame, bounds.x ,bounds.y ,bounds.width, bounds.height);
+            spriteBatch.draw(frame, mDrawRect.x , mDrawRect.y , mDrawRect.width, mDrawRect.height);
         }
     }
 
@@ -140,9 +140,9 @@ public class Furball extends Enemy
         if(dying)
         {
             //resize it by state time
-            bounds.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
-            bounds.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
-            if(bounds.height < 0)world.trashObjects.add(this);
+            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
+            mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
+            if(mDrawRect.height < 0)world.trashObjects.add(this);
             return;
         }
 
@@ -185,7 +185,7 @@ public class Furball extends Enemy
 		if(!vertical)
 		{
 			if(((object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive
-					&& object.body.y + object.body.height > body.y + 0.1f)
+					&& object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
 					|| object instanceof EnemyStopper
 					|| (object instanceof Enemy && this != object))
                     && !turned)
@@ -213,23 +213,23 @@ public class Furball extends Enemy
 
     private void setupBoundingBox()
     {
-        body.height = body.height - 0.2f;
+        mColRect.height = mColRect.height - 0.2f;
     }
 
     @Override
     public void updateBounds()
     {
-        bounds.height = body.height + 0.2f;
+        mDrawRect.height = mColRect.height + 0.2f;
         super.updateBounds();
     }
 
     @Override
     public int hitByPlayer(Maryo maryo, boolean vertical)
     {
-        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
+        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             System.out.println("hitByPlayer");
-            ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + bounds.height);
+            ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + mDrawRect.height);
             if (type == Type.boss && downgradeCount >= maxDowngradeCount)
             {
                 downgradeCount++;
@@ -262,6 +262,6 @@ public class Furball extends Enemy
     {
         System.out.println("downgradeOrDie");
         super.downgradeOrDie(killedBy);
-        ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + bounds.height);
+        ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + mDrawRect.height);
     }
 }

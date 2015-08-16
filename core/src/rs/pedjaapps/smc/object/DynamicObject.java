@@ -6,7 +6,6 @@ import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Constants;
-import com.badlogic.gdx.math.Rectangle;
 
 public abstract class DynamicObject extends GameObject
 {
@@ -30,8 +29,8 @@ public abstract class DynamicObject extends GameObject
 		velocity.scl(deltaTime);
 
 		position.add(velocity);
-        body.x = position.x;
-        body.y = position.y;
+        mColRect.x = position.x;
+        mColRect.y = position.y;
         updateBounds();
 
 		velocity.scl(1 / deltaTime);
@@ -82,7 +81,7 @@ public abstract class DynamicObject extends GameObject
             // we first check the movement on the horizontal X axis
 
             // simulate maryos's movement on the X
-            body.x += velocity.x;
+            mColRect.x += velocity.x;
 
             List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
             // if m collides, make his horizontal velocity 0
@@ -92,29 +91,29 @@ public abstract class DynamicObject extends GameObject
             {
                 GameObject object = surroundingObjects.get(i);
                 if (object == null) continue;
-                if (body.overlaps(object.body, this instanceof Maryo))
+                if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
                 {
                     handleCollision(object, false);
                 }
-                else if ((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
                 {
                     handleCollision(((Box) object).itemObject, false);
                 }
             }
-            if (body.x < 0 || body.x + body.width > world.level.width)
+            if (mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
             {
                 velocity.x = 0;
             }
 
             // reset the x position of the collision box
-            body.x = position.x;
+            mColRect.x = position.x;
         }
 
         if(checkY)
         {
             // the same thing but on the vertical Y axis
 
-            body.y += velocity.y;
+            mColRect.y += velocity.y;
 
             List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
             //noinspection ForLoopReplaceableByForEach
@@ -123,28 +122,28 @@ public abstract class DynamicObject extends GameObject
             {
                 GameObject object = surroundingObjects.get(i);
                 if (object == null) continue;
-                if (body.overlaps(object.body, this instanceof Maryo))
+                if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
                 {
                     handleCollision(object, true);
                 }
-                else if ((object instanceof Box && ((Box) object).itemObject != null && body.overlaps(((Box) object).itemObject.body)))
+                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
                 {
                     handleCollision(((Box) object).itemObject, true);
                 }
             }
-            if (body.y < 0)
+            if (mColRect.y < 0)
             {
                 handleDroppedBelowWorld();
             }
 
             // reset the collision box's position on Y
-            body.y = position.y;
+            mColRect.y = position.y;
         }
 
         // update position
         position.add(velocity);
-        body.x = position.x;
-        body.y = position.y;
+        mColRect.x = position.x;
+        mColRect.y = position.y;
         updateBounds();
 
         // un-scale velocity (not in frame time)
@@ -192,7 +191,7 @@ public abstract class DynamicObject extends GameObject
 		}
 		else if(object instanceof Sprite && ((Sprite)object).type == Sprite.Type.halfmassive)
 		{
-			if(velocity.y < 0 && position.y > object.position.y + object.body.height)
+			if(velocity.y < 0 && position.y > object.position.y + object.mColRect.height)
 			{
 				grounded = true;
 				velocity.y = 0;

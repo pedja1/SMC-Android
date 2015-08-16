@@ -2,16 +2,17 @@ package rs.papltd.smc.smc_level_converter;
 
 
 import com.badlogic.gdx.math.Rectangle;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Created by pedja on 11/1/13.
@@ -587,8 +588,8 @@ public class SAXXMLHandler extends DefaultHandler
                 tmpInformation = null;
                 break;
             case "settings":
-                tmpSettings.height = Math.abs(tmpSettings.height / 64);
-                tmpSettings.width = tmpSettings.width / 64;
+                tmpSettings.height = Math.abs(tmpSettings.height / 64f);
+                tmpSettings.width = tmpSettings.width / 64f;
                 tmpSettings.music = "data/music/" + tmpSettings.music;
                 level.settings = tmpSettings;
                 tmpSettings = null;
@@ -1045,17 +1046,19 @@ public class SAXXMLHandler extends DefaultHandler
 					{
 						sprite.texture_name = sprite.texture_atlas + ":" + baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf("."));
 					}
-					System.out.println("fileName" + fileName + ", baseFilename: " + baseFileName + ", lines.length: " + lines.length);
+					//System.out.println("fileName" + fileName + ", baseFilename: " + baseFileName + ", lines.length: " + lines.length);
 				}
 			}
 		}
 		
         float origHeight = 1;
+        float origWidth = 1;
         for(String s : lines)
         {
             String[] data = s.split(" ");
             if("width".equals(data[0]))
             {
+                origWidth = Float.parseFloat(data[1]);
                 sprite.width = Float.parseFloat(data[1]) / 64f;
             }
             else if("height".equals(data[0]))
@@ -1068,9 +1071,18 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.rotationX = Integer.parseInt(data[1]);
                 sprite.rotationY = Integer.parseInt(data[2]);
                 sprite.rotationZ = Integer.parseInt(data[3]);
-				System.out.println("rotation: " + Arrays.toString(data));
+				//System.out.println("rotation: " + Arrays.toString(data));
             }
         }
+        /*if(sprite.rotationZ == 90 || sprite.rotationZ == 270)
+        {
+            sprite.posy = convertY(sprite.posy, origWidth);
+            //sprite.posy += (sprite.width - sprite.height) / 2;
+        }
+        else
+        {
+            sprite.posy = convertY(sprite.posy, origHeight);
+        }*/
         sprite.posy = convertY(sprite.posy, origHeight);
     }
 

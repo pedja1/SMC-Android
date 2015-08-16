@@ -52,7 +52,7 @@ public class Flyon extends Enemy
     public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
+        Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
     }
 
     public void update(float deltaTime)

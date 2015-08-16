@@ -147,7 +147,7 @@ public class Maryo extends DynamicObject
 	private boolean exiting, entering;
 	private LevelExit exit;
 	private Vector3 exitStartPosition = new Vector3();
-	private float exitVelocity = 0.8f;
+	private static final float exitVelocity = 0.8f;
 	private int rotation = 0;
     
     public Maryo(World world, Vector3 position, Vector2 size)
@@ -155,49 +155,49 @@ public class Maryo extends DynamicObject
         super(world, size, position);
         setupBoundingBox();
 		
-		position.y = body.y = bounds.y += 0.5f;
+		position.y = mColRect.y = mDrawRect.y += 0.5f;
     }
 
     private void setupBoundingBox()
     {
-        float centerX = position.x + body.width / 2;
+        float centerX = position.x + mColRect.width / 2;
 		switch(maryoState)
 		{
 			case small:
-				bounds.width = 0.9f;
-				bounds.height = 0.9f;
+				mDrawRect.width = 0.9f;
+				mDrawRect.height = 0.9f;
 				break;
 			case big:
 			case fire:
 			case ghost:
 			case ice:
-				bounds.height = 1.09f;
-				bounds.width = 1.09f;
+				mDrawRect.height = 1.09f;
+				mDrawRect.width = 1.09f;
 				break;
 			case flying:
 				break;
 		}
-		body.x = bounds.x + bounds.width / 4;
-		body.width = bounds.width / 2;
-		position.x = body.x;
+		mColRect.x = mDrawRect.x + mDrawRect.width / 4;
+		mColRect.width = mDrawRect.width / 2;
+		position.x = mColRect.x;
 		
         if(worldState == WorldState.DUCKING)
 		{
-			body.height = bounds.height / 2;
+			mColRect.height = mDrawRect.height / 2;
 		}
 		else
 		{
-			body.height = bounds.height * 0.9f;
+			mColRect.height = mDrawRect.height * 0.9f;
 		}
 
-        position.x = body.x = centerX - body.width / 2;
+        position.x = mColRect.x = centerX - mColRect.width / 2;
     }
 
 	@Override
     public void updateBounds()
     {
-        bounds.x = body.x - bounds.width / 4;
-        bounds.y = body.y;
+        mDrawRect.x = mColRect.x - mDrawRect.width / 4;
+        mDrawRect.y = mColRect.y;
     }
 
     public void initAssets()
@@ -265,9 +265,9 @@ public class Maryo extends DynamicObject
 		{
 			marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.stand_left)) : Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
 			
-            float originX = bounds.width * 0.5f;
-            float originY = bounds.height * 0.5f;
-            spriteBatch.draw(marioFrame, bounds.x, bounds.y, originX, originY, bounds.width, bounds.height, 1, 1, rotation);
+            float originX = mDrawRect.width * 0.5f;
+            float originY = mDrawRect.height * 0.5f;
+            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, originX, originY, mDrawRect.width, mDrawRect.height, 1, 1, rotation);
 			
 			return;
 		}
@@ -335,14 +335,14 @@ public class Maryo extends DynamicObject
 			color.a = 0.5f;
 			spriteBatch.setColor(color);
 			
-			spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
+			spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
 			
 			color.a = oldA;
 			spriteBatch.setColor(color);
 		}
 		else
 		{
-        	spriteBatch.draw(marioFrame, bounds.x, bounds.y, bounds.width, bounds.height);
+        	spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
 		}
     }
 
@@ -596,48 +596,48 @@ public class Maryo extends DynamicObject
 			float velDelta = exitVelocity * delta;
 			if("up".equals(exit.direction))
 			{
-				if(position.y >= exitStartPosition.y + bounds.height)
+				if(position.y >= exitStartPosition.y + mDrawRect.height)
 				{
 					isDone = true;
 				}
 				else
 				{
-					body.y = position.y += bounds.height * velDelta;
+					mColRect.y = position.y += mDrawRect.height * velDelta;
 				}
 			}
 			else if("down".equals(exit.direction))
 			{
-				if(position.y <= exitStartPosition.y - bounds.height)
+				if(position.y <= exitStartPosition.y - mDrawRect.height)
 				{
 					isDone = true;
 				}
 				else
 				{
-					body.y = position.y -= bounds.height * velDelta;
+					mColRect.y = position.y -= mDrawRect.height * velDelta;
 				}
 			}
 			else if("right".equals(exit.direction))
 			{
-				if(position.x >= exitStartPosition.x + bounds.width)
+				if(position.x >= exitStartPosition.x + mDrawRect.width)
 				{
 					isDone = true;
 				}
 				else
 				{
 					rotation = -90;
-					body.x = position.x += bounds.width * velDelta;
+					mColRect.x = position.x += mDrawRect.width * velDelta;
 				}
 			}
 			else if("left".equals(exit.direction))
 			{
-				if(position.x <= exitStartPosition.x + bounds.width)
+				if(position.x <= exitStartPosition.x + mDrawRect.width)
 				{
 					isDone = true;
 				}
 				else
 				{
 					rotation = 90;
-					body.x = position.x -= bounds.width * velDelta;
+					mColRect.x = position.x -= mDrawRect.width * velDelta;
 				}
 			}
 			if(isDone)
@@ -683,9 +683,9 @@ public class Maryo extends DynamicObject
             Array<GameObject> objects = world.getVisibleObjects();
             Rectangle rect = world.RECT_POOL.obtain();
             debugRayRect = rect;
-            rect.set(position.x, 0, body.width, position.y);
+            rect.set(position.x, 0, mColRect.width, position.y);
             float tmpGroundY = 0;
-            float distance = body.y;
+            float distance = mColRect.y;
 			GameObject closestObject = null;
             //for(GameObject go : objects)
             for(int i = 0; i < objects.size; i++)
@@ -694,17 +694,17 @@ public class Maryo extends DynamicObject
                 if(go == null)continue;
                 if(go instanceof Sprite
                         && (((Sprite)go).type == Sprite.Type.massive || ((Sprite)go).type == Sprite.Type.halfmassive)
-                        && rect.overlaps(go.body))
+                        && rect.overlaps(go.mColRect))
                 {
-					if(((Sprite)go).type == Sprite.Type.halfmassive && body.y < go.body.y + go.body.height)
+					if(((Sprite)go).type == Sprite.Type.halfmassive && mColRect.y < go.mColRect.y + go.mColRect.height)
 					{
 						continue;
 					}
-                    float tmpDistance = body.y - (go.body.y + go.body.height);
+                    float tmpDistance = mColRect.y - (go.mColRect.y + go.mColRect.height);
                     if(tmpDistance < distance)
                     {
                         distance = tmpDistance;
-                        tmpGroundY = go.body.y + go.body.height;
+                        tmpGroundY = go.mColRect.y + go.mColRect.height;
 						closestObject = go;
                     }
                 }
@@ -758,7 +758,7 @@ public class Maryo extends DynamicObject
                 }
             }
 		}
-		else if(object instanceof Box && position.y + body.height <= object.position.y)
+		else if(object instanceof Box && position.y + mColRect.height <= object.position.y)
 		{
 			((Box)object).handleHitByPlayer();
 		}
@@ -781,11 +781,11 @@ public class Maryo extends DynamicObject
         this.worldState = newWorldState;
 		if(worldState == WorldState.DUCKING)
 		{
-			body.height = bounds.height / 2;
+			mColRect.height = mDrawRect.height / 2;
 		}
 		else
 		{
-			body.height = bounds.height * 0.9f;
+			mColRect.height = mDrawRect.height * 0.9f;
 		}
     }
 
@@ -916,7 +916,7 @@ public class Maryo extends DynamicObject
 		{
 			velocity.x = 0;
 			position.x = diedPosition.x;
-			if(bounds.y + bounds.height < 0)//first check if player is visible
+			if(mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
 			{
 				((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
 				world.trashObjects.add(Maryo.this);

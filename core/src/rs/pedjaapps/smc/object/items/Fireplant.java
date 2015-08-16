@@ -49,7 +49,7 @@ public class Fireplant extends Item
 
             // update position
             position.add(velocity);
-            body.y = position.y;
+            mColRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
@@ -71,7 +71,7 @@ public class Fireplant extends Item
         velocity.y = VELOCITY_POP;
         originalPosY = position.y;
         ParticleEffect effect = Assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
-        effect.setPosition(position.x + bounds.width / 2, position.y + bounds.height / 2);
+        effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
         effect.start();
     }
 
@@ -80,10 +80,10 @@ public class Fireplant extends Item
     {
         if(!visible)return;
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
 
         ParticleEffect effect = Assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
-        effect.setPosition(position.x + bounds.width / 2, position.y + bounds.height / 2);
+        effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
         effect.draw(spriteBatch, Gdx.graphics.getDeltaTime());
     }
 

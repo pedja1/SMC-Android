@@ -35,11 +35,11 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
-import rs.pedjaapps.smc.utility.NAHudText;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
@@ -333,7 +333,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		//for (GameObject go : world.level.gameObjects)
 		{
             GameObject go = world.level.gameObjects.get(i);
-			if (maryoBWO.overlaps(go.body))
+			if (maryoBWO.overlaps(go.mColRect))
 			{
 				if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
 				{
@@ -360,17 +360,25 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		//for (GameObject go : world.getVisibleObjects())
 		{
             GameObject go = world.getVisibleObjects().get(i);
-            Rectangle body = go.body;
-            Rectangle bounds = go.bounds;
+            Rectangle colRect = go.mColRect;
+            Rectangle drawRect = go.mDrawRect;
             shapeRenderer.setColor(0, 1, 0, 1);
-            shapeRenderer.rect(body.x, body.y, body.width, body.height);
-            shapeRenderer.setColor(1, 0, 0, 1);
-            shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-		}
+            shapeRenderer.rect(colRect.x, colRect.y, colRect.width, colRect.height);
+            /*if (go instanceof Sprite)
+            {
+                shapeRenderer.setColor(1, 0, 0, 1);
+                shapeRenderer.polygon(((Sprite)go).polygon.getTransformedVertices());
+            }
+            else
+            {*/
+                shapeRenderer.setColor(1, 0, 0, 1);
+                shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+            /*}*/
+        }
 		// render maryo
 		Maryo maryo = world.maryo;
-		Rectangle body = maryo.body;
-        Rectangle bounds = maryo.bounds;
+		Rectangle body = maryo.mColRect;
+        Rectangle bounds = maryo.mDrawRect;
 		shapeRenderer.setColor(0, 1, 0, 1);
 		shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(1, 0, 0, 1);

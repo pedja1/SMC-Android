@@ -256,9 +256,9 @@ public class LevelLoader
         {
             Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
-        sprite.rotationX = jSprite.optInt("rotationX");
-        sprite.rotationY = jSprite.optInt("rotationY");
-        sprite.rotationZ = jSprite.optInt("rotationZ");
+        sprite.mRotationX = jSprite.optInt("rotationX");
+        sprite.mRotationY = jSprite.optInt("rotationY");
+        sprite.mRotationZ = jSprite.optInt("rotationZ");
         if(!levelParsed)level.gameObjects.add(sprite);
 
     }
@@ -308,9 +308,8 @@ public class LevelLoader
     {
         if(levelParsed)return;
         Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
-        float width = .15625f;//(float) jExit.getDouble(KEY.width.toString());
-        float height = .3125f;//(float) jExit.getDouble(KEY.height.toString());
-		//position.y -= height * .5f;
+        float width = (float) jExit.getDouble(KEY.width.toString());
+        float height = (float) jExit.getDouble(KEY.height.toString());
         LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
         exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
         exit.type = jExit.optInt(KEY.type.toString());

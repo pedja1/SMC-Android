@@ -48,7 +48,7 @@ public abstract class Mushroom extends Item
     {
         if(!visible)return;
         Texture txt = Assets.manager.get(textureName);
-        Utility.draw(spriteBatch, txt, position.x, position.y, bounds.height);
+        Utility.draw(spriteBatch, txt, position.x, position.y, mDrawRect.height);
     }
 
     @Override
@@ -62,7 +62,7 @@ public abstract class Mushroom extends Item
 
             // update position
             position.add(velocity);
-            body.y = position.y;
+            mColRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
@@ -109,50 +109,50 @@ public abstract class Mushroom extends Item
         // we first check the movement on the horizontal X axis
 
         // simulate movement on the X
-        body.x += velocity.x;
+        mColRect.x += velocity.x;
 
         List<GameObject> surroundingObjects = world.level.gameObjects;
         // if m collides, make his horizontal velocity 0
         for (GameObject object : surroundingObjects)
         {
             if (object == null) continue;
-            if (body.overlaps(object.body))
+            if (mColRect.overlaps(object.mColRect))
             {
                 handleCollision(object, false);
             }
         }
-        if(body.x < 0 || body.x + body.width > world.level.width)
+        if(mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
         {
             velocity.x = 0;
         }
 
         // reset the x position of the collision box
-        body.x = position.x;
+        mColRect.x = position.x;
 
         // the same thing but on the vertical Y axis
 
-        body.y += velocity.y;
+        mColRect.y += velocity.y;
 
         for (GameObject object : surroundingObjects)
         {
             if (object == null) continue;
-            if (body.overlaps(object.body))
+            if (mColRect.overlaps(object.mColRect))
             {
                 handleCollision(object, true);
             }
         }
-        if(body.y < 0)
+        if(mColRect.y < 0)
         {
             handleDroppedBelowWorld();
         }
 
         // reset the collision box's position on Y
-        body.y = position.y;
+        mColRect.y = position.y;
 
         // update position
         position.add(velocity);
-        body.x = position.x;
-        body.y = position.y;
+        mColRect.x = position.x;
+        mColRect.y = position.y;
         updateBounds();
 
         // un-scale velocity (not in frame time)
@@ -179,7 +179,7 @@ public abstract class Mushroom extends Item
             }
             else
             {
-                if(object.position.y + object.bounds.height / 2 > position.y)
+                if(object.position.y + object.mDrawRect.height / 2 > position.y)
                 {
                     direction = direction == Direction.right ? Direction.left : Direction.right;
                     velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);

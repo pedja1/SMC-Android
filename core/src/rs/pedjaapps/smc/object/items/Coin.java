@@ -68,8 +68,8 @@ public class Coin extends Item
 				layout = new GlyphLayout(font, "100");
             }
 
-            pointsTextPosition.x = (bounds.x + bounds.width / 2) - layout.width / 2;
-            pointsTextPosition.y = (bounds.y + bounds.height / 2) + layout.height / 2;
+            pointsTextPosition.x = (mDrawRect.x + mDrawRect.width / 2) - layout.width / 2;
+            pointsTextPosition.y = (mDrawRect.y + mDrawRect.height / 2) + layout.height / 2;
         }
     }
 
@@ -80,7 +80,7 @@ public class Coin extends Item
         //if (!playerHit)
         //{
             TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-            Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+            Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
         //}
         //else
         //{
@@ -100,13 +100,13 @@ public class Coin extends Item
 
 			// update position
 			position.add(velocity);
-			body.y = position.y;
+			mColRect.y = position.y;
 			updateBounds();
 
 			// un-scale velocity (not in frame time)
 			velocity.scl(1 / delta);
 
-			if(position.y >= originalPosY + body.height + 0.3f)
+			if(position.y >= originalPosY + mColRect.height + 0.3f)
 			{
 				popFromBox = false;
 				collect();
@@ -117,8 +117,8 @@ public class Coin extends Item
 			velocity.scl(delta);
 			
 			position.add(velocity);
-			body.y = position.y;
-			body.x = position.x;
+			mColRect.y = position.y;
+			mColRect.x = position.x;
 			updateBounds();
 
 			// un-scale velocity (not in frame time)
@@ -126,7 +126,7 @@ public class Coin extends Item
 			OrthographicCamera cam = ((GameScreen)world.screen).cam;
 			float camLeft = cam.position.x - cam.viewportWidth / 2;
 			float camTop = cam.position.y + cam.viewportHeight / 2;
-			float objRight = position.x + bounds.width;
+			float objRight = position.x + mDrawRect.width;
 			float objBottom = position.y;
 			if(objRight < camLeft || objBottom > camTop)//is visible
 			{

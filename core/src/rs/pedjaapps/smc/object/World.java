@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object;
 
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -41,6 +42,15 @@ public class World
 		}
 	};
 
+    public static Pool<Polygon> POLY_POOL = new Pool<Polygon>()
+    {
+        @Override
+        protected Polygon newObject()
+        {
+            return new Polygon();
+        }
+    };
+
     public static Pool<Vector2> VECTOR2_POOL = new Pool<Vector2>()
     {
         @Override
@@ -67,7 +77,7 @@ public class World
         for (int i = 0; i < level.gameObjects.size(); i++)
         {
             GameObject object = level.gameObjects.get(i);
-            Rectangle bounds = object.bounds;
+            Rectangle bounds = object.mDrawRect;
             if (bounds.overlaps(worldBounds)/* || object instanceof Enemy*/)
             {
                 visibleObjects.add(object);
@@ -80,15 +90,15 @@ public class World
 	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
     {
         tmpObjects.clear();
-        float wX = center.body.x - offset;
-        float wY = center.body.y - offset;
-        float wW = center.body.x + center.body.width + offset * 2;
-        float wH = center.body.y + center.body.height + offset * 2;
+        float wX = center.mColRect.x - offset;
+        float wY = center.mColRect.y - offset;
+        float wW = center.mColRect.x + center.mColRect.width + offset * 2;
+        float wH = center.mColRect.y + center.mColRect.height + offset * 2;
         Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
         for (GameObject object : level.gameObjects)
         {
-            Rectangle bounds = object.bounds;
+            Rectangle bounds = object.mDrawRect;
             if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
             {
                 tmpObjects.add(object);
@@ -100,10 +110,10 @@ public class World
 	
 	public Rectangle createMaryoRectWithOffset(float offset)
 	{
-		float wX = maryo.body.x - offset;
-        float wY = maryo.body.y - offset;
-        float wW = maryo.body.x + maryo.body.width + offset * 2;
-        float wH = maryo.body.y + maryo.body.height + offset * 2;
+		float wX = maryo.mColRect.x - offset;
+        float wY = maryo.mColRect.y - offset;
+        float wW = maryo.mColRect.x + maryo.mColRect.width + offset * 2;
+        float wH = maryo.mColRect.y + maryo.mColRect.height + offset * 2;
         Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
      	return offsetBounds;
@@ -136,7 +146,7 @@ public class World
         float wH = Constants.CAMERA_HEIGHT + 1;
         Rectangle worldBounds = RECT_POOL.obtain();
         worldBounds.set(wX, wY, wW, wH);
-        boolean result = object.bounds.overlaps(worldBounds);
+        boolean result = object.mDrawRect.overlaps(worldBounds);
         RECT_POOL.free(worldBounds);
         return result;
     }

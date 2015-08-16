@@ -5,7 +5,7 @@ package rs.papltd.smc.smc_level_converter;
  */
 public class LevelExit
 {
-    public float posx, posy, width = .13f, height = .3f;
+    public float posx, posy, width = 10, height = 20;
     public int type, camera_motion;
     public String level_name, entry, direction;
 }

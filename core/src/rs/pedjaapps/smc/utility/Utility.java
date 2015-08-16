@@ -123,11 +123,11 @@ public class Utility
 		float objGuiX = (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
 		float objGuiY = (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
 		
-		gameObject.body.y = gameObject.bounds.y = gameObject.position.y = objGuiY;
-		gameObject.body.x = gameObject.bounds.x = gameObject.position.x = objGuiX;
+		gameObject.mColRect.y = gameObject.mDrawRect.y = gameObject.position.y = objGuiY;
+		gameObject.mColRect.x = gameObject.mDrawRect.x = gameObject.position.x = objGuiX;
 		
-		gameObject.body.width = gameObject.bounds.width = gameObject.bounds.width * widthMul;
-		gameObject.body.height = gameObject.bounds.height = gameObject.bounds.height * heightMul;
+		gameObject.mColRect.width = gameObject.mDrawRect.width = gameObject.mDrawRect.width * widthMul;
+		gameObject.mColRect.height = gameObject.mDrawRect.height = gameObject.mDrawRect.height * heightMul;
 	}
 
     public static float gamePositionToGuiPosition(GameObject gameObject, GameScreen gameScreen, boolean x)

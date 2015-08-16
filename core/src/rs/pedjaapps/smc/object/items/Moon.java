@@ -46,7 +46,7 @@ public class Moon extends Item
 
             // update position
             position.add(velocity);
-            body.y = position.y;
+            mColRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
@@ -74,7 +74,7 @@ public class Moon extends Item
     {
         if(!visible)return;
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, position.x, position.y, bounds.height);
+        Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
     }
 
     @Override

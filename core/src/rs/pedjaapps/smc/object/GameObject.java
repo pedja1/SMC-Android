@@ -9,8 +9,8 @@ import rs.pedjaapps.smc.Rect;
  */
 public abstract class GameObject
 {
-    public Rect bounds = new Rect();//used for draw
-    public Rect body = new Rect();//used for collision detection
+    public Rect mDrawRect = new Rect();//used for draw
+    public Rect mColRect = new Rect();//used for collision detection
 	public Vector3 position = new Vector3();
     public Vector3 velocity = new Vector3();
     public Vector3 acceleration = new Vector3();
@@ -60,16 +60,16 @@ public abstract class GameObject
 
     public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.bounds = new Rect(position.x, position.y, size.x, size.y);
-        body = new Rect(bounds);
+        this.mDrawRect = new Rect(position.x, position.y, size.x, size.y);
+        mColRect = new Rect(mDrawRect);
 		this.position = position;
         this.world = world;
     }
 	
 	public void updateBounds()
     {
-        bounds.x = body.x;
-        bounds.y = body.y;
+        mDrawRect.x = mColRect.x;
+        mDrawRect.y = mColRect.y;
     }
 
     public abstract void render(SpriteBatch spriteBatch);

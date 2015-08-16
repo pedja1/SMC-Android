@@ -107,10 +107,10 @@ public class Turtle extends Enemy
         }
         if(frame != null)
         {
-            float width = Utility.getWidth(frame, bounds.height);
+            float width = Utility.getWidth(frame, mDrawRect.height);
             float originX = width * 0.5f;
-            float originY = bounds.height * 0.5f;
-            spriteBatch.draw(frame, bounds.x, bounds.y, originX, originY, width, bounds.height, 1, 1, mShellRotation);
+            float originY = mDrawRect.height * 0.5f;
+            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mShellRotation);
         }
     }
 
@@ -118,7 +118,7 @@ public class Turtle extends Enemy
     {
         if(isShellMoving)
         {
-            float circumference = (float) Math.PI * (body.width);
+            float circumference = (float) Math.PI * (mColRect.width);
             float deltaVelocity = mVelocityShell * Gdx.graphics.getDeltaTime();
 
             float step = circumference / deltaVelocity;
@@ -205,7 +205,7 @@ public class Turtle extends Enemy
 		if(!vertical)
 		{
 			if(((object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive
-					&& object.body.y + object.body.height > body.y + 0.1f)
+					&& object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
 					|| (object instanceof EnemyStopper && !isShellMoving))
                     && !turned)
 			{
@@ -243,7 +243,7 @@ public class Turtle extends Enemy
 
     private void setupBoundingBox()
     {
-        if(!isShell)body.height = body.height - 0.2f;
+        if(!isShell) mColRect.height = mColRect.height - 0.2f;
     }
 
     @Override
@@ -251,20 +251,20 @@ public class Turtle extends Enemy
     {
         if(!isShell)
         {
-            bounds.height = body.height + 0.2f;
+            mDrawRect.height = mColRect.height + 0.2f;
             super.updateBounds();
         }
         else
         {
-            bounds.x = body.x - ((bounds.width - body.width) - body.width / 2);
-            bounds.y = body.y - ((bounds.height - body.height) - body.height / 2);
+            mDrawRect.x = mColRect.x - ((mDrawRect.width - mColRect.width) - mColRect.width / 2);
+            mDrawRect.y = mColRect.y - ((mDrawRect.height - mColRect.height) - mColRect.height / 2);
         }
     }
 
     @Override
     public int hitByPlayer(Maryo maryo, boolean vertical)
     {
-        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
+        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             //transform to shell if not shell
             //if shell make it move
@@ -273,14 +273,14 @@ public class Turtle extends Enemy
             {
                 isShell = true;
                 velocity.x = 0;
-                bounds.height = bounds.height * 0.60f;
-                bounds.width = bounds.width * 0.60f;
-                body.height = bounds.height / 2;
-                body.width = bounds.width / 2;
+                mDrawRect.height = mDrawRect.height * 0.60f;
+                mDrawRect.width = mDrawRect.width * 0.60f;
+                mColRect.height = mDrawRect.height / 2;
+                mColRect.width = mDrawRect.width / 2;
             }
             else
             {
-                direction = (maryo.position.x + maryo.body.width * 0.5f) > (position.x + body.width * 0.5f) ? Direction.right : Direction.left;
+                direction = (maryo.position.x + maryo.mColRect.width * 0.5f) > (position.x + mColRect.width * 0.5f) ? Direction.right : Direction.left;
                 isShellMoving = !isShellMoving;
             }
             //TODO (v2.0)turtle should automatically transform back from shell after timeout if shell is standing

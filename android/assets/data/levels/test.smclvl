@@ -1,0 +1,50 @@
+{
+    "info": {
+        "level_width": 12,
+        "level_height": 7,
+        "level_music": [
+            "data/music/land/land_5.ogg"
+        ]
+    },
+    "background": {
+        "r_1": 80,
+        "g_1": 60,
+        "b_1": 40,
+        "r_2": 80,
+        "g_2": 60,
+        "b_2": 0
+    },
+    "objects": [
+        {
+            "posx": 3.53125,
+            "posy": 6.5,
+            "obj_class": "player"
+        },
+        {
+            "posx": 4,
+            "posy": 5,
+            "width": 2,
+            "height": 1,
+            "texture_atlas": "data/pipes/grey/grey.pack",
+            "texture_name": "data/pipes/grey/grey.pack:up",
+            "rotationX": 0,
+            "rotationY": 180,
+            "rotationZ": 90,
+            "obj_class": "sprite",
+            "massive_type": "massive"
+        },
+        {
+            "posx": 5.5,
+            "posy": 5,
+            "width": 2,
+            "height": 1,
+            "texture_atlas": "data/pipes/grey/grey.pack",
+            "texture_name": "data/pipes/grey/grey.pack:up",
+            "rotationX": 0,
+            "rotationY": 180,
+            "rotationZ": 0,
+            "obj_class": "sprite",
+            "massive_type": "massive"
+        }
+    ]
+}

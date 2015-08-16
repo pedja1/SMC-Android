@@ -11,12 +11,7 @@ import com.badlogic.gdx.utils.*;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
-import rs.pedjaapps.smc.object.Background;
-import rs.pedjaapps.smc.object.BackgroundColor;
-import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.Level;
-import rs.pedjaapps.smc.object.Maryo;
-import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.*;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.NATypeConverter;
@@ -186,12 +181,20 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //for (GameObject go : world.getVisibleObjects())
         {
             GameObject go = loader.level.gameObjects.get(i);
-            Rectangle body = go.body;
-            Rectangle bounds = go.bounds;
+            Rectangle body = go.mColRect;
+            Rectangle bounds = go.mDrawRect;
             shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.rect(body.x, body.y, body.width, body.height);
-            shapeRenderer.setColor(1, 0, 0, 1);
-            shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+            /*if(go instanceof rs.pedjaapps.smc.object.Sprite)
+            {
+                shapeRenderer.setColor(1, 0, 0, 1);
+                shapeRenderer.polygon(((rs.pedjaapps.smc.object.Sprite)go).polygon.getTransformedVertices());
+            }
+            else
+            {*/
+                shapeRenderer.setColor(1, 0, 0, 1);
+                shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+            /*}*/
         }
         shapeRenderer.end();
     }

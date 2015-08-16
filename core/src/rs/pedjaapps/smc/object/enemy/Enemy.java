@@ -54,7 +54,7 @@ public abstract class Enemy extends DynamicObject
     {
         //TODO implement this in subclasses and dont call super
         //TODO this is just here to remove enemies that aren't finished yet
-        if (maryo.velocity.y < 0 && vertical && maryo.body.y > body.y)//enemy death from above
+        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             downgradeOrDie(maryo);
             return HIT_RESOLUTION_ENEMY_DIED;
@@ -132,10 +132,10 @@ public abstract class Enemy extends DynamicObject
         if(deadByBullet)
         {
             TextureRegion frame = getDeadTextureRegion();
-            float width = Utility.getWidth(frame, bounds.height);
+            float width = Utility.getWidth(frame, mDrawRect.height);
             float originX = width * 0.5f;
-            float originY = bounds.height * 0.5f;
-            spriteBatch.draw(frame, bounds.x, bounds.y, originX, originY, width, bounds.height, 1, 1, 180);
+            float originY = mDrawRect.height * 0.5f;
+            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, 180);
         }
         else
         {

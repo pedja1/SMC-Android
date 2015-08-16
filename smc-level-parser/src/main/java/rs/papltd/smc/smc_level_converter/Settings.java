@@ -6,5 +6,5 @@ package rs.papltd.smc.smc_level_converter;
 public class Settings
 {
     public String music;
-    public int width, height;
+    public float width, height;
 }

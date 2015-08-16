@@ -8,15 +8,9 @@ import java.util.*;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.Level;
 import rs.pedjaapps.smc.object.LevelExit;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.screen.GameScreen;
-import rs.pedjaapps.smc.screen.LoadingScreen;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
-import rs.pedjaapps.smc.view.HUD;
-import rs.pedjaapps.smc.object.LevelEntry;
 
 public class MarioController
 {
@@ -73,7 +67,7 @@ public class MarioController
         {
 			GameObject go = vo.get(i);
             if(go instanceof LevelExit 
-				&& go.body.overlaps(maryo.body) 
+				&& go.mColRect.overlaps(maryo.mColRect)
 				&& (((LevelExit)go).type == LevelExit.LEVEL_EXIT_BEAM || (((LevelExit)go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit)go).direction))))
             {
                 /*String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
