@@ -62,8 +62,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		super(game);
         this.game = game;
         batch = new SpriteBatch();
-        drawCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        drawCam.position.set(Constants.CAMERA_WIDTH / 2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT / 2, 0);
+        drawCam = new OrthographicCamera(Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT);
+        drawCam.position.set(Constants.MENU_CAMERA_WIDTH / 2 + (Constants.MENU_DRAW_WIDTH - Constants.MENU_CAMERA_WIDTH) / 2, Constants.MENU_CAMERA_HEIGHT / 2, 0);
         drawCam.update();
         debugCam = new OrthographicCamera(1280, 720);
         debugCam.position.set(1280 / 2, 720 / 2, 0);
@@ -206,8 +206,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         screenHeight = Gdx.graphics.getHeight();
         screenWidth = Gdx.graphics.getWidth();
         Constants.initCamera();
-        drawCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        drawCam.position.set(Constants.CAMERA_WIDTH / 2 + (Constants.DRAW_WIDTH - Constants.CAMERA_WIDTH) / 2, Constants.CAMERA_HEIGHT / 2, 0);
+        drawCam = new OrthographicCamera(Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT);
+        drawCam.position.set(Constants.MENU_CAMERA_WIDTH / 2 + (Constants.MENU_DRAW_WIDTH - Constants.MENU_CAMERA_WIDTH) / 2, Constants.MENU_CAMERA_HEIGHT / 2, 0);
         drawCam.update();
         hudCam = new OrthographicCamera(screenWidth, screenHeight);
         hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
@@ -256,7 +256,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
-        cloudsPEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
+        cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();
 
         Assets.manager.load("data/hud/lock.png", Texture.class, Assets.textureParameter);

@@ -1071,6 +1071,7 @@ public class Maryo extends DynamicObject
         {
             if(go instanceof LevelEntry && mColRect.overlaps(go.mColRect) && ((LevelEntry)go).type == LevelExit.LEVEL_EXIT_WARP)
             {
+                LevelEntry entry = (LevelEntry) go;
                 if( entry.type == LevelExit.LEVEL_EXIT_BEAM )
                 {
                     float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
