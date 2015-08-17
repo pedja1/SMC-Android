@@ -5,10 +5,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -102,8 +106,11 @@ public abstract class Enemy extends DynamicObject
         super(world, size, position);
     }
 
-    public static Enemy initEnemy(World world, String enemyClassString, Vector2 size, Vector3 position, int maxDowngradeCount, String color)
+    public static Enemy initEnemy(World world, JSONObject jEnemy) throws JSONException
     {
+        Vector3 position = new Vector3((float) jEnemy.getDouble(LevelLoader.KEY.posx.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.posy.toString()), 0);
+        String enemyClassString = jEnemy.getString(LevelLoader.KEY.enemy_class.toString());
+        Vector2 size = new Vector2((float) jEnemy.getDouble(LevelLoader.KEY.width.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.height.toString()));
         CLASS enemyClass = CLASS.valueOf(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)
@@ -112,15 +119,15 @@ public abstract class Enemy extends DynamicObject
                 enemy = new Eato(world, size, position);
                 break;
             case flyon:
-                enemy = new Flyon(world, size, position);
+                enemy = new Flyon(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));
                 break;
 			case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position, maxDowngradeCount);
+                enemy = new Furball(world, size, position, jEnemy.optInt(LevelLoader.KEY.max_downgrade_count.toString()));
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;
-                enemy = new Turtle(world, size, position, color);
+                enemy = new Turtle(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
                 break;
         }
         return enemy;

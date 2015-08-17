@@ -729,7 +729,7 @@ public class SAXXMLHandler extends DefaultHandler
             enemy.texture_atlas = "data/" + enemy.image_dir.substring(0, enemy.image_dir.length() - 1) + ".pack";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "closed_1.settings");
-            enemy.max_distance = enemy.max_distance / 64;
+            enemy.max_distance = enemy.max_distance / 64f;
             enemy.speed = enemy.speed / 64f;
         }
         else if("furball".equals(enemy.type))

@@ -10,7 +10,7 @@ public class Enemy
 {
     public String type, color, direction, image_dir, texture_atlas;
     public float posx, posy, speed, width, height;
-    public int max_distance;
+    public float max_distance;
     public Rectangle colRect = new Rectangle();
     public int max_downgrade_count;
 }

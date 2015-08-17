@@ -4,11 +4,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -19,16 +22,34 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Flyon extends Enemy
 {
     public static String DEAD_KEY;
-    public static final float FLYON_VELOCITY = 3f;
-    private boolean goingUp = true, topReached, bottomReached;
-    private long maxPositionReachedTs = 0;
-    private long minPositionReachedTs = 0;
-    private static final long STAY_TOP_TIME = 300;//2 seconds
-    private static final long STAY_BOTTOM_TIME = 2500;//3 seconds
+    private static final float STAY_BOTTOM_TIME = 2.5f;
+    public String direction;
+    public float maxDistance;
+    public float speed;
+    private Vector3 mOriginPosition;
+    private boolean forward = true, staying = true;
+    private float waitTime;
+    private float rotation;
 
-    public Flyon(World world, Vector2 size, Vector3 position)
+    public Flyon(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
     {
         super(world, size, position);
+        this.maxDistance = maxDistance;
+        this.speed = 3f;//speed;
+        this.direction = direction;
+        mOriginPosition = new Vector3(position);
+        if("left".equals(direction))
+        {
+            rotation = 270f;
+        }
+        else if("right".equals(direction))
+        {
+            rotation = 270f;
+        }
+        else if("left".equals(direction))
+        {
+            rotation = 180f;
+        }
     }
 
     @Override
@@ -43,7 +64,6 @@ public class Flyon extends Enemy
         DEAD_KEY = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
-        //frames.add(atlas.findRegion(TKey.two.toString()));
         Assets.loadedRegions.put(DEAD_KEY, frames.get(3));
         Assets.animations.put(textureAtlas, new Animation(0.25f, frames));
     }
@@ -52,19 +72,14 @@ public class Flyon extends Enemy
     public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+        float width = Utility.getWidth(frame, mDrawRect.height);
+        float originX = width * 0.5f;
+        float originY = mDrawRect.height * 0.5f;
+        spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
     }
 
     public void update(float deltaTime)
     {
-        /*// Setting initial vertical acceleration
-        acceleration.y = Constants.GRAVITY;
-
-        // Convert acceleration to frame time
-        acceleration.scl(deltaTime);
-
-        // apply acceleration to change velocity
-        velocity.add(acceleration);*/
         if (deadByBullet)
         {
             // Setting initial vertical acceleration
@@ -81,55 +96,84 @@ public class Flyon extends Enemy
         }
 
         stateTime += deltaTime;
-
-        long timeNow = System.currentTimeMillis();
-        if ((topReached && timeNow - maxPositionReachedTs < STAY_TOP_TIME))
+        if(staying)
         {
-            velocity.set(0, -Constants.GRAVITY, velocity.z);
-            return;
-        }
-        else
-        {
-            if (position.y > 5)
+            if(checkMaryoInFront())
             {
-                maxPositionReachedTs = System.currentTimeMillis();
-                goingUp = false;
-                topReached = true;
+                waitTime = 0;//wait again
+            }
+            waitTime += deltaTime;
+            if(waitTime >= STAY_BOTTOM_TIME)
+            {
+                staying = false;
+                forward = true;
+                waitTime = 0;
+            }
+        }
+        else if("up".equals(direction))
+        {
+            float remainingDistance = mOriginPosition.y + maxDistance - position.y;
+            if(forward)
+            {
+                if (remainingDistance <= 0)
+                {
+                    forward = false;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.y = speed / (100 / distancePercent);
+                    if (velocity.y < 0.3f) velocity.y = 0.3f;
+                }
             }
             else
             {
-                topReached = false;
-                maxPositionReachedTs = 0;
+                if (remainingDistance >= maxDistance)
+                {
+                    velocity.y = 0;
+                    staying = true;
+                    forward = true;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.y = -(speed / (100 / distancePercent));
+                    if (velocity.y > -0.3f) velocity.y = -0.3f;
+                }
             }
-        }
-        if ((bottomReached && timeNow - minPositionReachedTs < STAY_BOTTOM_TIME))
-        {
-            velocity.set(0, 0, velocity.z);
-            return;
-        }
-        else
-        {
-            if (position.y <= 1.5f)
-            {
-                minPositionReachedTs = System.currentTimeMillis();
-                goingUp = true;
-                bottomReached = true;
-            }
-            else
-            {
-                bottomReached = false;
-                minPositionReachedTs = 0;
-            }
-        }
-        if (goingUp)
-        {
-            velocity.set(0, velocity.y = +((Constants.CAMERA_HEIGHT - position.y) / 3f), velocity.z);
-        }
-        else
-        {
-            velocity.set(0, velocity.y = -((Constants.CAMERA_HEIGHT - position.y) / 3f), velocity.z);
         }
 
         updatePosition(deltaTime);
+    }
+
+    private boolean checkMaryoInFront()
+    {
+        for(int i = 0; i < world.getVisibleObjects().size; i++)
+        {
+            GameObject go = world.getVisibleObjects().get(i);
+            if(go instanceof Maryo)
+            {
+                Maryo maryo = (Maryo) go;
+                Rectangle rect = World.RECT_POOL.obtain();
+                if("up".equals(direction))
+                {
+                    rect.set(mColRect.x, mColRect.y + mColRect.height, mColRect.width, maxDistance + mColRect.height);
+                }
+                else if("down".equals(direction))
+                {
+                    rect.set(mColRect.x, mColRect.y - mColRect.height, mColRect.width, maxDistance + mColRect.height);
+                }
+                else if("left".equals(direction))
+                {
+                    rect.set(mColRect.x - maxDistance, mColRect.y, maxDistance, mColRect.height);
+                }
+                else if("right".equals(direction))
+                {
+                    rect.set(mColRect.x + maxDistance + mColRect.width, mColRect.y, maxDistance + mColRect.width, mColRect.height);
+                }
+                return maryo.mColRect.overlaps(rect);
+            }
+        }
+        return false;
     }
 }

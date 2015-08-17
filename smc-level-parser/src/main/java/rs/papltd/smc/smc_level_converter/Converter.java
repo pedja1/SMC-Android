@@ -143,6 +143,12 @@ public class Converter
                 {
                     jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
                 }
+                if("flyon".equals(enemy.type))
+                {
+                    jEnemy.put("max_distance", enemy.max_distance);
+                    jEnemy.put("speed", enemy.speed);
+                    jEnemy.put("direction", enemy.direction);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);
