@@ -299,4 +299,10 @@ public class Turtle extends Enemy
     {
         return Assets.loadedRegions.get(KEY_DEAD);
     }
+
+    @Override
+    protected void handleDroppedBelowWorld()
+    {
+        world.trashObjects.add(this);
+    }
 }
