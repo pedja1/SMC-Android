@@ -3,6 +3,10 @@ package rs.papltd.smc.smc_level_converter;
 import java.util.ArrayList;
 import java.util.List;
 
+import rs.papltd.smc.smc_level_converter.objects.Background;
+import rs.papltd.smc.smc_level_converter.objects.Information;
+import rs.papltd.smc.smc_level_converter.objects.Settings;
+
 /**
  * Created by pedja on 22.6.14..
  */

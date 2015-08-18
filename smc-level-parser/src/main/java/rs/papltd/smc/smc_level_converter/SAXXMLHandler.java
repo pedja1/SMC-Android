@@ -14,6 +14,19 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import rs.papltd.smc.smc_level_converter.objects.Background;
+import rs.papltd.smc.smc_level_converter.objects.Box;
+import rs.papltd.smc.smc_level_converter.objects.Enemy;
+import rs.papltd.smc.smc_level_converter.objects.EnemyStopper;
+import rs.papltd.smc.smc_level_converter.objects.Information;
+import rs.papltd.smc.smc_level_converter.objects.Item;
+import rs.papltd.smc.smc_level_converter.objects.LevelEntry;
+import rs.papltd.smc.smc_level_converter.objects.LevelExit;
+import rs.papltd.smc.smc_level_converter.objects.MovingPlatform;
+import rs.papltd.smc.smc_level_converter.objects.Player;
+import rs.papltd.smc.smc_level_converter.objects.Settings;
+import rs.papltd.smc.smc_level_converter.objects.Sprite;
+
 /**
  * Created by pedja on 11/1/13.
  */
@@ -103,439 +116,56 @@ public class SAXXMLHandler extends DefaultHandler
     {
         if(tmpBackground != null)
         {
-            setBackgroundAttributes(attributes);
+            tmpBackground.setFromAttributes(attributes);
         }
         else if(tmpSprite != null)
         {
-            setSpriteAttributes(attributes);
+            tmpSprite.setFromAttributes(attributes);
         }
         else if(tmpSettings != null)
         {
-            setSettingsAttributes(attributes);
+            tmpSettings.setFromAttributes(attributes);
         }
         else if(tmpPlayer != null)
         {
-            setPlayerAttributes(attributes);
+            tmpPlayer.setFromAttributes(attributes);
         }
         else if(tmpExit != null)
         {
-            setExitAttributes(attributes);
+            tmpExit.setFromAttributes(attributes);
         }
         else if(tmpEntry != null)
         {
-            setEntryAttributes(attributes);
+            tmpEntry.setFromAttributes(attributes);
         }
         else if(tmpItem != null)
         {
-            setItemAttributes(attributes);
+            tmpItem.setFromAttributes(attributes);
         }
         else if(tmpStopper != null)
         {
-            setStopperAttributes(attributes);
+            tmpStopper.setFromAttributes(attributes);
         }
         else if(tmpBox != null)
         {
-            setBoxAttributes(attributes);
+            tmpBox.setFromAttributes(attributes);
         }
         else if(tmpEnemy != null)
         {
-            setEnemyAttributes(attributes);
+            tmpEnemy.setFromAttributes(attributes);
         }
         else if(tmpPlatform != null)
         {
-            setPlatformAttributes(attributes);
+            tmpPlatform.setFromAttributes(attributes);
         }
         else if(tmpInformation != null)
         {
-            setInformationAttributes(attributes);
+            tmpInformation.setFromAttributes(attributes);
         }
         else
         {
             //throw new IllegalArgumentException("All objects are null");
             //System.out.println("Warning: all objects are null, probably skipped element");
-        }
-    }
-
-    private void setPlatformAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        switch (name)
-        {
-            case "image_top_middle":
-                tmpPlatform.image_top_middle = value;
-                break;
-            case "image_top_right":
-                tmpPlatform.image_top_right = value;
-                break;
-            case "image_top_left":
-                tmpPlatform.image_top_left = value;
-                break;
-            case "direction":
-                tmpPlatform.direction = value;
-                break;
-            case "massive_type":
-                tmpPlatform.massive_type = value;
-                break;
-            case "middle_img_count":
-                tmpPlatform.middle_img_count = Integer.parseInt(value);
-                break;
-            case "move_type":
-                tmpPlatform.move_type = Integer.parseInt(value);
-                break;
-            case "posx":
-                tmpPlatform.posx = Float.parseFloat(value);
-                break;
-            case "posy":
-                tmpPlatform.posy = Float.parseFloat(value);
-                break;
-            case "max_distance":
-                tmpPlatform.max_distance = Float.parseFloat(value);
-                break;
-            case "speed":
-                tmpPlatform.speed = Float.parseFloat(value);
-                break;
-            case "touch_time":
-                tmpPlatform.touch_time = Float.parseFloat(value);
-                break;
-            case "shake_time":
-                tmpPlatform.shake_time = Float.parseFloat(value);
-                break;
-            case "touch_move_time":
-                tmpPlatform.touch_move_time = Float.parseFloat(value);
-                break;
-        }
-    }
-
-    private void setEntryAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpEntry.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpEntry.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpEntry.type = Integer.parseInt(value);
-        }
-        else if("direction".equals(name))
-        {
-            tmpEntry.direction = value;
-        }
-        else if("name".equals(name))
-        {
-            tmpEntry.name = value;
-        }
-    }
-
-
-    private void setExitAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpExit.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpExit.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpExit.type = Integer.parseInt(value);
-        }
-        else if("camera_motion".equals(name))
-        {
-            tmpExit.camera_motion = Integer.parseInt(value);
-        }
-        else if("direction".equals(name))
-        {
-            tmpExit.direction = value;
-        }
-        else if("level_name".equals(name))
-        {
-            tmpExit.level_name = value;
-        }
-        else if("entry".equals(name))
-        {
-            tmpExit.entry = value;
-        }
-    }
-
-    private void setStopperAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpStopper.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpStopper.posy = Float.parseFloat(value);
-        }
-    }
-
-    private void setItemAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpItem.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpItem.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpItem.type = value;
-        }
-        else if("color".equals(name))
-        {
-            tmpItem.color = value;
-        }
-        else if("mushroom_type".equals(name))
-        {
-            tmpItem.mushroom_type = Integer.parseInt(value);
-        }
-    }
-
-    private void setEnemyAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpEnemy.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpEnemy.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpEnemy.type = value;
-        }
-        else if("image_dir".equals(name))
-        {
-            tmpEnemy.image_dir = value;
-        }
-        else if("direction".equals(name))
-        {
-            tmpEnemy.direction = value;
-        }
-        else if("color".equals(name))
-        {
-            tmpEnemy.color = value;
-        }
-        else if("speed".equals(name))
-        {
-            tmpEnemy.speed = Float.parseFloat(value);
-        }
-        else if("max_distance".equals(name))
-        {
-            tmpEnemy.max_distance = Integer.parseInt(value);
-        }
-        else if("max_downgrade_count".equals(name))
-        {
-            tmpEnemy.max_downgrade_count = Integer.parseInt(value);
-        }
-    }
-
-    private void setBoxAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpBox.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpBox.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpBox.type = value;
-        }
-        else if("animation".equals(name))
-        {
-            tmpBox.animation = value;
-        }
-        else if("item".equals(name))
-        {
-            tmpBox.item = Integer.parseInt(value);
-        }
-        else if("invisible".equals(name))
-        {
-            tmpBox.invisible = Integer.parseInt(value);
-        }
-        else if("useable_count".equals(name))
-        {
-            tmpBox.useable_count = Integer.parseInt(value);
-        }
-        else if("force_best_item".equals(name))
-        {
-            tmpBox.force_best_item = Integer.parseInt(value);
-        }
-        else if("gold_color".equals(name))
-        {
-            tmpBox.gold_color = value;
-        }
-        else if("text".equals(name))
-        {
-            tmpBox.text = value;
-        }
-    }
-
-
-    private void setPlayerAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpPlayer.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpPlayer.posy = Float.parseFloat(value);
-        }
-        else if("direction".equals(name))
-        {
-            tmpPlayer.direction = value;
-        }
-    }
-
-    private void setInformationAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("engine_version".equals(name))
-        {
-            if(value.contains("."))
-            {
-                tmpInformation.engine_version = (int) (Float.parseFloat(value) * 10);
-            }
-            else
-            {
-                tmpInformation.engine_version = Integer.parseInt(value);
-            }
-            if(tmpInformation.engine_version < 35)
-            {
-                tmpInformation.yOffset = -600;
-            }
-        }
-    }
-
-
-    private void setSettingsAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("lvl_music".equals(name))
-        {
-            tmpSettings.music = value;
-        }
-        else if("cam_limit_w".equals(name))
-        {
-            tmpSettings.width = Integer.parseInt(value);
-        }
-        else if("cam_limit_h".equals(name))
-        {
-            tmpSettings.height = Integer.parseInt(value);
-        }
-    }
-
-    private void setSpriteAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("posx".equals(name))
-        {
-            tmpSprite.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpSprite.posy = Float.parseFloat(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpSprite.type = value;
-        }
-        else if("image".equals(name))
-        {
-            tmpSprite.image = value;
-        }
-    }
-
-    private void setBackgroundAttributes(Attributes attributes)
-    {
-        String name = attributes.getValue("name");
-        String value = attributes.getValue("value");
-        if("bg_color_1_red".equals(name))
-        {
-            tmpBackground.color1_red = Integer.parseInt(value);
-        }
-        else if("bg_color_2_red".equals(name))
-        {
-            tmpBackground.color2_red = Integer.parseInt(value);
-        }
-        else if("bg_color_1_blue".equals(name))
-        {
-            tmpBackground.color1_blue = Integer.parseInt(value);
-        }
-        else if("bg_color_2_blur".equals(name))
-        {
-            tmpBackground.color2_blue = Integer.parseInt(value);
-        }
-        if("bg_color_1_green".equals(name))
-        {
-            tmpBackground.color1_green = Integer.parseInt(value);
-        }
-        else if("bg_color_2_green".equals(name))
-        {
-            tmpBackground.color2_green = Integer.parseInt(value);
-        }
-        else if("type".equals(name))
-        {
-            tmpBackground.type = Integer.parseInt(value);
-        }
-        else if("posx".equals(name))
-        {
-            tmpBackground.posx = Float.parseFloat(value);
-        }
-        else if("posy".equals(name))
-        {
-            tmpBackground.posy = Float.parseFloat(value);
-        }
-        else if("speedx".equals(name))
-        {
-            tmpBackground.speedx = Float.parseFloat(value);
-        }
-        else if("speedy".equals(name))
-        {
-            tmpBackground.speedy = Float.parseFloat(value);
-        }
-        else if("image".equals(name))
-        {
-            tmpBackground.image = value;
-        }
-        else if("const_velx".equals(name))
-        {
-            tmpBackground.const_velx = Float.parseFloat(value);
-        }
-        else if("const_vely".equals(name))
-        {
-            tmpBackground.const_vely = Float.parseFloat(value);
         }
     }
 
@@ -641,8 +271,6 @@ public class SAXXMLHandler extends DefaultHandler
             tmpPlatform.width = 22 / 64f;
         }
         //TODO other maybe
-
-
     }
 
     private void fixBackground(Background background)
@@ -655,7 +283,7 @@ public class SAXXMLHandler extends DefaultHandler
     {
         box.posx = box.posx / 64;
         box.posy = convertY(box.posy, 43f);
-        String settingsFileName = null;
+        String settingsFileName;
         if(box.animation != null)
         {
             switch (box.animation)
@@ -882,8 +510,6 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.texture_atlas = sprite.image.contains("small") ? "data/pipes/orange/yellow.pack" : "data/pipes/yellow/yellow.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
-			//sprite.image = sprite.image.replaceAll(sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")), "up");
-			//System.out.println(sprite.image);
         }
         else if(sprite.image.startsWith("ground/mushroom_1/platform"))
         {
@@ -975,16 +601,10 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.texture_atlas = "data/ground/jungle_1/slider/green.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
-            /*if(sprite.texture_name.endsWith("-right"))
-            {
-                sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
-                
-            }*/
         }
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {
             sprite.texture_name = "data/" + sprite.image;
-            //sprite.texture_name = sprite.texture_name.replaceAll("right", "left");
         }
         else
         {

@@ -15,6 +15,17 @@ import java.io.PrintWriter;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import rs.papltd.smc.smc_level_converter.objects.Background;
+import rs.papltd.smc.smc_level_converter.objects.Box;
+import rs.papltd.smc.smc_level_converter.objects.Enemy;
+import rs.papltd.smc.smc_level_converter.objects.EnemyStopper;
+import rs.papltd.smc.smc_level_converter.objects.Item;
+import rs.papltd.smc.smc_level_converter.objects.LevelEntry;
+import rs.papltd.smc.smc_level_converter.objects.LevelExit;
+import rs.papltd.smc.smc_level_converter.objects.MovingPlatform;
+import rs.papltd.smc.smc_level_converter.objects.Player;
+import rs.papltd.smc.smc_level_converter.objects.Sprite;
+
 /**
  * Created by pedja on 22.6.14..
  */

@@ -10,8 +10,8 @@
     },
     "objects": [
         {
-            "posy": 3.0625,
-            "posx": 2,
+            "posy": 4.265625,
+            "posx": 125.140625,
             "obj_class": "player"
         },
         {
@@ -2975,9 +2975,9 @@
         },
         {
             "height": 3.90625,
-            "posy": 0.71875,
+            "posy": 1.296875,
             "width": 1.953125,
-            "posx": 52.359375,
+            "posx": 53.09375,
             "rotationZ": 0,
             "massive_type": "front_passive",
             "obj_class": "sprite",
@@ -4291,7 +4291,7 @@
         },
         {
             "height": 0.9375,
-            "color": "red",
+            "color": "green",
             "posy": 6.099999904632568,
             "width": 0.9375,
             "posx": 92.671875,
@@ -5429,17 +5429,6 @@
             "obj_class": "enemy_stopper"
         },
         {
-            "height": 0.671875,
-            "color": "brown",
-            "max_downgrade_count": 0,
-            "posy": 2.1312499046325684,
-            "width": 0.671875,
-            "posx": 121.28125,
-            "texture_atlas": "data/enemy/furball/brown.pack",
-            "obj_class": "enemy",
-            "enemy_class": "furball"
-        },
-        {
             "height": 0.96875,
             "posy": 6.90625,
             "width": 1.9375,
@@ -5744,6 +5733,73 @@
             "posx": 126.15625,
             "type": 1,
             "obj_class": "level_entry"
+        },
+        {
+            "height": 0.9375,
+            "color": "red",
+            "posy": 2.3031249046325684,
+            "width": 0.9375,
+            "posx": 123.46875,
+            "texture_atlas": "data/enemy/turtle/green.pack",
+            "obj_class": "enemy",
+            "enemy_class": "turtle"
+        },
+        {
+            "height": 0,
+            "color": "red",
+            "posy": -332,
+            "width": 0,
+            "posx": 7787,
+            "obj_class": "enemy",
+            "enemy_class": "turtleboss"
+        },
+        {
+            "height": 0.703125,
+            "speed": 0.09062500298023224,
+            "direction": "up",
+            "posy": 3.5843749046325684,
+            "width": 0.703125,
+            "posx": 45.78125,
+            "max_distance": 3.125,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
+        },
+        {
+            "height": 0.703125,
+            "speed": 0.09062500298023224,
+            "direction": "down",
+            "posy": 6.740624904632568,
+            "width": 0.703125,
+            "posx": 44.90625,
+            "max_distance": 3.125,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
+        },
+        {
+            "height": 0.703125,
+            "speed": 0.09062500298023224,
+            "direction": "left",
+            "posy": 4.193749904632568,
+            "width": 0.703125,
+            "posx": 51.484375,
+            "max_distance": 3.125,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
+        },
+        {
+            "height": 0.703125,
+            "speed": 0.09062500298023224,
+            "direction": "right",
+            "posy": 2.8812499046325684,
+            "width": 0.703125,
+            "posx": 41.03125,
+            "max_distance": 3.125,
+            "texture_atlas": "data/enemy/flyon/orange.pack",
+            "obj_class": "enemy",
+            "enemy_class": "flyon"
         }
     ],
     "info": {
