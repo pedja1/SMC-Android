@@ -43,6 +43,9 @@ public class Box extends Sprite
     // visible after activation and only touchable in the activation direction
     BOX_INVISIBLE_SEMI_MASSIVE = 3;
 
+    public static final float POSITION_Z = 0.055f;
+    public static final float SPINNING_TIME = 5;
+
 
     public static final float SIZE = 0.67f;
     String goldColor, animation, boxType, text;
@@ -58,12 +61,15 @@ public class Box extends Sprite
 
     //item that pops out when box is hit by player
     Item itemObject;
+    private boolean spinning;
+    private float spinningTime;
 
     public Box(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
         type = Type.massive;
         originalPosY = position.y;
+        position.z = POSITION_Z;
     }
 
     @Override
@@ -76,7 +82,11 @@ public class Box extends Sprite
             {
                 textureName = "data/game/box/yellow/default.png";
             }
-            return;
+            if(!"spin".equals(boxType))return;
+        }
+        if("spin".equals(boxType))
+        {
+            textureAtlas = "data/game/box/yellow/spin.pack";
         }
         if (textureAtlas == null) return;
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
@@ -109,7 +119,7 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("4"));
             frames.add(atlas.findRegion("5"));
             txDisabled = atlas.findRegion("6");
-            animSpeed = 0.13f;
+            animSpeed = 0.08f;
         }
         Assets.animations.put(textureAtlas, new Animation(animSpeed, frames));
     }
@@ -131,15 +141,40 @@ public class Box extends Sprite
         }
         else
         {
-            if (textureName != null)
+            if("spin".equals(boxType))
             {
-                Texture tx = Assets.manager.get(textureName);
-                Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
+                if(spinning)
+                {
+                    if(spinningTime >= SPINNING_TIME)
+                    {
+                        if(!world.maryo.mColRect.overlaps(mColRect))//continue spinning as long as maryo is over the box
+                        {
+                            spinning = false;
+                            spinningTime = 0;
+                            type = Type.massive;
+                        }
+                    }
+                    TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+                    Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+                }
+                else
+                {
+                    Texture tx = Assets.manager.get(textureName);
+                    Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
+                }
             }
-            if (textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
+            else
             {
-                TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-                Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+                if (textureName != null)
+                {
+                    Texture tx = Assets.manager.get(textureName);
+                    Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
+                }
+                if (textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
+                {
+                    TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+                    Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+                }
             }
         }
     }
@@ -169,6 +204,10 @@ public class Box extends Sprite
         {
             box.textureAtlas = jBox.getString(LevelLoader.KEY.texture_atlas.toString());
             Assets.manager.load(box.textureAtlas, TextureAtlas.class);
+        }
+        if("spin".equals(box.boxType))
+        {
+            Assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class);
         }
         Assets.manager.load("data/game/box/yellow/default.png", Texture.class, Assets.textureParameter);
         addBoxItem(box, true);
@@ -310,7 +349,13 @@ public class Box extends Sprite
     {
         if (hitByPlayer) return;
         Sound sound = null;
-        if ((usableCount == -1 || usableCount > 0))//is disabled(no more items)
+        if("spin".equals(boxType))
+        {
+            spinning = true;
+            hitByPlayer = true;
+            type = Type.passive;
+        }
+        else if ((usableCount == -1 || usableCount > 0))//is disabled(no more items)
         {
             if (usableCount != -1) usableCount--;
             hitByPlayer = true;
@@ -346,6 +391,10 @@ public class Box extends Sprite
     @Override
     public void update(float delta)
     {
+        if(spinning)
+        {
+            spinningTime += delta;
+        }
         if (itemObject != null && world.isObjectVisible(itemObject, true))
         {
             itemObject.update(delta);

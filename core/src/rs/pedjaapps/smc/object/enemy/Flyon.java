@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
@@ -244,32 +243,25 @@ public class Flyon extends Enemy
 
     private boolean checkMaryoInFront()
     {
-        for(int i = 0; i < world.getVisibleObjects().size; i++)
+        Maryo maryo = world.maryo;
+        if(maryo == null)return false;
+        Rectangle rect = World.RECT_POOL.obtain();
+        if("up".equals(direction))
         {
-            GameObject go = world.getVisibleObjects().get(i);
-            if(go instanceof Maryo)
-            {
-                Maryo maryo = (Maryo) go;
-                Rectangle rect = World.RECT_POOL.obtain();
-                if("up".equals(direction))
-                {
-                    rect.set(mColRect.x, mColRect.y + mColRect.height, mColRect.width, maxDistance + mColRect.height);
-                }
-                else if("down".equals(direction))
-                {
-                    rect.set(mColRect.x, mColRect.y - maxDistance, mColRect.width, maxDistance);
-                }
-                else if("left".equals(direction))
-                {
-                    rect.set(mColRect.x - maxDistance, mColRect.y, maxDistance, mColRect.height);
-                }
-                else if("right".equals(direction))
-                {
-                    rect.set(mColRect.x + maxDistance + mColRect.width, mColRect.y, maxDistance + mColRect.width, mColRect.height);
-                }
-                return maryo.mColRect.overlaps(rect);
-            }
+            rect.set(mColRect.x, mColRect.y + mColRect.height, mColRect.width, maxDistance + mColRect.height);
         }
-        return false;
+        else if("down".equals(direction))
+        {
+            rect.set(mColRect.x, mColRect.y - maxDistance, mColRect.width, maxDistance);
+        }
+        else if("left".equals(direction))
+        {
+            rect.set(mColRect.x - maxDistance, mColRect.y, maxDistance, mColRect.height);
+        }
+        else if("right".equals(direction))
+        {
+            rect.set(mColRect.x + maxDistance + mColRect.width, mColRect.y, maxDistance + mColRect.width, mColRect.height);
+        }
+        return maryo.mColRect.overlaps(rect);
     }
 }
