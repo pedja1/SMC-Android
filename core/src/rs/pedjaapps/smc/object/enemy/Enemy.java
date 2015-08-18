@@ -174,4 +174,10 @@ public abstract class Enemy extends DynamicObject
 	{
 		return DEF_MAX_VEL;
 	}
+
+    @Override
+    protected void handleDroppedBelowWorld()
+    {
+        world.trashObjects.add(this);
+    }
 }
