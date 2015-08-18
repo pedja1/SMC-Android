@@ -40,13 +40,13 @@ public class Flyon extends Enemy
         mOriginPosition = new Vector3(position);
         if("left".equals(direction))
         {
-            rotation = 270f;
+            rotation = 90f;
         }
         else if("right".equals(direction))
         {
             rotation = 270f;
         }
-        else if("left".equals(direction))
+        else if("down".equals(direction))
         {
             rotation = 180f;
         }
@@ -65,13 +65,13 @@ public class Flyon extends Enemy
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
         Assets.loadedRegions.put(DEAD_KEY, frames.get(3));
-        Assets.animations.put(textureAtlas, new Animation(0.25f, frames));
+        Assets.animations.put(textureAtlas, new Animation(0.13f, frames));
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(staying ? 0 : stateTime, true);
         float width = Utility.getWidth(frame, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
@@ -142,6 +142,102 @@ public class Flyon extends Enemy
                 }
             }
         }
+        else if("down".equals(direction))
+        {
+            float remainingDistance = maxDistance - (mOriginPosition.y - position.y);
+            if(forward)
+            {
+                if (remainingDistance <= 0)
+                {
+                    forward = false;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.y = -(speed / (100 / distancePercent));
+                    if (velocity.y > -0.3f) velocity.y = -0.3f;
+                }
+            }
+            else
+            {
+                if (remainingDistance >= maxDistance)
+                {
+                    velocity.y = 0;
+                    staying = true;
+                    forward = true;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.y = (speed / (100 / distancePercent));
+                    if (velocity.y < 0.3f) velocity.y = 0.3f;
+                }
+            }
+        }
+        else if("right".equals(direction))
+        {
+            float remainingDistance = (mOriginPosition.x + maxDistance) - position.x;
+            if(forward)
+            {
+                if (remainingDistance <= 0)
+                {
+                    forward = false;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.x = (speed / (100 / distancePercent));
+                    if (velocity.x < 0.3f) velocity.x = 0.3f;
+                }
+            }
+            else
+            {
+                if (remainingDistance >= maxDistance)
+                {
+                    velocity.x = 0;
+                    staying = true;
+                    forward = true;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.x = -(speed / (100 / distancePercent));
+                    if (velocity.x > -0.3f) velocity.x = -0.3f;
+                }
+            }
+        }
+        else if("left".equals(direction))
+        {
+            float remainingDistance = position.x - (mOriginPosition.x - maxDistance);
+            if(forward)
+            {
+                if (remainingDistance <= 0)
+                {
+                    forward = false;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.x = -(speed / (100 / distancePercent));
+                    if (velocity.x > -0.3f) velocity.x = -0.3f;
+                }
+            }
+            else
+            {
+                if (remainingDistance >= maxDistance)
+                {
+                    velocity.x = 0;
+                    staying = true;
+                    forward = true;
+                }
+                else
+                {
+                    float distancePercent = 100 / maxDistance * remainingDistance;
+                    velocity.x = (speed / (100 / distancePercent));
+                    if (velocity.x < 0.3f) velocity.x = 0.3f;
+                }
+            }
+        }
 
         updatePosition(deltaTime);
     }
@@ -161,7 +257,7 @@ public class Flyon extends Enemy
                 }
                 else if("down".equals(direction))
                 {
-                    rect.set(mColRect.x, mColRect.y - mColRect.height, mColRect.width, maxDistance + mColRect.height);
+                    rect.set(mColRect.x, mColRect.y - maxDistance, mColRect.width, maxDistance);
                 }
                 else if("left".equals(direction))
                 {
