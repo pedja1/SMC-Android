@@ -73,6 +73,10 @@ public class LoadingScreen extends AbstractScreen
         {
             // Load some, will return true if done loading
             if(!resume)screenToLoadAfter.onAssetsLoaded();
+            if(screenToLoadAfter instanceof GameScreen)
+            {
+                ((GameScreen)screenToLoadAfter).resumed = resume;
+            }
             game.setScreen(screenToLoadAfter);
         }
         // Interpolate the percentage to make it more smooth

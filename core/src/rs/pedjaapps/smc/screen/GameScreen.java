@@ -71,7 +71,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private float width, height;
 
-    private String levelName;
+    public String levelName;
 
 	public void setGameState(GAME_STATE gameState)
 	{
@@ -122,9 +122,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 	
 	public KillPointsTextHandler killPointsTextHandler;
 
+    public GameScreen parent;
+    public boolean resumed, forceCheckEnter;
+
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
+        this(game, fromMenu, levelName, null);
+    }
+
+    public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent)
+    {
 		super(game);
+        this.parent = parent;
         this.levelName = levelName;
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
@@ -153,8 +162,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         loadTextures();
         controller = new MarioController(world);
-		Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(this);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
         {
@@ -173,6 +180,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		music = Assets.manager.get(loader.level.music.first());
         if(Assets.playMusic)music.play();
 		GLProfiler.enable();
+        if(!resumed || forceCheckEnter)
+        {
+            world.maryo.checkLevelEnter();
+            forceCheckEnter = false;
+        }
+        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -551,7 +565,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
 		pointsFont.setColor(1, 1, 1, 1);
 		killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-        world.maryo.checkLevelEnter();
     }
 
     // * InputProcessor methods ***************************//

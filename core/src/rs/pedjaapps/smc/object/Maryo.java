@@ -11,7 +11,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import java.util.Collections;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
@@ -657,7 +659,7 @@ public class Maryo extends DynamicObject
 			}
 			if(isDone)
 			{
-				//exiting = false;
+				exiting = false;
 				//((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
 				
 				String nextLevelName;
@@ -669,7 +671,30 @@ public class Maryo extends DynamicObject
 				{
 					nextLevelName = exit.levelName;
 				}
-				world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+                GameScreen parent;
+                GameScreen newScreen;
+                boolean resume = false;
+                if(nextLevelName.contains("sub"))
+                {
+                    parent = (GameScreen) world.screen;
+                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
+                }
+                else if(((GameScreen)world.screen).parent != null && nextLevelName.equals(((GameScreen)world.screen).parent.levelName))
+                {
+                    newScreen = ((GameScreen)world.screen).parent;
+                    newScreen.forceCheckEnter = true;
+                    resume = true;
+                }
+                else
+                {
+                    if(((GameScreen)world.screen).parent != null)
+                    {
+                        ((GameScreen)world.screen).parent.dispose();
+                        ((GameScreen)world.screen).parent = null;
+                    }
+                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, null);
+                }
+				world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
 			}
 			else
 			{
@@ -688,7 +713,7 @@ public class Maryo extends DynamicObject
             float velDelta = exitEnterVelocity * delta;
             if("up".equals(entry.direction))
             {
-                if(position.y >= exitEnterStartPosition.y + mDrawRect.height)
+                if(position.y > entry.mColRect.y + entry.mColRect.height)
                 {
                     isDone = true;
                 }
@@ -699,7 +724,7 @@ public class Maryo extends DynamicObject
             }
             else if("down".equals(entry.direction))
             {
-                if(position.y <= exitEnterStartPosition.y - mDrawRect.height)
+                if(position.y + mDrawRect.height < entry.mColRect.y)
                 {
                     isDone = true;
                 }
@@ -710,7 +735,7 @@ public class Maryo extends DynamicObject
             }
             else if("right".equals(entry.direction))
             {
-                if(position.x >= exitEnterStartPosition.x + mDrawRect.width)
+                if(position.x > entry.mColRect.x + entry.mColRect.width)
                 {
                     isDone = true;
                 }
@@ -722,7 +747,7 @@ public class Maryo extends DynamicObject
             }
             else if("left".equals(entry.direction))
             {
-                if(exitEnterStartPosition.x - position.x >= mDrawRect.width)
+                if(position.x + mDrawRect.width < entry.mColRect.x)
                 {
                     isDone = true;
                 }
@@ -1116,7 +1141,7 @@ public class Maryo extends DynamicObject
             //up
             else if("up".equals(entry.direction))
             {
-                position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height - mColRect.height;
+                position.y = mColRect.y = entry.mColRect.y - mColRect.height;
 
                 float entryCenter = entry.mColRect.x + entry.mColRect.width  * 0.5f;
                 position.x = mColRect.x = entryCenter - mColRect.width  * 0.5f;
