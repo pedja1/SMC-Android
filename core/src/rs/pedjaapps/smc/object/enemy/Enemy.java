@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector3;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
@@ -75,6 +77,8 @@ public abstract class Enemy extends DynamicObject
         {
             deadByBullet = true;
             handleCollision = false;
+            position.z = 1;
+            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
         }
         else
         {
