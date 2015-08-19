@@ -260,7 +260,6 @@ public class Furball extends Enemy
     @Override
     public void downgradeOrDie(GameObject killedBy)
     {
-        System.out.println("downgradeOrDie");
         super.downgradeOrDie(killedBy);
         ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + mDrawRect.height);
     }

@@ -73,7 +73,7 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy)
     {
-        if(killedBy instanceof Turtle)
+        if(killedBy instanceof Turtle)//todo bullet, fireball...
         {
             deadByBullet = true;
             handleCollision = false;

@@ -230,6 +230,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
 		//cleanup
 		//for(GameObject obj : world.trashObjects)
+        //TODO wtf?
 		for(int i = 0; i < world.trashObjects.size; i++)
 		{
 			world.level.gameObjects.remove(world.trashObjects.get(i));

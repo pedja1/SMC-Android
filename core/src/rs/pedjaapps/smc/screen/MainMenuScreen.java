@@ -16,6 +16,7 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.SelectionAdapter;
@@ -38,7 +39,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
     private boolean playT = false, musicT = false, soundT = false;
-	public boolean debug = true;
+	public boolean debug = PrefsManager.isDebug();
     private static final String FPS_STRING = "FPS: ";
     private static final NATypeConverter<Integer> fpsCounter = new NATypeConverter<>();
 
@@ -323,10 +324,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             //game.setScreen(new LoadingScreen(new GameScreen(game), false));
 			isSelection = true;
         }
-        else if (keycode == Input.Keys.D)
-        {
-            debug = !debug;debug = !debug;
-        }
         return false;
     }
 
@@ -341,6 +338,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         else if(keycode == Input.Keys.D)
         {
             debug = !debug;
+            PrefsManager.setDebug(debug);
         }
         return true;
     }

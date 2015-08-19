@@ -1,7 +1,10 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,7 +14,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.Fireball;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -30,6 +37,9 @@ public class Gee extends Enemy
     private Color color;
     public int mKillPoints;
     private boolean flipx;
+    private ParticleEffect effect, deadEffect;
+    private boolean canStartParticle;
+    private boolean dying;
 
     public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
     {
@@ -60,6 +70,16 @@ public class Gee extends Enemy
                 break;
         }
         position.z = POSITION_Z;
+        if("vertical".equals(direction))
+        {
+            Assets.manager.load("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        }
+        else
+        {
+            Assets.manager.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        }
+        Assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/sounds/enemy/gee/die.ogg", Sound.class);
     }
 
     @Override
@@ -77,16 +97,45 @@ public class Gee extends Enemy
         frames.add(frames.removeIndex(1));
         Assets.loadedRegions.put(DEAD_KEY, frames.get(4));
         Assets.animations.put(textureAtlas, new Animation(0.14f, frames));
+        if("vertical".equals(direction))
+        {
+            effect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
+        }
+        else
+        {
+            effect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class));
+        }
+        deadEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class));
+        for(ParticleEmitter pe : effect.getEmitters())
+        {
+            pe.getTint().setColors(new float[]{color.r, color.g, color.b});
+        }
+        for(ParticleEmitter pe : deadEffect.getEmitters())
+        {
+            pe.getTint().setColors(new float[]{color.r, color.g, color.b});
+        }
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        float width = Utility.getWidth(frame, mDrawRect.height);
-        frame.flip(flipx, false);//flip
-        spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, width, mDrawRect.height);
-        frame.flip(flipx, false);//return
+
+        if(!dying)
+        {
+            effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
+            if(canStartParticle)effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
+
+            TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+            float width = Utility.getWidth(frame, mDrawRect.height);
+            frame.flip(flipx, false);//flip
+            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, width, mDrawRect.height);
+            frame.flip(flipx, false);//return
+        }
+        else
+        {
+            deadEffect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
+            deadEffect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
+        }
     }
 
     public void update(float deltaTime)
@@ -106,12 +155,28 @@ public class Gee extends Enemy
             return;
         }
 
+
         stateTime += deltaTime;
+
+        if(dying)
+        {
+            deadEffect.update(deltaTime);
+            if(effect.isComplete())
+            {
+                world.trashObjects.add(this);
+            }
+            return;
+        }
+
+        effect.update(deltaTime);
+
         if (staying)
         {
             currWaitTime += deltaTime;
             if (currWaitTime >= waitTime)
             {
+                effect.start();
+                canStartParticle = true;
                 staying = false;
                 currWaitTime = 0;
                 if(forward)
@@ -136,6 +201,7 @@ public class Gee extends Enemy
                     if(remainingDistance <= 0)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.x = 0;
                     }
                     else
@@ -150,6 +216,7 @@ public class Gee extends Enemy
                     if (remainingDistance >= flyDistance)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.x = 0;
                     }
                     else
@@ -167,6 +234,7 @@ public class Gee extends Enemy
                     if(remainingDistance <= 0)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.x = 0;
                     }
                     else
@@ -180,6 +248,7 @@ public class Gee extends Enemy
                     if (remainingDistance >= flyDistance)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.x = 0;
                     }
                     else
@@ -200,6 +269,7 @@ public class Gee extends Enemy
                     if(remainingDistance <= 0)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.y = 0;
                     }
                     else
@@ -213,6 +283,7 @@ public class Gee extends Enemy
                     if (remainingDistance >= flyDistance)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.y = 0;
                     }
                     else
@@ -230,6 +301,7 @@ public class Gee extends Enemy
                     if(remainingDistance <= 0)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.y = 0;
                     }
                     else
@@ -243,6 +315,7 @@ public class Gee extends Enemy
                     if (remainingDistance >= flyDistance)
                     {
                         staying = true;
+                        effect.allowCompletion();
                         velocity.y = 0;
                     }
                     else
@@ -254,5 +327,37 @@ public class Gee extends Enemy
         }
 
         updatePosition(deltaTime);
+    }
+
+    @Override
+    public int hitByPlayer(Maryo maryo, boolean vertical)
+    {
+        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
+        {
+            ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+            dying = true;
+            deadEffect.start();
+            stateTime = 0;
+            handleCollision = false;
+            Sound sound = Assets.manager.get("data/sounds/enemy/gee/die.ogg");
+            if (sound != null && Assets.playSounds)
+            {
+                sound.play();
+            }
+            return HIT_RESOLUTION_ENEMY_DIED;
+        }
+        else
+        {
+            return HIT_RESOLUTION_PLAYER_DIED;
+        }
+    }
+
+    @Override
+    public void downgradeOrDie(GameObject killedBy)
+    {
+        if(fireResistant && killedBy instanceof Fireball)
+            return;
+        super.downgradeOrDie(killedBy);
+        ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 }

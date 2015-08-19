@@ -50,7 +50,13 @@ public class PrefsManager
 
     public static boolean isDebug()
     {
-        return prefs.getBoolean(PrefsKey.debug.toString(), true);
+        return prefs.getBoolean(PrefsKey.debug.toString(), false);
+    }
+
+    public static void setDebug(boolean debug)
+    {
+        prefs.putBoolean(PrefsKey.debug.toString(), debug);
+        flush();
     }
 	
 	public static void flush()
