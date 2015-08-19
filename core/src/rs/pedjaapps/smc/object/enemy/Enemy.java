@@ -133,6 +133,9 @@ public abstract class Enemy extends DynamicObject
                 position.z = Turtle.POS_Z;
                 enemy = new Turtle(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
                 break;
+            case gee:
+                enemy = new Gee(world, size, position, (float)jEnemy.getDouble("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), (float)jEnemy.getDouble("wait_time"));
+                break;
         }
         return enemy;
     }

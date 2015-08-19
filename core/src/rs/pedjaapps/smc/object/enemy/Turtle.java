@@ -45,13 +45,13 @@ public class Turtle extends Enemy
         if(!"green".equals(color))
         {
             mKillPoints = 50;
-            mVelocity = 1.5f;
+            mVelocity = 2.881f;
             mVelocityShell = 5.8f;
         }
         else
         {
             mKillPoints = 150;
-            mVelocity = 1.875f;
+            mVelocity = 3.601f;
             mVelocityShell = 7.1f;
         }
         setupBoundingBox();

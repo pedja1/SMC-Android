@@ -16,11 +16,31 @@ public class Enemy
     public Rectangle colRect = new Rectangle();
     public int max_downgrade_count;
 
+    //gee
+    public float waitTime, flyDistance;
+    /*
+        <property name="always_fly" value="0" />
+        <property name="wait_time" value="2" />
+        <property name="fly_distance" value="400" />
+        <property name="color" value="red" />*/
+
     public void setFromAttributes(Attributes attributes)
     {
         String name = attributes.getValue("name");
         String value = attributes.getValue("value");
-        if("posx".equals(name))
+        if("wait_time".equals(name))
+        {
+            waitTime = Float.parseFloat(value);
+        }
+        else if("fly_distance".equals(name))
+        {
+            flyDistance = Float.parseFloat(value);
+        }
+        else if("color".equals(name))
+        {
+            color = value;
+        }
+        else if("posx".equals(name))
         {
             posx = Float.parseFloat(value);
         }

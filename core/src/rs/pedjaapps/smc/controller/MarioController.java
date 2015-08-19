@@ -23,7 +23,7 @@ public class MarioController
 
     private static final long LONG_JUMP_PRESS = 150l;
     private static final float MAX_JUMP_SPEED = 9f;
-    private static final float POWER_MAX_JUMP_SPEED = 13.5f;
+    private static final float POWER_MAX_JUMP_SPEED = 11f;
     private float mMaxJumpSpeed = MAX_JUMP_SPEED;
     
     private World world;

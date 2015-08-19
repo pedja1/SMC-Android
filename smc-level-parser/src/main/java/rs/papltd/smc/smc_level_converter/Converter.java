@@ -160,6 +160,13 @@ public class Converter
                     jEnemy.put("speed", enemy.speed);
                     jEnemy.put("direction", enemy.direction);
                 }
+                if("gee".equals(enemy.type))
+                {
+                    jEnemy.put("max_distance", enemy.max_distance);
+                    jEnemy.put("fly_distance", enemy.flyDistance);
+                    jEnemy.put("wait_time", enemy.waitTime);
+                    jEnemy.put("direction", enemy.direction);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);

@@ -105,7 +105,7 @@ public class SAXXMLHandler extends DefaultHandler
                 //we don't need this elements
                 break;
             case "sound":
-                //TODO parse ambient sound for levels
+                System.out.println("skipped 'sound' element from level");
                 break;
             default:
                 throw new IllegalArgumentException("Unknown element found (" + qName + ")");
@@ -275,8 +275,8 @@ public class SAXXMLHandler extends DefaultHandler
 
     private void fixBackground(Background background)
     {
-            if(background.image != null)
-                background.image = "data/" + background.image;
+        if(background.image != null)
+            background.image = "data/" + background.image;
     }
 
     private void fixBox(Box box)
@@ -369,27 +369,43 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("gee".equals(enemy.type))
         {
-            //TODO do the rest of the enemies
+            enemy.texture_atlas = "data/enemy/gee/" + enemy.color + ".pack";
+            enemy.posx = enemy.posx / 64;
+            switch (enemy.color)
+            {
+                case "yellow":
+                    enemy.image_dir = "enemy/gee/electro";
+                    break;
+                case "red":
+                    enemy.image_dir = "enemy/gee/venom";
+                    break;
+                case "green":
+                    enemy.image_dir = "enemy/gee/lava";
+                    break;
+            }
+            setEnemySettings(enemy, "1.settings");
+            enemy.max_distance = enemy.max_distance / 64f;
+            enemy.flyDistance = enemy.flyDistance / 64f;
         }
         else if("krush".equals(enemy.type))
         {
-
+            System.out.println("skipped enemy 'krush'");
         }
         else if("rokko".equals(enemy.type))
         {
-
+            System.out.println("skipped enemy 'rokko'");
         }
         else if("spika".equals(enemy.type))
         {
-
+            System.out.println("skipped enemy 'spika'");
         }
         else if("spikeball".equals(enemy.type))
         {
-
+            System.out.println("skipped enemy 'spikeball'");
         }
         else if("thromp".equals(enemy.type))
         {
-
+            System.out.println("skipped enemy 'thromp'");
         }
         else if("turtle".equals(enemy.type))
         {
@@ -397,6 +413,10 @@ public class SAXXMLHandler extends DefaultHandler
             enemy.image_dir = "enemy/turtle/green/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "walk_1.settings");
+        }
+        else
+        {
+            System.out.println(String.format("skipped enemy '%s'", enemy.type));
         }
     }
 
@@ -473,6 +493,9 @@ public class SAXXMLHandler extends DefaultHandler
             case "moon":
                 item.texture_name = "data/game/items/moon.pack";
 				item.image = "game/items/moon_1.png";
+                break;
+            default:
+                System.out.println(String.format("skipped item '%s'", item.type));
                 break;
         }
 		setItemSettings(item);
