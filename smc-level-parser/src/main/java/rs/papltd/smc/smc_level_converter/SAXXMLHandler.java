@@ -389,7 +389,10 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("krush".equals(enemy.type))
         {
-            System.out.println("skipped enemy 'krush'");
+            enemy.texture_atlas = "data/enemy/krush/krush.pack";
+            enemy.image_dir = "enemy/krush/";
+            enemy.posx = enemy.posx / 64;
+            setEnemySettings(enemy, "big_1.settings");
         }
         else if("rokko".equals(enemy.type))
         {

@@ -136,6 +136,9 @@ public abstract class Enemy extends DynamicObject
             case gee:
                 enemy = new Gee(world, size, position, (float)jEnemy.getDouble("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), (float)jEnemy.getDouble("wait_time"));
                 break;
+            case krush:
+                enemy = new Krush(world, size, position);
+                break;
         }
         return enemy;
     }
