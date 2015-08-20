@@ -19,7 +19,7 @@ public abstract class GameObject
     
 	public enum WorldState
     {
-        IDLE, WALKING, JUMPING, DYING, DUCKING
+        IDLE, WALKING, JUMPING, DYING, DUCKING, CLIMBING
     }
 
     public enum TKey
@@ -36,6 +36,8 @@ public abstract class GameObject
         dead_left("dead-left"),
         duck_right("duck-right"),
         duck_left("duck-left"),
+        climb_left("climb-left"),
+        climb_right("climb-right"),
         one("1"),
         two("2"),
         three("3"),;
@@ -55,7 +57,7 @@ public abstract class GameObject
 
     public enum AKey
     {
-        walk_left, walk_right
+        walk_left, walk_right, climb
     }
 
     public GameObject(World world, Vector2 size, Vector3 position)

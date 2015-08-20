@@ -37,16 +37,22 @@ public class Maryo extends DynamicObject
     //omg, this is a lot of constants :D
     private static final String KEY_WALKING_LEFT_SMALL = AKey.walk_left + ":" + MaryoState.small;
     private static final String KEY_WALKING_RIGHT_SMALL = AKey.walk_right + ":" + MaryoState.small;
+    private static final String KEY_CLIMB_SMALL = AKey.climb + ":" + MaryoState.small;
     private static final String KEY_WALKING_LEFT_BIG = AKey.walk_left + ":" + MaryoState.big;
     private static final String KEY_WALKING_RIGHT_BIG = AKey.walk_right + ":" + MaryoState.big;
+    private static final String KEY_CLIMB_BIG = AKey.climb + ":" + MaryoState.big;
     private static final String KEY_WALKING_LEFT_FIRE = AKey.walk_left + ":" + MaryoState.fire;
     private static final String KEY_WALKING_RIGHT_FIRE = AKey.walk_right + ":" + MaryoState.fire;
+    private static final String KEY_CLIMB_FIRE = AKey.climb + ":" + MaryoState.fire;
     private static final String KEY_WALKING_LEFT_FLYING = AKey.walk_left + ":" + MaryoState.flying;
     private static final String KEY_WALKING_RIGHT_FLYING = AKey.walk_right + ":" + MaryoState.flying;
+    private static final String KEY_CLIMB_FLYING = AKey.climb + ":" + MaryoState.flying;
     private static final String KEY_WALKING_LEFT_GHOST = AKey.walk_left + ":" + MaryoState.ghost;
     private static final String KEY_WALKING_RIGHT_GHOST = AKey.walk_right + ":" + MaryoState.ghost;
+    private static final String KEY_CLIMB_GHOST = AKey.climb + ":" + MaryoState.ghost;
     private static final String KEY_WALKING_LEFT_ICE = AKey.walk_left + ":" + MaryoState.ice;
     private static final String KEY_WALKING_RIGHT_ICE = AKey.walk_right + ":" + MaryoState.ice;
+    private static final String KEY_CLIMB_ICE = AKey.climb + ":" + MaryoState.ice;
 
     private static final String KEY_DUCK_LEFT_SMALL = TKey.duck_left + ":" + MaryoState.small;
     private static final String KEY_DUCK_RIGHT_SMALL = TKey.duck_right + ":" + MaryoState.small;
@@ -117,6 +123,7 @@ public class Maryo extends DynamicObject
     public static final float POSITION_Z = 0.0999f;
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
+    private static final float CLIMB_FRAME_DURATION = 0.25f;
     private static final float RESIZE_ANIMATION_DURATION = 0.977f;
     private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 8f;
 
@@ -247,6 +254,11 @@ public class Maryo extends DynamicObject
         }
         Assets.animations.put(AKey.walk_left + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkLeftFrames));
 
+        TextureRegion[] climbFrames = new TextureRegion[2];
+        climbFrames[0] = atlas.findRegion(TKey.climb_left + "");
+        climbFrames[1] = atlas.findRegion(TKey.climb_right + "");
+        Assets.animations.put(AKey.climb + ":" + state, new Animation(CLIMB_FRAME_DURATION, climbFrames));
+
         Assets.loadedRegions.put(TKey.jump_right + ":" + state, atlas.findRegion(TKey.jump_right.toString()));
         tmp = new TextureRegion(Assets.loadedRegions.get(TKey.jump_right.toString() + ":" + state));
         tmp.flip(true, false);
@@ -344,6 +356,12 @@ public class Maryo extends DynamicObject
 		{
 			marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.dead_left)) : Assets.loadedRegions.get(getTextureKey(TKey.dead_right));
 		}
+        else if(worldState == WorldState.CLIMBING)
+        {
+            TextureRegion[] frames = Assets.animations.get(getAnimationKey(AKey.climb)).getKeyFrames();
+            float distance = position.y - exitEnterStartPosition.y;
+            marioFrame = frames[Math.floor(distance / 0.3f) % 2 == 0 ? 0 : 1];
+        }
         else
         {
             marioFrame = facingLeft ? Assets.loadedRegions.get(getTextureKey(TKey.stand_left)) : Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
@@ -564,6 +582,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_SMALL;
                     case walk_right:
                         return KEY_WALKING_RIGHT_SMALL;
+                    case climb:
+                        return KEY_CLIMB_SMALL;
                 }
                 break;
             case big:
@@ -573,6 +593,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_BIG;
                     case walk_right:
                         return KEY_WALKING_RIGHT_BIG;
+                    case climb:
+                        return KEY_CLIMB_BIG;
                 }
                 break;
             case fire:
@@ -582,6 +604,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_FIRE;
                     case walk_right:
                         return KEY_WALKING_RIGHT_FIRE;
+                    case climb:
+                        return KEY_CLIMB_FIRE;
                 }
                 break;
             case ice:
@@ -591,6 +615,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_ICE;
                     case walk_right:
                         return KEY_WALKING_RIGHT_ICE;
+                    case climb:
+                        return KEY_CLIMB_ICE;
                 }
                 break;
             case ghost:
@@ -600,6 +626,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_GHOST;
                     case walk_right:
                         return KEY_WALKING_RIGHT_GHOST;
+                    case climb:
+                        return KEY_CLIMB_GHOST;
                 }
                 break;
             case flying:
@@ -609,6 +637,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_LEFT_FLYING;
                     case walk_right:
                         return KEY_WALKING_RIGHT_FLYING;
+                    case climb:
+                        return KEY_CLIMB_FLYING;
                 }
                 break;
         }
@@ -797,46 +827,66 @@ public class Maryo extends DynamicObject
         }
         else
 		{
-			super.update(delta);
-            //check where ground is
-            Array<GameObject> objects = world.getVisibleObjects();
-            Rectangle rect = world.RECT_POOL.obtain();
-            debugRayRect = rect;
-            rect.set(position.x, 0, mColRect.width, position.y);
-            float tmpGroundY = 0;
-            float distance = mColRect.y;
-			GameObject closestObject = null;
-            //for(GameObject go : objects)
-            for(int i = 0; i < objects.size; i++)
+            if(worldState == WorldState.CLIMBING)
             {
-                GameObject go = objects.get(i);
-                if(go == null)continue;
-                if(go instanceof Sprite
-                        && (((Sprite)go).type == Sprite.Type.massive || ((Sprite)go).type == Sprite.Type.halfmassive)
-                        && rect.overlaps(go.mColRect))
+                checkCollisionWithBlocks(delta);
+                boolean climbing = false;
+                Array<GameObject> vo = world.getVisibleObjects();
+                for(int i = 0; i < vo.size; i++)
                 {
-					if(((Sprite)go).type == Sprite.Type.halfmassive && mColRect.y < go.mColRect.y + go.mColRect.height)
-					{
-						continue;
-					}
-                    float tmpDistance = mColRect.y - (go.mColRect.y + go.mColRect.height);
-                    if(tmpDistance < distance)
+                    GameObject go = vo.get(i);
+                    if(go instanceof Sprite && ((Sprite)go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
                     {
-                        distance = tmpDistance;
-                        tmpGroundY = go.mColRect.y + go.mColRect.height;
-						closestObject = go;
+                        climbing = true;
+                        break;
                     }
                 }
+                if(!climbing)setWorldState(WorldState.JUMPING);
+                stateTime += delta;
             }
-            groundY = tmpGroundY;
-			if(closestObject != null 
-				&& closestObject instanceof Sprite 
-				&& ((Sprite)closestObject).type == Sprite.Type.halfmassive
-				&& worldState == WorldState.DUCKING)
-			{
-				position.y -= 0.1f;
-			}
-            world.RECT_POOL.free(rect);
+            else
+            {
+                super.update(delta);
+                //check where ground is
+                Array<GameObject> objects = world.getVisibleObjects();
+                Rectangle rect = world.RECT_POOL.obtain();
+                debugRayRect = rect;
+                rect.set(position.x, 0, mColRect.width, position.y);
+                float tmpGroundY = 0;
+                float distance = mColRect.y;
+                GameObject closestObject = null;
+                //for(GameObject go : objects)
+                for (int i = 0; i < objects.size; i++)
+                {
+                    GameObject go = objects.get(i);
+                    if (go == null) continue;
+                    if (go instanceof Sprite
+                            && (((Sprite) go).type == Sprite.Type.massive || ((Sprite) go).type == Sprite.Type.halfmassive)
+                            && rect.overlaps(go.mColRect))
+                    {
+                        if (((Sprite) go).type == Sprite.Type.halfmassive && mColRect.y < go.mColRect.y + go.mColRect.height)
+                        {
+                            continue;
+                        }
+                        float tmpDistance = mColRect.y - (go.mColRect.y + go.mColRect.height);
+                        if (tmpDistance < distance)
+                        {
+                            distance = tmpDistance;
+                            tmpGroundY = go.mColRect.y + go.mColRect.height;
+                            closestObject = go;
+                        }
+                    }
+                }
+                groundY = tmpGroundY;
+                if (closestObject != null
+                        && closestObject instanceof Sprite
+                        && ((Sprite) closestObject).type == Sprite.Type.halfmassive
+                        && worldState == WorldState.DUCKING)
+                {
+                    position.y -= 0.1f;
+                }
+                world.RECT_POOL.free(rect);
+            }
 		}
         if(powerJump)
         {
@@ -910,6 +960,12 @@ public class Maryo extends DynamicObject
 		{
 			mColRect.height = mDrawRect.height * 0.9f;
 		}
+        if(worldState == WorldState.CLIMBING)
+        {
+            exitEnterStartPosition.set(position);
+            velocity.x = 0;
+            velocity.y = 0;
+        }
     }
 
 	@Override
