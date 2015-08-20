@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -156,6 +157,8 @@ public class Maryo extends DynamicObject
 	private Vector3 exitEnterStartPosition = new Vector3();
 	private static final float exitEnterVelocity = 1.3f;
 	private int rotation = 0;
+    public ParticleEffect powerJumpEffect;
+    public boolean powerJump;
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -163,6 +166,7 @@ public class Maryo extends DynamicObject
         setupBoundingBox();
 		
 		position.y = mColRect.y = mDrawRect.y += 0.5f;
+        Assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
     }
 
     private void setupBoundingBox()
@@ -215,6 +219,8 @@ public class Maryo extends DynamicObject
             loadTextures(ms.toString());
         }
         setJumpSound();
+        powerJumpEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
+
     }
 
     private void loadTextures(String state)
@@ -361,6 +367,11 @@ public class Maryo extends DynamicObject
 		{
         	spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
 		}
+        if(worldState == WorldState.DUCKING && powerJump)
+        {
+            powerJumpEffect.setPosition(position.x, position.y + 0.05f);
+            powerJumpEffect.draw(spriteBatch);
+        }
     }
 
     private String getTextureKey(TKey tkey)
@@ -827,6 +838,10 @@ public class Maryo extends DynamicObject
 			}
             world.RECT_POOL.free(rect);
 		}
+        if(powerJump)
+        {
+            powerJumpEffect.update(delta);
+        }
 	}
 
 	@Override

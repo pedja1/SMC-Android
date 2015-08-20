@@ -19,7 +19,7 @@ public class MarioController
     {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }
-    private static final int POWER_JUMP_DELTA = 1000;
+    private static final int POWER_JUMP_DELTA = 1;
 
     private static final long LONG_JUMP_PRESS = 150l;
     private static final float MAX_JUMP_SPEED = 9f;
@@ -30,7 +30,7 @@ public class MarioController
     private Maryo maryo;
     private boolean jumped;
 
-    private long downPressTime;
+    private float downPressTime;
 
     private long jumpClickTime;
 
@@ -87,7 +87,6 @@ public class MarioController
     {
         keys.add(Keys.DOWN);
 		checkLeave("down");
-        downPressTime = System.currentTimeMillis();
     }
 
     public void jumpPressed()
@@ -128,7 +127,6 @@ public class MarioController
     public void downReleased()
     {
         keys.remove(Keys.DOWN);
-        downPressTime = 0;
     }
 
     public void jumpReleased()
@@ -147,20 +145,22 @@ public class MarioController
      */
     public void update(float delta)
     {
-        if(downPressTime != 0 && System.currentTimeMillis() - downPressTime > POWER_JUMP_DELTA)
+        if(downPressTime > POWER_JUMP_DELTA)
         {
             mMaxJumpSpeed = POWER_MAX_JUMP_SPEED;
+            maryo.powerJump = true;
         }
         else
         {
             mMaxJumpSpeed = MAX_JUMP_SPEED;
+            maryo.powerJump = false;
         }
         maryo.grounded = maryo.position.y - maryo.groundY < 0.1f;
 		if(!maryo.grounded)
 		{
 			maryo.setWorldState(Maryo.WorldState.JUMPING);
 		}
-        processInput();
+        processInput(delta);
         if (maryo.grounded && maryo.getWorldState().equals(Maryo.WorldState.JUMPING))
         {
             maryo.setWorldState(Maryo.WorldState.IDLE);
@@ -170,15 +170,17 @@ public class MarioController
     /**
      * Change Mario's state and parameters based on input controls *
      */
-    private boolean processInput()
+    private boolean processInput(float delta)
     {
         Vector3 vel = maryo.velocity;
         Vector3 pos = maryo.position;
+        boolean resetDownPressedTime = true;
         if (keys.contains(Keys.JUMP))
         {
             if (!jumped && vel.y < mMaxJumpSpeed && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS)
             {
                 maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
+                resetDownPressedTime = false;
             }
             else
             {
@@ -207,6 +209,8 @@ public class MarioController
         }
         else if (keys.contains(Keys.DOWN))
         {
+            downPressTime += delta;
+            resetDownPressedTime = resetDownPressedTime & !maryo.grounded;
             if (maryo.getWorldState() != Maryo.WorldState.JUMPING)
             {
                 maryo.setWorldState(Maryo.WorldState.DUCKING);
@@ -220,6 +224,11 @@ public class MarioController
             }
             //slowly decrease linear velocity on x axes
             maryo.velocity.set(vel.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */vel.y, maryo.velocity.z);
+        }
+        if(resetDownPressedTime)
+        {
+            downPressTime = 0;
+            maryo.powerJumpEffect.reset();
         }
         return false;
     }
