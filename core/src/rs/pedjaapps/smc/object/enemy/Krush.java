@@ -33,21 +33,21 @@ public class Krush extends Enemy
 
     public boolean isSmall;
 
-    private final String keyDead, keySmall, keyBig;
+    private String keyDead, keySmall, keyBig;
 
     public Krush(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
         setupBoundingBox();
-        keyDead = textureAtlas + ":dead";
-        keySmall = textureAtlas + ":small";
-        keyBig = textureAtlas + ":big";
         position.z = POS_Z;
     }
 
     @Override
     public void initAssets()
     {
+        keyDead = textureAtlas + ":dead";
+        keySmall = textureAtlas + ":small";
+        keyBig = textureAtlas + ":big";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
 
         Array<TextureRegion> smallFrames = new Array<>();

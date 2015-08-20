@@ -49,26 +49,26 @@ public class Furball extends Enemy
 
     Type type = Type.brown;
 
-    private final String keyDead, keyLeft, keyDeadRight, keyTurn, keyHit;
+    private String keyDead, keyLeft, keyDeadRight, keyTurn, keyHit;
 
     public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
     {
         super(world, size, position);
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
-        keyDead = textureAtlas + ":dead";
-        keyDeadRight = textureAtlas + ":dead_r";
-        keyLeft = textureAtlas + "_l";
-        keyTurn = textureAtlas + ":turn";
-        keyHit = textureAtlas + ":hit";
     }
 
     @Override
     public void initAssets()
     {
+        keyDead = textureAtlas + ":dead";
+        keyDeadRight = textureAtlas + ":dead_r";
+        keyLeft = textureAtlas + "_l";
+        keyTurn = textureAtlas + ":turn";
+        keyHit = textureAtlas + ":hit";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureRegion> rightFrames = /*atlas.getRegions();//*/new Array<TextureRegion>();
-        Array<TextureRegion> leftFrames = /*atlas.getRegions();//*/new Array<TextureRegion>();
+        Array<TextureRegion> rightFrames = new Array<TextureRegion>();
+        Array<TextureRegion> leftFrames = new Array<TextureRegion>();
 
         for(int i = 1; i < 9; i++)
         {
