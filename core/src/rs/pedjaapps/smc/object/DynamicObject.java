@@ -56,12 +56,10 @@ public abstract class DynamicObject extends GameObject
 
         // ensure terminal velocity is not exceeded
         //x
-        if (velocity.x > maxVelocity()) {
+        if (velocity.x > maxVelocity())
             velocity.x = maxVelocity();
-        }
-        if (velocity.x < -maxVelocity()) {
+        if (velocity.x < -maxVelocity())
             velocity.x = -maxVelocity();
-        }
 
         //y
         /*if (velocity.y < Constants.GRAVITY) {

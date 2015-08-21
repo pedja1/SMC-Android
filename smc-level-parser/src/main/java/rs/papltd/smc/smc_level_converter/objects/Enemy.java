@@ -10,7 +10,7 @@ import org.xml.sax.Attributes;
  */
 public class Enemy
 {
-    public String type, color, direction, image_dir, texture_atlas;
+    public String type, color, direction, image_dir, texture_atlas, texture_name;
     public float posx, posy, speed, width, height;
     public float max_distance;
     public Rectangle colRect = new Rectangle();

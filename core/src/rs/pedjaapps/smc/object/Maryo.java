@@ -19,6 +19,7 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.Flyon;
+import rs.pedjaapps.smc.object.enemy.Spika;
 import rs.pedjaapps.smc.object.enemy.Thromp;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -941,7 +942,8 @@ public class Maryo extends DynamicObject
     private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)
     {
         //TODO update this when you add new enemy classes
-        return object instanceof Flyon || object instanceof Eato || object instanceof Thromp;
+        return object instanceof Flyon || object instanceof Eato || object instanceof Thromp
+                || object instanceof Spika;
     }
 
     public WorldState getWorldState()

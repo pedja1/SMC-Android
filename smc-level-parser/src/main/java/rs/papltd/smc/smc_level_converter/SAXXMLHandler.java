@@ -400,7 +400,10 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("spika".equals(enemy.type))
         {
-            System.out.println("skipped enemy 'spika'");
+            enemy.texture_name = "data/enemy/spika/" + enemy.color + ".png";
+            enemy.image_dir = "enemy/spika/";
+            enemy.posx = enemy.posx / 64;
+            setEnemySettings(enemy, "green.settings");
         }
         else if("spikeball".equals(enemy.type))
         {

@@ -273,6 +273,11 @@ public class LevelLoader
             enemy.textureAtlas = jEnemy.getString(KEY.texture_atlas.toString());
             Assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
         }
+        if (jEnemy.has(KEY.texture_name.toString()))
+        {
+            enemy.textureName = jEnemy.getString(KEY.texture_name.toString());
+            Assets.manager.load(enemy.textureName, Texture.class);
+        }
         if(!levelParsed)level.gameObjects.add(enemy);
     }
 

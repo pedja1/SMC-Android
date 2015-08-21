@@ -173,6 +173,10 @@ public class Converter
                     jEnemy.put("speed", enemy.speed);
                     jEnemy.put("direction", enemy.direction);
                 }
+                if("spika".equals(enemy.type))
+                {
+                    jEnemy.put("texture_name", enemy.texture_name);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);

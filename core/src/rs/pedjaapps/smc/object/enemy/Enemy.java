@@ -73,7 +73,7 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy)
     {
-        if(killedBy instanceof Turtle)//todo bullet, fireball...
+        if(killedBy instanceof Turtle || killedBy instanceof Spika)//todo bullet, fireball...
         {
             deadByBullet = true;
             handleCollision = false;
@@ -141,6 +141,9 @@ public abstract class Enemy extends DynamicObject
                 break;
             case thromp:
                 enemy = new Thromp(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));
+                break;
+            case spika:
+                enemy = new Spika(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
                 break;
         }
         return enemy;
