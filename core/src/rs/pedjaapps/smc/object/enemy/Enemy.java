@@ -139,6 +139,9 @@ public abstract class Enemy extends DynamicObject
             case krush:
                 enemy = new Krush(world, size, position);
                 break;
+            case thromp:
+                enemy = new Thromp(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));
+                break;
         }
         return enemy;
     }

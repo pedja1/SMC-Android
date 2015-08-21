@@ -1,13 +1,11 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.Maryo;
@@ -18,19 +16,19 @@ import rs.pedjaapps.smc.utility.Utility;
 /**
  * Created by pedja on 18.5.14..
  */
-public class Flyon extends Enemy
+public class Thromp extends Enemy
 {
+    public static final float POSITION_Z = 0.093f;
     public String DEAD_KEY;
-    private static final float STAY_BOTTOM_TIME = 2.5f;
+    public String ACTIVE_KEY, DEFAULT_KEY;
     public String direction;
     public float maxDistance;
     public float speed;
     private Vector3 mOriginPosition;
     private boolean forward = true, staying = true;
-    private float waitTime;
     private float rotation;
 
-    public Flyon(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
+    public Thromp(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
     {
         super(world, size, position);
         this.maxDistance = maxDistance;
@@ -45,10 +43,11 @@ public class Flyon extends Enemy
         {
             rotation = 270f;
         }
-        else if("down".equals(direction))
+        else if("up".equals(direction))
         {
             rotation = 180f;
         }
+        position.z = POSITION_Z;
     }
 
     @Override
@@ -61,16 +60,18 @@ public class Flyon extends Enemy
     public void initAssets()
     {
         DEAD_KEY = textureAtlas + ":dead";
+        DEFAULT_KEY = textureAtlas + ":default";
+        ACTIVE_KEY = textureAtlas + ":active";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
-        Assets.loadedRegions.put(DEAD_KEY, frames.get(3));
-        Assets.animations.put(textureAtlas, new Animation(0.13f, frames));
+        Assets.loadedRegions.put(DEAD_KEY, atlas.findRegion("default"));
+        Assets.loadedRegions.put(DEFAULT_KEY, atlas.findRegion("default"));
+        Assets.loadedRegions.put(ACTIVE_KEY, atlas.findRegion("active"));
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(staying ? 0 : stateTime, true);
+        TextureRegion frame = Assets.loadedRegions.get(staying ? DEFAULT_KEY : ACTIVE_KEY);
         float width = Utility.getWidth(frame, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
@@ -99,14 +100,8 @@ public class Flyon extends Enemy
         {
             if(checkMaryoInFront())
             {
-                waitTime = 0;//wait again
-            }
-            waitTime += deltaTime;
-            if(waitTime >= STAY_BOTTOM_TIME)
-            {
                 staying = false;
                 forward = true;
-                waitTime = 0;
             }
         }
         else if("up".equals(direction))
@@ -120,9 +115,7 @@ public class Flyon extends Enemy
                 }
                 else
                 {
-                    float distancePercent = 100 / maxDistance * remainingDistance;
-                    velocity.y = speed / (100 / distancePercent);
-                    if (velocity.y < 0.3f) velocity.y = 0.3f;
+                    velocity.y = speed;
                 }
             }
             else
@@ -152,9 +145,7 @@ public class Flyon extends Enemy
                 }
                 else
                 {
-                    float distancePercent = 100 / maxDistance * remainingDistance;
-                    velocity.y = -(speed / (100 / distancePercent));
-                    if (velocity.y > -0.3f) velocity.y = -0.3f;
+                    velocity.y = -speed;
                 }
             }
             else
@@ -184,9 +175,7 @@ public class Flyon extends Enemy
                 }
                 else
                 {
-                    float distancePercent = 100 / maxDistance * remainingDistance;
-                    velocity.x = (speed / (100 / distancePercent));
-                    if (velocity.x < 0.3f) velocity.x = 0.3f;
+                    velocity.x = speed;
                 }
             }
             else
@@ -216,9 +205,7 @@ public class Flyon extends Enemy
                 }
                 else
                 {
-                    float distancePercent = 100 / maxDistance * remainingDistance;
-                    velocity.x = -(speed / (100 / distancePercent));
-                    if (velocity.x > -0.3f) velocity.x = -0.3f;
+                    velocity.x = speed;
                 }
             }
             else
@@ -260,7 +247,7 @@ public class Flyon extends Enemy
         }
         else if("right".equals(direction))
         {
-            rect.set(mColRect.x + maxDistance + mColRect.width, mColRect.y, maxDistance + mColRect.width, mColRect.height);
+            rect.set(mColRect.x + mColRect.width, mColRect.y, maxDistance, mColRect.height);
         }
         return maryo.mColRect.overlaps(rect);
     }

@@ -408,7 +408,11 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("thromp".equals(enemy.type))
         {
-            System.out.println("skipped enemy 'thromp'");
+            enemy.texture_atlas = "data/enemy/thromp/" + (enemy.image_dir.contains("desert") ? "desert" : "thromp") + ".pack";
+            enemy.posx = enemy.posx / 64;
+            setEnemySettings(enemy, "down.settings");
+            enemy.max_distance = enemy.max_distance / 64f;
+            enemy.speed = enemy.speed / 64f;
         }
         else if("turtle".equals(enemy.type))
         {

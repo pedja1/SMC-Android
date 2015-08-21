@@ -526,7 +526,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        debugFontParams.fontParameters.size = (int) (height / 20f);
+        debugFontParams.fontParameters.size = (int) (height / 25f);
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
         Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
 

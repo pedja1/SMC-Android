@@ -167,6 +167,12 @@ public class Converter
                     jEnemy.put("wait_time", enemy.waitTime);
                     jEnemy.put("direction", enemy.direction);
                 }
+                if("thromp".equals(enemy.type))
+                {
+                    jEnemy.put("max_distance", enemy.max_distance);
+                    jEnemy.put("speed", enemy.speed);
+                    jEnemy.put("direction", enemy.direction);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);
