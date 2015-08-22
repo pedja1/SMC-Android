@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.view;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -87,12 +88,16 @@ public class SelectionAdapter
 		txItemBgSelected = Assets.manager.get("data/hud/option_selected.png");
 		txLock = Assets.manager.get("data/hud/lock.png");
 
+		//TODO load this fonts with asset manager
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 96;
         parameter.characters = "SECTLV";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.shadowColor = new Color(.5f, .5f, .5f, .75f);
+		parameter.shadowOffsetX = 3;
+		parameter.shadowOffsetY = 3;
         font96 = generator.generateFont(parameter);
 		font96Glyph = new GlyphLayout();
 
@@ -120,8 +125,8 @@ public class SelectionAdapter
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 
-        font96.setColor(.5f, .5f, .5f, 1);
-        font96.draw(batch, "SELECT LEVEL", CAM_WIDTH / 2 + 2, CAM_HEIGHT * 0.9f - 2, 0, Align.center, false);
+        //font96.setColor(.5f, .5f, .5f, 1);
+        //font96.draw(batch, "SELECT LEVEL", CAM_WIDTH / 2 + 2, CAM_HEIGHT * 0.9f - 2, 0, Align.center, false);
         font96.setColor(1, 1, 1, 1);
         font96.draw(batch, "SELECT LEVEL", CAM_WIDTH / 2, CAM_HEIGHT * 0.9f, 0, Align.center, false);
 
@@ -174,7 +179,6 @@ public class SelectionAdapter
 			shapeRenderer.setProjectionMatrix(cam.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-			//TODO ALLOC "new Color"
 			shapeRenderer.setColor(0, 1, 0, 1);
 			shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
 
