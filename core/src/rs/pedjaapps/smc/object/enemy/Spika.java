@@ -24,7 +24,7 @@ public class Spika extends Enemy
     public static final float ACCELERATION = 2;
 
     public float mSpeed;
-    private float mRotation, mDetectionSize, mFireResistant, mIceResistant;
+    private float mRotation, mDetectionSize;
     public int mKillPoints;
 
     public Spika(World world, Vector2 size, Vector3 position, String color)

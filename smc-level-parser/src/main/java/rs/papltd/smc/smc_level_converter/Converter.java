@@ -182,6 +182,13 @@ public class Converter
                     jEnemy.put("texture_name", enemy.texture_name);
                     jEnemy.put("direction", enemy.direction);
                 }
+                if("static".equals(enemy.type))
+                {
+                    jEnemy.put("texture_name", enemy.texture_name);
+                    jEnemy.put("rotation_speed", enemy.rotationSpeed);
+                    jEnemy.put("fire_resistance", enemy.fireResistance);
+                    jEnemy.put("ice_resistance", enemy.iceResistance);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);

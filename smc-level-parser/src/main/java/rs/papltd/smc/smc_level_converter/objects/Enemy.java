@@ -10,9 +10,9 @@ import org.xml.sax.Attributes;
  */
 public class Enemy
 {
-    public String type, color, direction, image_dir, texture_atlas, texture_name;
-    public float posx, posy, speed, width, height;
-    public float max_distance;
+    public String type, color, direction, image_dir, texture_atlas, texture_name, image;
+    public float posx, posy, speed, width, height, rotationSpeed;
+    public float max_distance, fireResistance, iceResistance;
     public Rectangle colRect = new Rectangle();
     public int max_downgrade_count;
 
@@ -75,6 +75,22 @@ public class Enemy
         else if("max_downgrade_count".equals(name))
         {
             max_downgrade_count = Integer.parseInt(value);
+        }
+        else if("image".equals(name))
+        {
+            image = value;
+        }
+        else if("fire_resistant".equals(name))
+        {
+            fireResistance = Float.parseFloat(value);
+        }
+        else if("ice_resistance".equals(name))
+        {
+            iceResistance = Float.parseFloat(value);
+        }
+        else if("rotation_speed".equals(name))
+        {
+            rotationSpeed = Float.parseFloat(value);
         }
     }
 

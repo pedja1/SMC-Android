@@ -427,6 +427,15 @@ public class SAXXMLHandler extends DefaultHandler
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "walk_1.settings");
         }
+        else if("static".equals(enemy.type))
+        {
+            enemy.texture_name = "data/" + enemy.image;
+            enemy.posx = enemy.posx / 64;
+            if(enemy.image == null)enemy.image = "enemy/static/blocks/spike_1/2_grey.png";
+            enemy.image_dir = enemy.image.substring(0, enemy.image.lastIndexOf('/'));
+            enemy.rotationSpeed = enemy.rotationSpeed * 0.5f;
+            setEnemySettings(enemy, enemy.image.substring(enemy.image.lastIndexOf('/') + 1, enemy.image.length()).replaceAll("png", "settings"));
+        }
         else
         {
             System.out.println(String.format("skipped enemy '%s'", enemy.type));

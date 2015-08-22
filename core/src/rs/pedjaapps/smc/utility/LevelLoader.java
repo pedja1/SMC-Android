@@ -53,7 +53,7 @@ public class LevelLoader
         g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class,
         massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
         force_best_item, max_downgrade_count, direction, level_name, name, camera_motion, entry, color,
-        max_distance, speed
+        max_distance, speed, rotation_speed, ice_resistance, fire_resistance
     }
 
     private enum ObjectClass

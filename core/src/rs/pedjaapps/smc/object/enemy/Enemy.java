@@ -44,7 +44,8 @@ public abstract class Enemy extends DynamicObject
     boolean deadByBullet;
     public int mKillPoints;
 
-    private float mFireResistant, mIceResistant;
+    public float mFireResistant, mIceResistant;
+    public float mSpeed, mRotation, mCanBeHitFromShell;
 
 	public void setDirection(Direction direction)
 	{
@@ -98,7 +99,35 @@ public abstract class Enemy extends DynamicObject
 	
     enum CLASS
     {
-        eato, flyon, furball, turtle, gee, krush, rokko, spika, spikeball, thromp, turtleboss
+        eato, flyon, furball, turtle, gee, krush, rokko, spika, spikeball, thromp, turtleboss, _static("static");
+
+        String mValue;
+
+        CLASS(String mValue)
+        {
+            this.mValue = mValue;
+        }
+
+        CLASS()
+        {
+        }
+
+        public static CLASS fromString(String string)
+        {
+            for(CLASS cls : values())
+            {
+                if(cls.toString().equals(string))
+                    return cls;
+            }
+            return null;
+        }
+
+
+        @Override
+        public String toString()
+        {
+            return mValue == null ? super.toString() : mValue;
+        }
     }
 	
 	public enum ContactType
@@ -118,7 +147,7 @@ public abstract class Enemy extends DynamicObject
         Vector3 position = new Vector3((float) jEnemy.getDouble(LevelLoader.KEY.posx.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.posy.toString()), 0);
         String enemyClassString = jEnemy.getString(LevelLoader.KEY.enemy_class.toString());
         Vector2 size = new Vector2((float) jEnemy.getDouble(LevelLoader.KEY.width.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.height.toString()));
-        CLASS enemyClass = CLASS.valueOf(enemyClassString);
+        CLASS enemyClass = CLASS.fromString(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)
         {
@@ -150,6 +179,9 @@ public abstract class Enemy extends DynamicObject
                 break;
             case rokko:
                 enemy = new Rokko(world, size, position, jEnemy.optString(LevelLoader.KEY.direction.toString()));
+                break;
+            case _static:
+                enemy = new Static(world, size, position, jEnemy.optInt(LevelLoader.KEY.rotation_speed.toString()), jEnemy.optInt(LevelLoader.KEY.fire_resistance.toString()), jEnemy.optInt(LevelLoader.KEY.ice_resistance.toString()));
                 break;
         }
         return enemy;
