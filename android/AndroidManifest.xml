@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rs.pedjaapps.smc.android"
-    android:versionCode="20140923"
-    android:versionName="0.0.3 alpha" >
+    package="rs.pedjaapps.smc.android" >
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="22" />
 

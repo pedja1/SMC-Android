@@ -1,6 +1,10 @@
 android {
     buildToolsVersion '22.0.1'
     compileSdkVersion 22
+    defaultConfig {
+        versionCode 20150822
+        versionName "0.1 alpha"
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -15,7 +19,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile = file("/home/pedja/Google Drive/keystore/smc/keystore.jks")
+            storeFile = file("/home/pedja/keystore.jks")
             storePassword = System.getenv("KEYSTORE_PWD")
             keyAlias = System.getenv("KEYSTORE_ALIAS")
             keyPassword = System.getenv("KEYSTORE_ALIAS_PWD")
