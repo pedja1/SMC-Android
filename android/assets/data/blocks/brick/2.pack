@@ -5,14 +5,14 @@ filter: Linear,Linear
 repeat: none
 2-1
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 2-2
   rotate: false
-  xy: 132, 2
+  xy: 131, 1
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

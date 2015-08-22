@@ -1,18 +1,18 @@
 
-green-1.png
+green_1.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 head
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
   index: -1
 middle
   rotate: false
-  xy: 2, 68
+  xy: 1, 67
   size: 256, 256
   orig: 256, 256
   offset: 0, 0

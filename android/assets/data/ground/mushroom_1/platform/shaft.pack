@@ -1,7 +1,7 @@
 
 shaft.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 shaft
   rotate: false
