@@ -4,6 +4,8 @@ android {
     defaultConfig {
         versionCode 20150822
         versionName "0.1 alpha"
+        minSdkVersion 10
+        targetSdkVersion 22
     }
     sourceSets {
         main {
