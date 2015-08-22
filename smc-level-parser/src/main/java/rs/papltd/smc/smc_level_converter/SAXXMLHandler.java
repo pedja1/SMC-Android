@@ -396,7 +396,10 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("rokko".equals(enemy.type))
         {
-            System.out.println("skipped enemy 'rokko'");
+            enemy.texture_name = "data/enemy/rokko/r.png";
+            enemy.image_dir = "enemy/rokko/";
+            enemy.posx = enemy.posx / 64;
+            setEnemySettings(enemy, "r.settings");
         }
         else if("spika".equals(enemy.type))
         {

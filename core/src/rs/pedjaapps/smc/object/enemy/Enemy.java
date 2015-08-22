@@ -42,6 +42,9 @@ public abstract class Enemy extends DynamicObject
 	protected Direction direction = Direction.right;
     public boolean handleCollision = true;
     boolean deadByBullet;
+    public int mKillPoints;
+
+    private float mFireResistant, mIceResistant;
 
 	public void setDirection(Direction direction)
 	{
@@ -144,6 +147,9 @@ public abstract class Enemy extends DynamicObject
                 break;
             case spika:
                 enemy = new Spika(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
+                break;
+            case rokko:
+                enemy = new Rokko(world, size, position, jEnemy.optString(LevelLoader.KEY.direction.toString()));
                 break;
         }
         return enemy;

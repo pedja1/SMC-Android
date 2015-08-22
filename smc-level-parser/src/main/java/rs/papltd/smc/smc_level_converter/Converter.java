@@ -177,6 +177,11 @@ public class Converter
                 {
                     jEnemy.put("texture_name", enemy.texture_name);
                 }
+                if("rokko".equals(enemy.type))
+                {
+                    jEnemy.put("texture_name", enemy.texture_name);
+                    jEnemy.put("direction", enemy.direction);
+                }
                 /*if(enemy.colRect != null)
                 {
                     jEnemy.put("col_x", enemy.colRect.x);
