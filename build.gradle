@@ -66,7 +66,8 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
         natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
-        //compile 'org.slf4j:slf4j-android:1.7.12'
+        compile 'org.slf4j:slf4j-android:1.7.12'
+        compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     }
 }
 

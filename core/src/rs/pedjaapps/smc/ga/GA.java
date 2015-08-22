@@ -45,7 +45,6 @@ public class GA
 
     public static void dispose()
     {
-        ga = null;
         gameStartTime = 0;
     }
 }
