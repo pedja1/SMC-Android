@@ -1,13 +1,19 @@
 package rs.pedjaapps.smc.screen;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.utility.Constants;
 
 /**
  * @author Mats Svensson
@@ -41,11 +47,17 @@ public class LoadingScreen extends AbstractScreen
         float camHeight = height/(width/camWidth);
         cam = new OrthographicCamera(camWidth, camHeight);
 
-        Texture fontTexture = new Texture(Gdx.files.internal("data/fonts/dejavu_sans.png"));
-        fontTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        font = new BitmapFont(Gdx.files.internal("data/fonts/dejavu_sans.fnt"), new TextureRegion(fontTexture), false);
-        font.setColor(Color.WHITE);
-        font.getData().setScale(0.25f);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontParams.size = height / 25;
+        fontParams.magFilter = Texture.TextureFilter.Linear;
+        fontParams.minFilter = Texture.TextureFilter.Linear;
+        fontParams.characters = "Loading,pleswt.0123456789";
+        font = generator.generateFont(fontParams);
+        font.setColor(new Color(1, 1, 1, 0.75f));
+
+        generator.dispose();
+
         batch = new SpriteBatch();
         Texture bgTexture = new Texture(Gdx.files.internal("data/loading/loading_bg.jpg"));
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
