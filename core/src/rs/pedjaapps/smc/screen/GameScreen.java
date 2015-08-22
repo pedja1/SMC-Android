@@ -28,6 +28,7 @@ import java.util.HashMap;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
+import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.object.BackgroundColor;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
@@ -124,6 +125,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
+    private float stateTime;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -187,6 +189,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
+        if(!resumed)
+        {
+            GA.sendLevelStarted(levelName);
+        }
     }
 
     @Override
@@ -243,6 +249,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		}
         world.newObjects.clear();
         GLProfiler.reset();
+        stateTime += delta;
     }
 
 	private void handleGameOver(float delta)
@@ -480,6 +487,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
         exitDialog.dispose();
+        GA.sendLevelEnded(levelName, stateTime);
     }
 
     @Override

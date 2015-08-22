@@ -4,20 +4,22 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import rs.pedjaapps.smc.screen.AbstractScreen;
-import rs.pedjaapps.smc.screen.SplashScreen;
-import rs.pedjaapps.smc.screen.LoadingScreen;
-import com.badlogic.gdx.Application;
 
-import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.ga.GA;
+import rs.pedjaapps.smc.screen.AbstractScreen;
+import rs.pedjaapps.smc.screen.LoadingScreen;
+import rs.pedjaapps.smc.screen.SplashScreen;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
 {
+
+
     @Override
 	public void create()
 	{
 		setScreen(new SplashScreen(this));
+		GA.sendGameStarted();
 	}
 
 	@Override
@@ -40,6 +42,9 @@ public class MaryoGame extends Game
     {
         super.dispose();
         Assets.dispose();
+		GA.sendGameEnded();
+		GA.dispose();
+
     }
 
     public void exit()
