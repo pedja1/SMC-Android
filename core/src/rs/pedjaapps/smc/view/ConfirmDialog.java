@@ -272,6 +272,7 @@ public class ConfirmDialog
 
         public Button()
         {
+            fontGlyph = new GlyphLayout();
         }
     }
 
