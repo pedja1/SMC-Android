@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.HashSet;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -185,8 +186,6 @@ public class HUD
         ttsTextParams.fontParameters.size = (int) C_H / 15;
         ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
         Assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
-
-		
 	}
 
     public void initAssets()
@@ -205,24 +204,27 @@ public class HUD
         soundOnP = atlas.findRegion("sound-on-pressed");
         soundOff = atlas.findRegion("sound-off");
         soundOffP = atlas.findRegion("sound-off-pressed");
-        
-		fire = atlas.findRegion("fire");
-		fireP = atlas.findRegion("fire-pressed");
-		jump = atlas.findRegion("jump");
-		jumpP = atlas.findRegion("jump-pressed");
-	    left = atlas.findRegion("dpad-left");
-		leftP = atlas.findRegion("dpad-left-pressed");
-		right = new TextureRegion(left);
-		right.flip(true, false);
-		rightP = new TextureRegion(leftP);
-		rightP.flip(true, false);
-		up = atlas.findRegion("dpad-up");
-		upP = atlas.findRegion("dpad-up-pressed");
-		down = new TextureRegion(up);
-		down.flip(false, true);
-		downP = new TextureRegion(upP);
-		downP.flip(false, true);
-		
+
+		if (MaryoGame.showOnScreenControlls())
+		{
+			fire = atlas.findRegion("fire");
+			fireP = atlas.findRegion("fire-pressed");
+			jump = atlas.findRegion("jump");
+			jumpP = atlas.findRegion("jump-pressed");
+			left = atlas.findRegion("dpad-left");
+			leftP = atlas.findRegion("dpad-left-pressed");
+			right = new TextureRegion(left);
+			right.flip(true, false);
+			rightP = new TextureRegion(leftP);
+			rightP.flip(true, false);
+			up = atlas.findRegion("dpad-up");
+			upP = atlas.findRegion("dpad-up-pressed");
+			down = new TextureRegion(up);
+			down.flip(false, true);
+			downP = new TextureRegion(upP);
+			downP.flip(false, true);
+		}
+
 		itemBox = Assets.manager.get("data/hud/itembox.png");
 		maryoL = Assets.manager.get("data/hud/maryo_l.png");
 		goldM = Assets.manager.get("data/hud/gold_m.png");
@@ -279,12 +281,15 @@ public class HUD
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(pressedKeys.contains(Key.pause) ? pauseP : pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
-			batch.draw(pressedKeys.contains(Key.fire) ? fireP : fire, fireR.x, fireR.y , fireR.width, fireR.height);
-			batch.draw(pressedKeys.contains(Key.jump) ? jumpP : jump, jumpR.x, jumpR.y , jumpR.width, jumpR.height);
-			batch.draw(pressedKeys.contains(Key.left) ? leftP : left, leftR.x, leftR.y , leftR.width, leftR.height);
-			batch.draw(pressedKeys.contains(Key.right) ? rightP : right, rightR.x, rightR.y , rightR.width, rightR.height);
-			batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
-			batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
+			if (MaryoGame.showOnScreenControlls())
+			{
+				batch.draw(pressedKeys.contains(Key.fire) ? fireP : fire, fireR.x, fireR.y , fireR.width, fireR.height);
+				batch.draw(pressedKeys.contains(Key.jump) ? jumpP : jump, jumpR.x, jumpR.y , jumpR.width, jumpR.height);
+				batch.draw(pressedKeys.contains(Key.left) ? leftP : left, leftR.x, leftR.y , leftR.width, leftR.height);
+				batch.draw(pressedKeys.contains(Key.right) ? rightP : right, rightR.x, rightR.y , rightR.width, rightR.height);
+				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
+				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
+			}
 			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			

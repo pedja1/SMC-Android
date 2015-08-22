@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.screen;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -675,44 +674,45 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
 		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
 		if(gameState == GAME_STATE.GAME_OVER)goTouched = true;
-        if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
-            return false;
         if (pointer < 5)
         {
-            Vector2 vect = world.VECTOR2_POOL.obtain();
-            if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
+            Vector2 vect = World.VECTOR2_POOL.obtain();
+            if(MaryoGame.showOnScreenControlls())
             {
-                controller.rightPressed();
-                //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
-                touches.get(pointer).clickArea = HUD.Key.right;
-                hud.rightPressed();
+                if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
+                {
+                    controller.rightPressed();
+                    //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
+                    touches.get(pointer).clickArea = HUD.Key.right;
+                    hud.rightPressed();
+                }
+                if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
+                {
+                    controller.leftPressed();
+                    //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
+                    touches.get(pointer).clickArea = HUD.Key.left;
+                    hud.leftPressed();
+                }
+                if (Intersector.isPointInPolygon(hud.upPolygon, vect.set(x, invertY(y))))//is top
+                {
+                    controller.upPressed();
+                    touches.get(pointer).clickArea = HUD.Key.up;
+                    hud.upPressed();
+                }
+                if (Intersector.isPointInPolygon(hud.downPolygon, vect.set(x, invertY(y))))//is bottom
+                {
+                    controller.downPressed();
+                    touches.get(pointer).clickArea = HUD.Key.down;
+                    hud.downPressed();
+                }
+                if (hud.jumpR.contains(x, invertY(y)))
+                {
+                    controller.jumpPressed();
+                    touches.get(pointer).clickArea = HUD.Key.jump;
+                    hud.jumpPressed();
+                }
             }
-            if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
-            {
-                controller.leftPressed();
-                //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
-                touches.get(pointer).clickArea = HUD.Key.left;
-                hud.leftPressed();
-            }
-            if (Intersector.isPointInPolygon(hud.upPolygon, vect.set(x, invertY(y))))//is top
-            {
-                controller.upPressed();
-                touches.get(pointer).clickArea = HUD.Key.up;
-                hud.upPressed();
-            }
-            if (Intersector.isPointInPolygon(hud.downPolygon, vect.set(x, invertY(y))))//is bottom
-            {
-                controller.downPressed();
-                touches.get(pointer).clickArea = HUD.Key.down;
-                hud.downPressed();
-            }
-            if (hud.jumpR.contains(x, invertY(y)))
-            {
-                controller.jumpPressed();
-                touches.get(pointer).clickArea = HUD.Key.jump;
-                hud.jumpPressed();
-            }
-			if (hud.pauseR.contains(x, invertY(y)))
+            if (hud.pauseR.contains(x, invertY(y)))
             {
 				touches.get(pointer).clickArea = HUD.Key.pause;
                 hud.pausePressed();
@@ -732,7 +732,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 				touches.get(pointer).clickArea = HUD.Key.play;
                 hud.playPressed();
             }
-            world.VECTOR2_POOL.free(vect);
+            World.VECTOR2_POOL.free(vect);
         }
 
         return true;
@@ -763,32 +763,45 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchUp(x, invertY(y));
             return true;
         }
-        if (!Gdx.app.getType().equals(Application.ApplicationType.Android))
-            return false;
         TouchInfo ti = touches.get(pointer);
         if (ti != null)
         {
             switch (ti.clickArea)
             {
                 case right:
-                    controller.rightReleased();
-                    hud.rightReleased();
+                    if(MaryoGame.showOnScreenControlls())
+                    {
+                        controller.rightReleased();
+                        hud.rightReleased();
+                    }
                     break;
                 case left:
-                    controller.leftReleased();
-                    hud.leftReleased();
+                    if (MaryoGame.showOnScreenControlls())
+                    {
+                        controller.leftReleased();
+                        hud.leftReleased();
+                    }
                     break;
                 case up:
-                    controller.upReleased();
-                    hud.upReleased();
+                    if (MaryoGame.showOnScreenControlls())
+                    {
+                        controller.upReleased();
+                        hud.upReleased();
+                    }
                     break;
                 case down:
-                    controller.downReleased();
-                    hud.downReleased();
+                    if (MaryoGame.showOnScreenControlls())
+                    {
+                        controller.downReleased();
+                        hud.downReleased();
+                    }
                     break;
                 case jump:
-                    controller.jumpReleased();
-                    hud.jumpReleased();
+                    if (MaryoGame.showOnScreenControlls())
+                    {
+                        controller.jumpReleased();
+                        hud.jumpReleased();
+                    }
                     break;
 				case pause:
 					if (gameState == GAME_STATE.GAME_RUNNING)gameState = GAME_STATE.GAME_PAUSED;
