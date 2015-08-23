@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
+    }
+}
+
+apply plugin: 'com.github.triplet.play'
+
 android {
     buildToolsVersion '22.0.1'
     compileSdkVersion 22
@@ -36,6 +47,12 @@ android {
         }
     }
 }
+
+play {
+    serviceAccountEmail = 'pcokulov@gmail.com'
+    pk12File = file('/home/pedja/Downloads/Google Play Android Developer-9a7c0e55d18d.p12')
+}
+
 // needed to add JNI shared libraries to APK when compiling on CLI
 tasks.withType(com.android.build.gradle.tasks.PackageApplication) { pkgTask ->
     pkgTask.jniFolders = new HashSet<File>()
