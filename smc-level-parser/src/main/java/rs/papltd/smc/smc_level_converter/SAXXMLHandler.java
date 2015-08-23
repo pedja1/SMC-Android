@@ -603,7 +603,7 @@ public class SAXXMLHandler extends DefaultHandler
         else if(sprite.image.contains("trees/balloon_tree"))
         {
             sprite.texture_atlas = "data/ground/green_2/balloon_tree.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replaceAll("trunk_node", "trunk-node");
         }
         else if(sprite.image.contains("box/yellow"))
         {
