@@ -46,16 +46,6 @@ public class LevelLoader
     public Level level;
     boolean levelParsed = false;
 
-    public enum KEY
-    {
-        sprites, posx, posy, width, height, texture_atlas, texture_name, info, player, level_width,
-        level_height, collision_bodies, flip_x, flip_y, is_front, background, r_1, r_2,
-        g_1, g_2, b_1, b_2, level_music, enemies, enemy_class, objects, object_class, obj_class,
-        massive_type, type, enemy_filter, gold_color, item, text, useable_count, invisible, animation,
-        force_best_item, max_downgrade_count, direction, level_name, name, camera_motion, entry, color,
-        max_distance, speed, rotation_speed, ice_resistance, fire_resistance
-    }
-
     private enum ObjectClass
     {
         sprite, item, box, player, enemy, moving_platform, enemy_stopper, level_entry, level_exit,
@@ -94,11 +84,11 @@ public class LevelLoader
 
     private void parseGameObjects(World world, MarioController controller, JSONObject level) throws JSONException
     {
-        JSONArray jObjects = level.getJSONArray(KEY.objects.toString());
+        JSONArray jObjects = level.getJSONArray("objects");
         for (int i = 0; i < jObjects.length(); i++)
         {
             JSONObject jObject = jObjects.getJSONObject(i);
-            switch (ObjectClass.valueOf(jObject.getString(KEY.obj_class.toString())))
+            switch (ObjectClass.valueOf(jObject.getString("obj_class")))
             {
                 case sprite:
                     parseSprite(world, jObject);
@@ -133,14 +123,14 @@ public class LevelLoader
 
     private void parseInfo(JSONObject jLevel) throws JSONException
     {
-        JSONObject jInfo = jLevel.getJSONObject(KEY.info.toString());
-        float width = (float) jInfo.getDouble(KEY.level_width.toString());
-        float height = (float) jInfo.getDouble(KEY.level_height.toString());
+        JSONObject jInfo = jLevel.getJSONObject("info");
+        float width = (float) jInfo.getDouble("level_width");
+        float height = (float) jInfo.getDouble("level_height");
         level.width = width;
         level.height = height;
-        if (jInfo.has(KEY.level_music.toString()))
+        if (jInfo.has("level_music"))
         {
-            JSONArray jMusic = jInfo.getJSONArray(KEY.level_music.toString());
+            JSONArray jMusic = jInfo.getJSONArray("level_music");
             Array<String> music = new Array<String>();
             for (int i = 0; i < jMusic.length(); i++)
             {
@@ -154,10 +144,10 @@ public class LevelLoader
 
     private void parseBg(JSONObject jLevel) throws JSONException
     {
-        if (jLevel.has(KEY.background.toString()))
+        if (jLevel.has("background"))
         {
-            JSONObject jBg = jLevel.getJSONObject(KEY.background.toString());
-            String textureName = jBg.optString(KEY.texture_name.toString(), null);
+            JSONObject jBg = jLevel.getJSONObject("background");
+            String textureName = jBg.optString("texture_name", null);
             if(textureName != null)Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
             if(levelParsed)return;
 
@@ -170,12 +160,12 @@ public class LevelLoader
 			}
             //TODO this is stupid, we should dinamically repeat background
 
-            float r1 = (float) jBg.getDouble(KEY.r_1.toString()) / 255;//convert from 0-255 range to 0-1 range
-            float r2 = (float) jBg.getDouble(KEY.r_2.toString()) / 255;
-            float g1 = (float) jBg.getDouble(KEY.g_1.toString()) / 255;
-            float g2 = (float) jBg.getDouble(KEY.g_2.toString()) / 255;
-            float b1 = (float) jBg.getDouble(KEY.b_1.toString()) / 255;
-            float b2 = (float) jBg.getDouble(KEY.b_2.toString()) / 255;
+            float r1 = (float) jBg.getDouble("r_1") / 255;//convert from 0-255 range to 0-1 range
+            float r2 = (float) jBg.getDouble("r_2") / 255;
+            float g1 = (float) jBg.getDouble("g_1") / 255;
+            float g2 = (float) jBg.getDouble("g_2") / 255;
+            float b1 = (float) jBg.getDouble("b_1") / 255;
+            float b2 = (float) jBg.getDouble("b_2") / 255;
 
             BackgroundColor bgColor = new BackgroundColor();
             bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
@@ -191,8 +181,8 @@ public class LevelLoader
     private void parsePlayer(JSONObject jPlayer, World world, MarioController controller) throws JSONException
     {
         if(levelParsed)return;
-        float x = (float) jPlayer.getDouble(KEY.posx.toString());
-        float y = (float) jPlayer.getDouble(KEY.posy.toString());
+        float x = (float) jPlayer.getDouble("posx");
+        float y = (float) jPlayer.getDouble("posy");
         level.spanPosition = new Vector3(x, y, Maryo.POSITION_Z);
         if (controller != null)
         {
@@ -205,11 +195,11 @@ public class LevelLoader
 
     private void parseSprite(World world, JSONObject jSprite) throws JSONException
     {
-        Vector3 position = new Vector3((float) jSprite.getDouble(KEY.posx.toString()), (float) jSprite.getDouble(KEY.posy.toString()), 0);
+        Vector3 position = new Vector3((float) jSprite.getDouble("posx"), (float) jSprite.getDouble("posy"), 0);
         Sprite.Type sType = null;
-        if (jSprite.has(KEY.massive_type.toString()))
+        if (jSprite.has("massive_type"))
         {
-            sType = Sprite.Type.valueOf(jSprite.getString(KEY.massive_type.toString()));
+            sType = Sprite.Type.valueOf(jSprite.getString("massive_type"));
             switch (sType)
             {
                 case massive:
@@ -234,10 +224,10 @@ public class LevelLoader
             position.z = m_pos_z_front_passive_start;
         }
 
-        Sprite sprite = new Sprite(world, new Vector2((float) jSprite.getDouble(KEY.width.toString()), (float) jSprite.getDouble(KEY.height.toString())), position);
+        Sprite sprite = new Sprite(world, new Vector2((float) jSprite.getDouble("width"), (float) jSprite.getDouble("height")), position);
         sprite.type = sType;
 
-        sprite.textureName = jSprite.getString(KEY.texture_name.toString());
+        sprite.textureName = jSprite.getString("texture_name");
         if (sprite.textureName == null || sprite.textureName.isEmpty())
         {
             throw new IllegalArgumentException("texture name is invalid: \"" + sprite.textureName + "\"");
@@ -247,12 +237,12 @@ public class LevelLoader
         {
             Assets.manager.load(sprite.textureName, Texture.class, Assets.textureParameter);
         }
-        if (jSprite.has(KEY.is_front.toString()))
+        if (jSprite.has("is_front"))
         {
-            sprite.isFront = jSprite.getBoolean(KEY.is_front.toString());
+            sprite.isFront = jSprite.getBoolean("is_front");
         }
 
-        sprite.textureAtlas = jSprite.optString(KEY.texture_atlas.toString(), null);
+        sprite.textureAtlas = jSprite.optString("texture_atlas", null);
         if(sprite.textureAtlas != null)
         {
             Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
@@ -268,14 +258,14 @@ public class LevelLoader
     {
         Enemy enemy = Enemy.initEnemy(world, jEnemy);
         if (enemy == null) return;//TODO this has to go aways after levels are fixed
-        if (jEnemy.has(KEY.texture_atlas.toString()))
+        if (jEnemy.has("texture_atlas"))
         {
-            enemy.textureAtlas = jEnemy.getString(KEY.texture_atlas.toString());
+            enemy.textureAtlas = jEnemy.getString("texture_atlas");
             Assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
         }
-        if (jEnemy.has(KEY.texture_name.toString()))
+        if (jEnemy.has("texture_name"))
         {
-            enemy.textureName = jEnemy.getString(KEY.texture_name.toString());
+            enemy.textureName = jEnemy.getString("texture_name");
             Assets.manager.load(enemy.textureName, Texture.class);
         }
         if(!levelParsed)level.gameObjects.add(enemy);
@@ -284,9 +274,9 @@ public class LevelLoader
     private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
     {
         if(levelParsed)return;
-        Vector3 position = new Vector3((float) jEnemyStopper.getDouble(KEY.posx.toString()), (float) jEnemyStopper.getDouble(KEY.posy.toString()), 0);
-        float width = (float) jEnemyStopper.getDouble(KEY.width.toString());
-        float height = (float) jEnemyStopper.getDouble(KEY.height.toString());
+        Vector3 position = new Vector3((float) jEnemyStopper.getDouble("posx"), (float) jEnemyStopper.getDouble("posy"), 0);
+        float width = (float) jEnemyStopper.getDouble("width");
+        float height = (float) jEnemyStopper.getDouble("height");
 
         EnemyStopper stopper = new EnemyStopper(world, new Vector2(width, height), position);
 
@@ -296,14 +286,14 @@ public class LevelLoader
     private void parseLevelEntry(World world, JSONObject jEntry) throws JSONException
     {
         if(levelParsed)return;
-        Vector3 position = new Vector3((float) jEntry.getDouble(KEY.posx.toString()), (float) jEntry.getDouble(KEY.posy.toString()), 0);
-        float width = (float) jEntry.getDouble(KEY.width.toString());
-        float height = (float) jEntry.getDouble(KEY.height.toString());
+        Vector3 position = new Vector3((float) jEntry.getDouble("posx"), (float) jEntry.getDouble("posy"), 0);
+        float width = (float) jEntry.getDouble("width");
+        float height = (float) jEntry.getDouble("height");
 
         LevelEntry entry = new LevelEntry(world, new Vector2(width, height), position);
-        entry.direction = jEntry.optString(KEY.direction.toString());
-        entry.type = jEntry.optInt(KEY.type.toString());
-        entry.name = jEntry.optString(KEY.name.toString());
+        entry.direction = jEntry.optString("direction");
+        entry.type = jEntry.optInt("type");
+        entry.name = jEntry.optString("name");
 
         level.gameObjects.add(entry);
     }
@@ -311,28 +301,28 @@ public class LevelLoader
     private void parseLevelExit(World world, JSONObject jExit) throws JSONException
     {
         if(levelParsed)return;
-        Vector3 position = new Vector3((float) jExit.getDouble(KEY.posx.toString()), (float) jExit.getDouble(KEY.posy.toString()), 0);
-        float width = (float) jExit.getDouble(KEY.width.toString());
-        float height = (float) jExit.getDouble(KEY.height.toString());
+        Vector3 position = new Vector3((float) jExit.getDouble("posx"), (float) jExit.getDouble("posy"), 0);
+        float width = (float) jExit.getDouble("width");
+        float height = (float) jExit.getDouble("height");
         LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
-        exit.cameraMotion = jExit.optInt(KEY.camera_motion.toString());
-        exit.type = jExit.optInt(KEY.type.toString());
-        exit.levelName = jExit.optString(KEY.level_name.toString(), null);
-        exit.entry = jExit.optString(KEY.entry.toString());
-        exit.direction = jExit.optString(KEY.direction.toString());
+        exit.cameraMotion = jExit.optInt("camera_motion");
+        exit.type = jExit.optInt("type");
+        exit.levelName = jExit.optString("level_name", null);
+        exit.entry = jExit.optString("entry");
+        exit.direction = jExit.optString("direction");
 
         level.gameObjects.add(exit);
     }
 
     private void parseItem(World world, JSONObject jItem) throws JSONException
     {
-        Vector3 position = new Vector3((float) jItem.getDouble(KEY.posx.toString()), (float) jItem.getDouble(KEY.posy.toString()), 0);
+        Vector3 position = new Vector3((float) jItem.getDouble("posx"), (float) jItem.getDouble("posy"), 0);
 
-        Item item = Item.initObject(world, jItem.getString(KEY.type.toString()), new Vector2((float) jItem.getDouble(KEY.width.toString()), (float) jItem.getDouble(KEY.height.toString())), position);
+        Item item = Item.initObject(world, jItem.getString("type"), new Vector2((float) jItem.getDouble("width"), (float) jItem.getDouble("height")), position);
         if (item == null) return;
-        if (jItem.has(KEY.texture_atlas.toString()))
+        if (jItem.has("texture_atlas"))
         {
-            item.textureAtlas = jItem.getString(KEY.texture_atlas.toString());
+            item.textureAtlas = jItem.getString("texture_atlas");
             Assets.manager.load(item.textureAtlas, TextureAtlas.class);
         }
         if(!levelParsed)level.gameObjects.add(item);

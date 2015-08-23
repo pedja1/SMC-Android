@@ -182,28 +182,28 @@ public class Box extends Sprite
 
     public static Box initBox(World world, JSONObject jBox, LevelLoader loader) throws JSONException
     {
-        Vector3 position = new Vector3((float) jBox.getDouble(LevelLoader.KEY.posx.toString()), (float) jBox.getDouble(LevelLoader.KEY.posy.toString()), 0);
-        Vector2 size = new Vector2(SIZE, SIZE/*(float) jBox.getDouble(LevelLoader.KEY.width.toString()), (float) jBox.getDouble(LevelLoader.KEY.height.toString())*/);
+        Vector3 position = new Vector3((float) jBox.getDouble("posx"), (float) jBox.getDouble("posy"), 0);
+        Vector2 size = new Vector2(SIZE, SIZE);
 
         Box box = new Box(world, size, position);
 
-        box.goldColor = jBox.optString(LevelLoader.KEY.gold_color.toString());
-        box.animation = jBox.optString(LevelLoader.KEY.animation.toString(), null);
-        box.boxType = jBox.optString(LevelLoader.KEY.type.toString());
-        box.text = jBox.optString(LevelLoader.KEY.text.toString());
-        box.forceBestItem = jBox.optInt(LevelLoader.KEY.force_best_item.toString(), 0) == 1;
-        box.invisible = jBox.optInt(LevelLoader.KEY.invisible.toString(), 0) == 1;
-        box.usableCount = jBox.optInt(LevelLoader.KEY.useable_count.toString(), -1);
-        box.item = jBox.optInt(LevelLoader.KEY.item.toString(), 0);
+        box.goldColor = jBox.optString("gold_color");
+        box.animation = jBox.optString("animation", null);
+        box.boxType = jBox.optString("type");
+        box.text = jBox.optString("text");
+        box.forceBestItem = jBox.optInt("force_best_item", 0) == 1;
+        box.invisible = jBox.optInt("invisible", 0) == 1;
+        box.usableCount = jBox.optInt("useable_count", -1);
+        box.item = jBox.optInt("item", 0);
 
-        box.textureName = jBox.optString(LevelLoader.KEY.texture_name.toString(), null);
+        box.textureName = jBox.optString("texture_name", null);
         if(box.textureAtlas != null && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
         {
             Assets.manager.load(box.textureName, Texture.class, Assets.textureParameter);
         }
-        if (jBox.has(LevelLoader.KEY.texture_atlas.toString()))
+        if (jBox.has("texture_atlas"))
         {
-            box.textureAtlas = jBox.getString(LevelLoader.KEY.texture_atlas.toString());
+            box.textureAtlas = jBox.getString("texture_atlas");
             Assets.manager.load(box.textureAtlas, TextureAtlas.class);
         }
         if("spin".equals(box.boxType))

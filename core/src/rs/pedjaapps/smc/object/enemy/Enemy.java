@@ -144,9 +144,9 @@ public abstract class Enemy extends DynamicObject
 
     public static Enemy initEnemy(World world, JSONObject jEnemy) throws JSONException
     {
-        Vector3 position = new Vector3((float) jEnemy.getDouble(LevelLoader.KEY.posx.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.posy.toString()), 0);
-        String enemyClassString = jEnemy.getString(LevelLoader.KEY.enemy_class.toString());
-        Vector2 size = new Vector2((float) jEnemy.getDouble(LevelLoader.KEY.width.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.height.toString()));
+        Vector3 position = new Vector3((float) jEnemy.getDouble("posx"), (float) jEnemy.getDouble("posy"), 0);
+        String enemyClassString = jEnemy.getString("enemy_class");
+        Vector2 size = new Vector2((float) jEnemy.getDouble("width"), (float) jEnemy.getDouble("height"));
         CLASS enemyClass = CLASS.fromString(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)
@@ -155,15 +155,15 @@ public abstract class Enemy extends DynamicObject
                 enemy = new Eato(world, size, position, jEnemy.optString("direction"));
                 break;
             case flyon:
-                enemy = new Flyon(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));
+                enemy = new Flyon(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
                 break;
 			case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position, jEnemy.optInt(LevelLoader.KEY.max_downgrade_count.toString()));
+                enemy = new Furball(world, size, position, jEnemy.optInt("max_downgrade_count"));
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;
-                enemy = new Turtle(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
+                enemy = new Turtle(world, size, position, jEnemy.optString("color"));
                 break;
             case gee:
                 enemy = new Gee(world, size, position, (float)jEnemy.getDouble("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), (float)jEnemy.getDouble("wait_time"));
@@ -172,16 +172,16 @@ public abstract class Enemy extends DynamicObject
                 enemy = new Krush(world, size, position);
                 break;
             case thromp:
-                enemy = new Thromp(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));
+                enemy = new Thromp(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
                 break;
             case spika:
-                enemy = new Spika(world, size, position, jEnemy.optString(LevelLoader.KEY.color.toString()));
+                enemy = new Spika(world, size, position, jEnemy.optString("color"));
                 break;
             case rokko:
-                enemy = new Rokko(world, size, position, jEnemy.optString(LevelLoader.KEY.direction.toString()));
+                enemy = new Rokko(world, size, position, jEnemy.optString("direction"));
                 break;
             case _static:
-                enemy = new Static(world, size, position, jEnemy.optInt(LevelLoader.KEY.rotation_speed.toString()), jEnemy.optInt(LevelLoader.KEY.fire_resistance.toString()), jEnemy.optInt(LevelLoader.KEY.ice_resistance.toString()));
+                enemy = new Static(world, size, position, jEnemy.optInt("rotation_speed"), jEnemy.optInt("fire_resistance"), jEnemy.optInt("ice_resistance"));
                 break;
         }
         return enemy;
