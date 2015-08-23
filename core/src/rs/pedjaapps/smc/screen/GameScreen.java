@@ -29,6 +29,7 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.object.BackgroundColor;
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
@@ -76,8 +77,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 	public void setGameState(GAME_STATE gameState)
 	{
 		this.gameState = gameState;
-		if(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
-            hud.updateTimer = false;
+        hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING || gameState == GAME_STATE.NO_UPDATE);
 	}
 
 	public GAME_STATE getGameState()
@@ -249,6 +249,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         world.newObjects.clear();
         GLProfiler.reset();
         stateTime += delta;
+    }
+
+    public void showBoxText(Box box)
+    {
+        setGameState(GAME_STATE.NO_UPDATE);
+        hud.boxTextPopup.show(box, this);
     }
 
 	private void handleGameOver(float delta)
@@ -654,6 +660,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 		}
         if (keycode == Input.Keys.D)
             debug = !debug;
+
+        if(keycode == Input.Keys.ENTER)
+        {
+            hud.boxTextPopup.hide();
+            setGameState(GAME_STATE.GAME_RUNNING);
+        }
         return true;
     }
 
@@ -734,7 +746,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
             World.VECTOR2_POOL.free(vect);
         }
-
+        if(hud.boxTextPopup.showing)
+        {
+            hud.boxTextPopup.hide();
+            setGameState(GAME_STATE.GAME_RUNNING);
+        }
         return true;
     }
 

@@ -201,8 +201,6 @@ public class Converter
             else if(obj instanceof Box)
             {
                 Box box = (Box)obj;
-                if("text".equals(box.type))
-                    continue;
                 JSONObject jBox = new JSONObject();
                 jBox.put("posx", box.posx);
                 jBox.put("posy", box.posy);

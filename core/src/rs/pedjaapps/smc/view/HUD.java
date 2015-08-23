@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,12 +15,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.HashSet;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -27,6 +30,7 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
+import rs.pedjaapps.smc.utility.Utility;
 
 public class HUD
 {
@@ -73,6 +77,7 @@ public class HUD
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
+	public BoxTextPopup boxTextPopup;
 
 	public HUD(World world)
 	{
@@ -186,6 +191,11 @@ public class HUD
         ttsTextParams.fontParameters.size = (int) C_H / 15;
         ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
         Assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
+
+		FreetypeFontLoader.FreeTypeFontLoaderParameter boxPD = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+		boxPD.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+		boxPD.fontParameters.size = (int) HUD.C_H / 30;
+		Assets.manager.load("btf.ttf", BitmapFont.class, boxPD);
 	}
 
     public void initAssets()
@@ -249,6 +259,9 @@ public class HUD
 		tts = Assets.manager.get("touch_to_start.ttf");
 		tts.setColor(1, 1, 1, 1);
 		ttsGlyphLayout = new GlyphLayout(font, ttsText);
+		BitmapFont btf = Assets.manager.get("btf.ttf");
+		btf.setColor(1, 1, 1, 1);
+		boxTextPopup = new BoxTextPopup(btf);
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
@@ -331,7 +344,8 @@ public class HUD
 			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);
 			font.draw(batch, lives, lifesX, pointsY);
-			
+
+			boxTextPopup.render(batch);
 			batch.end();
 		}
 	}
@@ -488,5 +502,73 @@ public class HUD
     {
         pressedKeys.remove(Key.music);
     }
+
+	public static class BoxTextPopup
+	{
+		BitmapFont font;
+		GlyphLayout glyphLayout;
+		float x, y, w, h;
+		public boolean showing;
+		TextureRegion back;
+		String text;
+
+		public BoxTextPopup(BitmapFont font)
+		{
+			this.font = font;
+			glyphLayout = new GlyphLayout();
+			TextureAtlas atlas = Assets.manager.get("data/hud/SMCLook512.pack");
+			back = atlas.findRegion("ClientBrush");
+		}
+
+		public void render(SpriteBatch batch)
+		{
+			if(!showing)return;
+			batch.draw(back, x, y, w, h);
+			glyphLayout.setText(font, text, Color.WHITE, w - 20, Align.left, true);
+			font.draw(batch, glyphLayout, x + 10, y + h - 10);
+		}
+
+		public void show(Box box, GameScreen gameScreen)
+		{
+			showing = true;
+
+			Vector2 point = World.VECTOR2_POOL.obtain();
+			Utility.gamePositionToGuiPosition(box.mDrawRect.x + box.mDrawRect.width / 2,
+					box.mDrawRect.y + box.mDrawRect.height * 1.1f, gameScreen, point);
+
+			//set initial x, y, w, h
+			w = gameScreen.hud.cam.viewportWidth * 0.33f;
+			h = w / 1.6f;//16x10
+			x = point.x - w / 2;
+			y = point.y;
+
+			if(x < 0)
+			{
+				x = 10;
+			}
+			if(y + h > gameScreen.hud.cam.viewportHeight)
+			{
+				//since by default popup is above box, and we don't want to cover box, we must first move it on x
+				float boxWidth = Utility.gameWidthToGuiWidth(gameScreen, box.mDrawRect.width);
+				x = point.x + boxWidth;
+				y = gameScreen.hud.cam.viewportHeight - 10 - h;
+			}
+
+			World.VECTOR2_POOL.free(point);
+			text = box.text;
+		}
+
+		public void hide()
+		{
+			showing = false;
+		}
+
+		public void dispose()
+		{
+			font.dispose();
+			font = null;
+			back = null;
+		}
+	}
 
 }

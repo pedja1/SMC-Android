@@ -239,7 +239,7 @@ public class MarioController
                 {
                     maryo.setWorldState(Maryo.WorldState.WALKING);
                 }
-                maryo.velocity.set(vel.x = -4f, vel.y, maryo.velocity.z);
+                maryo.velocity.set(vel.x = -4.5f, vel.y, maryo.velocity.z);
             }
             else if (keys.contains(Keys.RIGHT))
             {
@@ -249,7 +249,7 @@ public class MarioController
                 {
                     maryo.setWorldState(Maryo.WorldState.WALKING);
                 }
-                maryo.velocity.set(vel.x = +4f, vel.y, maryo.velocity.z);
+                maryo.velocity.set(vel.x = +4.5f, vel.y, maryo.velocity.z);
             }
             else if (keys.contains(Keys.DOWN))
             {

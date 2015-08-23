@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 
 import rs.pedjaapps.smc.Assets;
@@ -130,20 +131,36 @@ public class Utility
 		gameObject.mColRect.height = gameObject.mDrawRect.height = gameObject.mDrawRect.height * heightMul;
 	}
 
-    public static float gamePositionToGuiPosition(GameObject gameObject, GameScreen gameScreen, boolean x)
+    public static void gamePositionToGuiPosition(float positionX, float positionY, GameScreen gameScreen, Vector2 point)
+    {
+        OrthographicCamera cam = gameScreen.cam;
+        OrthographicCamera guiCam = gameScreen.hud.cam;
+
+        float camViewX = cam.position.x/*this is center*/ - cam.viewportWidth * 0.5f;
+        float camViewY = cam.position.y/*this is center*/ - cam.viewportHeight * 0.5f;
+        positionX = positionX - camViewX;
+        positionY = positionY - camViewY;
+        float widthMul = guiCam.viewportWidth / cam.viewportWidth;
+        float heightMul = guiCam.viewportHeight / cam.viewportHeight;
+        point.x = positionX * widthMul;
+        point.y = positionY * heightMul;
+    }
+
+    public static float gameWidthToGuiWidth(GameScreen gameScreen, float width)
     {
         OrthographicCamera cam = gameScreen.cam;
         OrthographicCamera guiCam = gameScreen.hud.cam;
         float widthMul = guiCam.viewportWidth / cam.viewportWidth;
+
+        return width * widthMul;
+    }
+
+    public static float gameHeightToGuiHeight(GameScreen gameScreen, float height)
+    {
+        OrthographicCamera cam = gameScreen.cam;
+        OrthographicCamera guiCam = gameScreen.hud.cam;
         float heightMul = guiCam.viewportHeight / cam.viewportHeight;
 
-        if(x)
-        {
-            return  (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
-        }
-        else
-        {
-            return (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
-        }
+        return height * heightMul;
     }
 }

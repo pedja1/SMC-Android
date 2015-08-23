@@ -56,7 +56,7 @@ public class Box
         }
         else if("text".equals(name))
         {
-            text = value;
+            text = value.replaceAll("<br/>", "\n");
         }
     }
 

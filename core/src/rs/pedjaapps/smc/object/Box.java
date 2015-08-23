@@ -25,6 +25,7 @@ import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomGhost;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomLive1;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomPoison;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -46,9 +47,9 @@ public class Box extends Sprite
     public static final float POSITION_Z = 0.055f;
     public static final float SPINNING_TIME = 5;
 
-
     public static final float SIZE = 0.67f;
-    String goldColor, animation, boxType, text;
+    String goldColor, animation, boxType;
+    public String text;
     boolean forceBestItem, invisible;
     int usableCount, item;
 
@@ -349,7 +350,12 @@ public class Box extends Sprite
     {
         if (hitByPlayer) return;
         Sound sound = null;
-        if("spin".equals(boxType))
+        if("text".equals(boxType))
+        {
+            hitByPlayer = true;
+            ((GameScreen)world.screen).showBoxText(this);
+        }
+        else if("spin".equals(boxType))
         {
             spinning = true;
             hitByPlayer = true;
