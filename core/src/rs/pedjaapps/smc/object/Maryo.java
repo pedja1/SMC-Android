@@ -708,7 +708,8 @@ public class Maryo extends DynamicObject
 				String nextLevelName;
 				if(exit.levelName == null)
 				{
-					nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+                    String currentLevel = ((GameScreen)world.screen).parent == null ? ((GameScreen)world.screen).levelName : ((GameScreen)world.screen).parent.levelName;
+					nextLevelName = GameSaveUtility.getInstance().getNextLevel(currentLevel);
 				}
 				else
 				{
@@ -1254,7 +1255,8 @@ public class Maryo extends DynamicObject
 				String nextLevelName;
 				if(exit.levelName == null)
 				{
-					nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
+                    String currentLevel = ((GameScreen)world.screen).parent == null ? ((GameScreen)world.screen).levelName : ((GameScreen)world.screen).parent.levelName;
+                    nextLevelName = GameSaveUtility.getInstance().getNextLevel(currentLevel);
 				}
 				else
 				{

@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,6 @@ public class Level
 	public String levelName;
 
 	public static final String LEVEL_EXT = ".smclvl";
-
-	public static final String[] levels = {/*"test",*/ "lvl_1", "lvl_2", "lvl_3", "lvl_4", "lvl_5", "lvl_6", "lvl_7", "lvl_8", "lvl_9", "lvl_10"};
 
 	public Level(String levelName)
 	{

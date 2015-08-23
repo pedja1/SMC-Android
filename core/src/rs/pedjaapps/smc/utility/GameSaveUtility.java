@@ -1,10 +1,17 @@
 package rs.pedjaapps.smc.utility;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import rs.pedjaapps.smc.object.Maryo;
 
 public class GameSaveUtility
 {
+    public static final List<String> LEVELS = Arrays.asList(/*"test",*/ "lvl_1", "lvl_2", "lvl_3", "lvl_4", "lvl_5", "lvl_6", "lvl_7", "lvl_8", "lvl_9", "lvl_10");
 	private static GameSaveUtility instance = null;
 	
 	public Save save;
@@ -54,15 +61,40 @@ public class GameSaveUtility
 		save = null;
 		instance = null;
 	}
-	
+
+    public boolean isUnlocked(String levelName)
+    {
+        return save.unlockedLevels.contains(levelName);
+    }
+
+    /**
+     * Get next level, or null if no more levels*/
+    public String getNextLevel(String currentLevel)
+    {
+        for(int i = 0; i < LEVELS.size(); i++)
+        {
+            String level = LEVELS.get(i);
+            if(level.equals(currentLevel))
+            {
+                if(i + 1 < LEVELS.size())
+                {
+                    String nextLevel = LEVELS.get(i + 1);
+                    save.unlockedLevels.add(nextLevel);
+                    save();
+                    return nextLevel;
+                }
+                return null;
+            }
+        }
+        return null;
+    }
 	
 	public static class Save
 	{
 		//persistent
-		public int currentLevel = 0;
+		Set<String> unlockedLevels;
 		
 		//in memory only
-		
 		public int coins;
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
@@ -71,13 +103,12 @@ public class GameSaveUtility
 		//copy constructor, only persistent objects are copied
 		public Save(Save save)
 		{
-			playerState = save.playerState;
-			currentLevel = save.currentLevel;
+			unlockedLevels = save.unlockedLevels;
 		}
 		
 		public Save()
 		{
-			
+			unlockedLevels = new HashSet<>(LEVELS.size());
 		}
 		
 		public static Save readFromString(String serializedSave)
@@ -93,24 +124,28 @@ public class GameSaveUtility
 				map.put(keyValue[0], keyValue[1]);
 			}
 			Save save = new Save();
-			//String state = map.get("state");
-			//save.playerState = state == null ? Maryo.MarioState.small: Maryo.MarioState.valueOf(state);
-			save.currentLevel = Utility.parseInt(map.get("level"), 0);
+            String tmp = map.get("unlocked_levels");
+            if(tmp != null)
+            {
+                String[] unlockedLevels = tmp.split(",");
+                Collections.addAll(save.unlockedLevels, unlockedLevels);
+            }
 			return save;
 		}
 
 		public static String writeToString(Save save)
 		{
 			if(save == null)return  null;
-			String input = /*"state=" + save.playerState.toString()
-							+ "\n*/"level=" + save.currentLevel;
-			return Utility.base64Encode(input);
-		}
 
-		@Override
-		public String toString()
-		{
-			return "state: " + playerState + ", currentLevel: " + currentLevel;
+            StringBuilder builder = new StringBuilder();
+            builder.append("unlocked_levels=");
+
+            for(String level : save.unlockedLevels)
+            {
+                builder.append(level).append(",");
+            }
+
+			return Utility.base64Encode(builder.toString());
 		}
 	}
 }

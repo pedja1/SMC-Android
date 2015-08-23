@@ -90,8 +90,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		for (int i = 0; i < 40; i++)
 		{
 			SelectionAdapter.Level level = new SelectionAdapter.Level();
-			level.isUnlocked = (i <= GameSaveUtility.getInstance().save.currentLevel);
-            if(i < Level.levels.length)level.levelId = Level.levels[i];
+            if(i < GameSaveUtility.LEVELS.size())level.levelId = GameSaveUtility.LEVELS.get(i);
+            level.isUnlocked = i == 0 || GameSaveUtility.getInstance().isUnlocked(level.levelId);
 			items.add(level);
 		}
 		return items;
