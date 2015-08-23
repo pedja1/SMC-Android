@@ -150,6 +150,10 @@ public class Converter
                 jEnemy.put("enemy_class", enemy.type);
                 jEnemy.put("color", enemy.color);
                 jEnemy.put("obj_class", "enemy");
+                if("eato".equals(enemy.type))
+                {
+                    jEnemy.put("direction", enemy.direction);
+                }
                 if("furball".equals(enemy.type))
                 {
                     jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);

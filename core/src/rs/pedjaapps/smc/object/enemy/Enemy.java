@@ -45,7 +45,7 @@ public abstract class Enemy extends DynamicObject
     public int mKillPoints;
 
     public float mFireResistant, mIceResistant;
-    public float mSpeed, mRotation, mCanBeHitFromShell;
+    public float mSpeed, mRotationX, mRotationY, mRotationZ, mCanBeHitFromShell;
 
 	public void setDirection(Direction direction)
 	{
@@ -152,7 +152,7 @@ public abstract class Enemy extends DynamicObject
         switch (enemyClass)
         {
             case eato:
-                enemy = new Eato(world, size, position);
+                enemy = new Eato(world, size, position, jEnemy.optString("direction"));
                 break;
             case flyon:
                 enemy = new Flyon(world, size, position, (float) jEnemy.getDouble(LevelLoader.KEY.max_distance.toString()), (float) jEnemy.getDouble(LevelLoader.KEY.speed.toString()), jEnemy.optString(LevelLoader.KEY.direction.toString(), "up"));

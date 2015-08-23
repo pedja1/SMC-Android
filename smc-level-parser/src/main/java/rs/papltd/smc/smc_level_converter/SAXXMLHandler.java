@@ -462,7 +462,11 @@ public class SAXXMLHandler extends DefaultHandler
                 enemy.height =  origHeight / 64f;
             }
         }
-        enemy.posy = convertY(enemy.posy, origHeight) + 0.1f;//TODO for collision
+        enemy.posy = convertY(enemy.posy, origHeight);
+        if(!"eato".equals(enemy.type))
+        {
+            enemy.posy += 0.1f;//TODO for collision
+        }
         enemy.colRect = getCollisionRectangle(settingsData);
     }
 

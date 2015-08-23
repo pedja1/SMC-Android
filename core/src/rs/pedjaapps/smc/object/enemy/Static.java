@@ -44,7 +44,7 @@ public class Static extends Enemy
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
             spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
-                    1, 1, -mRotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+                    1, 1, -mRotationZ, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
         }
     }
 
@@ -56,16 +56,16 @@ public class Static extends Enemy
         float step = circumference / deltaVelocity;
 
         float frameRotation = 360 / step;//degrees
-        mRotation += frameRotation;
-        if (mRotation > 360) mRotation = mRotation - 360;
+        mRotationZ += frameRotation;
+        if (mRotationZ > 360) mRotationZ = mRotationZ - 360;
 
-        return mRotation;
+        return mRotationZ;
     }
 
     public void update(float deltaTime)
     {
         stateTime += deltaTime;
-        mRotation = getRotation();
+        mRotationZ = getRotation();
     }
 
     @Override

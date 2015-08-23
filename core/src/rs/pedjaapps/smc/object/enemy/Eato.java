@@ -17,10 +17,48 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Eato extends Enemy
 {
+    public static final float POSITION_Z = 0.087f;
     public static String DEAD_KEY;
-    public Eato(World world, Vector2 size, Vector3 position)
+    private String direction;
+
+    public Eato(World world, Vector2 size, Vector3 position, String direction)
     {
         super(world, size, position);
+        this.direction = direction;
+        position.z = POSITION_Z;
+        mFireResistant = 1;
+        mKillPoints = 150;
+
+        if("top_left".equals(direction))
+        {
+            mRotationY = 180f;
+        }
+        else if("left_top".equals(direction))
+        {
+            mRotationZ = 90f;
+            mRotationX = 180f;
+        }
+        else if("left_bottom".equals(direction))
+        {
+            mRotationZ = 90f;
+        }
+        else if("right_top".equals(direction))
+        {
+            mRotationZ = 270f;
+        }
+        else if("right_bottom".equals(direction))
+        {
+            mRotationZ = 270f;
+            mRotationX = 180f;
+        }
+        else if("bottom_left".equals(direction))
+        {
+            mRotationX = 180f;
+        }
+        else if("bottom_right".equals(direction))
+        {
+            mRotationZ = 180f;
+        }
     }
 
     @Override
@@ -34,7 +72,7 @@ public class Eato extends Enemy
     {
         DEAD_KEY = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = new Array<>();//atlas.getRegions();
+        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
         		frames.add(atlas.findRegion(TKey.one.toString()));
         		frames.add(atlas.findRegion(TKey.two.toString()));
         		frames.add(atlas.findRegion(TKey.three.toString()));
@@ -48,7 +86,18 @@ public class Eato extends Enemy
     public void draw(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+
+        float width = Utility.getWidth(frame, mDrawRect.height);
+        float originX = width * 0.5f;
+        float originY = /*0;//*/mDrawRect.height * 0.5f;
+        float rotation = mRotationZ;
+        boolean flipX = mRotationY == 180;
+        boolean flipY = mRotationX == 180;
+
+        frame.flip(flipX, flipY);//flip it
+        spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
+        frame.flip(flipX, flipY);//return it to original
+
     }
 	
 	@Override
