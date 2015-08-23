@@ -1025,7 +1025,7 @@ public class Maryo extends DynamicObject
             case fire:
                 return Assets.manager.get("data/sounds/item/fireplant.ogg");
             case ice:
-                return Assets.manager.get("data/sounds/item/mushroom_blue.ogg");
+                return Assets.manager.get("data/sounds/item/mushroom_blue.wav");
             case ghost:
                 return Assets.manager.get("data/sounds/item/mushroom_ghost.ogg");
             case flying:

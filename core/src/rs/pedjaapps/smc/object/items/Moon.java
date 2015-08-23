@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
@@ -16,13 +17,13 @@ import rs.pedjaapps.smc.utility.Utility;
 /**
  * Created by pedja on 29.3.15..
  */
-public class Moon extends Item
+public class Moon extends BoxItem
 {
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.59375f;
-    public Moon(World world, Vector2 size, Vector3 position)
+    public Moon(World world, Vector2 size, Vector3 position, Box box)
     {
-        super(world, size, position);
+        super(world, size, position, box);
         textureAtlas = "data/game/items/moon.pack";
     }
 
@@ -81,7 +82,7 @@ public class Moon extends Item
     public void hitPlayer()
     {
         playerHit = true;
-        position.set(-1, -1, -1);//has the effect of removing item (if its not on screen it wont be drawn)
+        box.itemObject = null;
         GameSaveUtility.getInstance().save.lifes += 3;
 
         Sound sound = Assets.manager.get("data/sounds/item/moon.ogg");

@@ -522,10 +522,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/sounds/wall_hit.wav", Sound.class);
 
         Assets.manager.load("data/sounds/sprout_1.ogg", Sound.class);
-        Assets.manager.load("data/sounds/item/mushroom.ogg", Sound.class);
-        Assets.manager.load("data/sounds/item/mushroom_blue.wav", Sound.class);
-        Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
-        Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
 
         Assets.manager.load("data/sounds/enemy/furball/die.ogg", Sound.class);
         //Assets.manager.load("data/sounds/item/feather.wav", Sound.class);

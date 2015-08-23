@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -20,7 +21,7 @@ import rs.pedjaapps.smc.utility.Utility;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public class Star extends Item
+public class Star extends BoxItem
 {
     public static final float VELOCITY_X = 1.5f;
     public static final float VELOCITY_POP = 1.6f;
@@ -37,9 +38,9 @@ public class Star extends Item
 
     private Direction direction = Direction.right;
 
-    public Star(World world, Vector2 size, Vector3 position)
+    public Star(World world, Vector2 size, Vector3 position, Box box)
     {
-        super(world, size, position);
+        super(world, size, position, box);
     }
 
     @Override

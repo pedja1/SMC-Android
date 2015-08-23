@@ -61,7 +61,7 @@ public class Box extends Sprite
     float originalPosY;
 
     //item that pops out when box is hit by player
-    Item itemObject;
+    public Item itemObject;
     private boolean spinning;
     private float spinningTime;
 
@@ -101,7 +101,7 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("4"));
             frames.add(atlas.findRegion("5"));
             frames.add(atlas.findRegion("6"));
-            animSpeed = 0.15f;
+            animSpeed = 0.09f;
         }
         if ("power".equalsIgnoreCase(animation))
         {
@@ -248,6 +248,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
+                Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
                 Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
                 Assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
             }
@@ -282,35 +283,55 @@ public class Box extends Sprite
 
     public static void createMushroom(Box box, boolean loadAssets)
     {
-        Mushroom mushroom;
-        switch (box.item)
-        {
-            case Item.TYPE_MUSHROOM_DEFAULT:
-            default:
-                mushroom = new MushroomDefault(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                break;
-            case Item.TYPE_MUSHROOM_LIVE_1:
-                mushroom = new MushroomLive1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                break;
-            case Item.TYPE_MUSHROOM_BLUE:
-                mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                break;
-            case Item.TYPE_MUSHROOM_GHOST:
-                mushroom = new MushroomGhost(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                break;
-            case Item.TYPE_MUSHROOM_POISON:
-                mushroom = new MushroomPoison(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                break;
-        }
-
-        mushroom.visible = false;
-
         if(loadAssets)
         {
-            Assets.manager.load(mushroom.textureName, Texture.class, Assets.textureParameter);
+            switch (box.item)
+            {
+                case Item.TYPE_MUSHROOM_DEFAULT:
+                default:
+                    Assets.manager.load("data/game/items/mushroom_red.png", Texture.class, Assets.textureParameter);
+                    Assets.manager.load("data/sounds/item/mushroom.ogg", Sound.class);
+                    break;
+                case Item.TYPE_MUSHROOM_LIVE_1:
+                    Assets.manager.load("data/game/items/mushroom_green.png", Texture.class, Assets.textureParameter);
+                    break;
+                case Item.TYPE_MUSHROOM_BLUE:
+                    Assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, Assets.textureParameter);
+                    Assets.manager.load("data/sounds/item/mushroom_blue.wav", Sound.class);
+                    break;
+                case Item.TYPE_MUSHROOM_GHOST:
+                    Assets.manager.load("data/game/items/mushroom_ghost.png", Texture.class, Assets.textureParameter);
+                    Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
+                    break;
+                case Item.TYPE_MUSHROOM_POISON:
+                    Assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, Assets.textureParameter);
+                    break;
+            }
         }
         else
         {
+            Mushroom mushroom;
+            switch (box.item)
+            {
+                case Item.TYPE_MUSHROOM_DEFAULT:
+                default:
+                    mushroom = new MushroomDefault(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    break;
+                case Item.TYPE_MUSHROOM_LIVE_1:
+                    mushroom = new MushroomLive1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    break;
+                case Item.TYPE_MUSHROOM_BLUE:
+                    mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    break;
+                case Item.TYPE_MUSHROOM_GHOST:
+                    mushroom = new MushroomGhost(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    break;
+                case Item.TYPE_MUSHROOM_POISON:
+                    mushroom = new MushroomPoison(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    break;
+            }
+
+            mushroom.visible = false;
             box.itemObject = mushroom;
         }
     }
@@ -329,7 +350,7 @@ public class Box extends Sprite
 
     public static void createFireplant(Box box)
     {
-        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
+        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position), box);
         fireplant.initAssets();
         fireplant.visible = false;
 
@@ -338,7 +359,7 @@ public class Box extends Sprite
 
     public static void createMoon(Box box)
     {
-        Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position));
+        Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position), box);
         moon.initAssets();
         moon.visible = false;
 
