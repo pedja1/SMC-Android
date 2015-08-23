@@ -401,15 +401,15 @@ public class Box extends Sprite
         {
             spinningTime += delta;
         }
-        if (itemObject != null && world.isObjectVisible(itemObject, true))
+        if (itemObject != null/* && world.isObjectVisible(itemObject, true)*/)
         {
             itemObject.update(delta);
         }
-        else
+        /*else
         {
             if(!(itemObject instanceof Fireplant))
                 itemObject = null;
-        }
+        }*/
         if (hitByPlayer)
         {
             // Setting initial vertical acceleration
