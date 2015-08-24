@@ -99,7 +99,7 @@ public abstract class DynamicObject extends GameObject
                 {
                     handleCollision(object, false);
                 }
-                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
+                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)) && !((Box)object).itemObject.popFromBox)
                 {
                     handleCollision(((Box) object).itemObject, false);
                 }
