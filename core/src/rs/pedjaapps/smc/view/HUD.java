@@ -24,6 +24,7 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
@@ -78,6 +79,7 @@ public class HUD
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
 	public BoxTextPopup boxTextPopup;
+    public Item item;
 
 	public HUD(World world)
 	{
@@ -160,10 +162,10 @@ public class HUD
 		x = soundR.x * 0.80f;
 		playR = new Rectangle(x, y, width, height);
 		
-		float ibSize = C_W / 12;
+		float ibSize = C_W / 14;
 		itemBoxR = new Rectangle(C_W / 2 - ibSize, C_H - ibSize - ibSize / 5, ibSize, ibSize);
 		
-		float maryoLSize = itemBoxR.height / 2;
+		float maryoLSize = itemBoxR.height / 2.5f;
 		maryoLR = new Rectangle(pauseR.x - maryoLSize * 3, itemBoxR.y + itemBoxR.height - maryoLSize - maryoLSize / 2, maryoLSize * 2, maryoLSize);
     }
 
@@ -246,7 +248,7 @@ public class HUD
 		
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = (int) C_H / 20;
+        parameter.size = (int) C_H / 25;
         parameter.characters = "0123456789TimePontsx:";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
@@ -303,7 +305,11 @@ public class HUD
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
+            if(item != null)
+                batch.setColor(Color.RED);
 			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
+            batch.setColor(Color.WHITE);
+
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
@@ -344,6 +350,17 @@ public class HUD
 			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);
 			font.draw(batch, lives, lifesX, pointsY);
+
+            //draw item if any
+            if(item != null)
+            {
+                float w = itemBoxR.width * 0.5f;
+                float h = itemBoxR.height * 0.5f;
+                float x = itemBoxR.x + itemBoxR.width * 0.5f - w * 0.5f;
+                float y = itemBoxR.y + itemBoxR.height * 0.5f - h * 0.5f;
+                Texture txt = Assets.manager.get(item.textureName);
+                batch.draw(txt, x, y, w, h);
+            }
 
 			boxTextPopup.render(batch);
 			batch.end();

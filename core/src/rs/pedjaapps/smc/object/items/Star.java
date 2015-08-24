@@ -52,9 +52,9 @@ public class Star extends BoxItem
     }
 
     @Override
-    public void update(float delta)
+    public void updateItem(float delta)
     {
-        super.update(delta);
+        super.updateItem(delta);
         if(popFromBox)
         {
             // scale velocity to frame units

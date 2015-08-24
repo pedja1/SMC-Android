@@ -45,6 +45,7 @@ public abstract class Item extends Sprite
     /**
      * Coin will smoothly pop out of the box*/
     public boolean popFromBox;
+    private boolean dropping;
 
     public Item(World world, Vector2 size, Vector3 position)
     {
@@ -67,9 +68,27 @@ public abstract class Item extends Sprite
     }
 
     @Override
-    public void update(float delta)
+    public final void update(float delta)
     {
-        stateTime += delta;
+        if(dropping)
+        {
+            stateTime += delta;
+            velocity.y = -1f;
+            velocity.x = 0;
+
+            velocity.scl(delta);
+
+            position.add(velocity);
+            mColRect.x = position.x;
+            mColRect.y = position.y;
+            updateBounds();
+
+            velocity.scl(1 / delta);
+        }
+        else
+        {
+            updateItem(delta);
+        }
     }
 	
 	public void popOutFromBox(float popTargetPosY)
@@ -79,5 +98,15 @@ public abstract class Item extends Sprite
 
     public abstract void hitPlayer();
 
+    public void updateItem(float delta)
+    {
+        stateTime += delta;
+    }
+
+    public void drop()
+    {
+        dropping = true;
+        playerHit = false;
+    }
 
 }

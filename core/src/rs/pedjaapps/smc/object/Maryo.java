@@ -3,6 +3,7 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -906,6 +907,7 @@ public class Maryo extends DynamicObject
 		{
             Item item = (Item)object;
 			if(!item.playerHit)item.hitPlayer();
+            world.trashObjects.add(item);
 		}
 		else if(object instanceof Enemy && ((Enemy)object).handleCollision)
 		{
@@ -989,7 +991,24 @@ public class Maryo extends DynamicObject
 		{
 			godMode = true;
 			godModeActivatedTime = System.currentTimeMillis();
-			//for now only make it small no matter the current state
+
+            if(((GameScreen)world.screen).hud.item != null)
+            {
+                //drop item
+                Item item = ((GameScreen)world.screen).hud.item;
+                OrthographicCamera cam = ((GameScreen)world.screen).cam;
+
+                item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
+                item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
+
+                item.updateBounds();
+
+                world.level.gameObjects.add(item);
+                item.drop();
+
+                ((GameScreen)world.screen).hud.item = null;
+            }
+
 			maryoState = MaryoState.small;
 			GameSaveUtility.getInstance().save.playerState = maryoState;
 			setupBoundingBox();
@@ -998,9 +1017,19 @@ public class Maryo extends DynamicObject
 
     /*
     * Level up*/
-    public void upgrade(MaryoState newState)
+    public void upgrade(MaryoState newState, boolean tempUpdate, Item item)
     {
-        if(maryoState == newState)return;
+        //cant upgrade from ice/fire to big
+        if((maryoState == newState && newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire)
+                || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
+        {
+            ((GameScreen)world.screen).hud.item = item;
+            return;
+        }
+        else if(maryoState == newState)
+        {
+            return;
+        }
         this.newState = newState;
         oldState = maryoState;
         Array<TextureRegion> frames = generateResizeAnimationFrames(maryoState, newState);
@@ -1008,7 +1037,7 @@ public class Maryo extends DynamicObject
         resizingAnimation.setPlayMode(Animation.PlayMode.LOOP);
         resizeAnimStartTime = stateTime;
         godMode = true;
-        //TODO handle if screen isnt GameScreen
+
         ((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
 
         //play new state sound

@@ -91,9 +91,9 @@ public class Coin extends Item
     }
 
     @Override
-    public void update(float delta)
+    public void updateItem(float delta)
     {
-        super.update(delta);
+        super.updateItem(delta);
         //pointsTextPosition.y += 3f * delta;
 		if(popFromBox)
 		{

@@ -188,7 +188,7 @@ public abstract class Enemy extends DynamicObject
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public final void render(SpriteBatch spriteBatch)
     {
         if(deadByBullet)
         {

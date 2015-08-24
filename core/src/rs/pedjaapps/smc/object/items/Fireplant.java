@@ -40,9 +40,9 @@ public class Fireplant extends BoxItem
     }
 
     @Override
-    public void update(float delta)
+    public void updateItem(float delta)
     {
-        super.update(delta);
+        super.updateItem(delta);
         if(popFromBox)
         {
             // scale velocity to frame units
@@ -92,7 +92,7 @@ public class Fireplant extends BoxItem
     public void hitPlayer()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.fire);
+        world.maryo.upgrade(Maryo.MaryoState.fire, false, this);
         box.itemObject = null;
         GameSaveUtility.getInstance().save.points += POINTS;
     }

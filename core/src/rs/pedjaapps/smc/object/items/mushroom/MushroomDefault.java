@@ -27,7 +27,7 @@ public class MushroomDefault extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.big);
+        world.maryo.upgrade(Maryo.MaryoState.big, false, this);
         box.itemObject = null;
         GameSaveUtility.getInstance().save.points += POINTS;
     }
