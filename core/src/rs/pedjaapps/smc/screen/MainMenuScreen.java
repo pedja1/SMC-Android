@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.*;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.*;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.NATypeConverter;
@@ -314,6 +315,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         for(GameObject go : loader.level.gameObjects)
             go.initAssets();
+    }
+
+    @Override
+    public int getTimeStep()
+    {
+        return DINAMYC_TIMESTEP;
     }
 
     @Override

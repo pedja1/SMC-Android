@@ -25,6 +25,7 @@ import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomGhost;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomLive1;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomPoison;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;

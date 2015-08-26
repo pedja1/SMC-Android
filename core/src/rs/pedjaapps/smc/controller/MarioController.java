@@ -9,7 +9,7 @@ import java.util.*;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.LevelExit;
-import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 
@@ -198,9 +198,14 @@ public class MarioController
         boolean resetDownPressedTime = true;
         if (keys.contains(Keys.JUMP))
         {
-            if (!jumped && vel.y < mMaxJumpSpeed && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS)
+            if (!jumped && vel.y < mMaxJumpSpeed/* && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS*/)
             {
-                maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
+                //vel.scl(delta);
+
+                vel.add(0, 120f * delta, 0);
+
+                //vel.scl(1 / delta);
+                //maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
                 resetDownPressedTime = false;
             }
             else

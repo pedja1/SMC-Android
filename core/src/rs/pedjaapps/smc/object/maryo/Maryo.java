@@ -1,4 +1,4 @@
-package rs.pedjaapps.smc.object;
+package rs.pedjaapps.smc.object.maryo;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -17,12 +17,20 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Collections;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.Box;
+import rs.pedjaapps.smc.object.DynamicObject;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.LevelEntry;
+import rs.pedjaapps.smc.object.LevelExit;
+import rs.pedjaapps.smc.object.Sprite;
+import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.Flyon;
 import rs.pedjaapps.smc.object.enemy.Spika;
 import rs.pedjaapps.smc.object.enemy.Thromp;
 import rs.pedjaapps.smc.object.items.Item;
+import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
@@ -217,8 +225,8 @@ public class Maryo extends DynamicObject
 	@Override
     public void updateBounds()
     {
-        mDrawRect.x = mColRect.x - mDrawRect.width / 4;
-        mDrawRect.y = mColRect.y;
+        mDrawRect.x = (world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.x : mColRect.x) - mDrawRect.width / 4;
+        mDrawRect.y = world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.y : mColRect.y;
     }
 
     public void initAssets()

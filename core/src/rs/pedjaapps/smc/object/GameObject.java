@@ -3,6 +3,7 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.*;
 import rs.pedjaapps.smc.Rect;
+import rs.pedjaapps.smc.screen.AbstractScreen;
 
 /**
  * Created by pedja on 18.5.14..
@@ -12,6 +13,8 @@ public abstract class GameObject
     public Rect mDrawRect = new Rect();//used for draw
     public Rect mColRect = new Rect();//used for collision detection
 	public Vector3 position = new Vector3();
+	public Vector3 prevPosition = new Vector3();
+	public Vector3 interpPosition = new Vector3();
     public Vector3 velocity = new Vector3();
     public Vector3 acceleration = new Vector3();
     protected World world;
@@ -65,13 +68,14 @@ public abstract class GameObject
         this.mDrawRect = new Rect(position.x, position.y, size.x, size.y);
         mColRect = new Rect(mDrawRect);
 		this.position = position;
+        this.interpPosition.set(position);
         this.world = world;
     }
 	
 	public void updateBounds()
     {
-        mDrawRect.x = mColRect.x;
-        mDrawRect.y = mColRect.y;
+        mDrawRect.x = world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.x : mColRect.x;
+        mDrawRect.y = world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.y : mColRect.y;
     }
 
     public abstract void render(SpriteBatch spriteBatch);

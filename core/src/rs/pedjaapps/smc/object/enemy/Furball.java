@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -140,7 +140,7 @@ public class Furball extends Enemy
         if(dying)
         {
             //resize it by state time
-            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
+            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;//TODO ovako zavisi brzina animacije od fps-a
             mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
             if(mDrawRect.height < 0)world.trashObjects.add(this);
             return;

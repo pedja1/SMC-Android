@@ -26,7 +26,7 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Level;
 import rs.pedjaapps.smc.object.LevelEntry;
 import rs.pedjaapps.smc.object.LevelExit;
-import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.enemy.Enemy;

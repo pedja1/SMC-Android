@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 
 public class GameSaveUtility
 {

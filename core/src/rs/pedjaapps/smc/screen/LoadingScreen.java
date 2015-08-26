@@ -124,6 +124,12 @@ public class LoadingScreen extends AbstractScreen
     }
 
     @Override
+    public int getTimeStep()
+    {
+        return DINAMYC_TIMESTEP;
+    }
+
+    @Override
     public void dispose()
     {
         font.dispose();

@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.Box;
-import rs.pedjaapps.smc.object.Maryo;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;

@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.HashMap;
@@ -31,8 +32,8 @@ import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.object.BackgroundColor;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -44,12 +45,11 @@ import rs.pedjaapps.smc.view.HUD;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
-
     private World world;
     public OrthographicCamera cam;
     private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
-	private OrthographicCamera bgCam;
+    private OrthographicCamera bgCam;
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -67,42 +67,42 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     Vector2 camMin = new Vector2();
     Vector2 camMax = new Vector2();
     private MarioController controller;
-    
+
     public HUD hud;
 
     private float width, height;
 
     public String levelName;
 
-	public void setGameState(GAME_STATE gameState)
-	{
-		this.gameState = gameState;
+    public void setGameState(GAME_STATE gameState)
+    {
+        this.gameState = gameState;
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING || gameState == GAME_STATE.NO_UPDATE);
-	}
+    }
 
-	public GAME_STATE getGameState()
-	{
-		return gameState;
-	}
+    public GAME_STATE getGameState()
+    {
+        return gameState;
+    }
 
     public enum GAME_STATE
     {
         GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
-		NO_UPDATE, PLAYER_UPDATING
-	}
+        NO_UPDATE, PLAYER_UPDATING
+    }
 
     private GAME_STATE gameState;
 
     private HashMap<Integer, TouchInfo> touches = new HashMap<>();
     LevelLoader loader;
-	
-	Sound audioOn;
-	Music music;
-	
-	float goAlpha = 0.0f;
-	boolean goTouched = false;
 
-	public void setSize(int w, int h)
+    Sound audioOn;
+    Music music;
+
+    float goAlpha = 0.0f;
+    boolean goTouched = false;
+
+    public void setSize(int w, int h)
     {
         this.width = w;
         this.height = h;
@@ -119,12 +119,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     ConfirmDialog exitDialog;
-	
-	public KillPointsTextHandler killPointsTextHandler;
+
+    public KillPointsTextHandler killPointsTextHandler;
 
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
     private float stateTime;
+
+    private double accumulator;
+    private float step = 1.0f / 30.0f;
+    private int timeStep = DINAMYC_TIMESTEP;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -133,7 +137,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent)
     {
-		super(game);
+        super(game);
         this.parent = parent;
         this.levelName = levelName;
         gameState = GAME_STATE.GAME_READY;
@@ -154,7 +158,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.position.set(cam.position.x, cam.position.y, 0);
         bgCam.update();
@@ -170,7 +174,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         loader = new LevelLoader(levelName);
         //Gdx.graphics.setContinuousRendering(false);
-		if(fromMenu)GameSaveUtility.getInstance().startLevelFresh();
+        if (fromMenu) GameSaveUtility.getInstance().startLevelFresh();
 
         exitDialog = new ConfirmDialog(this, guiCam);
     }
@@ -178,77 +182,131 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
-		music = Assets.manager.get(loader.level.music.first());
-        if(Assets.playMusic)music.play();
-		GLProfiler.enable();
-        if(!resumed || forceCheckEnter)
+        music = Assets.manager.get(loader.level.music.first());
+        if (Assets.playMusic) music.play();
+        GLProfiler.enable();
+        if (!resumed || forceCheckEnter)
         {
             world.maryo.checkLevelEnter();
             forceCheckEnter = false;
         }
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
-        if(!resumed)
+        if (!resumed)
         {
             GA.sendLevelStarted(levelName);
         }
     }
 
+    int physicsAccumulatorIterations;
+
     @Override
     public void render(float delta)
     {
-		if (delta > 0.1f) delta = 0.1f;
+        if (delta > 0.1f) delta = 0.1f;
         //debug
-        //delta = 0.033333333f;//debug, 30 fps, everything is way to fast
+        //delta = 0.02f;//debug, 50 fps
         //debug end
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-        if (gameState == GAME_STATE.GAME_RUNNING)controller.update(delta);
-        moveCamera(cam, world.maryo.position.x, world.maryo.position.y);
+
+        //physics
+
+        if(timeStep == FIXED_TIMESTEP)
+        {
+            fixedTimeStep(delta);
+        }
+        else if(timeStep == SEMI_FIXED_TIMESTEP)
+        {
+            semiFixedTimeStep(delta);
+        }
+        else /*if (timeStep == DINAMYC_TIMESTEP)*/
+        {
+            updateObjects(delta);
+        }
+
+        //physics end
+
+        if (gameState == GAME_STATE.GAME_RUNNING) controller.update(delta);
+        moveCamera(cam, world.maryo.position, gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING || gameState != GAME_STATE.PLAYER_DEAD);
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
-        drawObjects(delta);
-		killPointsTextHandler.render(spriteBatch, delta);
+        drawObjects();
+        killPointsTextHandler.render(spriteBatch, delta);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(pCamera.combined);
         spriteBatch.begin();
-        if (gameState == GAME_STATE.GAME_RUNNING)leafEffect.draw(spriteBatch, delta);
+        if (gameState == GAME_STATE.GAME_RUNNING) leafEffect.draw(spriteBatch, delta);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(guiCam.combined);
         spriteBatch.begin();
-        if (debug)drawDebugText();
+        if (debug) drawDebugText();
         spriteBatch.end();
-		if (debug)drawDebug();
-		
+        if (debug) drawDebug();
+
         hud.render(gameState, delta);
-		
-		if(gameState == GAME_STATE.GAME_OVER)
-		{
-			handleGameOver(delta);
-		}
+
+        if (gameState == GAME_STATE.GAME_OVER)
+        {
+            handleGameOver(delta);
+        }
 
         exitDialog.render(spriteBatch);
 
-		//cleanup
-		//for(GameObject obj : world.trashObjects)
-        //TODO wtf?
-		for(int i = 0; i < world.trashObjects.size; i++)
-		{
-			world.level.gameObjects.remove(world.trashObjects.get(i));
-		}
-        world.trashObjects.clear();
-		//for(GameObject obj : world.newObjects)
-        for(int i = 0; i < world.newObjects.size; i++)
+        //cleanup
+        for (int i = 0; i < world.trashObjects.size; i++)
         {
-            world.level.gameObjects.remove(world.newObjects.get(i));
-		}
-        world.newObjects.clear();
+            world.level.gameObjects.remove(world.trashObjects.get(i));
+        }
+        world.trashObjects.clear();
         GLProfiler.reset();
         stateTime += delta;
+    }
+
+    private void semiFixedTimeStep(float delta)
+    {
+        //debug
+        physicsAccumulatorIterations = 0;
+        //debug
+        while (delta > 0.0)
+        {
+            float deltaTime = Math.min(delta, step);
+            updateObjects(deltaTime);
+            delta -= deltaTime;
+
+            //debug
+            physicsAccumulatorIterations++;
+            //debug
+        }
+    }
+
+    private void fixedTimeStep(float delta)
+    {
+        accumulator += delta;
+        //currentTime = newTime;
+
+        //debug
+        physicsAccumulatorIterations = 0;
+        //debug
+
+        while (accumulator >= step)
+        {
+            //update, save last position
+            updateObjects(step);
+
+            accumulator -= step;
+
+            //debug
+            physicsAccumulatorIterations++;
+            //debug
+        }
+
+        //interpolate
+        double alpha = accumulator / step;
+        interpolateObjects((float)alpha);
     }
 
     public void showBoxText(Box box)
@@ -257,80 +315,88 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.boxTextPopup.show(box, this);
     }
 
-	private void handleGameOver(float delta)
-	{
-		if(GameSaveUtility.getInstance().save.lifes < 0)
-		{
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-			Gdx.gl.glEnable(GL20.GL_BLEND);
+    private void handleGameOver(float delta)
+    {
+        if (GameSaveUtility.getInstance().save.lifes < 0)
+        {
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
 
-			shapeRenderer.setProjectionMatrix(guiCam.combined);
-			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-			shapeRenderer.setColor(0, 0, 0, 0.5f);
-			shapeRenderer.rect(0, 0, width, height);
-			shapeRenderer.end();
-			
-			spriteBatch.setProjectionMatrix(guiCam.combined);
-			spriteBatch.begin();
-			
-			Texture go = Assets.manager.get("data/hud/game_over.png");
-			go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-			float width = this.width * 0.8f;
-			float height = width / 4;
-			
-			float x = this.width / 2 - width / 2;
-			float y = this.height / 2 - height / 2;
-			spriteBatch.draw(go, x, y, width, height);
-			
-			spriteBatch.end();
-			if(!goTouched)return;
-		}
-		
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
+            shapeRenderer.setProjectionMatrix(guiCam.combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0, 0, 0, 0.5f);
+            shapeRenderer.rect(0, 0, width, height);
+            shapeRenderer.end();
 
-		shapeRenderer.setProjectionMatrix(guiCam.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.setColor(0, 0, 0, goAlpha += 0.033f);
-		shapeRenderer.rect(0, 0, width, height);
-		shapeRenderer.end();
+            spriteBatch.setProjectionMatrix(guiCam.combined);
+            spriteBatch.begin();
+
+            Texture go = Assets.manager.get("data/hud/game_over.png");
+            go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            float width = this.width * 0.8f;
+            float height = width / 4;
+
+            float x = this.width / 2 - width / 2;
+            float y = this.height / 2 - height / 2;
+            spriteBatch.draw(go, x, y, width, height);
+
+            spriteBatch.end();
+            if (!goTouched) return;
+        }
+
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        shapeRenderer.setProjectionMatrix(guiCam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, goAlpha += 0.033f);
+        shapeRenderer.rect(0, 0, width, height);
+        shapeRenderer.end();
 
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
         spriteBatch.end();
         //background changes to black if i don't add this after blend
-		
-		if(goAlpha >= 1)
-		{
-			if(GameSaveUtility.getInstance().save.lifes < 0)
-			{
-				game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
-			}
-			else
-			{
-				game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
-			}
-		}
-	}
 
-	private void drawBackground()
-	{
+        if (goAlpha >= 1)
+        {
+            if (GameSaveUtility.getInstance().save.lifes < 0)
+            {
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+            }
+            else
+            {
+                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
+            }
+        }
+    }
+
+    private void drawBackground()
+    {
         BackgroundColor bgColor = world.level.bgColor;
         bgColor.render(bgCam);
         bgCam.position.set(cam.position.x * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportWidth * 0.44f,
-						   cam.position.y * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportHeight * 0.44f, 0);
+                cam.position.y * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportHeight * 0.44f, 0);
         bgCam.update();
         spriteBatch.setProjectionMatrix(bgCam.combined);
         spriteBatch.begin();
-		if(world.level.bg1 != null)world.level.bg1.render(spriteBatch);
-		if(world.level.bg2 != null)world.level.bg2.render(spriteBatch);
+        if (world.level.bg1 != null) world.level.bg1.render(spriteBatch);
+        if (world.level.bg2 != null) world.level.bg2.render(spriteBatch);
         spriteBatch.end();
-	}
+    }
 
-    public void moveCamera(OrthographicCamera cam, float x, float y)
+    public void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
     {
-        if(gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting)return;
-        cam.position.set(x, y, 0);
+        if (gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting)
+            return;
+        if(snap)
+        {
+            cam.position.set(pos);
+        }
+        else
+        {
+            cam.position.lerp(pos, 0.05f);
+        }
         cam.update();
         keepCameraInBounds(cam);
     }
@@ -353,39 +419,70 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         cam.update();
     }
 
-    private void drawObjects(float delta)
+    private void updateObjects(float delta)
     {
-		Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
-        for(int i = 0; i < world.level.gameObjects.size(); i++)
-		//for (GameObject go : world.level.gameObjects)
-		{
-            GameObject go = world.level.gameObjects.get(i);
-			if (maryoBWO.overlaps(go.mColRect))
-			{
-				if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
-				{
-					go.update(delta);
-				}
-			}
-		}
-        Array<GameObject> drawableObjects = world.getDrawableObjects(cam.position.x, cam.position.y);
-        for(int i = 0; i < drawableObjects.size; i++)
-		//for (GameObject object : drawableObjects)
+        Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
+        for (int i = 0; i < world.level.gameObjects.size(); i++)
+        //for (GameObject go : world.level.gameObjects)
         {
-            GameObject object = drawableObjects.get(i);
-            object.render(spriteBatch);
+            GameObject go = world.level.gameObjects.get(i);
+            go.prevPosition.set(go.position);
+            if (maryoBWO.overlaps(go.mColRect))
+            {
+                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
+                {
+                    go.update(delta);
+                }
+            }
         }
         World.RECT_POOL.free(maryoBWO);
     }
 
-	private void drawDebug() 
-	{
-		// render blocks
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for(int i = 0; i < world.getVisibleObjects().size; i++)
-		//for (GameObject go : world.getVisibleObjects())
-		{
+    private void interpolateObjects(float alpha)
+    {
+        Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
+        for (int i = 0; i < world.level.gameObjects.size(); i++)
+        //for (GameObject go : world.level.gameObjects)
+        {
+            GameObject go = world.level.gameObjects.get(i);
+            if (maryoBWO.overlaps(go.mColRect))
+            {
+                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
+                {
+                    //go.prevPosition.lerp(go.position, alpha);
+                    //go.position.interpolate(go.prevPosition, alpha, Interpolation.linear);
+                    //go.position.x = (float) (go.position.x * alpha + go.prevPosition.x * ( 1.0 - alpha ));
+                    //go.position.y = (float) (go.position.y * alpha + go.prevPosition.y * ( 1.0 - alpha ));
+                    go.interpPosition.set(go.prevPosition).lerp(go.position, alpha);
+                    //go.mColRect.x = go.prevPosition.x;
+                    //go.mColRect.y = go.prevPosition.y;
+                    go.updateBounds();
+                }
+            }
+        }
+        World.RECT_POOL.free(maryoBWO);
+    }
+
+    private void drawObjects()
+    {
+
+        Array<GameObject> drawableObjects = world.getDrawableObjects(cam.position.x, cam.position.y);
+        for (int i = 0; i < drawableObjects.size; i++)
+        //for (GameObject object : drawableObjects)
+        {
+            GameObject object = drawableObjects.get(i);
+            object.render(spriteBatch);
+        }
+    }
+
+    private void drawDebug()
+    {
+        // render blocks
+        shapeRenderer.setProjectionMatrix(cam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (int i = 0; i < world.getVisibleObjects().size; i++)
+        //for (GameObject go : world.getVisibleObjects())
+        {
             GameObject go = world.getVisibleObjects().get(i);
             Rectangle colRect = go.mColRect;
             Rectangle drawRect = go.mDrawRect;
@@ -398,22 +495,22 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
             else
             {*/
-                shapeRenderer.setColor(1, 0, 0, 1);
-                shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+            shapeRenderer.setColor(1, 0, 0, 1);
+            shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
             /*}*/
         }
-		// render maryo
-		Maryo maryo = world.maryo;
-		Rectangle body = maryo.mColRect;
+        // render maryo
+        Maryo maryo = world.maryo;
+        Rectangle body = maryo.mColRect;
         Rectangle bounds = maryo.mDrawRect;
-		shapeRenderer.setColor(0, 1, 0, 1);
-		shapeRenderer.rect(body.x, body.y, body.width, body.height);
+        shapeRenderer.setColor(0, 1, 0, 1);
+        shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(1, 0, 0, 1);
         shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
         shapeRenderer.setColor(0, 0, 1, 1);
         shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect.height);
-		shapeRenderer.end();
-	}
+        shapeRenderer.end();
+    }
 
     private void drawDebugText()
     {
@@ -425,21 +522,23 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private String generateDebugMessage()
     {
         return "Level: width=" + world.level.width + ", height=" + world.level.height
-			+ "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
-            + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
-            + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
-            + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
-            + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
-            + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
-            + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
-            + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
-            + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
+                + "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
+                + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
+                + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
+                + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
+                + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
+                + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
+                + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
+                + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
+                + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
+                + "\n" + "TimeStep:" + (timeStep == FIXED_TIMESTEP ? "fixed" : (timeStep == SEMI_FIXED_TIMESTEP ? "semi-fixed" : "dynamic"))
+                + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
     @Override
     public void resize(int width, int height)
     {
-		this.width = width;
+        this.width = width;
         this.height = height;
 
         Constants.initCamera();
@@ -475,20 +574,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void pause()
     {
-		gameState = GAME_STATE.GAME_PAUSED;
+        gameState = GAME_STATE.GAME_PAUSED;
         music.stop();
     }
 
     @Override
     public void resume()
     {
-		//Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
     }
 
     @Override
     public void dispose()
     {
-		music.stop();
+        music.stop();
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
         exitDialog.dispose();
@@ -499,15 +598,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void loadAssets()
     {
         loader.parseLevel(world, controller);
-        for(Maryo.MaryoState ms : Maryo.MaryoState.values())
+        for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
-		hud.loadAssets();
-		
+        hud.loadAssets();
+
         //audio
         Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
-		Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
+        Assets.manager.load("data/sounds/item/goldpiece_1.ogg", Sound.class);
         Assets.manager.load("data/sounds/item/goldpiece_red.wav", Sound.class);
         Assets.manager.load("data/sounds/player/dead.ogg", Sound.class);
         Assets.manager.load("data/sounds/player/jump_big.ogg", Sound.class);
@@ -540,16 +639,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
 
         exitDialog.loadAssets();
-        
-		FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+
+        FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         pointsParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
         pointsParams.fontParameters.size = (int) HUD.C_H / 35;
         pointsParams.fontParameters.characters = "0123456789";
         Assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
-		
+
     }
 
-	private void loadTextures()
+    private void loadTextures()
     {
         leafEffect = new ParticleEffect();
         leafEffect.load(Gdx.files.internal("data/animation/particles/leaf_emitter.p"), Gdx.files.internal("data/animation/particles"));
@@ -562,19 +661,25 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         hud.initAssets();
         world.level = loader.level;
-		audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
+        audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
         exitDialog.initAssets();
 
         debugFont = Assets.manager.get("debug.ttf");
         debugFont.setColor(1, 0, 0, 1);
         debugGlyph = new GlyphLayout();
 
-        for(GameObject go : loader.level.gameObjects)
+        for (GameObject go : loader.level.gameObjects)
             go.initAssets();
-			
-		BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
-		pointsFont.setColor(1, 1, 1, 1);
-		killPointsTextHandler = new KillPointsTextHandler(pointsFont);
+
+        BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
+        pointsFont.setColor(1, 1, 1, 1);
+        killPointsTextHandler = new KillPointsTextHandler(pointsFont);
+    }
+
+    @Override
+    public int getTimeStep()
+    {
+        return timeStep;
     }
 
     // * InputProcessor methods ***************************//
@@ -582,7 +687,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean keyDown(int keycode)
     {
-        if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
+        if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
         if (keycode == Input.Keys.LEFT)
         {
             controller.leftPressed();
@@ -649,15 +754,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.upReleased();
             hud.upReleased();
         }
-		if(keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
-		{
-            if(exitDialog.visible)exitDialog.hide();
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
+        {
+            if (exitDialog.visible) exitDialog.hide();
             else exitDialog.show();
-		}
+        }
         if (keycode == Input.Keys.D)
             debug = !debug;
 
-        if(keycode == Input.Keys.ENTER)
+        if (keycode == Input.Keys.ENTER)
         {
             hud.boxTextPopup.hide();
             setGameState(GAME_STATE.GAME_RUNNING);
@@ -675,17 +780,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
-        if(exitDialog.visible)
+        if (exitDialog.visible)
         {
             exitDialog.touchDown(x, invertY(y));
             return true;
         }
-		if (gameState == GAME_STATE.GAME_READY)gameState = GAME_STATE.GAME_RUNNING;
-		if(gameState == GAME_STATE.GAME_OVER)goTouched = true;
+        if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
+        if (gameState == GAME_STATE.GAME_OVER) goTouched = true;
         if (pointer < 5)
         {
             Vector2 vect = World.VECTOR2_POOL.obtain();
-            if(MaryoGame.showOnScreenControlls())
+            if (MaryoGame.showOnScreenControlls())
             {
                 if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
                 {
@@ -722,27 +827,27 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
             if (hud.pauseR.contains(x, invertY(y)))
             {
-				touches.get(pointer).clickArea = HUD.Key.pause;
+                touches.get(pointer).clickArea = HUD.Key.pause;
                 hud.pausePressed();
             }
-			if (gameState == GAME_STATE.GAME_PAUSED && hud.soundR.contains(x, invertY(y)))
+            if (gameState == GAME_STATE.GAME_PAUSED && hud.soundR.contains(x, invertY(y)))
             {
-				touches.get(pointer).clickArea = HUD.Key.sound;
+                touches.get(pointer).clickArea = HUD.Key.sound;
                 hud.soundPressed();
             }
-			if (gameState == GAME_STATE.GAME_PAUSED && hud.musicR.contains(x, invertY(y)))
+            if (gameState == GAME_STATE.GAME_PAUSED && hud.musicR.contains(x, invertY(y)))
             {
-				touches.get(pointer).clickArea = HUD.Key.music;
+                touches.get(pointer).clickArea = HUD.Key.music;
                 hud.musicPressed();
             }
-			if (gameState == GAME_STATE.GAME_PAUSED && hud.playR.contains(x, invertY(y)))
+            if (gameState == GAME_STATE.GAME_PAUSED && hud.playR.contains(x, invertY(y)))
             {
-				touches.get(pointer).clickArea = HUD.Key.play;
+                touches.get(pointer).clickArea = HUD.Key.play;
                 hud.playPressed();
             }
             World.VECTOR2_POOL.free(vect);
         }
-        if(hud.boxTextPopup.showing)
+        if (hud.boxTextPopup.showing)
         {
             hud.boxTextPopup.hide();
             setGameState(GAME_STATE.GAME_RUNNING);
@@ -759,18 +864,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (isX)
         {
-            return val / ((float)width / Constants.CAMERA_WIDTH);
+            return val / ((float) width / Constants.CAMERA_WIDTH);
         }
         else
         {
-            return (height - val) / ((float)height / Constants.CAMERA_HEIGHT);
+            return (height - val) / ((float) height / Constants.CAMERA_HEIGHT);
         }
     }
 
     @Override
     public boolean touchUp(int x, int y, int pointer, int button)
     {
-        if(exitDialog.visible)
+        if (exitDialog.visible)
         {
             exitDialog.touchUp(x, invertY(y));
             return true;
@@ -781,7 +886,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             switch (ti.clickArea)
             {
                 case right:
-                    if(MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControlls())
                     {
                         controller.rightReleased();
                         hud.rightReleased();
@@ -815,31 +920,31 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                         hud.jumpReleased();
                     }
                     break;
-				case pause:
-					if (gameState == GAME_STATE.GAME_RUNNING)gameState = GAME_STATE.GAME_PAUSED;
+                case pause:
+                    if (gameState == GAME_STATE.GAME_RUNNING) gameState = GAME_STATE.GAME_PAUSED;
                     hud.pauseReleased();
                     break;
-				case play:
-					gameState = GAME_STATE.GAME_RUNNING;
+                case play:
+                    gameState = GAME_STATE.GAME_RUNNING;
                     hud.playReleased();
                     break;
-				case sound:
-					if(Utility.toggleSound())
-					{
-						audioOn.play();
-					}
-					hud.soundReleased();
+                case sound:
+                    if (Utility.toggleSound())
+                    {
+                        audioOn.play();
+                    }
+                    hud.soundReleased();
                     break;
-				case music:
-					if(Utility.toggleMusic())
-					{
-						music.play();
-					}
-					else
-					{
-						music.pause();
-					}
-					hud.musicReleased();
+                case music:
+                    if (Utility.toggleMusic())
+                    {
+                        music.play();
+                    }
+                    else
+                    {
+                        music.pause();
+                    }
+                    hud.musicReleased();
                     break;
             }
             touches.get(pointer).clickArea = HUD.Key.none;
@@ -850,7 +955,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDragged(int x, int y, int pointer)
     {
-        if(exitDialog.visible)
+        if (exitDialog.visible)
         {
             exitDialog.touchDragged(x, invertY(y));
             return true;
@@ -909,83 +1014,83 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         public boolean touched = false;
         HUD.Key clickArea = HUD.Key.none;
     }
-	
-	public static class KillPointsTextHandler
-	{
-		private final Array<KillPoint> pointsTextsPool = new Array<>();
-		private BitmapFont font;
-		NAHudText<Integer> text = new NAHudText<>(null, null);
 
-		public KillPointsTextHandler(BitmapFont font)
-		{
-			this.font = font;
-			font.getData().setScale(0.01f);
-		}
+    public static class KillPointsTextHandler
+    {
+        private final Array<KillPoint> pointsTextsPool = new Array<>();
+        private BitmapFont font;
+        NAHudText<Integer> text = new NAHudText<>(null, null);
 
-		public void add(int points, float positionX, float positionY)
-		{
-			for(KillPoint point : pointsTextsPool)
-			{
-				if(point.recycled)
-				{
-					point.reset(positionX, positionY, points);
-					return;
-				}
-			}
-			KillPoint point = new KillPoint(points, positionX, positionY);
-			pointsTextsPool.add(point);
-		}
+        public KillPointsTextHandler(BitmapFont font)
+        {
+            this.font = font;
+            font.getData().setScale(0.01f);
+        }
 
-		public void render(SpriteBatch batch, float deltaTime)
-		{
-			for(KillPoint point : pointsTextsPool)
-			{
-				if(!point.recycled)
-				{
-					point.draw(batch, deltaTime, font, text);
-				}
-			}
-		}
+        public void add(int points, float positionX, float positionY)
+        {
+            for (KillPoint point : pointsTextsPool)
+            {
+                if (point.recycled)
+                {
+                    point.reset(positionX, positionY, points);
+                    return;
+                }
+            }
+            KillPoint point = new KillPoint(points, positionX, positionY);
+            pointsTextsPool.add(point);
+        }
 
-		private static class KillPoint
-		{
-			static final float velocity = 0.9f;
-			static final float maxDistance = 0.4f;
-			private boolean recycled = false;
-			private int points;
-			private float positionX, positionY, origPosY;
+        public void render(SpriteBatch batch, float deltaTime)
+        {
+            for (KillPoint point : pointsTextsPool)
+            {
+                if (!point.recycled)
+                {
+                    point.draw(batch, deltaTime, font, text);
+                }
+            }
+        }
 
-			public KillPoint(int points, float positionX, float positionY)
-			{
-				this.points = points;
-				this.positionX = positionX;
-				this.positionY = positionY;
-				this.origPosY = positionY;
-			}
-			
-			public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text)
-			{
-				if(positionY >= origPosY + maxDistance)
-				{
-					recycled = true;
-					return;
-				}
-				float velDelta = velocity * deltaTime;
-				positionY += maxDistance * velDelta;
-				float alpha = font.getColor().a;
-				alpha -= 1 / (maxDistance / (maxDistance * velDelta));
-				font.getColor().set(1, 1, 1, alpha);
-				font.draw(spriteBatch, text.toString(points), positionX, positionY);
-			}
-			
-			public void reset(float posX, float posY, int points)
-			{
-				recycled = false;
-				positionX = posX;
-				positionY = posY;
-				this.points = points;
-				origPosY = posY;
-			}
-		}
-	}
+        private static class KillPoint
+        {
+            static final float velocity = 0.9f;
+            static final float maxDistance = 0.4f;
+            private boolean recycled = false;
+            private int points;
+            private float positionX, positionY, origPosY;
+
+            public KillPoint(int points, float positionX, float positionY)
+            {
+                this.points = points;
+                this.positionX = positionX;
+                this.positionY = positionY;
+                this.origPosY = positionY;
+            }
+
+            public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text)
+            {
+                if (positionY >= origPosY + maxDistance)
+                {
+                    recycled = true;
+                    return;
+                }
+                float velDelta = velocity * deltaTime;
+                positionY += maxDistance * velDelta;
+                float alpha = font.getColor().a;
+                alpha -= 1 / (maxDistance / (maxDistance * velDelta));
+                font.getColor().set(1, 1, 1, alpha);
+                font.draw(spriteBatch, text.toString(points), positionX, positionY);
+            }
+
+            public void reset(float posX, float posY, int points)
+            {
+                recycled = false;
+                positionX = posX;
+                positionY = posY;
+                this.points = points;
+                origPosY = posY;
+            }
+        }
+    }
 }

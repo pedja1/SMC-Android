@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -29,14 +30,13 @@ public class World
 	 * 
 	 */
 	public final Array<GameObject> trashObjects = new Array<>();
-	public final Array<GameObject> newObjects = new Array<>();
 
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame
 	public static Pool<Rectangle> RECT_POOL = new Pool<Rectangle>()
 	{
 		@Override
-		protected Rectangle newObject() 
+		protected Rectangle newObject()
 		{
 			return new Rectangle();
 		}

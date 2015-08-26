@@ -1,8 +1,11 @@
-package rs.pedjaapps.smc.object;
+package rs.pedjaapps.smc.object.maryo;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.World;
 
 /**
  * Created by pedja on 19.8.15..
