@@ -38,7 +38,6 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 
 public class Maryo extends DynamicObject
 {
-
     public enum MaryoState
     {
         small, big, fire, ice, ghost, flying
@@ -54,6 +53,7 @@ public class Maryo extends DynamicObject
     private static final String KEY_CLIMB_BIG = AKey.climb + ":" + MaryoState.big;
     private static final String KEY_WALKING_LEFT_FIRE = AKey.walk_left + ":" + MaryoState.fire;
     private static final String KEY_WALKING_RIGHT_FIRE = AKey.walk_right + ":" + MaryoState.fire;
+    private static final String KEY_THROW_FIRE = AKey._throw + ":" + MaryoState.fire;
     private static final String KEY_CLIMB_FIRE = AKey.climb + ":" + MaryoState.fire;
     private static final String KEY_WALKING_LEFT_FLYING = AKey.walk_left + ":" + MaryoState.flying;
     private static final String KEY_WALKING_RIGHT_FLYING = AKey.walk_right + ":" + MaryoState.flying;
@@ -63,6 +63,7 @@ public class Maryo extends DynamicObject
     private static final String KEY_CLIMB_GHOST = AKey.climb + ":" + MaryoState.ghost;
     private static final String KEY_WALKING_LEFT_ICE = AKey.walk_left + ":" + MaryoState.ice;
     private static final String KEY_WALKING_RIGHT_ICE = AKey.walk_right + ":" + MaryoState.ice;
+    private static final String KEY_THROW_ICE = AKey._throw + ":" + MaryoState.ice;
     private static final String KEY_CLIMB_ICE = AKey.climb + ":" + MaryoState.ice;
 
     private static final String KEY_DUCK_LEFT_SMALL = TKey.duck_left + ":" + MaryoState.small;
@@ -135,11 +136,14 @@ public class Maryo extends DynamicObject
 
     private static final float RUNNING_FRAME_DURATION = 0.08f;
     private static final float CLIMB_FRAME_DURATION = 0.25f;
+    private static final float THROW_FRAME_DURATION = 0.1f;
     private static final float RESIZE_ANIMATION_DURATION = 0.977f;
     private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 8f;
 
 	protected static final float MAX_VEL          = 4f;
 	private static final float GOD_MOD_TIMEOUT = 3000;//3 sec
+
+    private static final float BULLET_COOLDOWN = 1f;//1 sec
 	
     WorldState worldState = WorldState.JUMPING;
     private MaryoState maryoState = GameSaveUtility.getInstance().save.playerState;
@@ -177,6 +181,9 @@ public class Maryo extends DynamicObject
 	private int rotation = 0;
     public ParticleEffect powerJumpEffect;
     public boolean powerJump;
+    private float bulletShotTime = BULLET_COOLDOWN;
+    private boolean fire;
+    private float fireAnimatioStateTime;
     
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -270,6 +277,14 @@ public class Maryo extends DynamicObject
         climbFrames[1] = atlas.findRegion(TKey.climb_right + "");
         Assets.animations.put(AKey.climb + ":" + state, new Animation(CLIMB_FRAME_DURATION, climbFrames));
 
+        if(state.equals(MaryoState.ice.toString()) || state.equals(MaryoState.fire.toString()))
+        {
+            TextureRegion[] throwFrames = new TextureRegion[2];
+            throwFrames[0] = atlas.findRegion(TKey.throw_right_1.toString());
+            throwFrames[1] = atlas.findRegion(TKey.throw_right_2.toString());
+            Assets.animations.put(AKey._throw + ":" + state, new Animation(THROW_FRAME_DURATION, throwFrames));
+        }
+
         Assets.loadedRegions.put(TKey.jump_right + ":" + state, atlas.findRegion(TKey.jump_right.toString()));
         tmp = new TextureRegion(Assets.loadedRegions.get(TKey.jump_right.toString() + ":" + state));
         tmp.flip(true, false);
@@ -342,6 +357,17 @@ public class Maryo extends DynamicObject
             {
                 maryoState = newState;
                 setupBoundingBox();
+            }
+        }
+        else if(fire)
+        {
+            Animation animation = Assets.animations.get(getAnimationKey(AKey._throw));
+            marioFrame = animation.getKeyFrame(fireAnimatioStateTime, false);
+            if(animation.isAnimationFinished(fireAnimatioStateTime))
+            {
+                fire = false;
+                fireAnimatioStateTime = 0;
+                //doFire();
             }
         }
         else if (worldState.equals(WorldState.WALKING))
@@ -617,6 +643,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_RIGHT_FIRE;
                     case climb:
                         return KEY_CLIMB_FIRE;
+                    case _throw:
+                        return KEY_THROW_FIRE;
                 }
                 break;
             case ice:
@@ -628,6 +656,8 @@ public class Maryo extends DynamicObject
                         return KEY_WALKING_RIGHT_ICE;
                     case climb:
                         return KEY_CLIMB_ICE;
+                    case _throw:
+                        return KEY_THROW_ICE;
                 }
                 break;
             case ghost:
@@ -823,6 +853,10 @@ public class Maryo extends DynamicObject
             }
             return;
         }
+        if(fire)
+        {
+            fireAnimatioStateTime += delta;
+        }
 		//disable godmod after timeot
 		if(godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
 		{
@@ -859,9 +893,10 @@ public class Maryo extends DynamicObject
             else
             {
                 super.update(delta);
+                //TODO ovo se vec proverava u checkY
                 //check where ground is
                 Array<GameObject> objects = world.getVisibleObjects();
-                Rectangle rect = world.RECT_POOL.obtain();
+                Rectangle rect = World.RECT_POOL.obtain();
                 debugRayRect = rect;
                 rect.set(position.x, 0, mColRect.width, position.y);
                 float tmpGroundY = 0;
@@ -897,19 +932,20 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
-                world.RECT_POOL.free(rect);
+                World.RECT_POOL.free(rect);
             }
 		}
         if(powerJump)
         {
             powerJumpEffect.update(delta);
         }
+        bulletShotTime += delta;
 	}
 
 	@Override
-	protected void handleCollision(GameObject object, boolean vertical)
+	protected boolean handleCollision(GameObject object, boolean vertical)
 	{
-		if(!handleCollision)return;
+		if(!handleCollision)return false;
 		super.handleCollision(object, vertical);
 		if(object instanceof Item)
 		{
@@ -948,6 +984,7 @@ public class Maryo extends DynamicObject
 		{
 			((Box)object).handleHitByPlayer();
 		}
+        return false;
 	}
 
     private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)
@@ -1164,12 +1201,13 @@ public class Maryo extends DynamicObject
 	}
 
     @Override
-    protected void handleDroppedBelowWorld()
+    protected boolean handleDroppedBelowWorld()
     {
 		if(worldState != WorldState.DYING)
 		{
         	downgradeOrDie(true);
 		}
+        return true;
     }
 
     private void setJumpSound()
@@ -1325,4 +1363,34 @@ public class Maryo extends DynamicObject
 				break;
 		}
 	}
+
+    public void fire()
+    {
+        if(worldState == WorldState.DUCKING)
+            return;
+        if(bulletShotTime < BULLET_COOLDOWN)
+            return;
+        fire = true;
+        doFire();
+    }
+
+    private void doFire()
+    {
+        if(maryoState == MaryoState.fire)
+        {
+            Fireball fireball = world.FIREBALL_POOL.obtain();
+            fireball.mColRect.x = fireball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
+            fireball.mColRect.y = fireball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+            fireball.updateBounds();
+            fireball.reset();
+            fireball.direction = facingLeft ? Direction.left : Direction.right;
+            world.level.gameObjects.add(fireball);
+            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+            bulletShotTime = 0;
+        }
+        else if(maryoState == MaryoState.ice)
+        {
+            bulletShotTime = 0;
+        }
+    }
 }

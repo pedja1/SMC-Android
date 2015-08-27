@@ -18,13 +18,13 @@ public class Static extends Enemy
 {
     public static final float POS_Z = 0.094f;
 
-    public Static(World world, Vector2 size, Vector3 position, float speed, float fireResistance, float iceResistance)
+    public Static(World world, Vector2 size, Vector3 position, float speed, int fireResistance, float iceResistance)
     {
         super(world, size, position);
         mSpeed = speed;
         mCanBeHitFromShell = 0;
         mFireResistant = fireResistance;
-        mIceResistant = iceResistance;
+        mIceResistance = iceResistance;
         position.z = POS_Z;
     }
 
@@ -72,12 +72,6 @@ public class Static extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return Assets.manager.get(textureName);
-    }
-
-    @Override
-    protected void handleDroppedBelowWorld()
-    {
-        world.trashObjects.add(this);
     }
 
 }

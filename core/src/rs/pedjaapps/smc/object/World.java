@@ -3,9 +3,11 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import rs.pedjaapps.smc.object.maryo.Fireball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -51,12 +53,32 @@ public class World
         }
     };
 
+    public static Pool<Vector3> VECTOR3_POOL = new Pool<Vector3>()
+    {
+        @Override
+        protected Vector3 newObject()
+        {
+            return new Vector3();
+        }
+    };
+
     public static Pool<Vector2> VECTOR2_POOL = new Pool<Vector2>()
     {
         @Override
         protected Vector2 newObject()
         {
             return new Vector2();
+        }
+    };
+
+    public Pool<Fireball> FIREBALL_POOL = new Pool<Fireball>()
+    {
+        @Override
+        protected Fireball newObject()
+        {
+            Fireball fb = new Fireball(World.this, new Vector3());
+            fb.initAssets();
+            return fb;
         }
     };
     

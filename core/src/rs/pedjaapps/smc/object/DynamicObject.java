@@ -1,7 +1,9 @@
 package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
@@ -19,6 +21,13 @@ public abstract class DynamicObject extends GameObject
 	public boolean grounded = false;
 
     long lasHitSoundPlayed;
+
+    protected float groundY;
+
+    public enum Direction
+    {
+        right, left
+    }
 	
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
@@ -75,74 +84,62 @@ public abstract class DynamicObject extends GameObject
         checkCollisionWithBlocks(delta, true, true);
     }
 
-    /** Collision checking **/
     protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY)
+    {
+        checkCollisionWithBlocks(delta, checkX, checkY, true, true);
+    }
+
+    /** Collision checking **/
+    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
     {
         // scale velocity to frame units 
         velocity.scl(delta);
 
-        if(checkX)
+        if(xFirst)
         {
-            // we first check the movement on the horizontal X axis
-
-            // simulate maryos's movement on the X
-            mColRect.x += velocity.x;
-
-            List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
-            // if m collides, make his horizontal velocity 0
-            //noinspection ForLoopReplaceableByForEach
-            for (int i = 0; i < surroundingObjects.size(); i++)
-            //for (GameObject object : surroundingObjects)
+            boolean first = false;
+            if (checkX)
             {
-                GameObject object = surroundingObjects.get(i);
-                if (object == null) continue;
-                if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
-                {
-                    handleCollision(object, false);
-                }
-                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)) && !((Box)object).itemObject.popFromBox)
-                {
-                    handleCollision(((Box) object).itemObject, false);
-                }
-            }
-            if (mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
-            {
-                velocity.x = 0;
+                first = checkX();
             }
 
-            // reset the x position of the collision box
-            mColRect.x = position.x;
+            if (checkY)
+            {
+                if(!checkSecondIfFirstCollides)
+                {
+                    if(!first)
+                    {
+                        checkY();
+                    }
+                }
+                else
+                {
+                    checkY();
+                }
+            }
         }
-
-        if(checkY)
+        else
         {
-            // the same thing but on the vertical Y axis
-
-            mColRect.y += velocity.y;
-
-            List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
-            //noinspection ForLoopReplaceableByForEach
-            for (int i = 0; i < surroundingObjects.size(); i++)
-            //for (GameObject object : surroundingObjects)
+            boolean first = false;
+            if (checkY)
             {
-                GameObject object = surroundingObjects.get(i);
-                if (object == null) continue;
-                if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
-                {
-                    handleCollision(object, true);
-                }
-                else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
-                {
-                    handleCollision(((Box) object).itemObject, true);
-                }
-            }
-            if (mColRect.y < 0)
-            {
-                handleDroppedBelowWorld();
+                first = checkY();
             }
 
-            // reset the collision box's position on Y
-            mColRect.y = position.y;
+            if (checkX)
+            {
+                if(!checkSecondIfFirstCollides)
+                {
+                    if(!first)
+                    {
+                        checkX();
+                    }
+                }
+                else
+                {
+                    checkX();
+                }
+            }
         }
 
         // update position
@@ -155,7 +152,110 @@ public abstract class DynamicObject extends GameObject
         velocity.scl(1 / delta);
     }
 
-    protected void handleDroppedBelowWorld()
+    protected boolean checkY()
+    {
+        boolean collides = false;
+        // the same thing but on the vertical Y axis
+        Rectangle rect = World.RECT_POOL.obtain();
+        rect.set(mColRect.x, 0, mColRect.width, mColRect.y);
+        float tmpGroundY = 0;
+        float distance = mColRect.y;
+        float oldY = mColRect.y;
+
+        mColRect.y += velocity.y;
+
+        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < surroundingObjects.size(); i++)
+        //for (GameObject object : surroundingObjects)
+        {
+            GameObject object = surroundingObjects.get(i);
+            if (object == null) continue;
+            if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
+            {
+                boolean tmp = handleCollision(object, true);
+                if(tmp)
+                    collides = true;
+            }
+            else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
+            {
+                boolean tmp = handleCollision(((Box) object).itemObject, true);
+                if(tmp)
+                    collides = true;
+            }
+
+            //checkGround
+            if (object instanceof Sprite
+                    && (((Sprite) object).type == Sprite.Type.massive || ((Sprite) object).type == Sprite.Type.halfmassive)
+                    && rect.overlaps(object.mColRect))
+            {
+                if (((Sprite) object).type == Sprite.Type.halfmassive && oldY < object.mColRect.y + object.mColRect.height)
+                {
+                    continue;
+                }
+                float tmpDistance = oldY - (object.mColRect.y + object.mColRect.height);
+                if (tmpDistance < distance)
+                {
+                    distance = tmpDistance;
+                    tmpGroundY = object.mColRect.y + object.mColRect.height;
+                }
+            }
+        }
+        groundY = tmpGroundY;
+        World.RECT_POOL.free(rect);
+        if (mColRect.y < 0)
+        {
+            boolean tmp = handleDroppedBelowWorld();
+            if(tmp)
+                collides = true;
+        }
+
+        // reset the collision box's position on Y
+        mColRect.y = position.y;
+        return collides;
+    }
+
+    protected boolean checkX()
+    {
+        boolean collides = false;
+        // we first check the movement on the horizontal X axis
+
+        // simulate maryos's movement on the X
+        mColRect.x += velocity.x;
+
+        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+        // if m collides, make his horizontal velocity 0
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < surroundingObjects.size(); i++)
+        //for (GameObject object : surroundingObjects)
+        {
+            GameObject object = surroundingObjects.get(i);
+            if (object == null) continue;
+            if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
+            {
+                boolean tmp = handleCollision(object, false);
+                if(tmp)
+                    collides = true;
+            }
+            else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)) && !((Box)object).itemObject.popFromBox)
+            {
+                boolean tmp = handleCollision(((Box) object).itemObject, false);
+                if(tmp)
+                    collides = true;
+            }
+        }
+        if (mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
+        {
+            velocity.x = 0;
+            collides = true;
+        }
+
+        // reset the x position of the collision box
+        mColRect.x = position.x;
+        return collides;
+    }
+
+    protected boolean handleDroppedBelowWorld()
     {
         //TODO for now only prevent it from dropping below
         if (velocity.y < 0)
@@ -163,9 +263,10 @@ public abstract class DynamicObject extends GameObject
             grounded = true;
         }
         velocity.y = 0;
+        return false;
     }
 
-    protected void handleCollision(GameObject object, boolean vertical)
+    protected boolean handleCollision(GameObject object, boolean vertical)
 	{
 		if(object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive)
 		{
@@ -193,6 +294,7 @@ public abstract class DynamicObject extends GameObject
 			{
 				velocity.x = 0;
 			}
+            return true;
 		}
 		else if(object instanceof Sprite && ((Sprite)object).type == Sprite.Type.halfmassive)
 		{
@@ -200,9 +302,23 @@ public abstract class DynamicObject extends GameObject
 			{
 				grounded = true;
 				velocity.y = 0;
+                return true;
 			}
 		}
+        return false;
 	}
-	
+
+    protected final void findGround()
+    {
+        List<GameObject> objects = world.level.gameObjects;
+
+        for (int i = 0; i < objects.size(); i++)
+        {
+            GameObject go = objects.get(i);
+            if (go == null) continue;
+
+        }
+    }
+
 	public abstract float maxVelocity();
 }

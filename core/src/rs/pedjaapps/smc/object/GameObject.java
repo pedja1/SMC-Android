@@ -41,6 +41,8 @@ public abstract class GameObject
         duck_left("duck-left"),
         climb_left("climb-left"),
         climb_right("climb-right"),
+        throw_right_1("throw-right-1"),
+        throw_right_2("throw-right-2"),
         one("1"),
         two("2"),
         three("3"),;
@@ -60,7 +62,7 @@ public abstract class GameObject
 
     public enum AKey
     {
-        walk_left, walk_right, climb
+        walk_left, walk_right, climb, _throw
     }
 
     public GameObject(World world, Vector2 size, Vector3 position)

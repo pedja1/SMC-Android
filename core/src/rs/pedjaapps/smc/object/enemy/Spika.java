@@ -36,7 +36,7 @@ public class Spika extends Enemy
             mDetectionSize = 2.5f;
             mKillPoints = 50;
             mFireResistant = 0;
-            mIceResistant = 0;
+            mIceResistance = 0;
         }
         else if("green".equals(color))
         {
@@ -44,7 +44,7 @@ public class Spika extends Enemy
             mDetectionSize = 3.4375f;
             mKillPoints = 200;
             mFireResistant = 0;
-            mIceResistant = 0.1f;
+            mIceResistance = 0.1f;
         }
         else if("grey".equals(color))
         {
@@ -52,7 +52,7 @@ public class Spika extends Enemy
             mDetectionSize = 5.15625f;
             mKillPoints = 500;
             mFireResistant = 1;
-            mIceResistant = 0.5f;
+            mIceResistance = 0.5f;
         }
         position.z = POS_Z;
         setupBoundingBox();
@@ -135,13 +135,14 @@ public class Spika extends Enemy
     }
 
     @Override
-	protected void handleCollision(GameObject object, boolean vertical)
+	protected boolean handleCollision(GameObject object, boolean vertical)
 	{
         super.handleCollision(object, vertical);
         if(object instanceof Enemy && object != this && ((Enemy)object).handleCollision && (velocity.x > 0.5f || velocity.x < 0.5f))
         {
             ((Enemy)object).downgradeOrDie(this);
         }
+        return false;
 	}
 
 	@Override
@@ -180,12 +181,6 @@ public class Spika extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return Assets.manager.get(textureName);
-    }
-
-    @Override
-    protected void handleDroppedBelowWorld()
-    {
-        world.trashObjects.add(this);
     }
 
     private boolean checkMaryoInFront()

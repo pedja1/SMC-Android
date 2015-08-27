@@ -129,6 +129,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private double accumulator;
     private float step = 1.0f / 30.0f;
     private int timeStep = DINAMYC_TIMESTEP;
+    private boolean cameraForceSnap;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -196,6 +197,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             GA.sendLevelStarted(levelName);
         }
+        if(resumed)
+        {
+            cameraForceSnap = true;
+        }
     }
 
     int physicsAccumulatorIterations;
@@ -228,7 +233,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //physics end
 
         if (gameState == GAME_STATE.GAME_RUNNING) controller.update(delta);
-        moveCamera(cam, world.maryo.position, gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING || gameState != GAME_STATE.PLAYER_DEAD);
+        moveCamera(cam, world.maryo.position, gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD);
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
@@ -389,9 +394,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting)
             return;
-        if(snap)
+        if(snap || cameraForceSnap)
         {
             cam.position.set(pos);
+            cameraForceSnap = false;
         }
         else
         {
@@ -602,6 +608,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
+        Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
+        Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class);
+        Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class);
         hud.loadAssets();
 
         //audio
@@ -703,6 +712,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.jumpPressed();
             hud.jumpPressed();
         }
+        if (keycode == Input.Keys.ALT_LEFT)
+        {
+            controller.firePressed();
+            hud.firePressed();
+        }
         if (keycode == Input.Keys.X)
         {
             controller.firePressed();
@@ -738,6 +752,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             controller.jumpReleased();
             hud.jumpReleased();
+        }
+        if (keycode == Input.Keys.ALT_LEFT)
+        {
+            controller.fireReleased();
+            hud.fireReleased();
         }
         if (keycode == Input.Keys.X)
         {

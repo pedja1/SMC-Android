@@ -179,7 +179,7 @@ public class Furball extends Enemy
     }
 	
 	@Override
-	protected void handleCollision(GameObject object, boolean vertical)
+	protected boolean handleCollision(GameObject object, boolean vertical)
 	{
         super.handleCollision(object, vertical);
 		if(!vertical)
@@ -194,6 +194,7 @@ public class Furball extends Enemy
                 handleCollision(Enemy.ContactType.stopper);
 			}
 		}
+        return false;
 	}
 
 	@Override

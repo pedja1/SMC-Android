@@ -200,7 +200,7 @@ public class Turtle extends Enemy
     }
 
     @Override
-	protected void handleCollision(GameObject object, boolean vertical)
+	protected boolean handleCollision(GameObject object, boolean vertical)
 	{
         super.handleCollision(object, vertical);
 		if(!vertical)
@@ -222,6 +222,7 @@ public class Turtle extends Enemy
         {
 
         }
+        return false;
 	}
 
 	@Override
@@ -299,11 +300,5 @@ public class Turtle extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return Assets.loadedRegions.get(KEY_DEAD);
-    }
-
-    @Override
-    protected void handleDroppedBelowWorld()
-    {
-        world.trashObjects.add(this);
     }
 }

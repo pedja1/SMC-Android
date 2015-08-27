@@ -12,6 +12,7 @@ import java.util.Collections;
 
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.maryo.Fireball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -44,7 +45,8 @@ public abstract class Enemy extends DynamicObject
     boolean deadByBullet;
     public int mKillPoints;
 
-    public float mFireResistant, mIceResistant;
+    public int mFireResistant;
+    public float mIceResistance;
     public float mSpeed, mRotationX, mRotationY, mRotationZ, mCanBeHitFromShell;
 
 	public void setDirection(Direction direction)
@@ -77,7 +79,7 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy)
     {
-        if(killedBy instanceof Turtle || killedBy instanceof Spika)//todo bullet, fireball...
+        if(killedBy instanceof Turtle || killedBy instanceof Spika || killedBy instanceof Fireball)//todo bullet, fireball...
         {
             deadByBullet = true;
             handleCollision = false;
@@ -91,11 +93,6 @@ public abstract class Enemy extends DynamicObject
         }
 
     }
-
-    public enum Direction
-	{
-		right, left
-	}
 	
     enum CLASS
     {
@@ -226,8 +223,9 @@ public abstract class Enemy extends DynamicObject
 	}
 
     @Override
-    protected void handleDroppedBelowWorld()
+    protected boolean handleDroppedBelowWorld()
     {
         world.trashObjects.add(this);
+        return true;
     }
 }

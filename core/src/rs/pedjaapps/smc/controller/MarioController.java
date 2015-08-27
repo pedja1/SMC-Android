@@ -128,6 +128,7 @@ public class MarioController
     public void firePressed()
     {
         keys.add(Keys.FIRE);
+        maryo.fire();
     }
 
     public void leftReleased()
