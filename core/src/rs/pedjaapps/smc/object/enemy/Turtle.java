@@ -23,7 +23,6 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Turtle extends Enemy
 {
-    private String KEY_TURN, KEY_LEFT, KEY_SHELL, KEY_DEAD;
     public final float mVelocity;
     public static final float VELOCITY_TURN = 0.75f;
     public final float mVelocityShell;
@@ -39,6 +38,8 @@ public class Turtle extends Enemy
     private boolean turned = false;
 
     boolean isShell = false, isShellMoving = false;
+    private Animation walkAnimation;
+    private TextureRegion tTurn, tShell, tDead;
 
     public Turtle(World world, Vector2 size, Vector3 position, String color)
     {
@@ -61,29 +62,20 @@ public class Turtle extends Enemy
     @Override
     public void initAssets()
     {
-        KEY_TURN = textureAtlas + ":turn";
-        KEY_LEFT = textureAtlas + "_l";
-        KEY_SHELL = textureAtlas + ":shell";
-        KEY_DEAD = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureRegion> rightFrames = new Array<TextureRegion>();
-        Array<TextureRegion> leftFrames = new Array<TextureRegion>();
+        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
 
         for(int i = 1; i < 9; i++)
         {
             TextureRegion region = atlas.findRegion("walk-" + i);
-            rightFrames.add(region);
-            TextureRegion regionL = new TextureRegion(region);
-            regionL.flip(true, false);
-            leftFrames.add(regionL);
+            walkFrames.add(region);
         }
 
 
-        Assets.animations.put(textureAtlas, new Animation(0.07f, rightFrames));
-        Assets.animations.put(textureAtlas + "_l", new Animation(0.07f, leftFrames));
-        Assets.loadedRegions.put(textureAtlas + ":turn", atlas.findRegion("turn"));
-        Assets.loadedRegions.put(textureAtlas + ":shell", atlas.findRegion("shell"));
-        Assets.loadedRegions.put(textureAtlas + ":dead", atlas.findRegion("walk-1"));
+        walkAnimation = new Animation(0.07f, walkFrames);
+        tTurn = atlas.findRegion("turn");
+        tShell = atlas.findRegion("shell");
+        tDead = atlas.findRegion("walk-1");
 
     }
 
@@ -93,17 +85,17 @@ public class Turtle extends Enemy
         TextureRegion frame;
         if(!isShell && turn)
         {
-            frame = Assets.loadedRegions.get(KEY_TURN);
+            frame = tTurn;
         }
         else
         {
             if(isShell)
             {
-                frame = Assets.loadedRegions.get(KEY_SHELL);
+                frame = tShell;
             }
             else
             {
-                frame = Assets.animations.get(direction == Direction.right ? textureAtlas : KEY_LEFT).getKeyFrame(stateTime, true);
+                frame = walkAnimation.getKeyFrame(stateTime, true);
             }
         }
         if(frame != null)
@@ -111,7 +103,9 @@ public class Turtle extends Enemy
             float width = Utility.getWidth(frame, mDrawRect.height);
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
+            frame.flip(!isShell && !turn && direction == Direction.left, false);
             spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mShellRotation);
+            frame.flip(!isShell && !turn && direction == Direction.left, false);
         }
     }
 
@@ -299,6 +293,6 @@ public class Turtle extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(KEY_DEAD);
+        return tDead;
     }
 }

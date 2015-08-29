@@ -49,7 +49,7 @@ public class Box extends Sprite
     public static final float SPINNING_TIME = 5;
 
     public static final float SIZE = 0.67f;
-    String goldColor, animation, boxType;
+    String goldColor, animationName, boxType;
     public String text;
     boolean forceBestItem, invisible;
     int usableCount, item;
@@ -65,6 +65,8 @@ public class Box extends Sprite
     public Item itemObject;
     private boolean spinning;
     private float spinningTime;
+    private Animation animation;
+    private Texture texture;
 
     public Box(World world, Vector2 size, Vector3 position)
     {
@@ -78,12 +80,13 @@ public class Box extends Sprite
     public void initAssets()
     {
         txDisabled = new TextureRegion(Assets.manager.get("data/game/box/brown1_1.png", Texture.class));
-        if (animation == null || "default".equalsIgnoreCase(animation))
+        if (textureName == null)
         {
-            if (textureName == null)
-            {
-                textureName = "data/game/box/yellow/default.png";
-            }
+            textureName = "data/game/box/yellow/default.png";
+        }
+        texture = Assets.manager.get(textureName);
+        if (animationName == null || "default".equalsIgnoreCase(animationName))
+        {
             if(!"spin".equals(boxType))return;
         }
         if("spin".equals(boxType))
@@ -94,7 +97,7 @@ public class Box extends Sprite
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> frames = new Array<TextureRegion>();
         float animSpeed = 0;
-        if ("bonus".equalsIgnoreCase(animation))
+        if ("bonus".equalsIgnoreCase(animationName))
         {
             frames.add(atlas.findRegion("1"));
             frames.add(atlas.findRegion("2"));
@@ -104,7 +107,7 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("6"));
             animSpeed = 0.09f;
         }
-        if ("power".equalsIgnoreCase(animation))
+        if ("power".equalsIgnoreCase(animationName))
         {
             frames.add(atlas.findRegion("power-1"));
             frames.add(atlas.findRegion("power-2"));
@@ -112,7 +115,7 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("power-4"));
             animSpeed = 0.2f;
         }
-        if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animation))
+        if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
         {
             frames.add(new TextureRegion(Assets.manager.get("data/game/box/yellow/default.png", Texture.class)));
             frames.add(atlas.findRegion("1"));
@@ -123,7 +126,7 @@ public class Box extends Sprite
             txDisabled = atlas.findRegion("6");
             animSpeed = 0.08f;
         }
-        Assets.animations.put(textureAtlas, new Animation(animSpeed, frames));
+        animation = new Animation(animSpeed, frames);
     }
 
     @Override
@@ -156,25 +159,23 @@ public class Box extends Sprite
                             type = Type.massive;
                         }
                     }
-                    TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+                    TextureRegion frame = animation.getKeyFrame(stateTime, true);
                     Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
                 }
                 else
                 {
-                    Texture tx = Assets.manager.get(textureName);
-                    Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
+                    Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
                 }
             }
             else
             {
                 if (textureName != null)
                 {
-                    Texture tx = Assets.manager.get(textureName);
-                    Utility.draw(spriteBatch, tx, position.x, position.y, mDrawRect.height);
+                    Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
                 }
-                if (textureAtlas != null && animation != null && !"default".equalsIgnoreCase(animation))
+                if (textureAtlas != null && animationName != null && !"default".equalsIgnoreCase(animationName))
                 {
-                    TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+                    TextureRegion frame = animation.getKeyFrame(stateTime, true);
                     Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
                 }
             }
@@ -189,7 +190,7 @@ public class Box extends Sprite
         Box box = new Box(world, size, position);
 
         box.goldColor = jBox.optString("gold_color");
-        box.animation = jBox.optString("animation", null);
+        box.animationName = jBox.optString("animation", null);
         box.boxType = jBox.optString("type");
         box.text = jBox.optString("text");
         box.forceBestItem = jBox.optInt("force_best_item", 0) == 1;

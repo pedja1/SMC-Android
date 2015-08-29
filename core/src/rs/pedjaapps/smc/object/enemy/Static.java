@@ -17,6 +17,8 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Static extends Enemy
 {
     public static final float POS_Z = 0.094f;
+    private Texture texture;
+    private TextureRegion region;
 
     public Static(World world, Vector2 size, Vector3 position, float speed, int fireResistance, float iceResistance)
     {
@@ -31,13 +33,12 @@ public class Static extends Enemy
     @Override
     public void initAssets()
     {
-
+        texture = Assets.manager.get(textureName);
     }
 
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        Texture texture = Assets.manager.get(textureName);
         if (texture != null)
         {
             float width = Utility.getWidth(texture, mDrawRect.height);
@@ -71,7 +72,11 @@ public class Static extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.manager.get(textureName);
+        if(region == null)
+        {
+            region = new TextureRegion(texture);
+        }
+        return region;
     }
 
 }

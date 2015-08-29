@@ -33,7 +33,8 @@ public class Krush extends Enemy
 
     public boolean isSmall;
 
-    private String keyDead, keySmall, keyBig;
+    private Animation aBig, aSmall;
+    private TextureRegion tDead;
 
     public Krush(World world, Vector2 size, Vector3 position)
     {
@@ -45,9 +46,6 @@ public class Krush extends Enemy
     @Override
     public void initAssets()
     {
-        keyDead = textureAtlas + ":dead";
-        keySmall = textureAtlas + ":small";
-        keyBig = textureAtlas + ":big";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
 
         Array<TextureRegion> smallFrames = new Array<>();
@@ -63,11 +61,10 @@ public class Krush extends Enemy
         smallFrames.add(atlas.findRegion("small-3"));
         smallFrames.add(atlas.findRegion("small-4"));
 
-        Assets.animations.put(keySmall, new Animation(0.07f, smallFrames));
-        Assets.animations.put(keyBig, new Animation(0.12f, bigFrames));
+        aSmall = new Animation(0.07f, smallFrames);
+        aBig = new Animation(0.12f, bigFrames);
 
-        TextureRegion tmp = atlas.findRegion("small-1");
-        Assets.loadedRegions.put(keyDead, tmp);
+        tDead = atlas.findRegion("small-1");
     }
 
     @Override
@@ -76,14 +73,14 @@ public class Krush extends Enemy
         TextureRegion frame;
         if (!dying)
         {
-            frame = Assets.animations.get(isSmall ? keySmall : keyBig).getKeyFrame(stateTime, true);
+            frame = isSmall ? aSmall.getKeyFrame(stateTime, true) : aBig.getKeyFrame(stateTime, true);
             frame.flip(direction == Direction.left, false);
             Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
             frame.flip(direction == Direction.left, false);
         }
         else
         {
-            frame = Assets.animations.get(keySmall).getKeyFrames()[0];
+            frame = aSmall.getKeyFrames()[0];
             frame.flip(direction == Direction.left, false);
             spriteBatch.draw(frame, mDrawRect.x , mDrawRect.y , mDrawRect.width, mDrawRect.height);
             frame.flip(direction == Direction.left, false);
@@ -202,7 +199,7 @@ public class Krush extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(keyDead);
+        return tDead;
     }
 
     @Override

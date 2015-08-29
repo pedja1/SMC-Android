@@ -30,6 +30,7 @@ public class Fireball extends DynamicObject
     public float velY = -1;
     ParticleEffect trail, explosion;
     private boolean destroyed;
+    private Animation animation;
 
     public Fireball(World world, Vector3 position)
     {
@@ -44,7 +45,7 @@ public class Fireball extends DynamicObject
         trail.draw(spriteBatch);
         if (!destroyed)
         {
-            TextureRegion region = Assets.animations.get("data/animation/fireball.pack").getKeyFrame(stateTime, true);
+            TextureRegion region = animation.getKeyFrame(stateTime, true);
             Utility.draw(spriteBatch, region, mDrawRect.x, mDrawRect.y, mDrawRect.height);
         }
         else
@@ -159,12 +160,12 @@ public class Fireball extends DynamicObject
     @Override
     public void initAssets()
     {
-        if (Assets.animations.get("data/animation/fireball.pack") == null)
+        if (animation == null)
         {
             TextureAtlas atlas = Assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
             Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
 
-            Assets.animations.put("data/animation/fireball.pack", new Animation(0.05f, regions));
+            animation = new Animation(0.05f, regions);
         }
         trail = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_emitter.p", ParticleEffect.class));
         explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));

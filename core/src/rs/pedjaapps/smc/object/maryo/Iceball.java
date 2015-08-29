@@ -27,6 +27,7 @@ public class Iceball extends DynamicObject
     public float velY = -1;
     ParticleEffect trail, explosion;
     private boolean destroyed;
+    private Texture texture;
 
     public Iceball(World world, Vector3 position)
     {
@@ -41,8 +42,7 @@ public class Iceball extends DynamicObject
         trail.draw(spriteBatch);
         if (!destroyed)
         {
-            Texture txt = Assets.manager.get("data/animation/iceball.png");
-            Utility.draw(spriteBatch, txt, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            Utility.draw(spriteBatch, texture, mDrawRect.x, mDrawRect.y, mDrawRect.height);
         }
         else
         {
@@ -157,6 +157,7 @@ public class Iceball extends DynamicObject
     @Override
     public void initAssets()
     {
+        texture = Assets.manager.get("data/animation/iceball.png");
         trail = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_emitter.p", ParticleEffect.class));
         explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
     }

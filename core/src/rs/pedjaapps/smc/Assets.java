@@ -5,15 +5,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.utils.ObjectMap;
 
 import rs.pedjaapps.smc.utility.MyFileHandleResolver;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -27,8 +24,6 @@ public class Assets
     public static TextureLoader.TextureParameter textureParameter;
     public static SMCTextureAtlasLoader.TextureAtlasParameter atlasTextureParameter;
     public static ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
-    public static ObjectMap<String, TextureRegion> loadedRegions;
-    public static ObjectMap<String, Animation> animations;
     public static boolean playMusic;
     public static boolean playSounds;
 
@@ -58,19 +53,13 @@ public class Assets
         manager.setLoader(ParticleEffect.class, ".p", new ParticleEffectLoader(resolver));
         manager.setLoader(TextureAtlas.class, ".pack", new SMCTextureAtlasLoader(resolver));
 
-        loadedRegions = new ObjectMap<>();
-        animations = new ObjectMap<>();
-
         playMusic = PrefsManager.isPlayMusic();
         playSounds = PrefsManager.isPlaySounds();
     }
 
     public static void dispose()
     {
-        //TODO should a call dispose on each object in these maps
-        loadedRegions.clear();
 		manager.clear();
-        animations.clear();
     }
 
 }

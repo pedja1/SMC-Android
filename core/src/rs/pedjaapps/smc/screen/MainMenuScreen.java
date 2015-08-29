@@ -58,6 +58,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     ConfirmDialog exitDialog;
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
+    TextureRegion marioFrame;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -127,7 +128,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         Utility.draw(batch, gameLogo, 2f, 5f, 2f);
 
-        TextureRegion marioFrame = Assets.loadedRegions.get(MARIO_TEXTURE_REGION_KEY);
         batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
@@ -306,7 +306,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         world.level = loader.level;
 
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
-        Assets.loadedRegions.put(GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small, atlas.findRegion(GameObject.TKey.stand_right.toString()));
+        marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
 
         audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
 

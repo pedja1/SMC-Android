@@ -18,8 +18,8 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Eato extends Enemy
 {
     public static final float POSITION_Z = 0.087f;
-    public static String DEAD_KEY;
     private String direction;
+    private Animation animation;
 
     public Eato(World world, Vector2 size, Vector3 position, String direction)
     {
@@ -64,28 +64,26 @@ public class Eato extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(DEAD_KEY);
+        return animation.getKeyFrames()[0];
     }
 
     @Override
     public void initAssets()
     {
-        DEAD_KEY = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = new Array<>();
         		frames.add(atlas.findRegion(TKey.one.toString()));
         		frames.add(atlas.findRegion(TKey.two.toString()));
         		frames.add(atlas.findRegion(TKey.three.toString()));
         frames.add(atlas.findRegion(TKey.two.toString()));
-        Assets.loadedRegions.put(DEAD_KEY, frames.get(0));
 
-        Assets.animations.put(textureAtlas, new Animation(0.18f, frames));
+        animation = new Animation(0.18f, frames);
     }
 
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+        TextureRegion frame = animation.getKeyFrame(stateTime, true);
 
         float width = Utility.getWidth(frame, mDrawRect.height);
         float originX = width * 0.5f;

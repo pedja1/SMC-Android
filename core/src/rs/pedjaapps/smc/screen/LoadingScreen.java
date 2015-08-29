@@ -84,7 +84,7 @@ public class LoadingScreen extends AbstractScreen
         if (Assets.manager.update())
         {
             // Load some, will return true if done loading
-            if(!resume)screenToLoadAfter.onAssetsLoaded();
+            /*if(!resume)*/screenToLoadAfter.onAssetsLoaded();
             if(screenToLoadAfter instanceof GameScreen)
             {
                 ((GameScreen)screenToLoadAfter).resumed = resume;

@@ -27,6 +27,8 @@ public class Rokko extends Enemy
     private boolean flipX;
     private float mMinDistanceFront, mMaxDistanceFront, mMaxDistanceSides;
     private ParticleEffect effect;
+    private Texture texture;
+    private TextureRegion region;
 
     public Rokko(World world, Vector2 size, Vector3 position,  String direction)
     {
@@ -56,12 +58,18 @@ public class Rokko extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.manager.get(textureName);
+        if(region == null)
+        {
+            region = new TextureRegion(texture);
+        }
+        return region;
     }
 
     @Override
     public void initAssets()
     {
+        texture = Assets.manager.get(textureName);
+        texture = Assets.manager.get(textureName);
         effect = new ParticleEffect(Assets.manager.get("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class));
         effect.start();
     }
@@ -69,11 +77,10 @@ public class Rokko extends Enemy
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        Texture frame = Assets.manager.get(textureName);
-        float width = Utility.getWidth(frame, mDrawRect.height);
+        float width = Utility.getWidth(texture, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
-        spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation, 0, 0, frame.getWidth(), frame.getHeight(), flipX, false);
+        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), flipX, false);
 
         if(!staying)
         {

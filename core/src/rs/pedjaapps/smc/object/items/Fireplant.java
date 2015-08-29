@@ -24,6 +24,8 @@ public class Fireplant extends BoxItem
     public static final int POINTS = 700;
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.59375f;
+    private Animation animation;
+
     public Fireplant(World world, Vector2 size, Vector3 position, Box box)
     {
         super(world, size, position, box);
@@ -34,9 +36,8 @@ public class Fireplant extends BoxItem
     public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Animation animation = new Animation(2f, atlas.getRegions());
+        animation = new Animation(2f, atlas.getRegions());
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
-        Assets.animations.put(textureAtlas, animation);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class Fireplant extends BoxItem
     public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+        TextureRegion frame = animation.getKeyFrame(stateTime, true);
         Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
 
         ParticleEffect effect = Assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);

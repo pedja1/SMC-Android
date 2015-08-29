@@ -20,6 +20,8 @@ public class Sprite extends GameObject
     public Type type = null;
     public float mRotationX, mRotationY, mRotationZ;//degrees
     private Rect mOrigDrawRect;
+    Texture txt = null;
+    TextureRegion region = null;
 
     public Sprite(World world, Vector2 size, Vector3 position)
     {
@@ -31,16 +33,6 @@ public class Sprite extends GameObject
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        Texture txt = null;
-        TextureRegion region = null;
-        if (textureAtlas == null)
-        {
-            txt = Assets.manager.get(textureName);
-        }
-        else
-        {
-            region = Assets.loadedRegions.get(textureName);
-        }
         if (txt != null || region != null)
         {
             float width = txt == null ? Utility.getWidth(region, mOrigDrawRect.height) : Utility.getWidth(txt, mOrigDrawRect.height);
@@ -87,11 +79,11 @@ public class Sprite extends GameObject
 
         if (atlas != null)
         {
-            TextureRegion region = Assets.loadedRegions.get(textureName);
-            if (region == null)
-            {
-                Assets.loadedRegions.put(textureName, atlas.findRegion(textureName.split(":")[1]));
-            }
+            region = atlas.findRegion(textureName.split(":")[1]);
+        }
+        else
+        {
+            txt = Assets.manager.get(textureName);
         }
         applyRotation();
 

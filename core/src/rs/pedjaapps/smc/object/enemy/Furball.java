@@ -49,7 +49,8 @@ public class Furball extends Enemy
 
     Type type = Type.brown;
 
-    private String keyDead, keyLeft, keyDeadRight, keyTurn, keyHit;
+    private Animation walkAnimation;
+    private TextureRegion tTurn, tDead, tHit;
 
     public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
     {
@@ -61,33 +62,19 @@ public class Furball extends Enemy
     @Override
     public void initAssets()
     {
-        keyDead = textureAtlas + ":dead";
-        keyDeadRight = textureAtlas + ":dead_r";
-        keyLeft = textureAtlas + "_l";
-        keyTurn = textureAtlas + ":turn";
-        keyHit = textureAtlas + ":hit";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureRegion> rightFrames = new Array<TextureRegion>();
-        Array<TextureRegion> leftFrames = new Array<TextureRegion>();
+        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
 
         for(int i = 1; i < 9; i++)
         {
             TextureRegion region = atlas.findRegion("walk-" + i);
-            rightFrames.add(region);
-            TextureRegion regionL = new TextureRegion(region);
-            regionL.flip(true, false);
-            leftFrames.add(regionL);
+            walkFrames.add(region);
         }
 
+        walkAnimation = new Animation(0.07f, walkFrames);
 
-        Assets.animations.put(textureAtlas, new Animation(0.07f, rightFrames));
-        Assets.animations.put(keyLeft, new Animation(0.07f, leftFrames));
-        Assets.loadedRegions.put(keyTurn, atlas.findRegion("turn"));
-        TextureRegion tmp = atlas.findRegion("dead");
-        Assets.loadedRegions.put(keyDead, tmp);
-        tmp = new TextureRegion(tmp);
-        tmp.flip(true, false);
-        Assets.loadedRegions.put(keyDeadRight, tmp);
+        tTurn = atlas.findRegion("turn");
+        tDead = atlas.findRegion("dead");
 
         if(textureAtlas.contains("brown"))
         {
@@ -112,7 +99,7 @@ public class Furball extends Enemy
             fireResistant = true;
             iceResistance = 1f;
             canBeHitFromShell = false;
-            Assets.loadedRegions.put(keyHit, atlas.findRegion("hit"));
+            tHit = atlas.findRegion("hit");
         }
     }
 
@@ -122,14 +109,17 @@ public class Furball extends Enemy
         TextureRegion frame;
         if (!dying)
         {
-            frame = turn ? Assets.loadedRegions.get(keyTurn)
-                    : Assets.animations.get(direction == Direction.right ? textureAtlas : keyLeft).getKeyFrame(stateTime, true);
+            frame = turn ? tTurn : walkAnimation.getKeyFrame(stateTime, true);
+            frame.flip(direction == Direction.left, false);
             Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            frame.flip(direction == Direction.left, false);
         }
         else
         {
-            frame = direction == Direction.right ? Assets.loadedRegions.get(keyDead) : Assets.loadedRegions.get(keyDeadRight);
+            frame = tDead;
+            frame.flip(direction == Direction.left, false);
             spriteBatch.draw(frame, mDrawRect.x , mDrawRect.y , mDrawRect.width, mDrawRect.height);
+            frame.flip(direction == Direction.left, false);
         }
     }
 
@@ -255,7 +245,7 @@ public class Furball extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(keyDead);
+        return tDead;
     }
 
     @Override

@@ -20,7 +20,6 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Flyon extends Enemy
 {
-    public String DEAD_KEY;
     private static final float STAY_BOTTOM_TIME = 2.5f;
     public String direction;
     public float maxDistance;
@@ -29,6 +28,7 @@ public class Flyon extends Enemy
     private boolean forward = true, staying = true;
     private float waitTime;
     private float rotation;
+    private Animation animation;
 
     public Flyon(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
     {
@@ -54,23 +54,21 @@ public class Flyon extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(DEAD_KEY);
+        return animation.getKeyFrames()[3];
     }
 
     @Override
     public void initAssets()
     {
-        DEAD_KEY = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
-        Assets.loadedRegions.put(DEAD_KEY, frames.get(3));
-        Assets.animations.put(textureAtlas, new Animation(0.13f, frames));
+        animation = new Animation(0.13f, frames);
     }
 
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(staying ? 0 : stateTime, true);
+        TextureRegion frame = animation.getKeyFrame(staying ? 0 : stateTime, true);
         float width = Utility.getWidth(frame, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;

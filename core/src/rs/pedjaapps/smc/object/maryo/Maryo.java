@@ -45,56 +45,56 @@ public class Maryo extends DynamicObject
 
     //this could be all done dynamically, but this way we minimize allocation in game loop
     //omg, this is a lot of constants :D
-    private static final String KEY_WALKING_SMALL = AKey.walk + ":" + MaryoState.small;
-    private static final String KEY_CLIMB_SMALL = AKey.climb + ":" + MaryoState.small;
-    private static final String KEY_WALKING_BIG = AKey.walk + ":" + MaryoState.big;
-    private static final String KEY_CLIMB_BIG = AKey.climb + ":" + MaryoState.big;
-    private static final String KEY_WALKING_FIRE = AKey.walk + ":" + MaryoState.fire;
-    private static final String KEY_THROW_FIRE = AKey._throw + ":" + MaryoState.fire;
-    private static final String KEY_CLIMB_FIRE = AKey.climb + ":" + MaryoState.fire;
-    private static final String KEY_WALKING_FLYING = AKey.walk + ":" + MaryoState.flying;
-    private static final String KEY_CLIMB_FLYING = AKey.climb + ":" + MaryoState.flying;
-    private static final String KEY_WALKING_GHOST = AKey.walk + ":" + MaryoState.ghost;
-    private static final String KEY_CLIMB_GHOST = AKey.climb + ":" + MaryoState.ghost;
-    private static final String KEY_WALKING_ICE = AKey.walk + ":" + MaryoState.ice;
-    private static final String KEY_THROW_ICE = AKey._throw + ":" + MaryoState.ice;
-    private static final String KEY_CLIMB_ICE = AKey.climb + ":" + MaryoState.ice;
+    private static final int A_KEY_WALKING_SMALL = 0;
+    private static final int A_KEY_CLIMB_SMALL = 1;
+    private static final int A_KEY_WALKING_BIG = 2;
+    private static final int A_KEY_CLIMB_BIG = 3;
+    private static final int A_KEY_WALKING_FIRE = 4;
+    private static final int A_KEY_THROW_FIRE = 5;
+    private static final int A_KEY_CLIMB_FIRE = 6;
+    private static final int A_KEY_WALKING_FLYING = 7;
+    private static final int A_KEY_CLIMB_FLYING = 8;
+    private static final int A_KEY_WALKING_GHOST = 9;
+    private static final int A_KEY_CLIMB_GHOST = 10;
+    private static final int A_KEY_WALKING_ICE = 11;
+    private static final int A_KEY_THROW_ICE = 12;
+    private static final int A_KEY_CLIMB_ICE = 13;
 
-    private static final String KEY_DUCK_RIGHT_SMALL = TKey.duck_right + ":" + MaryoState.small;
-    private static final String KEY_JUMP_RIGHT_SMALL = TKey.jump_right + ":" + MaryoState.small;
-    private static final String KEY_FALL_RIGHT_SMALL = TKey.fall_right + ":" + MaryoState.small;
-    private static final String KEY_DEAD_RIGHT_SMALL = TKey.dead_right + ":" + MaryoState.small;
-    private static final String KEY_STAND_RIGHT_SMALL = TKey.stand_right + ":" + MaryoState.small;
+    private static final int T_KEY_DUCK_RIGHT_SMALL = 0;
+    private static final int T_KEY_JUMP_RIGHT_SMALL = 1;
+    private static final int T_KEY_FALL_RIGHT_SMALL = 2;
+    private static final int T_KEY_DEAD_RIGHT_SMALL = 3;
+    private static final int T_KEY_STAND_RIGHT_SMALL = 4;
 
-    private static final String KEY_DUCK_RIGHT_BIG = TKey.duck_right + ":" + MaryoState.big;
-    private static final String KEY_JUMP_RIGHT_BIG = TKey.jump_right + ":" + MaryoState.big;
-    private static final String KEY_FALL_RIGHT_BIG = TKey.fall_right + ":" + MaryoState.big;
-    private static final String KEY_DEAD_RIGHT_BIG = TKey.dead_right + ":" + MaryoState.big;
-    private static final String KEY_STAND_RIGHT_BIG = TKey.stand_right + ":" + MaryoState.big;
+    private static final int T_KEY_DUCK_RIGHT_BIG = 5;
+    private static final int T_KEY_JUMP_RIGHT_BIG = 6;
+    private static final int T_KEY_FALL_RIGHT_BIG = 7;
+    private static final int T_KEY_DEAD_RIGHT_BIG = 8;
+    private static final int T_KEY_STAND_RIGHT_BIG = 9;
 
-    private static final String KEY_DUCK_RIGHT_FIRE = TKey.duck_right + ":" + MaryoState.fire;
-    private static final String KEY_JUMP_RIGHT_FIRE = TKey.jump_right + ":" + MaryoState.fire;
-    private static final String KEY_FALL_RIGHT_FIRE = TKey.fall_right + ":" + MaryoState.fire;
-    private static final String KEY_DEAD_RIGHT_FIRE = TKey.dead_right + ":" + MaryoState.fire;
-    private static final String KEY_STAND_RIGHT_FIRE = TKey.stand_right + ":" + MaryoState.fire;
+    private static final int T_KEY_DUCK_RIGHT_FIRE = 10;
+    private static final int T_KEY_JUMP_RIGHT_FIRE = 11;
+    private static final int T_KEY_FALL_RIGHT_FIRE = 12;
+    private static final int T_KEY_DEAD_RIGHT_FIRE = 13;
+    private static final int T_KEY_STAND_RIGHT_FIRE = 14;
 
-    private static final String KEY_DUCK_RIGHT_FLYING = TKey.duck_right + ":" + MaryoState.flying;
-    private static final String KEY_JUMP_RIGHT_FLYING = TKey.jump_right + ":" + MaryoState.flying;
-    private static final String KEY_FALL_RIGHT_FLYING = TKey.fall_right + ":" + MaryoState.flying;
-    private static final String KEY_DEAD_RIGHT_FLYING = TKey.dead_right + ":" + MaryoState.flying;
-    private static final String KEY_STAND_RIGHT_FLYING = TKey.stand_right + ":" + MaryoState.flying;
+    private static final int T_KEY_DUCK_RIGHT_FLYING = 15;
+    private static final int T_KEY_JUMP_RIGHT_FLYING = 16;
+    private static final int T_KEY_FALL_RIGHT_FLYING = 17;
+    private static final int T_KEY_DEAD_RIGHT_FLYING = 18;
+    private static final int T_KEY_STAND_RIGHT_FLYING = 19;
 
-    private static final String KEY_DUCK_RIGHT_GHOST = TKey.duck_right + ":" + MaryoState.ghost;
-    private static final String KEY_JUMP_RIGHT_GHOST = TKey.jump_right + ":" + MaryoState.ghost;
-    private static final String KEY_FALL_RIGHT_GHOST = TKey.fall_right + ":" + MaryoState.ghost;
-    private static final String KEY_DEAD_RIGHT_GHOST = TKey.dead_right + ":" + MaryoState.ghost;
-    private static final String KEY_STAND_RIGHT_GHOST = TKey.stand_right + ":" + MaryoState.ghost;
+    private static final int T_KEY_DUCK_RIGHT_GHOST = 20;
+    private static final int T_KEY_JUMP_RIGHT_GHOST = 21;
+    private static final int T_KEY_FALL_RIGHT_GHOST = 22;
+    private static final int T_KEY_DEAD_RIGHT_GHOST = 23;
+    private static final int T_KEY_STAND_RIGHT_GHOST = 24;
 
-    private static final String KEY_DUCK_RIGHT_ICE = TKey.duck_right + ":" + MaryoState.ice;
-    private static final String KEY_JUMP_RIGHT_ICE = TKey.jump_right + ":" + MaryoState.ice;
-    private static final String KEY_FALL_RIGHT_ICE = TKey.fall_right + ":" + MaryoState.ice;
-    private static final String KEY_DEAD_RIGHT_ICE = TKey.dead_right + ":" + MaryoState.ice;
-    private static final String KEY_STAND_RIGHT_ICE = TKey.stand_right + ":" + MaryoState.ice;
+    private static final int T_KEY_DUCK_RIGHT_ICE = 25;
+    private static final int T_KEY_JUMP_RIGHT_ICE = 26;
+    private static final int T_KEY_FALL_RIGHT_ICE = 27;
+    private static final int T_KEY_DEAD_RIGHT_ICE = 28;
+    private static final int T_KEY_STAND_RIGHT_ICE = 29;
 
     public static final float POSITION_Z = 0.0999f;
 
@@ -147,7 +147,11 @@ public class Maryo extends DynamicObject
     public boolean powerJump;
     private float bulletShotTime = BULLET_COOLDOWN;
     private boolean fire;
-    private float fireAnimatioStateTime;
+    private float fireAnimationStateTime;
+
+    //textures
+    private TextureRegion[] tMap = new TextureRegion[30];
+    private Animation[] aMap = new Animation[14];
 
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -205,48 +209,49 @@ public class Maryo extends DynamicObject
         MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ghost, MaryoState.ice};
         for (MaryoState ms : states)
         {
-            loadTextures(ms.toString());
+            loadTextures(ms);
         }
         setJumpSound();
         powerJumpEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
 
     }
 
-    private void loadTextures(String state)
+    private void loadTextures(MaryoState state)
     {
         TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");
 
-        Assets.loadedRegions.put(TKey.stand_right + ":" + state, atlas.findRegion(TKey.stand_right.toString()));
+        TextureRegion tmpStandRight;
+        tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
 
         TextureRegion[] walkFrames = new TextureRegion[4];
-        walkFrames[0] = Assets.loadedRegions.get(TKey.stand_right + ":" + state);
+        walkFrames[0] = tmpStandRight;
         walkFrames[1] = atlas.findRegion(TKey.walk_right_1 + "");
         walkFrames[2] = atlas.findRegion(TKey.walk_right_2 + "");
         walkFrames[3] = walkFrames[1];
-        Assets.animations.put(AKey.walk + ":" + state, new Animation(RUNNING_FRAME_DURATION, walkFrames));
+        aMap[aIndex(state, AKey.walk)] = new Animation(RUNNING_FRAME_DURATION, walkFrames);
 
         TextureRegion[] climbFrames = new TextureRegion[2];
         climbFrames[0] = atlas.findRegion(TKey.climb_left + "");
         climbFrames[1] = atlas.findRegion(TKey.climb_right + "");
-        Assets.animations.put(AKey.climb + ":" + state, new Animation(CLIMB_FRAME_DURATION, climbFrames));
+        aMap[aIndex(state, AKey.climb)] = new Animation(CLIMB_FRAME_DURATION, climbFrames);
 
-        if (state.equals(MaryoState.ice.toString()) || state.equals(MaryoState.fire.toString()))
+        if (state == MaryoState.ice || state == MaryoState.fire)
         {
             TextureRegion[] throwFrames = new TextureRegion[2];
             throwFrames[0] = atlas.findRegion(TKey.throw_right_1.toString());
             throwFrames[1] = atlas.findRegion(TKey.throw_right_2.toString());
-            Assets.animations.put(AKey._throw + ":" + state, new Animation(THROW_FRAME_DURATION, throwFrames));
+            aMap[aIndex(state, AKey._throw)] = new Animation(THROW_FRAME_DURATION, throwFrames);
         }
 
-        Assets.loadedRegions.put(TKey.jump_right + ":" + state, atlas.findRegion(TKey.jump_right.toString()));
-        Assets.loadedRegions.put(TKey.fall_right + ":" + state, atlas.findRegion(TKey.fall_right.toString()));
+        tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(TKey.jump_right.toString());
+        tMap[tIndex(state, TKey.fall_right)] = atlas.findRegion(TKey.fall_right.toString());
 
-        if (MaryoState.small.toString().equals(state))
+        if (MaryoState.small == state)
         {
-            Assets.loadedRegions.put(TKey.dead_right + ":" + state, atlas.findRegion(TKey.dead_right.toString()));
+            tMap[tIndex(state, TKey.dead_right)] = atlas.findRegion(TKey.dead_right.toString());
         }
 
-        Assets.loadedRegions.put(TKey.duck_right + ":" + state, atlas.findRegion(TKey.duck_right.toString()));
+        tMap[tIndex(state, TKey.duck_right)] = atlas.findRegion(TKey.duck_right.toString());
     }
 
     @Override
@@ -255,7 +260,7 @@ public class Maryo extends DynamicObject
         TextureRegion marioFrame;
         if (exiting)
         {
-            marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
+            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
 
             float originX = mDrawRect.width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
@@ -265,7 +270,7 @@ public class Maryo extends DynamicObject
         }
         if (entering)
         {
-            marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
+            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
 
             float originX = mDrawRect.width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
@@ -302,47 +307,47 @@ public class Maryo extends DynamicObject
         }
         else if (fire)
         {
-            Animation animation = Assets.animations.get(getAnimationKey(AKey._throw));
-            marioFrame = animation.getKeyFrame(fireAnimatioStateTime, false);
-            if (animation.isAnimationFinished(fireAnimatioStateTime))
+            Animation animation = aMap[aIndex(maryoState, AKey._throw)];
+            marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
+            if (animation.isAnimationFinished(fireAnimationStateTime))
             {
                 fire = false;
-                fireAnimatioStateTime = 0;
+                fireAnimationStateTime = 0;
                 //doFire();
             }
         }
         else if (worldState.equals(WorldState.WALKING))
         {
-            marioFrame = Assets.animations.get(getAnimationKey(AKey.walk)).getKeyFrame(stateTime, true);
+            marioFrame = aMap[aIndex(maryoState, AKey.walk)].getKeyFrame(stateTime, true);
         }
         else if (worldState == WorldState.DUCKING)
         {
-            marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.duck_right));
+            marioFrame = tMap[tIndex(maryoState, TKey.duck_right)];
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (velocity.y > 0)
             {
-                marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.jump_right));
+                marioFrame = tMap[tIndex(maryoState, TKey.jump_right)];
             }
             else
             {
-                marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.fall_right));
+                marioFrame = tMap[tIndex(maryoState, TKey.fall_right)];
             }
         }
         else if (worldState == WorldState.DYING)
         {
-            marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.dead_right));
+            marioFrame = tMap[tIndex(maryoState, TKey.dead_right)];
         }
         else if (worldState == WorldState.CLIMBING)
         {
-            TextureRegion[] frames = Assets.animations.get(getAnimationKey(AKey.climb)).getKeyFrames();
+            TextureRegion[] frames = aMap[aIndex(maryoState, AKey.climb)].getKeyFrames();
             float distance = position.y - exitEnterStartPosition.y;
             marioFrame = frames[Math.floor(distance / 0.3f) % 2 == 0 ? 0 : 1];
         }
         else
         {
-            marioFrame = Assets.loadedRegions.get(getTextureKey(TKey.stand_right));
+            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
         }
 
         marioFrame.flip(facingLeft, false);
@@ -372,160 +377,159 @@ public class Maryo extends DynamicObject
         }
     }
 
-    private String getTextureKey(TKey tkey)
+    private int tIndex(MaryoState state, TKey tkey)
     {
-        //and another OMG, can this be done differently?
         switch (tkey)
         {
             case stand_right:
-                switch (maryoState)
+                switch (state)
                 {
                     case small:
-                        return KEY_STAND_RIGHT_SMALL;
+                        return T_KEY_STAND_RIGHT_SMALL;
                     case big:
-                        return KEY_STAND_RIGHT_BIG;
+                        return T_KEY_STAND_RIGHT_BIG;
                     case fire:
-                        return KEY_STAND_RIGHT_FIRE;
+                        return T_KEY_STAND_RIGHT_FIRE;
                     case ice:
-                        return KEY_STAND_RIGHT_ICE;
+                        return T_KEY_STAND_RIGHT_ICE;
                     case ghost:
-                        return KEY_STAND_RIGHT_GHOST;
+                        return T_KEY_STAND_RIGHT_GHOST;
                     case flying:
-                        return KEY_STAND_RIGHT_FLYING;
+                        return T_KEY_STAND_RIGHT_FLYING;
                 }
                 break;
             case jump_right:
-                switch (maryoState)
+                switch (state)
                 {
                     case small:
-                        return KEY_JUMP_RIGHT_SMALL;
+                        return T_KEY_JUMP_RIGHT_SMALL;
                     case big:
-                        return KEY_JUMP_RIGHT_BIG;
+                        return T_KEY_JUMP_RIGHT_BIG;
                     case fire:
-                        return KEY_JUMP_RIGHT_FIRE;
+                        return T_KEY_JUMP_RIGHT_FIRE;
                     case ice:
-                        return KEY_JUMP_RIGHT_ICE;
+                        return T_KEY_JUMP_RIGHT_ICE;
                     case ghost:
-                        return KEY_JUMP_RIGHT_GHOST;
+                        return T_KEY_JUMP_RIGHT_GHOST;
                     case flying:
-                        return KEY_JUMP_RIGHT_FLYING;
+                        return T_KEY_JUMP_RIGHT_FLYING;
                 }
                 break;
             case fall_right:
-                switch (maryoState)
+                switch (state)
                 {
                     case small:
-                        return KEY_FALL_RIGHT_SMALL;
+                        return T_KEY_FALL_RIGHT_SMALL;
                     case big:
-                        return KEY_FALL_RIGHT_BIG;
+                        return T_KEY_FALL_RIGHT_BIG;
                     case fire:
-                        return KEY_FALL_RIGHT_FIRE;
+                        return T_KEY_FALL_RIGHT_FIRE;
                     case ice:
-                        return KEY_FALL_RIGHT_ICE;
+                        return T_KEY_FALL_RIGHT_ICE;
                     case ghost:
-                        return KEY_FALL_RIGHT_GHOST;
+                        return T_KEY_FALL_RIGHT_GHOST;
                     case flying:
-                        return KEY_FALL_RIGHT_FLYING;
+                        return T_KEY_FALL_RIGHT_FLYING;
                 }
                 break;
             case dead_right:
-                switch (maryoState)
+                switch (state)
                 {
                     case small:
-                        return KEY_DEAD_RIGHT_SMALL;
+                        return T_KEY_DEAD_RIGHT_SMALL;
                     case big:
-                        return KEY_DEAD_RIGHT_BIG;
+                        return T_KEY_DEAD_RIGHT_BIG;
                     case fire:
-                        return KEY_DEAD_RIGHT_FIRE;
+                        return T_KEY_DEAD_RIGHT_FIRE;
                     case ice:
-                        return KEY_DEAD_RIGHT_ICE;
+                        return T_KEY_DEAD_RIGHT_ICE;
                     case ghost:
-                        return KEY_DEAD_RIGHT_GHOST;
+                        return T_KEY_DEAD_RIGHT_GHOST;
                     case flying:
-                        return KEY_DEAD_RIGHT_FLYING;
+                        return T_KEY_DEAD_RIGHT_FLYING;
                 }
                 break;
             case duck_right:
-                switch (maryoState)
+                switch (state)
                 {
                     case small:
-                        return KEY_DUCK_RIGHT_SMALL;
+                        return T_KEY_DUCK_RIGHT_SMALL;
                     case big:
-                        return KEY_DUCK_RIGHT_BIG;
+                        return T_KEY_DUCK_RIGHT_BIG;
                     case fire:
-                        return KEY_DUCK_RIGHT_FIRE;
+                        return T_KEY_DUCK_RIGHT_FIRE;
                     case ice:
-                        return KEY_DUCK_RIGHT_ICE;
+                        return T_KEY_DUCK_RIGHT_ICE;
                     case ghost:
-                        return KEY_DUCK_RIGHT_GHOST;
+                        return T_KEY_DUCK_RIGHT_GHOST;
                     case flying:
-                        return KEY_DUCK_RIGHT_FLYING;
+                        return T_KEY_DUCK_RIGHT_FLYING;
                 }
                 break;
         }
         throw new IllegalArgumentException("Unknown texture key '" + tkey + "' or maryoState '" + maryoState + "'");
     }
 
-    private String getAnimationKey(AKey akey)
+    private int aIndex(MaryoState state, AKey akey)
     {
-        switch (maryoState)
+        switch (state)
         {
             case small:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_SMALL;
+                        return A_KEY_WALKING_SMALL;
                     case climb:
-                        return KEY_CLIMB_SMALL;
+                        return A_KEY_CLIMB_SMALL;
                 }
                 break;
             case big:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_BIG;
+                        return A_KEY_WALKING_BIG;
                     case climb:
-                        return KEY_CLIMB_BIG;
+                        return A_KEY_CLIMB_BIG;
                 }
                 break;
             case fire:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_FIRE;
+                        return A_KEY_WALKING_FIRE;
                     case climb:
-                        return KEY_CLIMB_FIRE;
+                        return A_KEY_CLIMB_FIRE;
                     case _throw:
-                        return KEY_THROW_FIRE;
+                        return A_KEY_THROW_FIRE;
                 }
                 break;
             case ice:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_ICE;
+                        return A_KEY_WALKING_ICE;
                     case climb:
-                        return KEY_CLIMB_ICE;
+                        return A_KEY_CLIMB_ICE;
                     case _throw:
-                        return KEY_THROW_ICE;
+                        return A_KEY_THROW_ICE;
                 }
                 break;
             case ghost:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_GHOST;
+                        return A_KEY_WALKING_GHOST;
                     case climb:
-                        return KEY_CLIMB_GHOST;
+                        return A_KEY_CLIMB_GHOST;
                 }
                 break;
             case flying:
                 switch (akey)
                 {
                     case walk:
-                        return KEY_WALKING_FLYING;
+                        return A_KEY_WALKING_FLYING;
                     case climb:
-                        return KEY_CLIMB_FLYING;
+                        return A_KEY_CLIMB_FLYING;
                 }
                 break;
         }
@@ -701,7 +705,7 @@ public class Maryo extends DynamicObject
         }
         if (fire)
         {
-            fireAnimatioStateTime += delta;
+            fireAnimationStateTime += delta;
         }
         //disable godmod after timeot
         if (godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
@@ -964,36 +968,36 @@ public class Maryo extends DynamicObject
         Array<TextureRegion> regions = new Array<>();
         if (worldState.equals(WorldState.WALKING))
         {
-            regions.add(Assets.animations.get(AKey.walk + ":" + stateFrom).getKeyFrame(stateTime, true));
-            regions.add(Assets.animations.get(AKey.walk + ":" + stateTo).getKeyFrame(stateTime, true));
+            regions.add(aMap[aIndex(stateFrom, AKey.walk)].getKeyFrame(stateTime, true));
+            regions.add(aMap[aIndex(stateTo, AKey.walk)].getKeyFrame(stateTime, true));
         }
         else if (worldState == WorldState.DUCKING)
         {
-            regions.add(Assets.loadedRegions.get(TKey.duck_right + ":" + stateFrom));
-            regions.add(Assets.loadedRegions.get(TKey.duck_right + ":" + stateTo));
+            regions.add(tMap[tIndex(stateFrom, TKey.duck_right)]);
+            regions.add(tMap[tIndex(stateTo, TKey.duck_right)]);
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (velocity.y > 0)
             {
-                regions.add(Assets.loadedRegions.get(TKey.jump_right + ":" + stateFrom));
-                regions.add(Assets.loadedRegions.get(TKey.jump_right + ":" + stateTo));
+                regions.add(tMap[tIndex(stateFrom, TKey.jump_right)]);
+                regions.add(tMap[tIndex(stateTo, TKey.jump_right)]);
             }
             else
             {
-                regions.add(Assets.loadedRegions.get(TKey.fall_right + ":" + stateFrom));
-                regions.add(Assets.loadedRegions.get(TKey.fall_right + ":" + stateTo));
+                regions.add(tMap[tIndex(stateFrom, TKey.fall_right)]);
+                regions.add(tMap[tIndex(stateTo, TKey.fall_right)]);
             }
         }
         else if (worldState == WorldState.DYING)
         {
-            regions.add(Assets.loadedRegions.get(TKey.dead_right + ":" + stateFrom));
-            regions.add(Assets.loadedRegions.get(TKey.dead_right + ":" + stateTo));
+            regions.add(tMap[tIndex(stateFrom, TKey.dead_right)]);
+            regions.add(tMap[tIndex(stateTo, TKey.dead_right)]);
         }
         else
         {
-            regions.add(Assets.loadedRegions.get(TKey.stand_right + ":" + stateFrom));
-            regions.add(Assets.loadedRegions.get(TKey.stand_right + ":" + stateTo));
+            regions.add(tMap[tIndex(stateFrom, TKey.stand_right)]);
+            regions.add(tMap[tIndex(stateTo, TKey.stand_right)]);
         }
         return regions;
     }

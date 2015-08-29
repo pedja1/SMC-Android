@@ -30,6 +30,7 @@ public class Coin extends Item
 	public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
     private Vector2 pointsTextPosition = new Vector2();
     public int points = 5;
+	private Animation animation;
 
 	/**
 	 * Coin will move out of the screen when collected*/
@@ -52,7 +53,7 @@ public class Coin extends Item
 			frames.add(atlas.findRegion(i + ""));
 		}
 
-        Assets.animations.put(textureAtlas, new Animation(0.10f, frames));
+        animation = new Animation(0.10f, frames);
         if (Assets.manager.isLoaded("coin.ttf"))
         {
             BitmapFont font = Assets.manager.get("coin.ttf");
@@ -81,7 +82,7 @@ public class Coin extends Item
 		if(!visible)return;
         //if (!playerHit)
         //{
-            TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+            TextureRegion frame = animation.getKeyFrame(stateTime, true);
             Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
         //}
         //else

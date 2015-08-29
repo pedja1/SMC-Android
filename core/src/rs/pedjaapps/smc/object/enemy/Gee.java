@@ -28,7 +28,6 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Gee extends Enemy
 {
     public static final float POSITION_Z = 0.088f;
-    public static String DEAD_KEY;
     public String direction;
     public float flyDistance, flySpeed;
     private Vector3 mOriginPosition;
@@ -40,6 +39,7 @@ public class Gee extends Enemy
     private ParticleEffect effect, deadEffect;
     private boolean canStartParticle;
     private boolean dying;
+    private Animation animation;
 
     public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
     {
@@ -85,18 +85,16 @@ public class Gee extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(DEAD_KEY);
+        return animation.getKeyFrames()[4];
     }
 
     @Override
     public void initAssets()
     {
-        DEAD_KEY = textureAtlas + ":dead";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
         frames.add(frames.removeIndex(1));
-        Assets.loadedRegions.put(DEAD_KEY, frames.get(4));
-        Assets.animations.put(textureAtlas, new Animation(0.14f, frames));
+        animation = new Animation(0.14f, frames);
         if("vertical".equals(direction))
         {
             effect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
@@ -125,7 +123,7 @@ public class Gee extends Enemy
             effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
             if(canStartParticle)effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
 
-            TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
+            TextureRegion frame = animation.getKeyFrame(stateTime, true);
             float width = Utility.getWidth(frame, mDrawRect.height);
             frame.flip(flipx, false);//flip
             spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, width, mDrawRect.height);

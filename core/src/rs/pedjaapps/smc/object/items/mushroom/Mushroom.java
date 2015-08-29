@@ -45,11 +45,16 @@ public abstract class Mushroom extends BoxItem
     }
 
     @Override
+    public void initAssets()
+    {
+        texture = Assets.manager.get(textureName);
+    }
+
+    @Override
     public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
-        Texture txt = Assets.manager.get(textureName);
-        Utility.draw(spriteBatch, txt, position.x, position.y, mDrawRect.height);
+        Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
     }
 
     @Override

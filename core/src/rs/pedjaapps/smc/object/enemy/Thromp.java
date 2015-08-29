@@ -19,14 +19,13 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Thromp extends Enemy
 {
     public static final float POSITION_Z = 0.093f;
-    public String DEAD_KEY;
-    public String ACTIVE_KEY, DEFAULT_KEY;
     public String direction;
     public float maxDistance;
     public float speed;
     private Vector3 mOriginPosition;
     private boolean forward = true, staying = true;
     private float rotation;
+    private TextureRegion tDefault, tActive;
 
     public Thromp(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
     {
@@ -53,25 +52,21 @@ public class Thromp extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.loadedRegions.get(DEAD_KEY);
+        return tDefault;
     }
 
     @Override
     public void initAssets()
     {
-        DEAD_KEY = textureAtlas + ":dead";
-        DEFAULT_KEY = textureAtlas + ":default";
-        ACTIVE_KEY = textureAtlas + ":active";
         TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Assets.loadedRegions.put(DEAD_KEY, atlas.findRegion("default"));
-        Assets.loadedRegions.put(DEFAULT_KEY, atlas.findRegion("default"));
-        Assets.loadedRegions.put(ACTIVE_KEY, atlas.findRegion("active"));
+        tDefault = atlas.findRegion("default");
+        tActive = atlas.findRegion("active");
     }
 
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = Assets.loadedRegions.get(staying ? DEFAULT_KEY : ACTIVE_KEY);
+        TextureRegion frame = staying ? tDefault : tActive;
         float width = Utility.getWidth(frame, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;

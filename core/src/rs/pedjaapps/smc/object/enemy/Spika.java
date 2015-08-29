@@ -26,6 +26,8 @@ public class Spika extends Enemy
     public float mSpeed;
     private float mRotation, mDetectionSize;
     public int mKillPoints;
+    private Texture texture;
+    private TextureRegion region;
 
     public Spika(World world, Vector2 size, Vector3 position, String color)
     {
@@ -61,13 +63,12 @@ public class Spika extends Enemy
     @Override
     public void initAssets()
     {
-
+        texture = Assets.manager.get(textureName);
     }
 
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        Texture texture = Assets.manager.get(textureName);
         if(texture != null)
         {
             float width = Utility.getWidth(texture, mDrawRect.height);
@@ -180,7 +181,11 @@ public class Spika extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return Assets.manager.get(textureName);
+        if(region == null)
+        {
+            region = new TextureRegion(texture);
+        }
+        return region;
     }
 
     private boolean checkMaryoInFront()

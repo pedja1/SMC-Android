@@ -358,8 +358,7 @@ public class HUD
                 float h = itemBoxR.height * 0.5f;
                 float x = itemBoxR.x + itemBoxR.width * 0.5f - w * 0.5f;
                 float y = itemBoxR.y + itemBoxR.height * 0.5f - h * 0.5f;
-                Texture txt = Assets.manager.get(item.textureName);
-                batch.draw(txt, x, y, w, h);
+                batch.draw(item.texture, x, y, w, h);
             }
 
 			boxTextPopup.render(batch);
