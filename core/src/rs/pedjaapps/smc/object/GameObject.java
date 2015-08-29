@@ -30,15 +30,10 @@ public abstract class GameObject
         stand_right("stand-right"),
         walk_right_1("walk-right-1"),
         walk_right_2("walk-right-2"),
-        stand_left("stand-left"),
         jump_right("jump-right"),
-        jump_left("jump-left"),
         fall_right("fall-right"),
-        fall_left("fall-left"),
         dead_right("dead-right"),
-        dead_left("dead-left"),
         duck_right("duck-right"),
-        duck_left("duck-left"),
         climb_left("climb-left"),
         climb_right("climb-right"),
         throw_right_1("throw-right-1"),
@@ -62,7 +57,7 @@ public abstract class GameObject
 
     public enum AKey
     {
-        walk_left, walk_right, climb, _throw
+        walk, climb, _throw
     }
 
     public GameObject(World world, Vector2 size, Vector3 position)
@@ -83,4 +78,5 @@ public abstract class GameObject
     public abstract void _render(SpriteBatch spriteBatch);
     public abstract void _update(float delta);
     public abstract void initAssets();
+    //public abstract void dispose();
 }
