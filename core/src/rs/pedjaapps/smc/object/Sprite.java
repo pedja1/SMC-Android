@@ -29,7 +29,7 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
         Texture txt = null;
         TextureRegion region = null;
@@ -70,7 +70,7 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void update(float delta)
+    public void _update(float delta)
     {
 
     }

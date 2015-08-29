@@ -77,7 +77,7 @@ public class Fireplant extends BoxItem
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);

@@ -127,7 +127,7 @@ public class Box extends Sprite
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
         if (invisible)
         {
@@ -135,7 +135,7 @@ public class Box extends Sprite
         }
         if (itemObject != null)
         {
-            itemObject.render(spriteBatch);
+            itemObject._render(spriteBatch);
         }
         if (usableCount == 0)
         {
@@ -417,7 +417,7 @@ public class Box extends Sprite
     }
 
     @Override
-    public void update(float delta)
+    public void _update(float delta)
     {
         if(spinning)
         {
@@ -425,7 +425,7 @@ public class Box extends Sprite
         }
         if (itemObject != null/* && world.isObjectVisible(itemObject, true)*/)
         {
-            itemObject.update(delta);
+            itemObject._update(delta);
         }
         /*else
         {

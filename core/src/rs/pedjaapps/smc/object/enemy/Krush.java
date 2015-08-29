@@ -71,7 +71,7 @@ public class Krush extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
         if (!dying)
@@ -206,9 +206,9 @@ public class Krush extends Enemy
     }
 
     @Override
-    public void downgradeOrDie(GameObject killedBy)
+    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
     {
-        super.downgradeOrDie(killedBy);
+        super.downgradeOrDie(killedBy, forceBulletKill);
         ((GameScreen)world.screen).killPointsTextHandler.add(isSmall ? KP_SMALL : KP_BIG, position.x, position.y + mDrawRect.height);
     }
 }

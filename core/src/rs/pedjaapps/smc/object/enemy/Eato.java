@@ -83,7 +83,7 @@ public class Eato extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(stateTime, true);
 

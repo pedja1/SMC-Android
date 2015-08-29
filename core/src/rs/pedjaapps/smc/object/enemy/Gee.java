@@ -117,7 +117,7 @@ public class Gee extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
 
         if(!dying)
@@ -353,11 +353,11 @@ public class Gee extends Enemy
     }
 
     @Override
-    public void downgradeOrDie(GameObject killedBy)
+    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
     {
         if(fireResistant && killedBy instanceof Fireball)
             return;
-        super.downgradeOrDie(killedBy);
+        super.downgradeOrDie(killedBy, forceBulletKill);
         ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 }

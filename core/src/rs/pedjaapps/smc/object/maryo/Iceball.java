@@ -1,13 +1,10 @@
 package rs.pedjaapps.smc.object.maryo;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.DynamicObject;
@@ -21,17 +18,17 @@ import rs.pedjaapps.smc.utility.Utility;
 /**
  * Created by pedja on 19.8.15..
  */
-public class Fireball extends DynamicObject
+public class Iceball extends DynamicObject
 {
     public static final float POSITION_Z = 0.095f;
-    public static final float VELOCITY_X = 7f;
-    public static final float VELOCITY_Y = 5f;
+    public static final float VELOCITY_X = 6f;
+    public static final float VELOCITY_Y = 2.5f;
     public Direction direction = Direction.right;
     public float velY = -1;
     ParticleEffect trail, explosion;
     private boolean destroyed;
 
-    public Fireball(World world, Vector3 position)
+    public Iceball(World world, Vector3 position)
     {
         super(world, new Vector2(.23f, .23f), position);
         position.z = POSITION_Z;
@@ -44,12 +41,12 @@ public class Fireball extends DynamicObject
         trail.draw(spriteBatch);
         if (!destroyed)
         {
-            TextureRegion region = Assets.animations.get("data/animation/fireball.pack").getKeyFrame(stateTime, true);
-            Utility.draw(spriteBatch, region, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            Texture txt = Assets.manager.get("data/animation/iceball.png");
+            Utility.draw(spriteBatch, txt, mDrawRect.x, mDrawRect.y, mDrawRect.height);
         }
         else
         {
-            explosion.setPosition(mColRect.x + (velocity.x > 0 ? mColRect.width : 0), mColRect.y + mColRect.height * 0.5f);
+            explosion.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
             explosion.draw(spriteBatch);
         }
     }
@@ -94,7 +91,7 @@ public class Fireball extends DynamicObject
             if(explosion.isComplete())
             {
                 world.trashObjects.add(this);
-                world.FIREBALL_POOL.free(this);
+                world.ICEBALL_POOL.free(this);
             }
             explosion.update(delta);
         }
@@ -137,9 +134,10 @@ public class Fireball extends DynamicObject
         }
         else if (object instanceof Enemy)
         {
-
-            if(((Enemy) object).mFireResistant != 1)
-                ((Enemy) object).downgradeOrDie(this, false);
+            if(((Enemy) object).mIceResistance < 1)
+            {
+                ((Enemy) object).freeze();
+            }
             else
             {
                 //repelled sound
@@ -159,15 +157,8 @@ public class Fireball extends DynamicObject
     @Override
     public void initAssets()
     {
-        if (Assets.animations.get("data/animation/fireball.pack") == null)
-        {
-            TextureAtlas atlas = Assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
-            Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
-
-            Assets.animations.put("data/animation/fireball.pack", new Animation(0.05f, regions));
-        }
-        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_emitter.p", ParticleEffect.class));
-        explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
+        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_emitter.p", ParticleEffect.class));
+        explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
     }
 
     public void destroy()

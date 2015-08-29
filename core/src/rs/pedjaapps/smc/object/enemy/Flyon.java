@@ -68,7 +68,7 @@ public class Flyon extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.animations.get(textureAtlas).getKeyFrame(staying ? 0 : stateTime, true);
         float width = Utility.getWidth(frame, mDrawRect.height);

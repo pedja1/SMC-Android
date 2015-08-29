@@ -76,7 +76,7 @@ public class Coin extends Item
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
 		if(!visible)return;
         //if (!playerHit)

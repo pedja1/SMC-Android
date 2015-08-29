@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
 import rs.pedjaapps.smc.object.maryo.Fireball;
+import rs.pedjaapps.smc.object.maryo.Iceball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -77,6 +78,17 @@ public class World
         protected Fireball newObject()
         {
             Fireball fb = new Fireball(World.this, new Vector3());
+            fb.initAssets();
+            return fb;
+        }
+    };
+
+    public Pool<Iceball> ICEBALL_POOL = new Pool<Iceball>()
+    {
+        @Override
+        protected Iceball newObject()
+        {
+            Iceball fb = new Iceball(World.this, new Vector3());
             fb.initAssets();
             return fb;
         }

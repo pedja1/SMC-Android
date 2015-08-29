@@ -88,7 +88,7 @@ public class Turtle extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
         if(!isShell && turn)
@@ -215,7 +215,7 @@ public class Turtle extends Enemy
 			}
             else if(object instanceof Enemy && object != this && isShell && isShellMoving && ((Enemy)object).handleCollision)
             {
-                ((Enemy)object).downgradeOrDie(this);
+                ((Enemy)object).downgradeOrDie(this, false);
             }
 		}
         else

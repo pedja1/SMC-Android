@@ -68,7 +68,7 @@ public abstract class Item extends Sprite
     }
 
     @Override
-    public final void update(float delta)
+    public final void _update(float delta)
     {
         if(dropping)
         {

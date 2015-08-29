@@ -80,7 +80,7 @@ public abstract class GameObject
         mDrawRect.y = world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.y : mColRect.y;
     }
 
-    public abstract void render(SpriteBatch spriteBatch);
-    public abstract void update(float delta);
+    public abstract void _render(SpriteBatch spriteBatch);
+    public abstract void _update(float delta);
     public abstract void initAssets();
 }

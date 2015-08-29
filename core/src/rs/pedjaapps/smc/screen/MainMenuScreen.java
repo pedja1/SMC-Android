@@ -169,8 +169,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         //for (GameObject gameObject : loader.level.gameObjects)
         {
             GameObject gameObject = loader.level.gameObjects.get(i);
-			gameObject.update(deltaTime);
-            gameObject.render(batch);
+			gameObject._update(deltaTime);
+            gameObject._render(batch);
         }
     }
 

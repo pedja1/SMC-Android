@@ -15,9 +15,9 @@ public abstract class DynamicObject extends GameObject
 	public float stateTime;
 	
 	private static final float ACCELERATION     = 20f;
-    protected static final float DAMP             = 0.90f;
     protected static final float DEF_MAX_VEL = 4f;
-	
+    protected static final float DEF_VEL_DUMP = .9f;
+
 	public boolean grounded = false;
 
     long lasHitSoundPlayed;
@@ -28,6 +28,8 @@ public abstract class DynamicObject extends GameObject
     {
         right, left
     }
+
+    protected float velocityDump = DEF_VEL_DUMP;
 	
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
@@ -47,7 +49,7 @@ public abstract class DynamicObject extends GameObject
 	}
 	
 	@Override
-    public void update(float delta)
+    public void _update(float delta)
     {
         // Setting initial vertical acceleration 
         acceleration.y = Constants.GRAVITY;
@@ -62,7 +64,7 @@ public abstract class DynamicObject extends GameObject
         checkCollisionWithBlocks(delta);
 
         // apply damping to halt Maryo nicely 
-        velocity.x *= DAMP;
+        velocity.x *= velocityDump;
 
         // ensure terminal velocity is not exceeded
         //x
@@ -307,18 +309,6 @@ public abstract class DynamicObject extends GameObject
 		}
         return false;
 	}
-
-    protected final void findGround()
-    {
-        List<GameObject> objects = world.level.gameObjects;
-
-        for (int i = 0; i < objects.size(); i++)
-        {
-            GameObject go = objects.get(i);
-            if (go == null) continue;
-
-        }
-    }
 
 	public abstract float maxVelocity();
 }

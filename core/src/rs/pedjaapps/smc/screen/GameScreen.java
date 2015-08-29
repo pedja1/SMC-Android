@@ -437,7 +437,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
                 {
-                    go.update(delta);
+                    go._update(delta);
                 }
             }
         }
@@ -477,7 +477,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //for (GameObject object : drawableObjects)
         {
             GameObject object = drawableObjects.get(i);
-            object.render(spriteBatch);
+            object._render(spriteBatch);
         }
     }
 
@@ -611,6 +611,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
         Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class);
+        Assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class);
+        Assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class);
+        Assets.manager.load("data/animation/iceball.png", Texture.class);
         hud.loadAssets();
 
         //audio

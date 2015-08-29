@@ -14,13 +14,13 @@ public class EnemyStopper extends GameObject
     }
 
     @Override
-	public void render(SpriteBatch spriteBatch)
+	public void _render(SpriteBatch spriteBatch)
 	{
 		// this object is invisible
 	}
 
     @Override
-    public void update(float delta)
+    public void _update(float delta)
     {
 
     }

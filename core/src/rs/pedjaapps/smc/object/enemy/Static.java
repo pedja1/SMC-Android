@@ -35,7 +35,7 @@ public class Static extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         Texture texture = Assets.manager.get(textureName);
         if (texture != null)

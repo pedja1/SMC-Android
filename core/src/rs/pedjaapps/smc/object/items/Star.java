@@ -44,7 +44,7 @@ public class Star extends BoxItem
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
         Texture txt = Assets.manager.get(textureName);

@@ -67,7 +67,7 @@ public class Rokko extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         Texture frame = Assets.manager.get(textureName);
         float width = Utility.getWidth(frame, mDrawRect.height);

@@ -309,7 +309,7 @@ public class Maryo extends DynamicObject
         Assets.loadedRegions.put(TKey.duck_left + ":" + state, tmp);
     }
 
-    public void render(SpriteBatch spriteBatch)
+    public void _render(SpriteBatch spriteBatch)
     {
         TextureRegion marioFrame;
 		if(exiting)
@@ -687,7 +687,7 @@ public class Maryo extends DynamicObject
     }
 
 	@Override
-	public void update(float delta)
+	public void _update(float delta)
 	{
 		if(exiting)
 		{
@@ -865,7 +865,7 @@ public class Maryo extends DynamicObject
 		if(worldState == WorldState.DYING)
 		{
 			stateTime += delta;
-			if(dyingAnim.update(delta))super.update(delta);
+			if(dyingAnim.update(delta))super._update(delta);
 		}
 		else if(resizingAnimation != null)
         {
@@ -892,7 +892,7 @@ public class Maryo extends DynamicObject
             }
             else
             {
-                super.update(delta);
+                super._update(delta);
                 //TODO ovo se vec proverava u checkY
                 //check where ground is
                 Array<GameObject> objects = world.getVisibleObjects();
@@ -958,7 +958,11 @@ public class Maryo extends DynamicObject
             if(!godMode)
             {
                 boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
-                if (deadAnyway)
+                if(((Enemy) object).frozen)
+                {
+                    ((Enemy) object).downgradeOrDie(this, true);
+                }
+                else if (deadAnyway)
                 {
                     downgradeOrDie(false);
                 }
@@ -1390,6 +1394,14 @@ public class Maryo extends DynamicObject
         }
         else if(maryoState == MaryoState.ice)
         {
+            Iceball iceball = world.ICEBALL_POOL.obtain();
+            iceball.mColRect.x = iceball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
+            iceball.mColRect.y = iceball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+            iceball.updateBounds();
+            iceball.reset();
+            iceball.direction = facingLeft ? Direction.left : Direction.right;
+            world.level.gameObjects.add(iceball);
+            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
             bulletShotTime = 0;
         }
     }

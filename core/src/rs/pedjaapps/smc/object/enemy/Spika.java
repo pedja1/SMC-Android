@@ -65,7 +65,7 @@ public class Spika extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         Texture texture = Assets.manager.get(textureName);
         if(texture != null)
@@ -140,7 +140,7 @@ public class Spika extends Enemy
         super.handleCollision(object, vertical);
         if(object instanceof Enemy && object != this && ((Enemy)object).handleCollision && (velocity.x > 0.5f || velocity.x < 0.5f))
         {
-            ((Enemy)object).downgradeOrDie(this);
+            ((Enemy)object).downgradeOrDie(this, false);
         }
         return false;
 	}

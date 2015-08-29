@@ -69,7 +69,7 @@ public class Thromp extends Enemy
     }
 
     @Override
-    public void draw(SpriteBatch spriteBatch)
+    public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = Assets.loadedRegions.get(staying ? DEFAULT_KEY : ACTIVE_KEY);
         float width = Utility.getWidth(frame, mDrawRect.height);
