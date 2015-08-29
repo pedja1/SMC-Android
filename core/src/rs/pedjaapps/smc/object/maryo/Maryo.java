@@ -1069,7 +1069,7 @@ public class Maryo extends DynamicObject
     public void upgrade(MaryoState newState, boolean tempUpdate, Item item)
     {
         //cant upgrade from ice/fire to big
-        if((maryoState == newState && newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire)
+        if((maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
             ((GameScreen)world.screen).hud.item = item;
