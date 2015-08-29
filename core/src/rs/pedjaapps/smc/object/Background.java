@@ -36,5 +36,10 @@ public class Background
 	{
 		spriteBatch.draw(Assets.manager.get(textureName, Texture.class), position.x, position.y, width, height);
 	}
+
+	public void dispose()
+	{
+
+	}
 	
 }

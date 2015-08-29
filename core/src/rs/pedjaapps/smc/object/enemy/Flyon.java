@@ -66,6 +66,12 @@ public class Flyon extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        animation = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = animation.getKeyFrame(staying ? 0 : stateTime, true);

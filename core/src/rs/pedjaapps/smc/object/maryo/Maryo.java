@@ -216,6 +216,12 @@ public class Maryo extends DynamicObject
 
     }
 
+    @Override
+    public void dispose()
+    {
+        //we dont actually ahve to do anything here, since maryo is always present, and no new reources are created
+    }
+
     private void loadTextures(MaryoState state)
     {
         TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");

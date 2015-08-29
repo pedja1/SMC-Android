@@ -67,6 +67,13 @@ public class Spika extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        texture = null;
+        region = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         if(texture != null)

@@ -36,4 +36,10 @@ public class LevelExit extends GameObject
     {
         //invisible
     }
+
+    @Override
+    public void dispose()
+    {
+
+    }
 }

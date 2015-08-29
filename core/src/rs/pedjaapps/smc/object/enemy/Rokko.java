@@ -69,9 +69,17 @@ public class Rokko extends Enemy
     public void initAssets()
     {
         texture = Assets.manager.get(textureName);
-        texture = Assets.manager.get(textureName);
         effect = new ParticleEffect(Assets.manager.get("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class));
         effect.start();
+    }
+
+    @Override
+    public void dispose()
+    {
+        effect.dispose();
+        effect = null;
+        texture = null;
+        region = null;
     }
 
     @Override

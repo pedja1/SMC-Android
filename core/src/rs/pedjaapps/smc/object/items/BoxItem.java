@@ -18,4 +18,12 @@ public abstract class BoxItem extends Item
         super(world, size, position);
         this.box = box;
     }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        box.dispose();
+        box = null;
+    }
 }

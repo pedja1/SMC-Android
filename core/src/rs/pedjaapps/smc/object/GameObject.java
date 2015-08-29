@@ -78,5 +78,5 @@ public abstract class GameObject
     public abstract void _render(SpriteBatch spriteBatch);
     public abstract void _update(float delta);
     public abstract void initAssets();
-    //public abstract void dispose();
+    public abstract void dispose();
 }

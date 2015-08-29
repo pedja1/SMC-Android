@@ -111,4 +111,9 @@ public abstract class Item extends Sprite
         playerHit = false;
     }
 
+    @Override
+    public void dispose()
+    {
+        texture.dispose();
+    }
 }

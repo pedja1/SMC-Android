@@ -89,4 +89,11 @@ public class Moon extends BoxItem
         Sound sound = Assets.manager.get("data/sounds/item/moon.ogg");
         if(sound != null && Assets.playSounds)sound.play();
     }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        animation = null;
+    }
 }

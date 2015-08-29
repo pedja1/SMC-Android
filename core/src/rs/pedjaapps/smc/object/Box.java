@@ -130,6 +130,14 @@ public class Box extends Sprite
     }
 
     @Override
+    public void dispose()
+    {
+        txDisabled = null;
+        texture = null;
+        animation = null;
+    }
+
+    @Override
     public void _render(SpriteBatch spriteBatch)
     {
         if (invisible)

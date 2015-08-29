@@ -162,6 +162,16 @@ public class Iceball extends DynamicObject
         explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
     }
 
+    @Override
+    public void dispose()
+    {
+        texture = null;
+        explosion.dispose();
+        explosion = null;
+        trail.dispose();
+        trail = null;
+    }
+
     public void destroy()
     {
         destroyed = true;

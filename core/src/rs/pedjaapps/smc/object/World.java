@@ -184,4 +184,11 @@ public class World
         RECT_POOL.free(worldBounds);
         return result;
     }
+
+    public void dispose()
+    {
+        level.dispose();
+        maryo.dispose();
+        maryo = null;
+    }
 }

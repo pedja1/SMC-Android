@@ -89,6 +89,13 @@ public class Sprite extends GameObject
 
     }
 
+    @Override
+    public void dispose()
+    {
+        txt = null;
+        region = null;
+    }
+
     private void applyRotation()
     {
         //apply rotation

@@ -64,6 +64,13 @@ public class Thromp extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        tDefault = null;
+        tActive = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame = staying ? tDefault : tActive;

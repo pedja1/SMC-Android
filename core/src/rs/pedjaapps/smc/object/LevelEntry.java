@@ -33,4 +33,10 @@ public class LevelEntry extends GameObject
     {
         //invisible
     }
+
+    @Override
+    public void dispose()
+    {
+
+    }
 }

@@ -23,7 +23,6 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Furball extends Enemy
 {
-
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
@@ -101,6 +100,15 @@ public class Furball extends Enemy
             canBeHitFromShell = false;
             tHit = atlas.findRegion("hit");
         }
+    }
+
+    @Override
+    public void dispose()
+    {
+        walkAnimation = null;
+        tTurn = null;
+        tHit = null;
+        tDead = null;
     }
 
     @Override

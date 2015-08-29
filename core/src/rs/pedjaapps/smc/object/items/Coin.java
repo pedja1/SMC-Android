@@ -177,4 +177,11 @@ public class Coin extends Item
 		originalPosY = position.y;
 		GameSaveUtility.getInstance().save.points += points;
 	}
+
+	@Override
+	public void dispose()
+	{
+		super.dispose();
+		animation = null;
+	}
 }

@@ -68,6 +68,14 @@ public class Krush extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        aBig = null;
+        aSmall = null;
+        tDead = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;

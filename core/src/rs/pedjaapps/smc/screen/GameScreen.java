@@ -597,6 +597,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
         exitDialog.dispose();
+        world.dispose();
         GA.sendLevelEnded(levelName, stateTime);
     }
 

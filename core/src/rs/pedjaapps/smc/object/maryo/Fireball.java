@@ -171,6 +171,16 @@ public class Fireball extends DynamicObject
         explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
     }
 
+    @Override
+    public void dispose()
+    {
+        animation = null;
+        trail.dispose();
+        trail = null;
+        explosion.dispose();
+        explosion = null;
+    }
+
     public void destroy()
     {
         destroyed = true;

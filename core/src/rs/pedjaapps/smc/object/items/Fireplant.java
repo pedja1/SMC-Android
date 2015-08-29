@@ -97,4 +97,11 @@ public class Fireplant extends BoxItem
         box.itemObject = null;
         GameSaveUtility.getInstance().save.points += POINTS;
     }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        animation = null;
+    }
 }

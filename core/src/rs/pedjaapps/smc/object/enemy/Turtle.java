@@ -80,6 +80,15 @@ public class Turtle extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        walkAnimation = null;
+        tDead = null;
+        tTurn = null;
+        tShell = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;

@@ -28,4 +28,19 @@ public class Level
 		this.gameObjects = new ArrayList<>(5000);//set initial capacity so that we avoid alloc during game loop
 		this.levelName = levelName;
 	}
+
+	public void dispose()
+	{
+		for(GameObject go : gameObjects)
+		{
+			go.dispose();
+		}
+		gameObjects = null;
+		bg1.dispose();
+		bg2.dispose();
+		bgColor.dispose();
+		bg2 = null;
+		bg1 = null;
+		bgColor = null;
+	}
 }

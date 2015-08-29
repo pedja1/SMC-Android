@@ -30,5 +30,11 @@ public class EnemyStopper extends GameObject
 	{
 		// TODO: Implement this method
 	}
-	
+
+    @Override
+    public void dispose()
+    {
+
+    }
+
 }

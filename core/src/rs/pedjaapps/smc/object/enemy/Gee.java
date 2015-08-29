@@ -115,6 +115,16 @@ public class Gee extends Enemy
     }
 
     @Override
+    public void dispose()
+    {
+        animation = null;
+        effect.dispose();
+        deadEffect.dispose();
+        effect = null;
+        deadEffect = null;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
 
