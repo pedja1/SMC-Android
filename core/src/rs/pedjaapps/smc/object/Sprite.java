@@ -18,7 +18,6 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
-    public float mRotationX, mRotationY, mRotationZ;//degrees
     private Rect mOrigDrawRect;
     Texture txt = null;
     TextureRegion region = null;

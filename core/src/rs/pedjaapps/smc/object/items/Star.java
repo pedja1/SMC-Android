@@ -56,15 +56,15 @@ public class Star extends Item
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        if(!visible)return;
+        if (!visible) return;
         trail.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
         trail.draw(spriteBatch);
         spriteBatch.setShader(Shader.STAR_GLOW_SHADER);
 
-        if(glimMode)
+        if (glimMode)
         {
             glimColor.a = glimCounter;
-            if(glimCounter > GLIM_COLOR_MAX_ALPHA)
+            if (glimCounter > GLIM_COLOR_MAX_ALPHA)
             {
                 glimMode = false;
                 glimCounter = GLIM_COLOR_MAX_ALPHA;
@@ -73,7 +73,7 @@ public class Star extends Item
         else
         {
             glimColor.a = glimCounter;
-            if(glimCounter < GLIM_COLOR_START_ALPHA)
+            if (glimCounter < GLIM_COLOR_START_ALPHA)
             {
                 glimMode = true;
                 glimCounter = GLIM_COLOR_START_ALPHA;
@@ -81,7 +81,11 @@ public class Star extends Item
         }
         spriteBatch.setColor(glimColor);
 
-        Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
+        float width = Utility.getWidth(texture, mDrawRect.height);
+        float originX = width * 0.5f;
+        float originY = mDrawRect.height * 0.5f;
+        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
+                1, 1, mRotationZ, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
 
         spriteBatch.setShader(null);
         spriteBatch.setColor(Color.WHITE);
@@ -91,7 +95,7 @@ public class Star extends Item
     public void updateItem(float delta)
     {
         super.updateItem(delta);
-        if(popFromBox)
+        if (popFromBox)
         {
             // scale velocity to frame units
             velocity.scl(delta);
@@ -104,7 +108,7 @@ public class Star extends Item
             // un-scale velocity (not in frame time)
             velocity.scl(1 / delta);
 
-            if(position.y >= popTargetPosY)
+            if (position.y >= popTargetPosY)
             {
                 isInBox = false;
                 popFromBox = false;
@@ -112,7 +116,7 @@ public class Star extends Item
                 velocity.x = direction == Direction.right ? VELOCITY_X : -VELOCITY_X;
             }
         }
-        else if(moving)
+        else if (moving)
         {
             trail.update(delta);
             // Setting initial vertical acceleration
@@ -126,7 +130,7 @@ public class Star extends Item
 
             checkCollisionWithBlocks(delta, true, true, false, false);
 
-            switch(direction)
+            switch (direction)
             {
                 case right:
                     velocity.x = VELOCITY_X;
@@ -141,7 +145,7 @@ public class Star extends Item
                 velY = -1;
             }
         }
-        if(glimMode)
+        if (glimMode)
         {
             glimCounter += (delta * 3f);
         }
@@ -149,16 +153,52 @@ public class Star extends Item
         {
             glimCounter -= (delta * 3f);
         }
+        getRotation(delta);
+    }
+
+    private void getRotation(float delta)
+    {
+        float circumference = (float) Math.PI * (mColRect.width);
+        float deltaVelocity = VELOCITY_X * delta;
+        float step = (circumference / deltaVelocity);
+        float frameRotation = 360 / step;//degrees
+        frameRotation *= 0.5f;
+
+        if(velocity.y > 0.0f)
+        {
+            mRotationZ += frameRotation;
+        }
+        // rotate back to 0 if falling
+        else
+        {
+            frameRotation *= 0.9f;
+            if(mRotationZ > 5.0f && mRotationZ <= 175.0f)
+            {
+                mRotationZ -= frameRotation;
+            }
+            else if(mRotationZ < 355 && mRotationZ > 185)
+            {
+                mRotationZ += frameRotation;
+            }
+        }
+        if(mRotationZ > 360)
+        {
+            mRotationZ = mRotationZ - 360;
+        }
+        if(mRotationZ < -360)
+        {
+            mRotationZ = 0 - mRotationZ;
+        }
     }
 
     @Override
     protected boolean handleCollision(GameObject object, boolean vertical)
     {
-        if(object instanceof Sprite)
+        if (object instanceof Sprite)
         {
-            if (((Sprite)object).type == Sprite.Type.massive)
+            if (((Sprite) object).type == Sprite.Type.massive)
             {
-                if(vertical)
+                if (vertical)
                 {
                     velY = mColRect.y < object.mColRect.y ? 0 : VELOCITY_Y;
                     return true;
@@ -198,7 +238,7 @@ public class Star extends Item
     @Override
     public void hitPlayer()
     {
-        if(isInBox)return;
+        if (isInBox) return;
         playerHit = true;
         //performCollisionAction();
     }

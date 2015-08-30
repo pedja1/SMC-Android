@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,9 +10,9 @@ import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -118,12 +117,12 @@ public class Turtle extends Enemy
         }
     }
 
-    private float getRotation()
+    private float getRotation(float delta)
     {
         if(isShellMoving)
         {
             float circumference = (float) Math.PI * (mColRect.width);
-            float deltaVelocity = mVelocityShell * Gdx.graphics.getDeltaTime();
+            float deltaVelocity = mVelocityShell * delta;
 
             float step = circumference / deltaVelocity;
 
@@ -173,7 +172,7 @@ public class Turtle extends Enemy
             }
         }
         turned = false;
-        mShellRotation = getRotation();
+        mShellRotation = getRotation(deltaTime);
     }
 
     private float getVelocityX()

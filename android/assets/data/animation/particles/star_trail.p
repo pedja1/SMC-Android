@@ -5,13 +5,13 @@ active: false
 lowMin: 1000.0
 lowMax: 1000.0
 - Count - 
-min: 10
-max: 30
+min: 24
+max: 40
 - Emission - 
-lowMin: 30.0
-lowMax: 30.0
-highMin: 30.0
-highMax: 30.0
+lowMin: 40.0
+lowMax: 40.0
+highMin: 40.0
+highMax: 40.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
