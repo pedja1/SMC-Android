@@ -1,5 +1,7 @@
 package rs.pedjaapps.smc.object.items;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -8,6 +10,7 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -19,20 +22,22 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Star extends Item
 {
+    public static final float GLIM_COLOR_START_ALPHA = 0f;
+    public static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
     public static final float POSITION_Z = 0.053f;
     public static final float VELOCITY_X = 3f;
     public static final float VELOCITY_Y = 10f;
-    public static final float DEF_SIZE = 0.49f;
+    public static final float DEF_SIZE = 0.65625f;
 
     boolean moving;
     public float velY = -1;
 
-    public enum Direction
-    {
-        right, left, up, down
-    }
-
     private Direction direction = Direction.right;
+
+    private final Color glimColor = new Color(0.160784314f, 0.654901961f, 1f, GLIM_COLOR_START_ALPHA);
+    private float glimCounter;
+    private boolean glimMode = true;
+    ParticleEffect trail;
 
     public Star(World world, Vector2 size, Vector3 position)
     {
@@ -45,13 +50,41 @@ public class Star extends Item
     public void initAssets()
     {
         texture = Assets.manager.get(textureName);
+        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
     }
 
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
+        trail.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
+        trail.draw(spriteBatch);
+        spriteBatch.setShader(Shader.STAR_GLOW_SHADER);
+
+        if(glimMode)
+        {
+            glimColor.a = glimCounter;
+            if(glimCounter > GLIM_COLOR_MAX_ALPHA)
+            {
+                glimMode = false;
+                glimCounter = GLIM_COLOR_MAX_ALPHA;
+            }
+        }
+        else
+        {
+            glimColor.a = glimCounter;
+            if(glimCounter < GLIM_COLOR_START_ALPHA)
+            {
+                glimMode = true;
+                glimCounter = GLIM_COLOR_START_ALPHA;
+            }
+        }
+        spriteBatch.setColor(glimColor);
+
         Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
+
+        spriteBatch.setShader(null);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override
@@ -81,6 +114,7 @@ public class Star extends Item
         }
         else if(moving)
         {
+            trail.update(delta);
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
 
@@ -106,6 +140,14 @@ public class Star extends Item
                 velocity.y = velY;
                 velY = -1;
             }
+        }
+        if(glimMode)
+        {
+            glimCounter += (delta * 3f);
+        }
+        else
+        {
+            glimCounter -= (delta * 3f);
         }
     }
 
@@ -169,6 +211,14 @@ public class Star extends Item
         popFromBox = true;
         velocity.y = VELOCITY_Y;
         originalPosY = position.y;
+    }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        trail.dispose();
+        trail = null;
     }
 
     //protected abstract void performCollisionAction();

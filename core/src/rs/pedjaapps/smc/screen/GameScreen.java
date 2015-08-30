@@ -614,6 +614,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class);
+        Assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class);
         Assets.manager.load("data/animation/iceball.png", Texture.class);
         hud.loadAssets();
 

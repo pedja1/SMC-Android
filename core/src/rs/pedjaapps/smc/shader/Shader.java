@@ -9,13 +9,10 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 public class Shader
 {
     public static ShaderProgram FREEZE_SHADER = new ShaderProgram(Gdx.files.internal("data/shaders/freeze.vert"), Gdx.files.internal("data/shaders/freeze.frag"));
+    public static ShaderProgram STAR_GLOW_SHADER = new ShaderProgram(Gdx.files.internal("data/shaders/star_glow.vert"), Gdx.files.internal("data/shaders/star_glow.frag"));
 
     static
     {
-        /*FREEZE_SHADER.begin();
-        FREEZE_SHADER.setUniformf("u_contrast", 1.0f);
-        FREEZE_SHADER.setUniformf("u_brightness", 0.0f);
-        FREEZE_SHADER.end();*/
         ShaderProgram.pedantic = false;
     }
 }
