@@ -157,10 +157,18 @@ public class Krush extends Enemy
         switch(contactType)
         {
             case stopper:
-                direction = direction == Direction.right ? Direction.left : Direction.right;
-                velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
+                turn();
                 break;
         }
+    }
+
+    @Override
+    public void turn()
+    {
+        if(turned)return;
+        direction = direction == Direction.right ? Direction.left : Direction.right;
+        velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
+        turned = true;
     }
 
     private void setupBoundingBox()

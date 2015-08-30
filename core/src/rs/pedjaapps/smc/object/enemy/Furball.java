@@ -26,11 +26,6 @@ public class Furball extends Enemy
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
-
-    private boolean turn;
-    private float turnStartTime;
-
-    private boolean turned = false;
     boolean dying = false;
     int killPoints = 10;
     boolean fireResistant = false;
@@ -201,11 +196,7 @@ public class Furball extends Enemy
 		switch(contactType)
 		{
 			case stopper:
-				direction = direction == Direction.right ? Direction.left : Direction.right;
-                turnStartTime = stateTime;
-                turn = true;
-				velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
-                turned = true;
+				turn();
 				break;
 		}
 	}

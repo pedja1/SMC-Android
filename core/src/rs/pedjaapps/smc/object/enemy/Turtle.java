@@ -27,14 +27,9 @@ public class Turtle extends Enemy
     public final float mVelocityShell;
     public static final float POS_Z = 0.091f;
 
-    private boolean turn;
-    private float turnStartTime;
-
     private float mShellRotation;
 
     public final int mKillPoints;
-
-    private boolean turned = false;
 
     boolean isShell = false, isShellMoving = false;
     private Animation walkAnimation;
@@ -233,11 +228,7 @@ public class Turtle extends Enemy
 		switch(contactType)
 		{
 			case stopper:
-				direction = direction == Direction.right ? Direction.left : Direction.right;
-                    turnStartTime = stateTime;
-                    turn = true;
-                velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
-                turned = true;
+				turn();
 				break;
             case player:
 

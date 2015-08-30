@@ -34,7 +34,7 @@ public class Fireball extends DynamicObject
 
     public Fireball(World world, Vector3 position)
     {
-        super(world, new Vector2(.23f, .23f), position);
+        super(world, new Vector2(.3125f, .3125f), position);
         position.z = POSITION_Z;
     }
 

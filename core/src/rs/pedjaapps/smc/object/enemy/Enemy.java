@@ -61,6 +61,11 @@ public abstract class Enemy extends DynamicObject
     private final Color frozenColor = new Color(0.160784314f, 0.654901961f, 1f, FROZEN_COLOR_START_ALPHA);
     private float freezeCounter, freezeCounterMax;
 
+    protected boolean turn;
+    protected float turnStartTime;
+
+    protected boolean turned = false;
+
     public void setDirection(Direction direction)
     {
         this.direction = direction;
@@ -270,7 +275,7 @@ public abstract class Enemy extends DynamicObject
         {
             update(delta);
         }
-
+        turned = false;
     }
 
     protected void update(float delta)
@@ -309,5 +314,15 @@ public abstract class Enemy extends DynamicObject
         freezeCounterMax = freezeCounter;
         velocityDump = 0.95f;
         velocity.y = 0;
+    }
+
+    public void turn()
+    {
+        if(turned)return;
+        direction = direction == Direction.right ? Direction.left : Direction.right;
+        turnStartTime = stateTime;
+        turn = true;
+        velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
+        turned = true;
     }
 }

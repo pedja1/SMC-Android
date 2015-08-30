@@ -33,6 +33,7 @@ import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
 
@@ -42,6 +43,10 @@ public class Maryo extends DynamicObject
     {
         small, big, fire, ice, ghost, flying
     }
+
+    public static final float STAR_EFFECT_TIMEOUT = 15f;
+    public static final float GLIM_COLOR_START_ALPHA = 0f;
+    public static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
 
     //this could be all done dynamically, but this way we minimize allocation in game loop
     //omg, this is a lot of constants :D
@@ -143,11 +148,17 @@ public class Maryo extends DynamicObject
     private Vector3 exitEnterStartPosition = new Vector3();
     private static final float exitEnterVelocity = 1.3f;
     private int rotation = 0;
-    public ParticleEffect powerJumpEffect;
+    public ParticleEffect powerJumpEffect, starEffect;
     public boolean powerJump;
     private float bulletShotTime = BULLET_COOLDOWN;
     private boolean fire;
     private float fireAnimationStateTime;
+
+    private boolean mInvincibleStar;
+    private final Color glimColor = new Color(0.160784314f, 0.654901961f, 1f, GLIM_COLOR_START_ALPHA);
+    private float glimCounter;
+    private boolean glimMode = true;
+    private float starEffectTime;
 
     //textures
     private TextureRegion[] tMap = new TextureRegion[30];
@@ -213,6 +224,7 @@ public class Maryo extends DynamicObject
         }
         setJumpSound();
         powerJumpEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
+        starEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
     }
 
@@ -356,6 +368,33 @@ public class Maryo extends DynamicObject
             marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
         }
 
+        if(mInvincibleStar)
+        {
+            starEffect.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
+            starEffect.draw(spriteBatch);
+            spriteBatch.setShader(Shader.NORMAL_BLEND_SHADER);
+
+            if (glimMode)
+            {
+                glimColor.a = Math.max(glimCounter, 0);
+                if (glimCounter > GLIM_COLOR_MAX_ALPHA)
+                {
+                    glimMode = false;
+                    glimCounter = GLIM_COLOR_MAX_ALPHA;
+                }
+            }
+            else
+            {
+                glimColor.a = Math.max(glimCounter, 0);
+                if (glimCounter < GLIM_COLOR_START_ALPHA)
+                {
+                    glimMode = true;
+                    glimCounter = GLIM_COLOR_START_ALPHA;
+                }
+            }
+            spriteBatch.setColor(glimColor);
+        }
+
         marioFrame.flip(facingLeft, false);
         //if god mode, make player half-transparent
         if (godMode)
@@ -381,6 +420,8 @@ public class Maryo extends DynamicObject
             powerJumpEffect.setPosition(position.x, position.y + 0.05f);
             powerJumpEffect.draw(spriteBatch);
         }
+        spriteBatch.setShader(null);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     private int tIndex(MaryoState state, TKey tkey)
@@ -795,7 +836,28 @@ public class Maryo extends DynamicObject
         {
             powerJumpEffect.update(delta);
         }
+        if(mInvincibleStar)
+        {
+            starEffect.update(delta);
+        }
         bulletShotTime += delta;
+        if(mInvincibleStar)
+        {
+            starEffectTime += delta;
+            if (glimMode)
+            {
+                glimCounter += (delta * 8f);
+            }
+            else
+            {
+                glimCounter -= (delta * 6f);
+            }
+            if(starEffectTime >= STAR_EFFECT_TIMEOUT)
+            {
+                mInvincibleStar = false;
+                starEffectTime = 0;
+            }
+        }
     }
 
     @Override
@@ -814,7 +876,18 @@ public class Maryo extends DynamicObject
             if (!godMode)
             {
                 boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
-                if (((Enemy) object).frozen)
+                if(mInvincibleStar)
+                {
+                    if(worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
+                    {
+                        ((Enemy) object).downgradeOrDie(this, true);
+                    }
+                    else
+                    {
+                        ((Enemy) object).turn();
+                    }
+                }
+                else if (((Enemy) object).frozen)
                 {
                     ((Enemy) object).downgradeOrDie(this, true);
                 }
@@ -1238,27 +1311,52 @@ public class Maryo extends DynamicObject
     {
         if (maryoState == MaryoState.fire)
         {
-            Fireball fireball = world.FIREBALL_POOL.obtain();
-            fireball.mColRect.x = fireball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-            fireball.mColRect.y = fireball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
-            fireball.updateBounds();
-            fireball.reset();
-            fireball.direction = facingLeft ? Direction.left : Direction.right;
-            world.level.gameObjects.add(fireball);
-            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+            addFireball(0f);
+            if(mInvincibleStar)
+            {
+                addFireball(Fireball.VELOCITY_Y * 0.5f);
+            }
             bulletShotTime = 0;
         }
         else if (maryoState == MaryoState.ice)
         {
-            Iceball iceball = world.ICEBALL_POOL.obtain();
-            iceball.mColRect.x = iceball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-            iceball.mColRect.y = iceball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
-            iceball.updateBounds();
-            iceball.reset();
-            iceball.direction = facingLeft ? Direction.left : Direction.right;
-            world.level.gameObjects.add(iceball);
-            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+            addIceball(0f);
+            if(mInvincibleStar)
+            {
+                addIceball(Fireball.VELOCITY_Y * 0.5f);
+            }
             bulletShotTime = 0;
         }
+    }
+
+    private void addIceball(float velY)
+    {
+        Iceball iceball = world.ICEBALL_POOL.obtain();
+        iceball.mColRect.x = iceball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
+        iceball.mColRect.y = iceball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+        iceball.updateBounds();
+        iceball.reset();
+        iceball.direction = facingLeft ? Direction.left : Direction.right;
+        iceball.velocity.y = velY;
+        world.level.gameObjects.add(iceball);
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+    }
+
+    private void addFireball(float velY)
+    {
+        Fireball fireball = world.FIREBALL_POOL.obtain();
+        fireball.mColRect.x = fireball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
+        fireball.mColRect.y = fireball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+        fireball.updateBounds();
+        fireball.reset();
+        fireball.direction = facingLeft ? Direction.left : Direction.right;
+        fireball.velocity.y = velY;
+        world.level.gameObjects.add(fireball);
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+    }
+
+    public void starPicked()
+    {
+        mInvincibleStar = true;
     }
 }

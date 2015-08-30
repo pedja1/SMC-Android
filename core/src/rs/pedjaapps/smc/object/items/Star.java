@@ -12,6 +12,7 @@ import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -59,7 +60,7 @@ public class Star extends Item
         if (!visible) return;
         trail.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
         trail.draw(spriteBatch);
-        spriteBatch.setShader(Shader.STAR_GLOW_SHADER);
+        spriteBatch.setShader(Shader.NORMAL_BLEND_SHADER);
 
         if (glimMode)
         {
@@ -240,7 +241,11 @@ public class Star extends Item
     {
         if (isInBox) return;
         playerHit = true;
-        //performCollisionAction();
+        //TODO play ""game/star.ogg","
+        //TODO play music for star, or whatewer
+        GameSaveUtility.getInstance().save.points += 1000;
+        world.maryo.starPicked();
+        world.trashObjects.add(this);
     }
 
     @Override
@@ -260,6 +265,4 @@ public class Star extends Item
         trail.dispose();
         trail = null;
     }
-
-    //protected abstract void performCollisionAction();
 }
