@@ -342,6 +342,7 @@ public class Box extends Sprite
             }
 
             mushroom.visible = false;
+            mushroom.initAssets();
             box.itemObject = mushroom;
         }
     }
@@ -354,6 +355,7 @@ public class Box extends Sprite
         coin.initAssets();
         coin.collectible = false;
         coin.visible = false;
+        coin.initAssets();
 
         box.itemObject = coin;
     }
@@ -363,6 +365,7 @@ public class Box extends Sprite
         Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position), box);
         fireplant.initAssets();
         fireplant.visible = false;
+        fireplant.initAssets();
 
         box.itemObject = fireplant;
     }
@@ -372,6 +375,7 @@ public class Box extends Sprite
         Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position), box);
         moon.initAssets();
         moon.visible = false;
+        moon.initAssets();
 
         box.itemObject = moon;
     }
