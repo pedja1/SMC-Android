@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
@@ -17,16 +16,17 @@ import rs.pedjaapps.smc.utility.Utility;
 /**
  * Created by pedja on 29.3.15..
  */
-public class Moon extends BoxItem
+public class Moon extends Item
 {
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.59375f;
     private Animation animation;
 
-    public Moon(World world, Vector2 size, Vector3 position, Box box)
+    public Moon(World world, Vector2 size, Vector3 position)
     {
-        super(world, size, position, box);
+        super(world, size, position);
         textureAtlas = "data/game/items/moon.pack";
+        position.z = 0.052f;
     }
 
     @Override
@@ -57,6 +57,7 @@ public class Moon extends BoxItem
             if(position.y >= popTargetPosY)
             {
                 popFromBox = false;
+                isInBox = false;
             }
         }
     }
@@ -82,8 +83,9 @@ public class Moon extends BoxItem
     @Override
     public void hitPlayer()
     {
+        if(isInBox)return;
         playerHit = true;
-        box.itemObject = null;
+        world.trashObjects.add(this);
         GameSaveUtility.getInstance().save.lifes += 3;
 
         Sound sound = Assets.manager.get("data/sounds/item/moon.ogg");
@@ -95,5 +97,11 @@ public class Moon extends BoxItem
     {
         super.dispose();
         animation = null;
+    }
+
+    @Override
+    public float maxVelocity()
+    {
+        return 0;
     }
 }

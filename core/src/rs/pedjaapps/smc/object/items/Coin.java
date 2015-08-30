@@ -40,9 +40,16 @@ public class Coin extends Item
     public Coin(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
+		position.z = 0.041f;
     }
 
-    @Override
+	@Override
+	public float maxVelocity()
+	{
+		return 0;
+	}
+
+	@Override
     public void initAssets()
     {
         TextureAtlas atlas = Assets.manager.get(textureAtlas);

@@ -3,9 +3,8 @@ package rs.pedjaapps.smc.object.items.mushroom;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.object.Box;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 /**
@@ -17,9 +16,9 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
 public class MushroomDefault extends Mushroom
 {
     public static final int POINTS = 500;
-    public MushroomDefault(World world, Vector2 size, Vector3 position, Box box)
+    public MushroomDefault(World world, Vector2 size, Vector3 position)
     {
-        super(world, size, position, box);
+        super(world, size, position);
         textureName = "data/game/items/mushroom_red.png";
     }
 
@@ -28,7 +27,7 @@ public class MushroomDefault extends Mushroom
     {
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.big, false, this);
-        box.itemObject = null;
+        world.trashObjects.add(this);
         GameSaveUtility.getInstance().save.points += POINTS;
     }
 }

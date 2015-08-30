@@ -1,18 +1,14 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.List;
-
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.items.BoxItem;
+import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -22,7 +18,7 @@ import rs.pedjaapps.smc.utility.Utility;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public abstract class Mushroom extends BoxItem
+public abstract class Mushroom extends Item
 {
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_POP = 1.6f;
@@ -39,9 +35,9 @@ public abstract class Mushroom extends BoxItem
 
     private Direction direction = Direction.right;
 
-    public Mushroom(World world, Vector2 size, Vector3 position, Box box)
+    public Mushroom(World world, Vector2 size, Vector3 position)
     {
-        super(world, size, position, box);
+        super(world, size, position);
     }
 
     @Override
@@ -76,6 +72,7 @@ public abstract class Mushroom extends BoxItem
 
             if(position.y >= popTargetPosY)
             {
+                isInBox = false;
                 popFromBox = false;
                 moving = true;
                 velocity.x = direction == Direction.right ? VELOCITY : -VELOCITY;
@@ -106,71 +103,15 @@ public abstract class Mushroom extends BoxItem
         }
     }
 
-    /** Collision checking **/
-    protected void checkCollisionWithBlocks(float delta)
-    {
-        // scale velocity to frame units
-        velocity.scl(delta);
-
-        // we first check the movement on the horizontal X axis
-
-        // simulate movement on the X
-        mColRect.x += velocity.x;
-
-        List<GameObject> surroundingObjects = world.level.gameObjects;
-        // if m collides, make his horizontal velocity 0
-        for (GameObject object : surroundingObjects)
-        {
-            if (object == null) continue;
-            if (mColRect.overlaps(object.mColRect))
-            {
-                handleCollision(object, false);
-            }
-        }
-        if(mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
-        {
-            velocity.x = 0;
-        }
-
-        // reset the x position of the collision box
-        mColRect.x = position.x;
-
-        // the same thing but on the vertical Y axis
-
-        mColRect.y += velocity.y;
-
-        for (GameObject object : surroundingObjects)
-        {
-            if (object == null) continue;
-            if (mColRect.overlaps(object.mColRect))
-            {
-                handleCollision(object, true);
-            }
-        }
-        if(mColRect.y < 0)
-        {
-            handleDroppedBelowWorld();
-        }
-
-        // reset the collision box's position on Y
-        mColRect.y = position.y;
-
-        // update position
-        position.add(velocity);
-        mColRect.x = position.x;
-        mColRect.y = position.y;
-        updateBounds();
-
-        // un-scale velocity (not in frame time)
-        velocity.scl(1 / delta);
-    }
-
-    protected void handleDroppedBelowWorld()
+    @Override
+    protected boolean handleDroppedBelowWorld()
     {
         world.trashObjects.add(this);
+        return false;
     }
 
-    protected void handleCollision(GameObject object, boolean vertical)
+    @Override
+    protected boolean handleCollision(GameObject object, boolean vertical)
     {
         if(object instanceof Sprite
                 && ((Sprite)object).type == Sprite.Type.massive)
@@ -192,11 +133,13 @@ public abstract class Mushroom extends BoxItem
                 }
             }
         }
+        return false;
     }
 
     @Override
     public void hitPlayer()
     {
+        if(isInBox)return;
         playerHit = true;
         performCollisionAction();
     }
@@ -209,6 +152,12 @@ public abstract class Mushroom extends BoxItem
         popFromBox = true;
         velocity.y = VELOCITY_POP;
         originalPosY = position.y;
+    }
+
+    @Override
+    public float maxVelocity()
+    {
+        return VELOCITY;
     }
 
     protected abstract void performCollisionAction();

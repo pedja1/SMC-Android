@@ -179,12 +179,6 @@ public abstract class DynamicObject extends GameObject
                 if(tmp)
                     collides = true;
             }
-            else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)))
-            {
-                boolean tmp = handleCollision(((Box) object).itemObject, true);
-                if(tmp)
-                    collides = true;
-            }
 
             //checkGround
             if (object instanceof Sprite
@@ -236,12 +230,6 @@ public abstract class DynamicObject extends GameObject
             if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
             {
                 boolean tmp = handleCollision(object, false);
-                if(tmp)
-                    collides = true;
-            }
-            else if ((object instanceof Box && ((Box) object).itemObject != null && mColRect.overlaps(((Box) object).itemObject.mColRect)) && !((Box)object).itemObject.popFromBox)
-            {
-                boolean tmp = handleCollision(((Box) object).itemObject, false);
                 if(tmp)
                     collides = true;
             }

@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.object.Sprite;
+import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.World;
 
 /**
  * Created by pedja on 24.5.14..
  */
-public abstract class Item extends Sprite
+public abstract class Item extends DynamicObject
 {
 	//item types
 	public static final int
@@ -27,6 +27,7 @@ public abstract class Item extends Sprite
 	TYPE_MOON = 37,
 	TYPE_STAR = 39;
 
+    public String textureName, textureAtlas;
 
     protected float popTargetPosY;
     public boolean playerHit;
@@ -48,10 +49,12 @@ public abstract class Item extends Sprite
      * Coin will smoothly pop out of the box*/
     public boolean popFromBox;
     private boolean dropping;
+    public boolean isInBox;
 
     public Item(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
+        position.z = 0.05f;
     }
 
     public static Item initObject(World world, String objectClassString, Vector2 size, Vector3 position)

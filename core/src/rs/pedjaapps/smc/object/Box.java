@@ -14,11 +14,14 @@ import com.badlogic.gdx.utils.Array;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.items.Coin;
 import rs.pedjaapps.smc.object.items.Fireplant;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.items.Moon;
+import rs.pedjaapps.smc.object.items.Star;
 import rs.pedjaapps.smc.object.items.mushroom.Mushroom;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomBlue;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
@@ -62,7 +65,7 @@ public class Box extends Sprite
     float originalPosY;
 
     //item that pops out when box is hit by player
-    public Item itemObject;
+    //public Item itemObject;
     private boolean spinning;
     private float spinningTime;
     private Animation animation;
@@ -144,10 +147,7 @@ public class Box extends Sprite
         {
             return;
         }
-        if (itemObject != null)
-        {
-            itemObject._render(spriteBatch);
-        }
+
         if (usableCount == 0)
         {
             Utility.draw(spriteBatch, txDisabled, position.x, position.y, mDrawRect.height);
@@ -226,7 +226,7 @@ public class Box extends Sprite
         return box;
     }
 
-    private static void addBoxItem(Box box, boolean loadAssets)
+    private static Item addBoxItem(Box box, boolean loadAssets)
     {
         //create item contained in box
         if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
@@ -235,7 +235,7 @@ public class Box extends Sprite
                         || GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.ice))))
         {
             box.item = Item.TYPE_MUSHROOM_DEFAULT;
-            createMushroom(box, loadAssets);
+            return createMushroom(box, loadAssets);
         }
         else if(box.item == Item.TYPE_GOLDPIECE)
         {
@@ -245,14 +245,14 @@ public class Box extends Sprite
             }
             else
             {
-                createCoin(box);
+                return createCoin(box);
             }
         }
         else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
                 || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_GHOST
                 || box.item == Item.TYPE_MUSHROOM_POISON)
         {
-            createMushroom(box, loadAssets);
+            return createMushroom(box, loadAssets);
         }
         else if(box.item == Item.TYPE_FIREPLANT)
         {
@@ -264,18 +264,18 @@ public class Box extends Sprite
             }
             else
             {
-                createFireplant(box);
+                return createFireplant(box);
             }
         }
         else if(box.item == Item.TYPE_STAR)
         {
             if(loadAssets)
             {
-                //Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
+                Assets.manager.load("data/game/items/star.png", Texture.class);
             }
             else
             {
-
+                return createStar(box);
             }
         }
         else if(box.item == Item.TYPE_MOON)
@@ -286,12 +286,13 @@ public class Box extends Sprite
             }
             else
             {
-                createMoon(box);
+                return createMoon(box);
             }
         }
+        return null;
     }
 
-    public static void createMushroom(Box box, boolean loadAssets)
+    public static Item createMushroom(Box box, boolean loadAssets)
     {
         if(loadAssets)
         {
@@ -325,29 +326,30 @@ public class Box extends Sprite
             {
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
-                    mushroom = new MushroomDefault(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    mushroom = new MushroomDefault(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
-                    mushroom = new MushroomLive1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    mushroom = new MushroomLive1(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
-                    mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
                 case Item.TYPE_MUSHROOM_GHOST:
-                    mushroom = new MushroomGhost(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    mushroom = new MushroomGhost(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
-                    mushroom = new MushroomPoison(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position), box);
+                    mushroom = new MushroomPoison(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
             }
 
             mushroom.visible = false;
             mushroom.initAssets();
-            box.itemObject = mushroom;
+            return mushroom;
         }
+        return null;
     }
 
-    public static void createCoin(Box box)
+    public static Item createCoin(Box box)
     {
         Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position));
         String ta = Coin.DEF_ATL;
@@ -355,29 +357,35 @@ public class Box extends Sprite
         coin.initAssets();
         coin.collectible = false;
         coin.visible = false;
-        coin.initAssets();
 
-        box.itemObject = coin;
+        return coin;
     }
 
-    public static void createFireplant(Box box)
+    public static Item createFireplant(Box box)
     {
-        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position), box);
+        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
         fireplant.initAssets();
         fireplant.visible = false;
-        fireplant.initAssets();
 
-        box.itemObject = fireplant;
+        return fireplant;
     }
 
-    public static void createMoon(Box box)
+    public static Item createMoon(Box box)
     {
-        Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position), box);
+        Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position));
         moon.initAssets();
         moon.visible = false;
-        moon.initAssets();
 
-        box.itemObject = moon;
+        return moon;
+    }
+
+    public static Item createStar(Box box)
+    {
+        Star star = new Star(box.world, new Vector2(Star.DEF_SIZE, Star.DEF_SIZE), new Vector3(box.position));
+        star.initAssets();
+        star.visible = false;
+
+        return star;
     }
 
 
@@ -401,13 +409,16 @@ public class Box extends Sprite
             if (usableCount != -1) usableCount--;
             hitByPlayer = true;
             velocity.y = 3f;
-            addBoxItem(this, false);
-            if (itemObject != null)
+            Item item = addBoxItem(this, false);
+            if (item != null)
             {
-                itemObject.popOutFromBox(position.y + mDrawRect.height);
-                if (itemObject instanceof Coin)
+                item.isInBox = true;
+                world.level.gameObjects.add(item);
+                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+                item.popOutFromBox(position.y + mDrawRect.height);
+                if (item instanceof Coin)
                 {
-                    if (itemObject.textureAtlas.contains("yellow"))
+                    if (item.textureAtlas.contains("yellow"))
                     {
                         sound = Assets.manager.get("data/sounds/item/goldpiece_1.ogg");
                     }
@@ -416,7 +427,7 @@ public class Box extends Sprite
                         sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
                     }
                 }
-                else if(itemObject instanceof Mushroom)
+                else if(item instanceof Mushroom)
                 {
                     sound = Assets.manager.get("data/sounds/sprout_1.ogg");
                 }
@@ -436,15 +447,7 @@ public class Box extends Sprite
         {
             spinningTime += delta;
         }
-        if (itemObject != null/* && world.isObjectVisible(itemObject, true)*/)
-        {
-            itemObject._update(delta);
-        }
-        /*else
-        {
-            if(!(itemObject instanceof Fireplant))
-                itemObject = null;
-        }*/
+
         if (hitByPlayer)
         {
             // Setting initial vertical acceleration

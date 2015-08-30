@@ -10,26 +10,26 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.Box;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 29.3.15..
  */
-public class Fireplant extends BoxItem
+public class Fireplant extends Item
 {
     public static final int POINTS = 700;
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.59375f;
     private Animation animation;
 
-    public Fireplant(World world, Vector2 size, Vector3 position, Box box)
+    public Fireplant(World world, Vector2 size, Vector3 position)
     {
-        super(world, size, position, box);
+        super(world, size, position);
         textureAtlas = "data/game/items/fireplant.pack";
+        position.z = 0.051f;
     }
 
     @Override
@@ -60,6 +60,7 @@ public class Fireplant extends BoxItem
             if(position.y >= popTargetPosY)
             {
                 popFromBox = false;
+                isInBox = false;
             }
         }
     }
@@ -92,9 +93,10 @@ public class Fireplant extends BoxItem
     @Override
     public void hitPlayer()
     {
+        if(isInBox)return;
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.fire, false, this);
-        box.itemObject = null;
+        world.trashObjects.add(this);
         GameSaveUtility.getInstance().save.points += POINTS;
     }
 
@@ -103,5 +105,11 @@ public class Fireplant extends BoxItem
     {
         super.dispose();
         animation = null;
+    }
+
+    @Override
+    public float maxVelocity()
+    {
+        return 0;
     }
 }
