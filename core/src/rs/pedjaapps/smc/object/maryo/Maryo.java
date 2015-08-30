@@ -1226,7 +1226,7 @@ public class Maryo extends DynamicObject
 
     public void fire()
     {
-        if (worldState == WorldState.DUCKING)
+        if (worldState == WorldState.DUCKING || (maryoState != MaryoState.fire && maryoState != MaryoState.ice))
             return;
         if (bulletShotTime < BULLET_COOLDOWN)
             return;
