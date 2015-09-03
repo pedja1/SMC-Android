@@ -49,7 +49,7 @@ public class LoadingScreen extends AbstractScreen
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontParams.size = height / 25;
+        fontParams.size = (int) camHeight / 20;
         fontParams.magFilter = Texture.TextureFilter.Linear;
         fontParams.minFilter = Texture.TextureFilter.Linear;
         fontParams.characters = "Loading,pleswt.0123456789";
