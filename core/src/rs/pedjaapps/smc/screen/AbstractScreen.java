@@ -12,6 +12,7 @@ public abstract class AbstractScreen implements Screen
     public static final int FIXED_TIMESTEP = 0;
     public static final int SEMI_FIXED_TIMESTEP = 1;
     public static final int DINAMYC_TIMESTEP = 2;
+	public static final int FIXED_DELTA = 3;
     public MaryoGame game;
 
     public AbstractScreen(MaryoGame game)

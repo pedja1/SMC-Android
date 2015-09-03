@@ -128,7 +128,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private double accumulator;
     private float step = 1.0f / 30.0f;
-    private int timeStep = DINAMYC_TIMESTEP;
+    private int timeStep = FIXED_DELTA;
     private boolean cameraForceSnap;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
@@ -212,6 +212,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //debug
         //delta = 0.02f;//debug, 50 fps
         //debug end
+		if(timeStep == FIXED_DELTA)
+			delta = 1f/60f;
+			
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -538,6 +541,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
                 + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
                 + "\n" + "TimeStep:" + (timeStep == FIXED_TIMESTEP ? "fixed" : (timeStep == SEMI_FIXED_TIMESTEP ? "semi-fixed" : "dynamic"))
+				+ "\n" + "Screen w=" + width + "h=" + height
                 + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
@@ -849,6 +853,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     touches.get(pointer).clickArea = HUD.Key.jump;
                     hud.jumpPressed();
                 }
+				if (hud.fireR.contains(x, invertY(y)))
+                {
+                    controller.firePressed();
+                    touches.get(pointer).clickArea = HUD.Key.fire;
+                    hud.firePressed();
+                }
             }
             if (hud.pauseR.contains(x, invertY(y)))
             {
@@ -943,6 +953,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     {
                         controller.jumpReleased();
                         hud.jumpReleased();
+                    }
+                    break;
+				case fire:
+                    if (MaryoGame.showOnScreenControlls())
+                    {
+                        controller.fireReleased();
+                        hud.fireReleased();
                     }
                     break;
                 case pause:

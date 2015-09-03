@@ -144,6 +144,10 @@ public abstract class DynamicObject extends GameObject
             }
         }
 
+		/*if(this instanceof Maryo && Math.abs(velocity.x) > 0.09f)
+		{
+			System.out.println("physics warning - vel.x: " + velocity.x + ", delta: " + delta);
+		}*/
         // update position
         position.add(velocity);
         mColRect.x = position.x;

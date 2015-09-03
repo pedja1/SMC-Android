@@ -29,7 +29,6 @@ public class Assets
 
     static
     {
-
         textureParameter = new TextureLoader.TextureParameter();
         //textureParameter.genMipMaps = true;
         textureParameter.magFilter = Texture.TextureFilter.Linear;
@@ -45,7 +44,6 @@ public class Assets
 
         MyFileHandleResolver resolver = new MyFileHandleResolver();
         manager = new AssetManager(resolver);
-
 
         // set the loaders for the generator and the fonts themselves
         manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
