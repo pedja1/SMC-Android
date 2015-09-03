@@ -869,7 +869,7 @@ public class Maryo extends DynamicObject
         {
             Item item = (Item) object;
             if (!item.playerHit) item.hitPlayer();
-            world.trashObjects.add(item);
+            //world.trashObjects.add(item);
         }
         else if (object instanceof Enemy && ((Enemy) object).handleCollision)
         {
