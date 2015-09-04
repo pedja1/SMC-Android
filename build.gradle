@@ -19,7 +19,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = 'SMC-Android'
-        gdxVersion = '1.6.4'
+        gdxVersion = '1.6.5'
         roboVMVersion = '1.5.0'
     }
 
