@@ -604,6 +604,26 @@ public class SAXXMLHandler extends DefaultHandler
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
         }
+		else if(sprite.image.contains("blocks/pipe/connection/plastic_1"))
+        {
+            if(sprite.image.contains("blue"))
+            {
+                sprite.texture_atlas = "data/blocks/pipe/connection/plastic_1/blue/blue.pack";
+            }
+            if(sprite.image.contains("orange"))
+            {
+                sprite.texture_atlas = "data/blocks/pipe/connection/plastic_1/orange/orange.pack";
+            }
+            if(sprite.image.contains("green"))
+            {
+                sprite.texture_atlas = "data/blocks/pipe/connection/plastic_1/orange/green.pack";
+            }
+            if(sprite.image.contains("red"))
+            {
+                sprite.texture_atlas = "data/blocks/pipe/connection/plastic_1/red/red.pack";
+            }
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
         else if(sprite.image.contains("trees/balloon_tree"))
         {
             sprite.texture_atlas = "data/ground/green_2/balloon_tree.pack";
@@ -651,6 +671,11 @@ public class SAXXMLHandler extends DefaultHandler
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
         }
+		else if(sprite.image.startsWith("ground/desert_1/bones"))
+        {
+			sprite.texture_atlas = "data/ground/desert_1/bones.pack";
+			sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+		}
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {
             sprite.texture_name = "data/" + sprite.image;
