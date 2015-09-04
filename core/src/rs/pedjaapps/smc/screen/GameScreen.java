@@ -847,13 +847,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     touches.get(pointer).clickArea = HUD.Key.down;
                     hud.downPressed();
                 }
-                if (hud.jumpR.contains(x, invertY(y)))
+                if (hud.jumpRT.contains(x, invertY(y)))
                 {
                     controller.jumpPressed();
                     touches.get(pointer).clickArea = HUD.Key.jump;
                     hud.jumpPressed();
                 }
-				if (hud.fireR.contains(x, invertY(y)))
+				if (hud.fireRT.contains(x, invertY(y)))
                 {
                     controller.firePressed();
                     touches.get(pointer).clickArea = HUD.Key.fire;

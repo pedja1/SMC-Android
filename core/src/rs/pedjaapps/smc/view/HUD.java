@@ -32,6 +32,7 @@ import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.utility.*;
 
 public class HUD
 {
@@ -41,7 +42,7 @@ public class HUD
 		left, soundOn, soundOff, musicOn, musicOff, pauseP, playP, fireP, jumpP, upP, 
 		downP, leftP, rightP, soundOnP, soundOffP, musicOnP, musicOffP;
     public Rectangle pauseR, playR, fireR, jumpR, upR, downR, rightR,
-		leftR, soundR, musicR;
+		leftR, soundR, musicR, fireRT, jumpRT;
 	Texture itemBox, maryoL, goldM;
 	Rectangle itemBoxR, maryoLR;
     public Array<Vector2> leftPolygon = new Array<Vector2>(5);
@@ -104,11 +105,18 @@ public class HUD
         x = C_W - width * 1.5f;
         y = C_H - height * 5f;
         fireR = new Rectangle(x, y, width, height);
-
-        x = x - width;
-        y = y - height;
+		float bX = x - width * .25f;
+		float bY = y - height * .25f;
+		float bW = width + width *.5f;
+		float bH = height + height * 0.5f;
+		fireRT = new Rectangle(bX, bY, bW, bH);
+		
+        x = bX - width * 1.25f;
+        y = bY - height;
+		bY = bY + bH * .25f;
         jumpR = new Rectangle(x, y, width, height);
-
+		jumpRT = new Rectangle(bX - bW, bY - bH, bW, bH);
+		
         x = width / 2f;
         y = height * 1.5f;
         width = width * 1.24f;
@@ -364,6 +372,18 @@ public class HUD
 			boxTextPopup.render(batch);
 			batch.end();
 		}
+		if(PrefsManager.isDebug())drawDebug();
+	}
+	
+	private void drawDebug()
+	{
+		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setColor(1, 0, 0, 1f);
+		shapeRenderer.rect(fireRT.x, fireRT.y, fireRT.width, fireRT.height);
+		shapeRenderer.rect(jumpRT.x, jumpRT.y, jumpRT.width, jumpRT.height);
+		
+		shapeRenderer.end();
 	}
 
     private String formatPointsString(int points)
