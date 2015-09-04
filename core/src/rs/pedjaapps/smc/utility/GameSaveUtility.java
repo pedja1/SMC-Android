@@ -28,8 +28,6 @@ public class GameSaveUtility
 	
 	public void reset()
 	{
-		save.coins = 0;
-		save.points = 0;
 		save.lifes = 3;
 		save.playerState = Maryo.MaryoState.small;
 	}
@@ -93,12 +91,13 @@ public class GameSaveUtility
 	{
 		//persistent
 		Set<String> unlockedLevels;
+		public int coins;
+		public int points;
 		
 		//in memory only
-		public int coins;
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
-		public int points;
+		
 		
 		//copy constructor, only persistent objects are copied
 		public Save(Save save)
@@ -124,12 +123,14 @@ public class GameSaveUtility
 				map.put(keyValue[0], keyValue[1]);
 			}
 			Save save = new Save();
-            String tmp = map.get("unlocked_levels");
-            if(tmp != null)
+            String uLevls = map.get("unlocked_levels");
+            if(uLevls != null)
             {
-                String[] unlockedLevels = tmp.split(",");
+                String[] unlockedLevels = uLevls.split(",");
                 Collections.addAll(save.unlockedLevels, unlockedLevels);
             }
+			save.points = Utility.parseInt(map.get("points"), 0);
+			save.coins = Utility.parseInt(map.get("coins"), 0);
 			return save;
 		}
 
@@ -144,7 +145,9 @@ public class GameSaveUtility
             {
                 builder.append(level).append(",");
             }
-
+			builder.append("\n").append("points=").append(save.points);
+			builder.append("\n").append("coins=").append(save.coins);
+			
 			return Utility.base64Encode(builder.toString());
 		}
 	}
