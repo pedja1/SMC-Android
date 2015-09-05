@@ -1047,7 +1047,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean scrolled(int amount)
     {
-        if(gameState == GAME_STATE.GAME_EDIT_MODE || PrefsManager.isDebug())
+        if(gameState == GAME_STATE.GAME_EDIT_MODE || debug)
         {
             cam.zoom += amount * 0.1f;
             cam.update();

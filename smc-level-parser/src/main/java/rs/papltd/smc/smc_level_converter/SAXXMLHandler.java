@@ -671,6 +671,11 @@ public class SAXXMLHandler extends DefaultHandler
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
         }
+        else if(sprite.image.contains("jungle_1/kplant"))
+        {
+            sprite.texture_atlas = "data/ground/jungle_1/kplant.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+        }
 		else if(sprite.image.startsWith("ground/desert_1/bones"))
         {
 			sprite.texture_atlas = "data/ground/desert_1/bones.pack";
@@ -745,6 +750,17 @@ public class SAXXMLHandler extends DefaultHandler
                     }
 					//System.out.println("fileName" + fileName + ", baseFilename: " + baseFileName + ", lines.length: " + lines.length);
 				}
+                else
+                {
+                    if(sprite.texture_atlas != null)
+                    {
+                        sprite.texture_name = sprite.texture_atlas + ":" + baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf("."));
+                    }
+                    else
+                    {
+                        sprite.texture_name = sprite.texture_name.replaceAll(sprite.texture_name.substring(sprite.texture_name.lastIndexOf('/') + 1, sprite.texture_name.lastIndexOf('.')), baseFileName.substring(baseFileName.lastIndexOf("/") + 1, baseFileName.lastIndexOf(".")));
+                    }
+                }
 			}
 		}
 		
