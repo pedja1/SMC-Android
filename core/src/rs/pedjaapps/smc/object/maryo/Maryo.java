@@ -28,6 +28,7 @@ import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.Flyon;
 import rs.pedjaapps.smc.object.enemy.Spika;
+import rs.pedjaapps.smc.object.enemy.Static;
 import rs.pedjaapps.smc.object.enemy.Thromp;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.AbstractScreen;
@@ -927,7 +928,7 @@ public class Maryo extends DynamicObject
     {
         //TODO update this when you add new enemy classes
         return object instanceof Flyon || object instanceof Eato || object instanceof Thromp
-                || object instanceof Spika;
+                || object instanceof Spika || object instanceof Static;
     }
 
     public WorldState getWorldState()
