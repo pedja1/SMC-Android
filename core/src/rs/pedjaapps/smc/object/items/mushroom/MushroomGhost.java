@@ -19,6 +19,7 @@ public class MushroomGhost extends Mushroom
     {
         super(world, size, position);
         textureName = "data/game/items/mushroom_ghost.png";
+        mPickPoints = 800;
     }
 
     @Override
@@ -27,6 +28,6 @@ public class MushroomGhost extends Mushroom
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.ghost, true, null);
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += 800;
+        GameSaveUtility.getInstance().save.points += mPickPoints;
     }
 }

@@ -19,6 +19,7 @@ public class MushroomBlue extends Mushroom
     {
         super(world, size, position);
         textureName = "data/game/items/mushroom_blue.png";
+        mPickPoints = 700;
     }
 
     @Override
@@ -27,6 +28,6 @@ public class MushroomBlue extends Mushroom
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.ice, false, this);
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += 700;
+        GameSaveUtility.getInstance().save.points += mPickPoints;
     }
 }

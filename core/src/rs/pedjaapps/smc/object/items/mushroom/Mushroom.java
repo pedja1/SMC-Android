@@ -9,6 +9,7 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.items.Item;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -25,6 +26,7 @@ public abstract class Mushroom extends Item
     public static final float DEF_SIZE = 0.546875f;
 
     protected boolean grounded = false;
+    protected int mPickPoints;
 
     boolean moving;
 
@@ -142,6 +144,8 @@ public abstract class Mushroom extends Item
         if(isInBox)return;
         playerHit = true;
         performCollisionAction();
+        if(mPickPoints > 0)
+            ((GameScreen)world.screen).killPointsTextHandler.add(mPickPoints, position.x, position.y + mDrawRect.height);
     }
 
     @Override

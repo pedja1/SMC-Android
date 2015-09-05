@@ -15,11 +15,11 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
  */
 public class MushroomDefault extends Mushroom
 {
-    public static final int POINTS = 500;
     public MushroomDefault(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
         textureName = "data/game/items/mushroom_red.png";
+        mPickPoints = 500;
     }
 
     @Override
@@ -28,6 +28,6 @@ public class MushroomDefault extends Mushroom
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.big, false, this);
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += POINTS;
+        GameSaveUtility.getInstance().save.points += mPickPoints;
     }
 }

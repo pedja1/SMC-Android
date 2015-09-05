@@ -18,6 +18,7 @@ public class MushroomLive1 extends Mushroom
     {
         super(world, size, position);
         textureName = "data/game/items/mushroom_green.png";
+        mPickPoints = 1000;
     }
 
     @Override
@@ -28,6 +29,6 @@ public class MushroomLive1 extends Mushroom
         //Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
         //if(sound != null && Assets.playSounds)sound.play();
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += 1000;
+        GameSaveUtility.getInstance().save.points += mPickPoints;
     }
 }
