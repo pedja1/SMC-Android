@@ -16,7 +16,7 @@ public class HUDTimeText extends FLString
 
     public void update(float millis)
     {
-        for(int i = 0; i < TIME_PREFIX.length(); i++)
+        for(int i = 0, size = TIME_PREFIX.length(); i < size; i++)
         {
             chars[i] = TIME_PREFIX.charAt(i);
         }

@@ -165,7 +165,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private void drawObjects(float deltaTime)
     {
         //noinspection ForLoopReplaceableByForEach
-        for(int i = 0; i < loader.level.gameObjects.size(); i++)
+        for(int i = 0, size = loader.level.gameObjects.size(); i < size; i++)
         //for (GameObject gameObject : loader.level.gameObjects)
         {
             GameObject gameObject = loader.level.gameObjects.get(i);

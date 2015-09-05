@@ -64,7 +64,7 @@ public class MarioController
         keys.add(Keys.UP);
         boolean climbing = false;
         Array<GameObject> vo = world.getVisibleObjects();
-        for(int i = 0; i < vo.size; i++)
+        for(int i = 0, size = vo.size; i < size; i++)
         {
             GameObject go = vo.get(i);
             if(go instanceof LevelExit
@@ -88,7 +88,7 @@ public class MarioController
 	{
 		Array<GameObject> vo = world.getVisibleObjects();
 		//for(GameObject go : world.getVisibleObjects())
-		for(int i = 0; i < vo.size; i++)
+		for(int i = 0, size = vo.size; i < size; i++)
         {
 			GameObject go = vo.get(i);
             if(go instanceof LevelExit 

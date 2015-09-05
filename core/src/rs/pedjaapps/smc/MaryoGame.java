@@ -10,6 +10,7 @@ import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.SplashScreen;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
@@ -45,6 +46,7 @@ public class MaryoGame extends Game
         Assets.dispose();
 		GA.sendGameEnded();
 		GA.dispose();
+		GameSaveUtility.getInstance().dispose();
 
     }
 
@@ -53,7 +55,7 @@ public class MaryoGame extends Game
         Gdx.app.exit();
     }
 
-	public static boolean showOnScreenControlls()
+	public static boolean showOnScreenControls()
 	{
 		return Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
 	}

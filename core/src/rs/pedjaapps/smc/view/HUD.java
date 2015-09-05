@@ -225,7 +225,7 @@ public class HUD
         soundOff = atlas.findRegion("sound-off");
         soundOffP = atlas.findRegion("sound-off-pressed");
 
-		if (MaryoGame.showOnScreenControlls())
+		if (MaryoGame.showOnScreenControls())
 		{
 			fire = atlas.findRegion("fire");
 			fireP = atlas.findRegion("fire-pressed");
@@ -304,7 +304,7 @@ public class HUD
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
 			batch.draw(pressedKeys.contains(Key.pause) ? pauseP : pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
-			if (MaryoGame.showOnScreenControlls())
+			if (MaryoGame.showOnScreenControls())
 			{
 				batch.draw(pressedKeys.contains(Key.fire) ? fireP : fire, fireR.x, fireR.y , fireR.width, fireR.height);
 				batch.draw(pressedKeys.contains(Key.jump) ? jumpP : jump, jumpR.x, jumpR.y , jumpR.width, jumpR.height);

@@ -6,7 +6,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import rs.pedjaapps.smc.MaryoGame;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
 
 /**
  * Created by pedja on 2/27/14.
@@ -34,14 +33,11 @@ public class AndroidLauncher extends AndroidApplication
 		
 		game = new MaryoGame();
         initialize(game, config);
-		
-		GameSaveUtility.getInstance(); //initialize save game
     }
 
 	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		GameSaveUtility.getInstance().dispose();
 	}
 }

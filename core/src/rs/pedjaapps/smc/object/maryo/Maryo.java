@@ -776,7 +776,7 @@ public class Maryo extends DynamicObject
                 checkCollisionWithBlocks(delta);
                 boolean climbing = false;
                 Array<GameObject> vo = world.getVisibleObjects();
-                for (int i = 0; i < vo.size; i++)
+                for (int i = 0, size = vo.size; i < size; i++)
                 {
                     GameObject go = vo.get(i);
                     if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
@@ -801,7 +801,7 @@ public class Maryo extends DynamicObject
                 float distance = mColRect.y;
                 GameObject closestObject = null;
                 //for(GameObject go : objects)
-                for (int i = 0; i < objects.size; i++)
+                for (int i = 0, size = objects.size; i < size; i++)
                 {
                     GameObject go = objects.get(i);
                     if (go == null) continue;
@@ -1258,8 +1258,6 @@ public class Maryo extends DynamicObject
 
     public void exitLevel(LevelExit exit)
     {
-        System.out.println("level: " + exit.levelName);
-
         switch (exit.type)
         {
             case LevelExit.LEVEL_EXIT_BEAM:

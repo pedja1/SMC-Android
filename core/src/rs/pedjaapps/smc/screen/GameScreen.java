@@ -90,7 +90,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public enum GAME_STATE
     {
         GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
-        NO_UPDATE, PLAYER_UPDATING
+        NO_UPDATE, PLAYER_UPDATING, GAME_EDIT_MODE
     }
 
     private GAME_STATE gameState;
@@ -132,6 +132,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private float step = 1.0f / 30.0f;
     private int timeStep = FIXED_DELTA;
     private boolean cameraForceSnap;
+    private Vector3 cameraEditModeTranslate = new Vector3();
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -210,13 +211,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void render(float delta)
     {
+        //debug
+        long now = System.currentTimeMillis();
+        //debug
         if (delta > 0.1f) delta = 0.1f;
         //debug
         //delta = 0.02f;//debug, 50 fps
         //debug end
 		if(timeStep == FIXED_DELTA)
 			delta = 1f/60f;
-			
+
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -238,7 +242,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //physics end
 
         if (gameState == GAME_STATE.GAME_RUNNING) controller.update(delta);
-        moveCamera(cam, world.maryo.position, gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD);
+        moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position, gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
@@ -267,13 +271,39 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.render(spriteBatch);
 
         //cleanup
-        for (int i = 0; i < world.trashObjects.size; i++)
+        for (int i = 0, size = world.trashObjects.size; i < size; i++)
         {
             world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
         GLProfiler.reset();
         stateTime += delta;
+        //debug
+        long end = System.currentTimeMillis() - now;
+        if(end >= 15)
+        {
+            System.out.println("render time total: " + end);
+        }
+        if(gameState == GAME_STATE.GAME_EDIT_MODE)
+        {
+            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            {
+                cameraEditModeTranslate.x = Math.min(world.level.width, cameraEditModeTranslate.x + 0.1f);
+            }
+            else if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            {
+                cameraEditModeTranslate.x = Math.max((cam.viewportWidth * cam.zoom) * 0.5f, cameraEditModeTranslate.x - 0.1f);
+            }
+            if(Gdx.input.isKeyPressed(Input.Keys.UP))
+            {
+                cameraEditModeTranslate.y = Math.min(world.level.height, cameraEditModeTranslate.y + 0.1f);
+            }
+            else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            {
+                cameraEditModeTranslate.y = Math.max((cam.viewportHeight * cam.zoom) * 0.5f, cameraEditModeTranslate.y - 0.1f);
+            }
+        }
+        //debug
     }
 
     private void semiFixedTimeStep(float delta)
@@ -397,7 +427,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
     {
-        if (gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting)
+        if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting))
             return;
         if(snap || cameraForceSnap)
         {
@@ -432,8 +462,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void updateObjects(float delta)
     {
-        Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
-        for (int i = 0; i < world.level.gameObjects.size(); i++)
+        int count = 0;
+        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
+        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
@@ -443,16 +474,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
                 {
                     go._update(delta);
+                    /*if(go instanceof Enemy)*/count++;
                 }
             }
         }
         World.RECT_POOL.free(maryoBWO);
+        System.out.println(count);
     }
 
     private void interpolateObjects(float alpha)
     {
-        Rectangle maryoBWO = world.createMaryoRectWithOffset(10);
-        for (int i = 0; i < world.level.gameObjects.size(); i++)
+        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
+        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
@@ -477,8 +510,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void drawObjects()
     {
 
-        Array<GameObject> drawableObjects = world.getDrawableObjects(cam.position.x, cam.position.y);
-        for (int i = 0; i < drawableObjects.size; i++)
+        Array<GameObject> drawableObjects = world.getDrawableObjects(cam);
+        for (int i = 0, size = drawableObjects.size; i < size; i++)
         //for (GameObject object : drawableObjects)
         {
             GameObject object = drawableObjects.get(i);
@@ -514,12 +547,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Maryo maryo = world.maryo;
         Rectangle body = maryo.mColRect;
         Rectangle bounds = maryo.mDrawRect;
+        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
         shapeRenderer.setColor(0, 1, 0, 1);
         shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(1, 0, 0, 1);
         shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
         shapeRenderer.setColor(0, 0, 1, 1);
         shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect.height);
+        shapeRenderer.setColor(0.3f, 0.9f, 0, 0);
+        shapeRenderer.rect(maryoBWO.x, maryoBWO.y, maryoBWO.width, maryoBWO.height);
         shapeRenderer.end();
     }
 
@@ -744,6 +780,19 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.upPressed();
             hud.upPressed();
         }
+        if(keycode == Input.Keys.F8)
+        {
+            if(gameState == GAME_STATE.GAME_EDIT_MODE)
+            {
+                gameState = GAME_STATE.GAME_RUNNING;
+                cam.zoom = 1;
+            }
+            else
+            {
+                cameraEditModeTranslate.set(cam.position);
+                gameState = GAME_STATE.GAME_EDIT_MODE;
+            }
+        }
         return true;
     }
 
@@ -821,7 +870,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (pointer < 5)
         {
             Vector2 vect = World.VECTOR2_POOL.obtain();
-            if (MaryoGame.showOnScreenControlls())
+            if (MaryoGame.showOnScreenControls())
             {
                 if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
                 {
@@ -897,18 +946,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return height - y;
     }
 
-    private float convertTouchPointToGamePoint(int val, boolean isX)
-    {
-        if (isX)
-        {
-            return val / ((float) width / Constants.CAMERA_WIDTH);
-        }
-        else
-        {
-            return (height - val) / ((float) height / Constants.CAMERA_HEIGHT);
-        }
-    }
-
     @Override
     public boolean touchUp(int x, int y, int pointer, int button)
     {
@@ -923,42 +960,42 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             switch (ti.clickArea)
             {
                 case right:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.rightReleased();
                         hud.rightReleased();
                     }
                     break;
                 case left:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.leftReleased();
                         hud.leftReleased();
                     }
                     break;
                 case up:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.upReleased();
                         hud.upReleased();
                     }
                     break;
                 case down:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.downReleased();
                         hud.downReleased();
                     }
                     break;
                 case jump:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.jumpReleased();
                         hud.jumpReleased();
                     }
                     break;
 				case fire:
-                    if (MaryoGame.showOnScreenControlls())
+                    if (MaryoGame.showOnScreenControls())
                     {
                         controller.fireReleased();
                         hud.fireReleased();
@@ -1010,7 +1047,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean scrolled(int amount)
     {
-        // TODO Auto-generated method stub
+        if(gameState == GAME_STATE.GAME_EDIT_MODE || PrefsManager.isDebug())
+        {
+            cam.zoom += amount * 0.1f;
+            cam.update();
+            return true;
+        }
         return false;
     }
 
@@ -1087,8 +1129,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         public void render(SpriteBatch batch, float deltaTime)
         {
-            for (KillPoint point : pointsTextPool)
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0, size = pointsTextPool.size(); i < size; i++)
             {
+                KillPoint point = pointsTextPool.get(i);
                 if (!point.recycled)
                 {
                     point.draw(batch, deltaTime, font, text);

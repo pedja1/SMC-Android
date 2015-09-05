@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -98,17 +99,21 @@ public class World
      * Return only the blocks that need to be drawn *
      * 
      */
-    public Array<GameObject> getDrawableObjects(float camX, float camY/*, boolean getFront*/)
+    public Array<GameObject> getDrawableObjects(OrthographicCamera cam)
     {
         visibleObjects.clear();
-        float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
-        float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
-        float wW = Constants.CAMERA_WIDTH + 1;
-        float wH = Constants.CAMERA_HEIGHT + 1;
+        float camX = cam.position.x;
+        float camY = cam.position.y;
+        float camWidth = (cam.viewportWidth * cam.zoom);
+        float camHeight = (cam.viewportHeight * cam.zoom);
+        float wX = camX - camWidth * 0.5f - 1;
+        float wY = camY - camHeight * 0.5f - 1;
+        float wW = camWidth + 1;
+        float wH = camHeight + 1;
         Rectangle worldBounds = RECT_POOL.obtain();
 		worldBounds.set(wX, wY, wW, wH);
         //for (GameObject object : level.gameObjects)
-        for (int i = 0; i < level.gameObjects.size(); i++)
+        for (int i = 0, size = level.gameObjects.size(); i < size; i++)
         {
             GameObject object = level.gameObjects.get(i);
             Rectangle bounds = object.mDrawRect;
@@ -142,12 +147,14 @@ public class World
         return tmpObjects;
     }
 	
-	public Rectangle createMaryoRectWithOffset(float offset)
+	public Rectangle createMaryoRectWithOffset(OrthographicCamera cam, float offset)
 	{
-		float wX = maryo.mColRect.x - offset;
-        float wY = maryo.mColRect.y - offset;
-        float wW = maryo.mColRect.x + maryo.mColRect.width + offset * 2;
-        float wH = maryo.mColRect.y + maryo.mColRect.height + offset * 2;
+        float offsetX = Math.max(offset, (cam.viewportWidth * cam.zoom));
+        float offsetY = Math.max(offset * 0.5f, (cam.viewportHeight * cam.zoom));
+		float wX = maryo.mColRect.x - offsetX;
+        float wY = maryo.mColRect.y - offsetY;
+        float wW = maryo.mColRect.x + maryo.mColRect.width + offsetX * 2;
+        float wH = maryo.mColRect.y + maryo.mColRect.height + offsetY * 2;
         Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
      	return offsetBounds;

@@ -60,7 +60,7 @@ public abstract class DynamicObject extends GameObject
         // apply acceleration to change velocity
         velocity.add(acceleration);
 
-        // checking collisions with the surrounding blocks depending on Bob's velocity
+        // checking collisions with the surrounding blocks depending on Maryo's velocity
         checkCollisionWithBlocks(delta);
 
         // apply damping to halt Maryo nicely 
@@ -172,7 +172,7 @@ public abstract class DynamicObject extends GameObject
 
         List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < surroundingObjects.size(); i++)
+        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = surroundingObjects.get(i);
@@ -226,7 +226,7 @@ public abstract class DynamicObject extends GameObject
         List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0; i < surroundingObjects.size(); i++)
+        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = surroundingObjects.get(i);
