@@ -199,12 +199,13 @@ public class Krush extends Enemy
                 {
                     sound.play();
                 }
+                return HIT_RESOLUTION_ENEMY_DIED;
             }
             else
             {
                 isSmall = true;
+                return HIT_RESOLUTION_CUSTOM;
             }
-            return HIT_RESOLUTION_ENEMY_DIED;
         }
         else
         {
@@ -221,7 +222,7 @@ public class Krush extends Enemy
     @Override
     public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
     {
+        mKillPoints = isSmall ? KP_SMALL : KP_BIG;
         super.downgradeOrDie(killedBy, forceBulletKill);
-        ((GameScreen)world.screen).killPointsTextHandler.add(isSmall ? KP_SMALL : KP_BIG, position.x, position.y + mDrawRect.height);
     }
 }

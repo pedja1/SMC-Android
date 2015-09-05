@@ -16,7 +16,9 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.maryo.Fireball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -110,7 +112,7 @@ public abstract class Enemy extends DynamicObject
             handleCollision = false;
             world.trashObjects.add(this);
         }
-
+        ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 
     enum CLASS

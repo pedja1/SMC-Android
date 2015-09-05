@@ -151,6 +151,7 @@ public class Coin extends Item
 		scrollOut = true;
 		velocity.x = -9f;
 		velocity.y = 2f;
+		((GameScreen)world.screen).killPointsTextHandler.add(points, position.x, position.y + mDrawRect.height);
 	}
 
 	@Override

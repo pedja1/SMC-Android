@@ -34,7 +34,6 @@ public class Gee extends Enemy
     private boolean forward, dirForward, staying = true, fireResistant;
     private float currWaitTime, waitTime;
     private Color color;
-    public int mKillPoints;
     private boolean flipx;
     private ParticleEffect effect, deadEffect;
     private boolean canStartParticle;
@@ -172,6 +171,7 @@ public class Gee extends Enemy
             if(effect.isComplete())
             {
                 world.trashObjects.add(this);
+                ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
             }
             return;
         }
@@ -366,6 +366,5 @@ public class Gee extends Enemy
         if(fireResistant && killedBy instanceof Fireball)
             return;
         super.downgradeOrDie(killedBy, forceBulletKill);
-        ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 }

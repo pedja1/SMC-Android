@@ -23,7 +23,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.MaryoGame;
@@ -1059,7 +1061,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public static class KillPointsTextHandler
     {
-        private final Array<KillPoint> pointsTextsPool = new Array<>();
+        private final List<KillPoint> pointsTextPool = new ArrayList<>(10);
         private BitmapFont font;
         NAHudText<Integer> text = new NAHudText<>(null, null);
 
@@ -1071,7 +1073,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         public void add(int points, float positionX, float positionY)
         {
-            for (KillPoint point : pointsTextsPool)
+            for (KillPoint point : pointsTextPool)
             {
                 if (point.recycled)
                 {
@@ -1080,12 +1082,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 }
             }
             KillPoint point = new KillPoint(points, positionX, positionY);
-            pointsTextsPool.add(point);
+            pointsTextPool.add(point);
         }
 
         public void render(SpriteBatch batch, float deltaTime)
         {
-            for (KillPoint point : pointsTextsPool)
+            for (KillPoint point : pointsTextPool)
             {
                 if (!point.recycled)
                 {
@@ -1101,6 +1103,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             private boolean recycled = false;
             private int points;
             private float positionX, positionY, origPosY;
+            private float alpha = 1;
 
             public KillPoint(int points, float positionX, float positionY)
             {
@@ -1119,7 +1122,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 }
                 float velDelta = velocity * deltaTime;
                 positionY += maxDistance * velDelta;
-                float alpha = font.getColor().a;
                 alpha -= 1 / (maxDistance / (maxDistance * velDelta));
                 font.getColor().set(1, 1, 1, alpha);
                 font.draw(spriteBatch, text.toString(points), positionX, positionY);
@@ -1132,6 +1134,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 positionY = posY;
                 this.points = points;
                 origPosY = posY;
+                alpha = 1;
             }
         }
     }

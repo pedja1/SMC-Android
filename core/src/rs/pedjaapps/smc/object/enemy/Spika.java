@@ -25,7 +25,6 @@ public class Spika extends Enemy
 
     public float mSpeed;
     private float mRotation, mDetectionSize;
-    public int mKillPoints;
     private Texture texture;
     private TextureRegion region;
 

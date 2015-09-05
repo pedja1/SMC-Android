@@ -29,8 +29,6 @@ public class Turtle extends Enemy
 
     private float mShellRotation;
 
-    public final int mKillPoints;
-
     boolean isShell = false, isShellMoving = false;
     private Animation walkAnimation;
     private TextureRegion tTurn, tShell, tDead;
@@ -272,6 +270,7 @@ public class Turtle extends Enemy
                 mDrawRect.width = mDrawRect.width * 0.60f;
                 mColRect.height = mDrawRect.height / 2;
                 mColRect.width = mDrawRect.width / 2;
+                return HIT_RESOLUTION_ENEMY_DIED;
             }
             else
             {
@@ -279,7 +278,7 @@ public class Turtle extends Enemy
                 isShellMoving = !isShellMoving;
             }
             //TODO (v2.0)turtle should automatically transform back from shell after timeout if shell is standing
-            return HIT_RESOLUTION_ENEMY_DIED;
+            return HIT_RESOLUTION_CUSTOM;
         }
         //TODO (v2.0)player can also pick up shell if player is "not small" and if shell is not moving, if shell is moving than player dies
         else

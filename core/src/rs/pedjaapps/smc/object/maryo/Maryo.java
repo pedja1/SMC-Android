@@ -881,6 +881,7 @@ public class Maryo extends DynamicObject
                     if(worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
                     {
                         ((Enemy) object).downgradeOrDie(this, true);
+                        GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
                     }
                     else
                     {
@@ -890,6 +891,7 @@ public class Maryo extends DynamicObject
                 else if (((Enemy) object).frozen)
                 {
                     ((Enemy) object).downgradeOrDie(this, true);
+                    GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
                 }
                 else if (deadAnyway)
                 {
@@ -901,6 +903,7 @@ public class Maryo extends DynamicObject
                     if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
                     {
                         velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                        GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
                     }
                     else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
                     {
@@ -908,7 +911,7 @@ public class Maryo extends DynamicObject
                     }
                     else
                     {
-                        //TODO handle this here or in enemy???????
+                        velocity.y = 5f * Gdx.graphics.getDeltaTime();
                     }
                 }
             }

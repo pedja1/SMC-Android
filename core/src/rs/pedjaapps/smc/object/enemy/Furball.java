@@ -9,11 +9,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -27,7 +28,6 @@ public class Furball extends Enemy
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
     boolean dying = false;
-    int killPoints = 10;
     boolean fireResistant = false;
     float iceResistance = 0.0f;
     boolean canBeHitFromShell = true;
@@ -73,7 +73,7 @@ public class Furball extends Enemy
         if(textureAtlas.contains("brown"))
         {
             type = Type.brown;
-            killPoints = 10;
+            mKillPoints = 10;
             fireResistant = false;
             iceResistance = .0f;
             canBeHitFromShell = true;
@@ -81,7 +81,7 @@ public class Furball extends Enemy
         else if(textureAtlas.contains("blue"))
         {
             type = Type.blue;
-            killPoints = 50;
+            mKillPoints = 50;
             fireResistant = false;
             iceResistance = .9f;
             canBeHitFromShell = true;
@@ -89,7 +89,7 @@ public class Furball extends Enemy
         else if(textureAtlas.contains("boss"))
         {
             type = Type.boss;
-            killPoints = 2500;
+            mKillPoints = 2500;
             fireResistant = true;
             iceResistance = 1f;
             canBeHitFromShell = false;
@@ -135,7 +135,8 @@ public class Furball extends Enemy
             //resize it by state time
             mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;//TODO ovako zavisi brzina animacije od fps-a
             mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
-            if(mDrawRect.height < 0)world.trashObjects.add(this);
+            if(mDrawRect.height < 0)
+                world.trashObjects.add(this);
             return;
         }
 
@@ -218,13 +219,12 @@ public class Furball extends Enemy
     {
         if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
-            System.out.println("hitByPlayer");
-            ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + mDrawRect.height);
             if (type == Type.boss && downgradeCount >= maxDowngradeCount)
             {
                 downgradeCount++;
-                return HIT_RESOLUTION_ENEMY_DIED;
+                return HIT_RESOLUTION_CUSTOM;
             }
+            ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
             stateTime = 0;
             handleCollision = false;
             dying = true;
@@ -245,12 +245,5 @@ public class Furball extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return tDead;
-    }
-
-    @Override
-    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
-    {
-        super.downgradeOrDie(killedBy, forceBulletKill);
-        ((GameScreen)world.screen).killPointsTextHandler.add(killPoints, position.x, position.y + mDrawRect.height);
     }
 }

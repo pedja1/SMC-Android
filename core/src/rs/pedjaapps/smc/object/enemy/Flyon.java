@@ -49,6 +49,7 @@ public class Flyon extends Enemy
         {
             rotation = 180f;
         }
+        mKillPoints = 100;
     }
 
     @Override
