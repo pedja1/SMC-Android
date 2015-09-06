@@ -234,8 +234,22 @@ public class Box extends Sprite
                         || ((GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.fire
                         || GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.ice))))
         {
+            int defBoxItem = box.item;
             box.item = Item.TYPE_MUSHROOM_DEFAULT;
-            return createMushroom(box, loadAssets);
+            Item item = createMushroom(box, loadAssets);
+            if(loadAssets)
+            {
+                if(defBoxItem != box.item)
+                {
+                    box.item = defBoxItem;
+                    boolean tmpForceBestItem = box.forceBestItem;
+                    box.forceBestItem = true;
+                    addBoxItem(box, true);
+                    box.forceBestItem = tmpForceBestItem;
+                }
+                box.item = defBoxItem;
+            }
+            return item;
         }
         else if(box.item == Item.TYPE_GOLDPIECE)
         {
