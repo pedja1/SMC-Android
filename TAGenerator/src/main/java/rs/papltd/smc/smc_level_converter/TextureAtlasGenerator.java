@@ -14,8 +14,8 @@ public class TextureAtlasGenerator
         settings.maxWidth = 1024;
         settings.maxHeight = 1024;
         settings.duplicatePadding = true;
-        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/pipes/yellow/tmp";
-        TexturePacker2.process(settings, path, path, "small.pack");
+        String path = "/home/pedja/workspace/SMC-Android/android/assets/data/ground/green_2/tmp";
+        TexturePacker2.process(settings, path, path, "baloon_tree.pack");
     }
 }
 

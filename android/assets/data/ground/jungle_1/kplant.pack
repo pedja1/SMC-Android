@@ -5,15 +5,15 @@ filter: Linear,Linear
 repeat: none
 kplant
   rotate: false
-  xy: 2, 2
-  size: 32, 32
-  orig: 32, 32
+  xy: 1, 1
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 kplant-head
   rotate: false
-  xy: 36, 2
-  size: 32, 32
-  orig: 32, 32
+  xy: 67, 1
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
