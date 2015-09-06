@@ -249,7 +249,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        loader.parseLevel(world, null);
+        loader.parseLevel(world);
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class, Assets.atlasTextureParameter);
 		Assets.manager.load("data/hud/option.png", Texture.class, Assets.textureParameter);

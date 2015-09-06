@@ -32,7 +32,6 @@ import java.util.List;
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.MaryoGame;
-import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.object.BackgroundColor;
 import rs.pedjaapps.smc.object.Box;
@@ -71,7 +70,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     Vector2 camMin = new Vector2();
     Vector2 camMax = new Vector2();
-    private MarioController controller;
 
     public HUD hud;
 
@@ -174,7 +172,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch = new SpriteBatch();
 
         loadTextures();
-        controller = new MarioController(world);
 
         for (int i = 0; i < 5; i++) //handle max 4 touches
         {
@@ -244,8 +241,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
 
         //physics end
-
-        if (gameState == GAME_STATE.GAME_RUNNING) controller.update(delta);
         moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position, gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
@@ -671,7 +666,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        loader.parseLevel(world, controller);
+        loader.parseLevel(world);
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
@@ -780,37 +775,37 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
         if (keycode == Input.Keys.LEFT)
         {
-            controller.leftPressed();
+            world.maryo.leftPressed();
             hud.leftPressed();
         }
         if (keycode == Input.Keys.RIGHT)
         {
-            controller.rightPressed();
+            world.maryo.rightPressed();
             hud.rightPressed();
         }
         if (keycode == Input.Keys.SPACE)
         {
-            controller.jumpPressed();
+            world.maryo.jumpPressed();
             hud.jumpPressed();
         }
         if (keycode == Input.Keys.ALT_LEFT)
         {
-            controller.firePressed();
+            world.maryo.firePressed();
             hud.firePressed();
         }
         if (keycode == Input.Keys.X)
         {
-            controller.firePressed();
+            world.maryo.firePressed();
             hud.firePressed();
         }
         if (keycode == Input.Keys.DOWN)
         {
-            controller.downPressed();
+            world.maryo.downPressed();
             hud.downPressed();
         }
         if (keycode == Input.Keys.UP)
         {
-            controller.upPressed();
+            world.maryo.upPressed();
             hud.upPressed();
         }
         if (keycode == Input.Keys.F8)
@@ -834,37 +829,37 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (keycode == Input.Keys.LEFT)
         {
-            controller.leftReleased();
+            world.maryo.leftReleased();
             hud.leftReleased();
         }
         if (keycode == Input.Keys.RIGHT)
         {
-            controller.rightReleased();
+            world.maryo.rightReleased();
             hud.rightReleased();
         }
         if (keycode == Input.Keys.SPACE)
         {
-            controller.jumpReleased();
+            world.maryo.jumpReleased();
             hud.jumpReleased();
         }
         if (keycode == Input.Keys.ALT_LEFT)
         {
-            controller.fireReleased();
+            world.maryo.fireReleased();
             hud.fireReleased();
         }
         if (keycode == Input.Keys.X)
         {
-            controller.fireReleased();
+            world.maryo.fireReleased();
             hud.fireReleased();
         }
         if (keycode == Input.Keys.DOWN)
         {
-            controller.downReleased();
+            world.maryo.downReleased();
             hud.downReleased();
         }
         if (keycode == Input.Keys.UP)
         {
-            controller.upReleased();
+            world.maryo.upReleased();
             hud.upReleased();
         }
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
@@ -914,39 +909,39 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
                 {
-                    controller.rightPressed();
+                    world.maryo.rightPressed();
                     //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
                     touches.get(pointer).clickArea = HUD.Key.right;
                     hud.rightPressed();
                 }
                 if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
                 {
-                    controller.leftPressed();
+                    world.maryo.leftPressed();
                     //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
                     touches.get(pointer).clickArea = HUD.Key.left;
                     hud.leftPressed();
                 }
                 if (Intersector.isPointInPolygon(hud.upPolygon, vect.set(x, invertY(y))))//is top
                 {
-                    controller.upPressed();
+                    world.maryo.upPressed();
                     touches.get(pointer).clickArea = HUD.Key.up;
                     hud.upPressed();
                 }
                 if (Intersector.isPointInPolygon(hud.downPolygon, vect.set(x, invertY(y))))//is bottom
                 {
-                    controller.downPressed();
+                    world.maryo.downPressed();
                     touches.get(pointer).clickArea = HUD.Key.down;
                     hud.downPressed();
                 }
                 if (hud.jumpRT.contains(x, invertY(y)))
                 {
-                    controller.jumpPressed();
+                    world.maryo.jumpPressed();
                     touches.get(pointer).clickArea = HUD.Key.jump;
                     hud.jumpPressed();
                 }
                 if (hud.fireRT.contains(x, invertY(y)))
                 {
-                    controller.firePressed();
+                    world.maryo.firePressed();
                     touches.get(pointer).clickArea = HUD.Key.fire;
                     hud.firePressed();
                 }
@@ -1002,42 +997,42 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 case right:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.rightReleased();
+                        world.maryo.rightReleased();
                         hud.rightReleased();
                     }
                     break;
                 case left:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.leftReleased();
+                        world.maryo.leftReleased();
                         hud.leftReleased();
                     }
                     break;
                 case up:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.upReleased();
+                        world.maryo.upReleased();
                         hud.upReleased();
                     }
                     break;
                 case down:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.downReleased();
+                        world.maryo.downReleased();
                         hud.downReleased();
                     }
                     break;
                 case jump:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.jumpReleased();
+                        world.maryo.jumpReleased();
                         hud.jumpReleased();
                     }
                     break;
                 case fire:
                     if (MaryoGame.showOnScreenControls())
                     {
-                        controller.fireReleased();
+                        world.maryo.fireReleased();
                         hud.fireReleased();
                     }
                     break;
