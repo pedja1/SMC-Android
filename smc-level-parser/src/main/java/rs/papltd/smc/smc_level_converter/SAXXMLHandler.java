@@ -406,7 +406,7 @@ public class SAXXMLHandler extends DefaultHandler
             enemy.texture_name = "data/enemy/spika/" + enemy.color + ".png";
             enemy.image_dir = "enemy/spika/";
             enemy.posx = enemy.posx / 64;
-            setEnemySettings(enemy, "green.settings");
+            setEnemySettings(enemy, enemy.color  + ".settings");
         }
         else if("spikeball".equals(enemy.type))
         {
