@@ -80,4 +80,23 @@ public abstract class GameObject
     public abstract void _update(float delta);
     public abstract void initAssets();
     public abstract void dispose();
+
+    @Override
+    public String toString()
+    {
+        return "GameObject{" +
+                "\n\tmDrawRect=" + mDrawRect +
+                "\n\t mColRect=" + mColRect +
+                "\n\t position=" + position +
+                "\n\t prevPosition=" + prevPosition +
+                "\n\t interpPosition=" + interpPosition +
+                "\n\t velocity=" + velocity +
+                "\n\t acceleration=" + acceleration +
+                "\n\t world=" + world +
+                "\n\t isFront=" + isFront +
+                "\n\t mRotationX=" + mRotationX +
+                "\n\t mRotationY=" + mRotationY +
+                "\n\t mRotationZ=" + mRotationZ +
+                "\n}";
+    }
 }

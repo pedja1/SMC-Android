@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
@@ -63,7 +65,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private SpriteBatch spriteBatch;
     private boolean debug = PrefsManager.isDebug();
 
-    private BitmapFont debugFont;
+    private BitmapFont debugFont, debugObjectFont;
     private GlyphLayout debugGlyph;
 
     Vector2 camMin = new Vector2();
@@ -133,6 +135,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private int timeStep = FIXED_DELTA;
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
+    private String objectDebugText;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -200,7 +203,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             GA.sendLevelStarted(levelName);
         }
-        if(resumed)
+        if (resumed)
         {
             cameraForceSnap = true;
         }
@@ -218,19 +221,19 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //debug
         //delta = 0.02f;//debug, 50 fps
         //debug end
-		if(timeStep == FIXED_DELTA)
-			delta = 1f/60f;
+        if (timeStep == FIXED_DELTA)
+            delta = 1f / 60f;
 
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //physics
 
-        if(timeStep == FIXED_TIMESTEP)
+        if (timeStep == FIXED_TIMESTEP)
         {
             fixedTimeStep(delta);
         }
-        else if(timeStep == SEMI_FIXED_TIMESTEP)
+        else if (timeStep == SEMI_FIXED_TIMESTEP)
         {
             semiFixedTimeStep(delta);
         }
@@ -280,27 +283,27 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         stateTime += delta;
         //debug
         long end = System.currentTimeMillis() - now;
-        if(end >= 15)
+        if (end >= 15)
         {
             System.out.println("render time total: " + end);
         }
-        if(gameState == GAME_STATE.GAME_EDIT_MODE)
+        if (gameState == GAME_STATE.GAME_EDIT_MODE)
         {
-            if(Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
-                cameraEditModeTranslate.x = Math.min(world.level.width, cameraEditModeTranslate.x + 0.1f);
+                cameraEditModeTranslate.x += 0.1f;
             }
-            else if(Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             {
-                cameraEditModeTranslate.x = Math.max((cam.viewportWidth * cam.zoom) * 0.5f, cameraEditModeTranslate.x - 0.1f);
+                cameraEditModeTranslate.x -= 0.1f;
             }
-            if(Gdx.input.isKeyPressed(Input.Keys.UP))
+            if (Gdx.input.isKeyPressed(Input.Keys.UP))
             {
-                cameraEditModeTranslate.y = Math.min(world.level.height, cameraEditModeTranslate.y + 0.1f);
+                cameraEditModeTranslate.y += 0.1f;
             }
-            else if(Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
             {
-                cameraEditModeTranslate.y = Math.max((cam.viewportHeight * cam.zoom) * 0.5f, cameraEditModeTranslate.y - 0.1f);
+                cameraEditModeTranslate.y -= 0.1f;
             }
         }
         //debug
@@ -346,7 +349,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         //interpolate
         double alpha = accumulator / step;
-        interpolateObjects((float)alpha);
+        interpolateObjects((float) alpha);
     }
 
     public void showBoxText(Box box)
@@ -429,7 +432,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting))
             return;
-        if(snap || cameraForceSnap)
+        if (snap || cameraForceSnap)
         {
             cam.position.set(pos);
             cameraForceSnap = false;
@@ -439,7 +442,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             cam.position.lerp(pos, 0.05f);
         }
         cam.update();
-        keepCameraInBounds(cam);
+        if(gameState != GAME_STATE.GAME_EDIT_MODE)keepCameraInBounds(cam);
     }
 
     private void keepCameraInBounds(OrthographicCamera cam)
@@ -462,7 +465,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void updateObjects(float delta)
     {
-        int count = 0;
+        //int count = 0;
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
         for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         //for (GameObject go : world.level.gameObjects)
@@ -474,12 +477,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
                 {
                     go._update(delta);
-                    /*if(go instanceof Enemy)*/count++;
+                    /*if(go instanceof Enemy)*/
+                    //count++;
                 }
             }
         }
         World.RECT_POOL.free(maryoBWO);
-        System.out.println(count);
+        //System.out.println(count);
     }
 
     private void interpolateObjects(float alpha)
@@ -564,6 +568,26 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         String debugMessage = generateDebugMessage();
         debugGlyph.setText(debugFont, debugMessage);
         debugFont.draw(spriteBatch, debugMessage, 20, height - 20);
+
+        Vector2 point = World.VECTOR2_POOL.obtain();
+        float x = Gdx.input.getX();
+        float y = invertY(Gdx.input.getY());
+        Utility.guiPositionToGamePosition(x, y, this, point);
+
+        for (GameObject gameObject : world.level.gameObjects)
+        {
+            if (gameObject.mDrawRect.contains(point))
+            {
+                objectDebugText = gameObject.toString();
+                float tWidth = width * 0.4f;
+                debugGlyph.setText(debugObjectFont, objectDebugText, Color.BLACK, tWidth, Align.left, true);
+                float height = debugGlyph.height;
+                debugObjectFont.draw(spriteBatch, debugGlyph, x - tWidth, y + height);
+                break;
+            }
+        }
+
+        World.VECTOR2_POOL.free(point);
     }
 
     private String generateDebugMessage()
@@ -579,7 +603,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
                 + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
                 + "\n" + "TimeStep:" + (timeStep == FIXED_TIMESTEP ? "fixed" : (timeStep == SEMI_FIXED_TIMESTEP ? "semi-fixed" : "dynamic"))
-				+ "\n" + "Screen w=" + width + "h=" + height
+                + "\n" + "Screen w=" + width + "h=" + height
                 + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
@@ -695,6 +719,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
         Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
 
+        debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+        debugFontParams.fontParameters.size = (int) (height / 40f);
+        debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+        Assets.manager.load("debug_object.ttf", BitmapFont.class, debugFontParams);
+
         exitDialog.loadAssets();
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
@@ -723,6 +753,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         debugFont = Assets.manager.get("debug.ttf");
         debugFont.setColor(1, 0, 0, 1);
+
+        debugObjectFont = Assets.manager.get("debug_object.ttf");
         debugGlyph = new GlyphLayout();
 
         for (GameObject go : loader.level.gameObjects)
@@ -780,9 +812,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             controller.upPressed();
             hud.upPressed();
         }
-        if(keycode == Input.Keys.F8)
+        if (keycode == Input.Keys.F8)
         {
-            if(gameState == GAME_STATE.GAME_EDIT_MODE)
+            if (gameState == GAME_STATE.GAME_EDIT_MODE)
             {
                 gameState = GAME_STATE.GAME_RUNNING;
                 cam.zoom = 1;
@@ -836,7 +868,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
         {
-            if(gameState == GAME_STATE.GAME_PAUSED)
+            if (gameState == GAME_STATE.GAME_PAUSED)
             {
                 if (exitDialog.visible) exitDialog.hide();
                 else exitDialog.show();
@@ -911,7 +943,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     touches.get(pointer).clickArea = HUD.Key.jump;
                     hud.jumpPressed();
                 }
-				if (hud.fireRT.contains(x, invertY(y)))
+                if (hud.fireRT.contains(x, invertY(y)))
                 {
                     controller.firePressed();
                     touches.get(pointer).clickArea = HUD.Key.fire;
@@ -1001,7 +1033,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                         hud.jumpReleased();
                     }
                     break;
-				case fire:
+                case fire:
                     if (MaryoGame.showOnScreenControls())
                     {
                         controller.fireReleased();
@@ -1054,7 +1086,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean scrolled(int amount)
     {
-        if(gameState == GAME_STATE.GAME_EDIT_MODE || debug)
+        if (gameState == GAME_STATE.GAME_EDIT_MODE || debug)
         {
             cam.zoom += amount * 0.1f;
             cam.update();
@@ -1066,7 +1098,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean mouseMoved(int screenX, int screenY)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 

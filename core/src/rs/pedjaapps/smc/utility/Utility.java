@@ -146,6 +146,21 @@ public class Utility
         point.y = positionY * heightMul;
     }
 
+
+
+    public static void guiPositionToGamePosition(float positionX, float positionY, GameScreen gameScreen, Vector2 point)
+    {
+        OrthographicCamera cam = gameScreen.cam;
+        OrthographicCamera guiCam = gameScreen.guiCam;
+
+        float camViewX = cam.position.x - (cam.viewportWidth * cam.zoom) * 0.5f;
+        float camViewY = cam.position.y - (cam.viewportHeight * cam.zoom) * 0.5f;
+        float widthMul = guiCam.viewportWidth / (cam.viewportWidth * cam.zoom);
+        float heightMul = guiCam.viewportHeight / (cam.viewportHeight * cam.zoom);
+        point.x = camViewX + positionX / widthMul;
+        point.y = camViewY + positionY / heightMul;
+    }
+
     public static float gameWidthToGuiWidth(GameScreen gameScreen, float width)
     {
         OrthographicCamera cam = gameScreen.cam;

@@ -70,6 +70,11 @@ public class Sprite extends GameObject
     @Override
     public void initAssets()
     {
+        if(mRotationZ == 90 && mRotationX == 0 && mRotationY == 0)
+        {
+            mRotationY = 180;
+            mRotationX = 180;
+        }
         //load all assets
         TextureAtlas atlas = null;
         if (textureAtlas != null && textureAtlas.length() > 0)
@@ -243,6 +248,14 @@ public class Sprite extends GameObject
     @Override
     public String toString()
     {
-        return textureName;
+        return "Sprite{" +
+                "\nrotationAplied=" + rotationAplied +
+                "\n textureAtlas='" + textureAtlas + '\'' +
+                "\n textureName='" + textureName + '\'' +
+                "\n type=" + type +
+                "\n mOrigDrawRect=" + mOrigDrawRect +
+                "\n txt=" + txt +
+                "\n region=" + region +
+                "\n} \n" + super.toString();
     }
 }
