@@ -836,8 +836,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
         {
-            if (exitDialog.visible) exitDialog.hide();
-            else exitDialog.show();
+            if(gameState == GAME_STATE.GAME_PAUSED)
+            {
+                if (exitDialog.visible) exitDialog.hide();
+                else exitDialog.show();
+            }
+            else
+            {
+                gameState = GAME_STATE.GAME_PAUSED;
+            }
         }
         if (keycode == Input.Keys.D)
             debug = !debug;
