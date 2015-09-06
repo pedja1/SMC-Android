@@ -149,8 +149,8 @@ public class World
 	
 	public Rectangle createMaryoRectWithOffset(OrthographicCamera cam, float offset)
 	{
-        float offsetX = Math.max(offset, (cam.viewportWidth * cam.zoom));
-        float offsetY = Math.max(offset * 0.5f, (cam.viewportHeight * cam.zoom));
+        float offsetX = Math.max(offset, Constants.CAMERA_WIDTH/*(cam.viewportWidth * cam.zoom)*/);
+        float offsetY = Math.max(offset * 0.5f, Constants.CAMERA_HEIGHT/*(cam.viewportHeight * cam.zoom)*/);
 		float wX = maryo.mColRect.x - offsetX;
         float wY = maryo.mColRect.y - offsetY;
         float wW = maryo.mColRect.x + maryo.mColRect.width + offsetX * 2;

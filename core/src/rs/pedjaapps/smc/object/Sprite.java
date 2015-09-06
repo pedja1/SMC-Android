@@ -15,6 +15,7 @@ import rs.pedjaapps.smc.utility.Utility;
 
 public class Sprite extends GameObject
 {
+    private boolean rotationAplied = false;
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
@@ -84,7 +85,11 @@ public class Sprite extends GameObject
         {
             txt = Assets.manager.get(textureName);
         }
-        applyRotation();
+        if(!rotationAplied)
+        {
+            applyRotation();
+            rotationAplied = true;
+        }
 
     }
 
