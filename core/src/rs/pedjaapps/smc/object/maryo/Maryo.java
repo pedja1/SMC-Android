@@ -44,7 +44,7 @@ public class Maryo extends DynamicObject
 {
     public enum MaryoState
     {
-        small, big, fire, ice, ghost, flying
+        small, big, fire, ice, ghost
     }
 
     public static final float STAR_EFFECT_TIMEOUT = 15f;
@@ -60,13 +60,11 @@ public class Maryo extends DynamicObject
     private static final int A_KEY_WALKING_FIRE = 4;
     private static final int A_KEY_THROW_FIRE = 5;
     private static final int A_KEY_CLIMB_FIRE = 6;
-    private static final int A_KEY_WALKING_FLYING = 7;
-    private static final int A_KEY_CLIMB_FLYING = 8;
-    private static final int A_KEY_WALKING_GHOST = 9;
-    private static final int A_KEY_CLIMB_GHOST = 10;
-    private static final int A_KEY_WALKING_ICE = 11;
-    private static final int A_KEY_THROW_ICE = 12;
-    private static final int A_KEY_CLIMB_ICE = 13;
+    private static final int A_KEY_WALKING_GHOST = 7;
+    private static final int A_KEY_CLIMB_GHOST = 8;
+    private static final int A_KEY_WALKING_ICE = 9;
+    private static final int A_KEY_THROW_ICE = 10;
+    private static final int A_KEY_CLIMB_ICE = 11;
 
     private static final int T_KEY_DUCK_RIGHT_SMALL = 0;
     private static final int T_KEY_JUMP_RIGHT_SMALL = 1;
@@ -86,23 +84,17 @@ public class Maryo extends DynamicObject
     private static final int T_KEY_DEAD_RIGHT_FIRE = 13;
     private static final int T_KEY_STAND_RIGHT_FIRE = 14;
 
-    private static final int T_KEY_DUCK_RIGHT_FLYING = 15;
-    private static final int T_KEY_JUMP_RIGHT_FLYING = 16;
-    private static final int T_KEY_FALL_RIGHT_FLYING = 17;
-    private static final int T_KEY_DEAD_RIGHT_FLYING = 18;
-    private static final int T_KEY_STAND_RIGHT_FLYING = 19;
+    private static final int T_KEY_DUCK_RIGHT_GHOST = 15;
+    private static final int T_KEY_JUMP_RIGHT_GHOST = 16;
+    private static final int T_KEY_FALL_RIGHT_GHOST = 17;
+    private static final int T_KEY_DEAD_RIGHT_GHOST = 18;
+    private static final int T_KEY_STAND_RIGHT_GHOST = 19;
 
-    private static final int T_KEY_DUCK_RIGHT_GHOST = 20;
-    private static final int T_KEY_JUMP_RIGHT_GHOST = 21;
-    private static final int T_KEY_FALL_RIGHT_GHOST = 22;
-    private static final int T_KEY_DEAD_RIGHT_GHOST = 23;
-    private static final int T_KEY_STAND_RIGHT_GHOST = 24;
-
-    private static final int T_KEY_DUCK_RIGHT_ICE = 25;
-    private static final int T_KEY_JUMP_RIGHT_ICE = 26;
-    private static final int T_KEY_FALL_RIGHT_ICE = 27;
-    private static final int T_KEY_DEAD_RIGHT_ICE = 28;
-    private static final int T_KEY_STAND_RIGHT_ICE = 29;
+    private static final int T_KEY_DUCK_RIGHT_ICE = 20;
+    private static final int T_KEY_JUMP_RIGHT_ICE = 21;
+    private static final int T_KEY_FALL_RIGHT_ICE = 22;
+    private static final int T_KEY_DEAD_RIGHT_ICE = 23;
+    private static final int T_KEY_STAND_RIGHT_ICE = 24;
 
     public static final float POSITION_Z = 0.0999f;
 
@@ -164,8 +156,8 @@ public class Maryo extends DynamicObject
     private float starEffectTime;
 
     //textures
-    private TextureRegion[] tMap = new TextureRegion[30];
-    private Animation[] aMap = new Animation[14];
+    private TextureRegion[] tMap = new TextureRegion[25];
+    private Animation[] aMap = new Animation[12];
 
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -191,8 +183,6 @@ public class Maryo extends DynamicObject
             case ice:
                 mDrawRect.height = 1.09f;
                 mDrawRect.width = 1.09f;
-                break;
-            case flying:
                 break;
         }
         mColRect.x = mDrawRect.x + mDrawRect.width / 4;
@@ -444,8 +434,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_STAND_RIGHT_ICE;
                     case ghost:
                         return T_KEY_STAND_RIGHT_GHOST;
-                    case flying:
-                        return T_KEY_STAND_RIGHT_FLYING;
                 }
                 break;
             case jump_right:
@@ -461,8 +449,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_JUMP_RIGHT_ICE;
                     case ghost:
                         return T_KEY_JUMP_RIGHT_GHOST;
-                    case flying:
-                        return T_KEY_JUMP_RIGHT_FLYING;
                 }
                 break;
             case fall_right:
@@ -478,8 +464,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_FALL_RIGHT_ICE;
                     case ghost:
                         return T_KEY_FALL_RIGHT_GHOST;
-                    case flying:
-                        return T_KEY_FALL_RIGHT_FLYING;
                 }
                 break;
             case dead_right:
@@ -495,8 +479,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_DEAD_RIGHT_ICE;
                     case ghost:
                         return T_KEY_DEAD_RIGHT_GHOST;
-                    case flying:
-                        return T_KEY_DEAD_RIGHT_FLYING;
                 }
                 break;
             case duck_right:
@@ -512,8 +494,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_DUCK_RIGHT_ICE;
                     case ghost:
                         return T_KEY_DUCK_RIGHT_GHOST;
-                    case flying:
-                        return T_KEY_DUCK_RIGHT_FLYING;
                 }
                 break;
         }
@@ -571,15 +551,6 @@ public class Maryo extends DynamicObject
                         return A_KEY_WALKING_GHOST;
                     case climb:
                         return A_KEY_CLIMB_GHOST;
-                }
-                break;
-            case flying:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_FLYING;
-                    case climb:
-                        return A_KEY_CLIMB_FLYING;
                 }
                 break;
         }
@@ -1061,9 +1032,6 @@ public class Maryo extends DynamicObject
                 return Assets.manager.get("data/sounds/item/mushroom_blue.wav");
             case ghost:
                 return Assets.manager.get("data/sounds/item/mushroom_ghost.ogg");
-            case flying:
-                //TODO this asset is missing somehow
-                //return Assets.manager.get("data/sounds/item/feather.ogg");
         }
         return null;
     }
