@@ -13,8 +13,8 @@ android {
     buildToolsVersion '22.0.1'
     compileSdkVersion 22
     defaultConfig {
-        versionCode 20150822
-        versionName "0.1 alpha"
+        versionCode 20150906
+        versionName "0.2 alpha"
         minSdkVersion 10
         targetSdkVersion 22
     }
