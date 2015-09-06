@@ -44,7 +44,7 @@ public class Eato extends Enemy
         }
         else if("right_top".equals(direction))
         {
-            mRotationZ = 270f;
+            mRotationZ = 90f;
         }
         else if("right_bottom".equals(direction))
         {
