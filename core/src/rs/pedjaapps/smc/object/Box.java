@@ -221,6 +221,7 @@ public class Box extends Sprite
             Assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class);
         }
         Assets.manager.load("data/game/box/yellow/default.png", Texture.class, Assets.textureParameter);
+        Assets.manager.load("data/game/box/brown1_1.png", Texture.class, Assets.textureParameter);
         addBoxItem(box, true);
         //addBoxItem(box, loader.getLevel());
         return box;

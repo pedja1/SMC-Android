@@ -556,7 +556,7 @@ public class SAXXMLHandler extends DefaultHandler
             }
             else if(sprite.image.contains("yellow"))
             {
-                sprite.texture_atlas = sprite.image.contains("small") ? "data/pipes/orange/yellow.pack" : "data/pipes/yellow/yellow.pack";
+                sprite.texture_atlas = sprite.image.contains("small") ? "data/pipes/yellow/yellow.pack" : "data/pipes/yellow/yellow.pack";
             }
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
         }
@@ -629,6 +629,26 @@ public class SAXXMLHandler extends DefaultHandler
             sprite.texture_atlas = "data/ground/green_2/balloon_tree.pack";
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replaceAll("trunk_node", "trunk-node");
         }
+        else if(sprite.image.contains("snow_1/trees/balloon"))
+        {
+            sprite.texture_atlas = "data/ground/snow_1/trees/balloon.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
+        else if(sprite.image.contains("hills/light_blue_1"))
+        {
+            sprite.texture_atlas = "data/hills/light_blue_1.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
+        else if(sprite.image.contains("hills/very_light_blue_1"))
+        {
+            sprite.texture_atlas = "data/hills/very_light_blue_1.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
+        else if(sprite.image.contains("hills/green"))
+        {
+            sprite.texture_atlas = "data/hills/green.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
+        }
         else if(sprite.image.contains("box/yellow"))
         {
             //TODO fix this and everything else
@@ -674,6 +694,21 @@ public class SAXXMLHandler extends DefaultHandler
         else if(sprite.image.contains("jungle_1/kplant"))
         {
             sprite.texture_atlas = "data/ground/jungle_1/kplant.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+        }
+        else if(sprite.image.contains("green_2/tendril"))
+        {
+            sprite.texture_atlas = "data/ground/green_2/tendril.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+        }
+        else if(sprite.image.contains("ground/underground/rope"))
+        {
+            sprite.texture_atlas = "data/ground/underground/rope.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+        }
+        else if(sprite.image.contains("ground/underground/cain"))
+        {
+            sprite.texture_atlas = "data/ground/underground/cain.pack";
             sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
         }
 		else if(sprite.image.startsWith("ground/desert_1/bones"))

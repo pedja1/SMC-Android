@@ -11,7 +11,7 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 
 public class GameSaveUtility
 {
-    public static final List<String> LEVELS = Arrays.asList(/*"test",*/ "lvl_1", "lvl_2", "lvl_3", "lvl_4", "lvl_5", "lvl_6", "lvl_7", "lvl_8", "lvl_9", "lvl_10");
+    public static final List<String> LEVELS = Arrays.asList("lvl_1", "lvl_2", "lvl_3", "lvl_4", "lvl_5", "lvl_6", "lvl_7", "lvl_8", "lvl_9", "pasol_3", "stephane_1", "tower_1", "eatomania", "lvl_10", "pasol_1", "flippa_3", "dj_kirby_1", "jungle_1", "keywest_1", "underground", "clear_night", "wn_01", "wn_02", "wn_03", "wn_04", "wn_05", "wn_06", "wn_07", "sauer_2_1", "sauer_2_2", "sauer_2_3", "sauer_2_4", "sauer_2_5", "sauer_2_6", "sauer_2_7");
 	private static GameSaveUtility instance = null;
 	
 	public Save save;
@@ -62,7 +62,7 @@ public class GameSaveUtility
 
     public boolean isUnlocked(String levelName)
     {
-        return save.unlockedLevels.contains(levelName);
+        return true;//save.unlockedLevels.contains(levelName);
     }
 
     /**

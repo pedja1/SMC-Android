@@ -150,4 +150,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-leaf-brown.png
+leaf_brown.png

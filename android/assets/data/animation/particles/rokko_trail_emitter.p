@@ -124,4 +124,4 @@ additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -
-smoke-grey-big.png
+smoke_grey_big.png

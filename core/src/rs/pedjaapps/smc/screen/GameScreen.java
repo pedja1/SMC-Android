@@ -215,7 +215,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void render(float delta)
     {
         //debug
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         //debug
         if (delta > 0.1f) delta = 0.1f;
         //debug
@@ -264,7 +264,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.end();
         if (debug) drawDebug();
 
-        hud.render(gameState, delta);
+        //hud.render(gameState, delta);
 
         if (gameState == GAME_STATE.GAME_OVER)
         {
@@ -282,11 +282,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         GLProfiler.reset();
         stateTime += delta;
         //debug
-        long end = System.currentTimeMillis() - now;
+        /*long end = System.currentTimeMillis() - now;
         if (end >= 15)
         {
             System.out.println("render time total: " + end);
-        }
+        }*/
         if (gameState == GAME_STATE.GAME_EDIT_MODE)
         {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))

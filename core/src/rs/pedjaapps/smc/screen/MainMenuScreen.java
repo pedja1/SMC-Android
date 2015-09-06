@@ -89,7 +89,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	public Array<SelectionAdapter.Level> loadSelectionItems()
 	{
 		Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
-		for (int i = 0; i < 40; i++)
+		for (int i = 0; i < GameSaveUtility.LEVELS.size(); i++)
 		{
 			SelectionAdapter.Level level = new SelectionAdapter.Level();
             if(i < GameSaveUtility.LEVELS.size())level.levelId = GameSaveUtility.LEVELS.get(i);
