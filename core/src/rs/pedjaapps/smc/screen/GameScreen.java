@@ -264,7 +264,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.end();
         if (debug) drawDebug();
 
-        //hud.render(gameState, delta);
+        hud.render(gameState, delta);
 
         if (gameState == GAME_STATE.GAME_OVER)
         {
