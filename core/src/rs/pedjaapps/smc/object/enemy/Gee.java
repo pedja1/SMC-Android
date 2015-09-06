@@ -14,10 +14,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.maryo.Fireball;
-import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -31,7 +29,7 @@ public class Gee extends Enemy
     public String direction;
     public float flyDistance, flySpeed;
     private Vector3 mOriginPosition;
-    private boolean forward, dirForward, staying = true, fireResistant;
+    private boolean forward, dirForward, staying = true;
     private float currWaitTime, waitTime;
     private Color color;
     private boolean flipx;
@@ -53,19 +51,19 @@ public class Gee extends Enemy
                 this.color = new Color(1, 0.960784314f, 0.039215686f, 1);
                 flySpeed = 2.881f;
                 mKillPoints = 50;
-                fireResistant = false;
+                mFireResistant = 0;
                 break;
             case "red":
                 this.color = new Color(1, 0.156862745f, 0.078431373f, 1);
                 flySpeed = 3.865f;
                 mKillPoints = 100;
-                fireResistant = true;
+                mFireResistant = 1;
                 break;
             case "green":
                 this.color = new Color(0.078431373f, 0.992156863f, 0.078431373f, 1);
                 flySpeed = 4.831f;
                 mKillPoints = 200;
-                fireResistant = false;
+                mFireResistant = 0;
                 break;
         }
         position.z = POSITION_Z;
@@ -358,13 +356,5 @@ public class Gee extends Enemy
         {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
-    }
-
-    @Override
-    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
-    {
-        if(fireResistant && killedBy instanceof Fireball)
-            return;
-        super.downgradeOrDie(killedBy, forceBulletKill);
     }
 }

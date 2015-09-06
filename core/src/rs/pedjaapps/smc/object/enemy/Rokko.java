@@ -52,6 +52,8 @@ public class Rokko extends Enemy
         mMinDistanceFront = 3.125f;
         mMaxDistanceFront = 15.625f;
         mMaxDistanceSides = 6.25f;
+        mFireResistant = 1;
+        mIceResistance = 1;
         Assets.manager.load("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
     }
 

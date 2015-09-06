@@ -47,6 +47,7 @@ public class Thromp extends Enemy
             rotation = 180f;
         }
         mKillPoints = 200;
+        mFireResistant = 1;
         position.z = POSITION_Z;
     }
 

@@ -28,8 +28,6 @@ public class Furball extends Enemy
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
     boolean dying = false;
-    boolean fireResistant = false;
-    float iceResistance = 0.0f;
     boolean canBeHitFromShell = true;
 
     //only for boss
@@ -74,24 +72,24 @@ public class Furball extends Enemy
         {
             type = Type.brown;
             mKillPoints = 10;
-            fireResistant = false;
-            iceResistance = .0f;
+            mFireResistant = 0;
+            mIceResistance = .0f;
             canBeHitFromShell = true;
         }
         else if(textureAtlas.contains("blue"))
         {
             type = Type.blue;
             mKillPoints = 50;
-            fireResistant = false;
-            iceResistance = .9f;
+            mFireResistant = 0;
+            mIceResistance = .9f;
             canBeHitFromShell = true;
         }
         else if(textureAtlas.contains("boss"))
         {
             type = Type.boss;
             mKillPoints = 2500;
-            fireResistant = true;
-            iceResistance = 1f;
+            mFireResistant = 1;
+            mIceResistance = 1f;
             canBeHitFromShell = false;
             tHit = atlas.findRegion("hit");
         }
