@@ -3,7 +3,7 @@ kplant.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-kplan1
+kplant
   rotate: false
   xy: 2, 2
   size: 32, 32
