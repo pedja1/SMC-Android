@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -86,4 +88,14 @@ public class Static extends Enemy
         return region;
     }
 
+    @Override
+    protected boolean handleCollision(GameObject object, boolean vertical)
+    {
+        if(object instanceof Enemy && ((Enemy)object).handleCollision)
+        {
+            GameSaveUtility.getInstance().save.points += ((Enemy)object).mKillPoints;
+            ((Enemy)object).downgradeOrDie(this, true);
+        }
+        return true;
+    }
 }

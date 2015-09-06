@@ -99,7 +99,7 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
     {
-        if (forceBulletKill || killedBy instanceof Turtle || killedBy instanceof Spika || killedBy instanceof Fireball)//todo bullet, fireball...
+        if (forceBulletKill || killedBy instanceof Turtle || killedBy instanceof Spika || killedBy instanceof Fireball || killedBy instanceof Static)//todo bullet, fireball...
         {
             deadByBullet = true;
             handleCollision = false;
