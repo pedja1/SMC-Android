@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 
@@ -280,7 +281,7 @@ public abstract class DynamicObject extends GameObject
                         Sound sound = Assets.manager.get("data/sounds/wall_hit.wav");
                         if (sound != null && Assets.playSounds)
                         {
-                            sound.play();
+                            Audio.play(sound);
                             lasHitSoundPlayed = System.currentTimeMillis();
                         }
                     }

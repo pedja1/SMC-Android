@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.controller.MarioController;
 import rs.pedjaapps.smc.ga.GA;
@@ -190,7 +191,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void show()
     {
         music = Assets.manager.get(loader.level.music.first());
-        if (Assets.playMusic) music.play();
+        Audio.play(music);
         GLProfiler.enable();
         if (!resumed || forceCheckEnter)
         {
@@ -1051,14 +1052,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 case sound:
                     if (Utility.toggleSound())
                     {
-                        audioOn.play();
+                        Audio.play(audioOn);
                     }
                     hud.soundReleased();
                     break;
                 case music:
                     if (Utility.toggleMusic())
                     {
-                        music.play();
+                        Audio.play(music);
                     }
                     else
                     {

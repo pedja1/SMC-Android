@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.Collections;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.items.Coin;
 import rs.pedjaapps.smc.object.items.Fireplant;
 import rs.pedjaapps.smc.object.items.Item;
@@ -452,7 +453,7 @@ public class Box extends Sprite
         {
             sound = Assets.manager.get("data/sounds/wall_hit.wav");
         }
-        if (sound != null && Assets.playSounds) sound.play();
+        Audio.play(sound);
     }
 
     @Override

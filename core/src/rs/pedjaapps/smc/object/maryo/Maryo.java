@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.Collections;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
@@ -1045,7 +1046,7 @@ public class Maryo extends DynamicObject
 
         //play new state sound
         Sound sound = upgradeSound(newState);
-        if (sound != null && Assets.playSounds) sound.play();
+        Audio.play(sound);
     }
 
     private Sound upgradeSound(MaryoState newState)
@@ -1121,7 +1122,7 @@ public class Maryo extends DynamicObject
             if (Assets.playSounds)
             {
                 Sound sound = Assets.manager.get("data/sounds/player/dead.ogg");
-                sound.play();
+                Audio.play(sound);
             }
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSaveUtility.getInstance().save.lifes--;

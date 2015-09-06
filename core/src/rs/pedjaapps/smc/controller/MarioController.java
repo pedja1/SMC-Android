@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.*;
 
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.LevelExit;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -119,7 +120,7 @@ public class MarioController
             if(Assets.playSounds)
             {
                 Sound sound = maryo.jumpSound;
-                if(sound != null)sound.play();
+                Audio.play(sound);
             }
             jumpClickTime = System.currentTimeMillis();
         }

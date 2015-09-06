@@ -12,7 +12,7 @@ public class PrefsManager
 
     public enum PrefsKey
     {
-        sound, music, sg, debug
+        sound, music, sg, debug, sound_volume, music_volume
     }
 
     public static boolean isPlayMusic()
@@ -45,6 +45,28 @@ public class PrefsManager
     public static void setSaveGame(String saveGame)
     {
         prefs.putString(PrefsKey.sg.toString(), saveGame);
+		flush();
+    }
+
+	public static float getSoundVolume()
+    {
+        return prefs.getFloat(PrefsKey.sound_volume.toString(), 0.5f);
+    }
+
+    public static void setSoundVolume(float volume)
+    {
+        prefs.putFloat(PrefsKey.sound_volume.toString(), volume);
+		flush();
+    }
+
+	public static float getMusicVolume()
+    {
+        return prefs.getFloat(PrefsKey.music_volume.toString(), 0.5f);
+    }
+
+    public static void setMusicVolume(float volume)
+    {
+        prefs.putFloat(PrefsKey.music_volume.toString(), volume);
 		flush();
     }
 

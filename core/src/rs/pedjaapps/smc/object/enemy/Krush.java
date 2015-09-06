@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
@@ -195,10 +196,7 @@ public class Krush extends Enemy
                 handleCollision = false;
                 dying = true;
                 Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.ogg");
-                if (sound != null && Assets.playSounds)
-                {
-                    sound.play();
-                }
+                Audio.play(sound);
                 return HIT_RESOLUTION_ENEMY_DIED;
             }
             else
