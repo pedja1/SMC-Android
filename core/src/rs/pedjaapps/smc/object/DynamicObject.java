@@ -240,8 +240,9 @@ public abstract class DynamicObject extends GameObject
         }
         if (mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
         {
-            velocity.x = 0;
-            collides = true;
+            boolean tmp = handleLevelEdge();
+            if(tmp)
+                collides = true;
         }
 
         // reset the x position of the collision box
@@ -257,6 +258,12 @@ public abstract class DynamicObject extends GameObject
             grounded = true;
         }
         velocity.y = 0;
+        return false;
+    }
+
+    protected boolean handleLevelEdge()
+    {
+        velocity.x = 0;
         return false;
     }
 
