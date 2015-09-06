@@ -30,6 +30,7 @@ import rs.pedjaapps.smc.object.enemy.Flyon;
 import rs.pedjaapps.smc.object.enemy.Spika;
 import rs.pedjaapps.smc.object.enemy.Static;
 import rs.pedjaapps.smc.object.enemy.Thromp;
+import rs.pedjaapps.smc.object.enemy.Turtle;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -900,19 +901,39 @@ public class Maryo extends DynamicObject
                 }
                 else
                 {
-                    int resolution = ((Enemy) object).hitByPlayer(this, vertical);
-                    if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
+                    if(object instanceof Turtle && ((Turtle)object).isShell && !((Turtle)object).isShellMoving)
                     {
-                        velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                        GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
-                    }
-                    else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
-                    {
-                        downgradeOrDie(false);
+                        Turtle turtle = (Turtle) object;
+                        turtle.isShellMoving = true;
+                        if(turtle.mColRect.x > mColRect.x)
+                        {
+                            turtle.setDirection(Direction.right);
+                            turtle.mColRect.x = turtle.position.x = mColRect.x + mColRect.width + 0.1f;
+                            turtle.updateBounds();
+                        }
+                        else
+                        {
+                            turtle.setDirection(Direction.left);
+                            turtle.mColRect.x = turtle.position.x = mColRect.x - turtle.mColRect.width - 0.1f;
+                            turtle.updateBounds();
+                        }
                     }
                     else
                     {
-                        velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                        int resolution = ((Enemy) object).hitByPlayer(this, vertical);
+                        if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
+                        {
+                            velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                            GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
+                        }
+                        else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
+                        {
+                            downgradeOrDie(false);
+                        }
+                        else
+                        {
+                            velocity.y = 5f * Gdx.graphics.getDeltaTime();
+                        }
                     }
                 }
             }

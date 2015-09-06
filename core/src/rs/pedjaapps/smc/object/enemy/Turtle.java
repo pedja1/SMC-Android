@@ -29,7 +29,7 @@ public class Turtle extends Enemy
 
     private float mShellRotation;
 
-    boolean isShell = false, isShellMoving = false;
+    public boolean isShell = false, isShellMoving = false;
     private Animation walkAnimation;
     private TextureRegion tTurn, tShell, tDead;
 
@@ -104,9 +104,9 @@ public class Turtle extends Enemy
             float width = Utility.getWidth(frame, mDrawRect.height);
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
-            frame.flip(!isShell && !turn && direction == Direction.left, false);
+            frame.flip(!isShell && !turn && direction == Direction.right, false);
             spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mShellRotation);
-            frame.flip(!isShell && !turn && direction == Direction.left, false);
+            frame.flip(!isShell && !turn && direction == Direction.right, false);
         }
     }
 
@@ -128,7 +128,7 @@ public class Turtle extends Enemy
         {
             mShellRotation = 0;
         }
-        return direction == Direction.right ? mShellRotation : -mShellRotation;
+        return direction == Direction.left ? mShellRotation : -mShellRotation;
     }
 
     public void update(float deltaTime)
@@ -157,10 +157,10 @@ public class Turtle extends Enemy
             switch(direction)
             {
                 case right:
-                    velocity.set(velocity.x = -getVelocityX(), velocity.y, velocity.z);
+                    velocity.set(velocity.x = +getVelocityX(), velocity.y, velocity.z);
                     break;
                 case left:
-                    velocity.set(velocity.x = +getVelocityX(), velocity.y, velocity.z);
+                    velocity.set(velocity.x = -getVelocityX(), velocity.y, velocity.z);
                     break;
             }
         }
