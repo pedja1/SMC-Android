@@ -18,8 +18,7 @@ import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.Background;
-import rs.pedjaapps.smc.object.BackgroundColor;
+import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Level;
@@ -150,15 +149,8 @@ public class LevelLoader
             if(textureName != null)Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
             if(levelParsed)return;
 
-			if(textureName != null)
-			{
-            	Background bg = new Background(new Vector2(0, 0), textureName);
-            	level.bg1 = bg;
-            	bg = new Background(new Vector2(Background.WIDTH, 0), textureName);
-            	level.bg2 = bg;
-			}
-            //TODO this is stupid, we should dinamically repeat background
-
+            Background bg = new Background(new Vector2(0, 0), textureName);
+            
             float r1 = (float) jBg.getDouble("r_1") / 255;//convert from 0-255 range to 0-1 range
             float r2 = (float) jBg.getDouble("r_2") / 255;
             float g1 = (float) jBg.getDouble("g_1") / 255;
@@ -166,10 +158,9 @@ public class LevelLoader
             float b1 = (float) jBg.getDouble("b_1") / 255;
             float b2 = (float) jBg.getDouble("b_2") / 255;
 
-            BackgroundColor bgColor = new BackgroundColor();
-            bgColor.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
-            bgColor.color2 = new Color(r2, g2, b2, 0f);
-            level.bgColor = bgColor;
+            bg.color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
+            bg.color2 = new Color(r2, g2, b2, 0f);
+			level.background = bg;
         }
         else
         {

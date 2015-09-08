@@ -1,26 +1,19 @@
 package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
-
 import rs.pedjaapps.smc.*;
-import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.*;
-import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
-import rs.pedjaapps.smc.utility.NATypeConverter;
-import rs.pedjaapps.smc.utility.LevelLoader;
-import rs.pedjaapps.smc.utility.PrefsManager;
-import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.view.ConfirmDialog;
-import rs.pedjaapps.smc.view.SelectionAdapter;
+import rs.pedjaapps.smc.object.maryo.*;
+import rs.pedjaapps.smc.utility.*;
+import rs.pedjaapps.smc.view.*;
+
+import rs.pedjaapps.smc.Audio;
 
 /**
  * Created by pedja on 2/17/14.
@@ -34,8 +27,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     OrthographicCamera drawCam, debugCam, hudCam;
     SpriteBatch batch;
     public MaryoGame game;
-	Background bgr1, bgr2;
-	BackgroundColor bgColor;
+	Background background;
     LevelLoader loader;
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
@@ -114,13 +106,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		bgColor.render(drawCam);
-
+		background.render(drawCam, batch);
+		
         batch.setProjectionMatrix(drawCam.combined);
         batch.begin();
-
-		bgr1.render(batch);
-        bgr2.render(batch);
 
         cloudsPEffect.draw(batch, delta);
 
@@ -240,7 +229,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setInputProcessor(null);
         Assets.dispose();
-        bgColor.dispose();
+        background.dispose();
         batch.dispose();
         exitDialog.dispose();
         music.stop();
@@ -289,15 +278,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        bgr1 = new Background(new Vector2(0, 0), "data/game/background/more_hills.png");
-        bgr1.width = 8.7f;
-        bgr1.height = 4.5f;
-        bgr2 = new Background(bgr1);
-        bgr2.position = new Vector2(bgr1.width, 0);
-
-        bgColor = new BackgroundColor();
-        bgColor.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
-        bgColor.color2 = new Color(0f, 0.392f, 0.039f, 0f);
+        background = new Background(new Vector2(0, 0), "data/game/background/more_hills.png");
+        background.width = Constants.MENU_CAMERA_WIDTH;//8.7f;
+        background.height = Constants.MENU_CAMERA_HEIGHT;//4.5f;
+ 
+        background.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
+        background.color2 = new Color(0f, 0.392f, 0.039f, 0f);
+		background.onAssetsLoaded();
 
         gameLogo = Assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

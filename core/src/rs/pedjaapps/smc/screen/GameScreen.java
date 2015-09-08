@@ -33,7 +33,6 @@ import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.ga.GA;
-import rs.pedjaapps.smc.object.BackgroundColor;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -53,8 +52,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public OrthographicCamera cam;
     private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
-    private OrthographicCamera bgCam;
-
+    
     ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
@@ -163,11 +161,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam = new OrthographicCamera(width, height);
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
-
-        bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        bgCam.position.set(cam.position.x, cam.position.y, 0);
-        bgCam.update();
 
         spriteBatch = new SpriteBatch();
 
@@ -412,16 +405,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void drawBackground()
     {
-        BackgroundColor bgColor = world.level.bgColor;
-        bgColor.render(bgCam);
-        bgCam.position.set(cam.position.x * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportWidth * 0.44f,
-                cam.position.y * Constants.BACKGROUND_SCROLL_SPEED + cam.viewportHeight * 0.44f, 0);
-        bgCam.update();
-        spriteBatch.setProjectionMatrix(bgCam.combined);
-        spriteBatch.begin();
-        if (world.level.bg1 != null) world.level.bg1.render(spriteBatch);
-        if (world.level.bg2 != null) world.level.bg2.render(spriteBatch);
-        spriteBatch.end();
+        world.level.background.render(cam, spriteBatch);
     }
 
     public void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
@@ -592,7 +576,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
                 + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
                 + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
-                + "\n" + "BG Camera: x=" + bgCam.position.x + ", y=" + bgCam.position.y
+                + "\n" + "BG Camera: x=" + world.level.background.bgCam.position.x + ", y=" + world.level.background.bgCam.position.y
                 + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
                 + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
                 + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
@@ -624,10 +608,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-        bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        bgCam.position.set(cam.position.x, cam.position.y, 0);
-        bgCam.update();
+   		world.level.background.resize();
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -759,6 +740,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
+		world.level.background.onAssetsLoaded();
     }
 
     @Override
