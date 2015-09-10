@@ -148,8 +148,13 @@ public class LevelLoader
             String textureName = jBg.optString("texture_name", null);
             if(textureName != null)Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
             if(levelParsed)return;
+			
+			Vector2 speed = new Vector2();
+			
+			speed.x = (float) jBg.optDouble("speedx");
+			speed.y = (float) jBg.optDouble("speedy");
 
-            Background bg = new Background(new Vector2(0, 0), textureName);
+            Background bg = new Background(new Vector2(0, 0), speed, textureName);
             
             float r1 = (float) jBg.getDouble("r_1") / 255;//convert from 0-255 range to 0-1 range
             float r2 = (float) jBg.getDouble("r_2") / 255;

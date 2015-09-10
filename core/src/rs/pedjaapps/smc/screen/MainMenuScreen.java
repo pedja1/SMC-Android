@@ -278,13 +278,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        background = new Background(new Vector2(0, 0), "data/game/background/more_hills.png");
+        background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png");
         background.width = Constants.MENU_CAMERA_WIDTH;//8.7f;
         background.height = Constants.MENU_CAMERA_HEIGHT;//4.5f;
  
         background.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
         background.color2 = new Color(0f, 0.392f, 0.039f, 0f);
-		background.onAssetsLoaded();
+		background.onAssetsLoaded(drawCam);
 
         gameLogo = Assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

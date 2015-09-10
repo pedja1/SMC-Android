@@ -608,7 +608,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-   		world.level.background.resize();
+   		world.level.background.resize(cam);
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -740,7 +740,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-		world.level.background.onAssetsLoaded();
+		world.level.background.onAssetsLoaded(cam);
     }
 
     @Override

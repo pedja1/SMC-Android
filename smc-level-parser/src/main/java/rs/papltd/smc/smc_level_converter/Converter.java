@@ -35,8 +35,8 @@ public class Converter
     {
         try
         {
-            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
-            //File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
+            //File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
+            File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
 			File[] files = levelsFolder.listFiles();
             for(File file : files)
             {
@@ -54,8 +54,8 @@ public class Converter
 
                 String levelJson = convertToJson(level);
                 //System.out.println(levelJson);
-                PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
-                //PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                //PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
                 writer.print(levelJson);
                 writer.flush();
                 writer.close();
@@ -98,6 +98,8 @@ public class Converter
             else if(bg.type == 1)
             {
                 background.put("texture_name", bg.image);
+				background.put("speedx", bg.speedx);
+				background.put("speedy", bg.speedy);
             }
         }
 

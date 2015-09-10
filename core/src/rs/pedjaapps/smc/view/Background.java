@@ -11,34 +11,35 @@ public class Background
 {
 	public static final float WIDTH = Constants.CAMERA_WIDTH;
 	public static final float HEIGHT = Constants.CAMERA_HEIGHT;
-	public Vector2 position;
+	public Vector2 position, speed;
 	public Texture texture;
 	public String textureName;
 	public float width;
 	public float height;
+	public Vector3 oldGameCamPos = new Vector3();
 
 	public Color color1;
     public Color color2;
 	ShapeRenderer renderer = new ShapeRenderer();
 	public OrthographicCamera bgCam;
 
-	public Background(Vector2 position, String textureName)
+	public Background(Vector2 position, Vector2 speed, String textureName)
 	{
+		this.speed = speed;
 		this.position = position;
 		this.textureName = textureName;
 		width = WIDTH;
 		height = HEIGHT;
 		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        //bgCam.position.set(cam.position.x, cam.position.y, 0);
         bgCam.update();
 	}
 
-	public void resize()
+	public void resize(OrthographicCamera gameCam)
 	{
 		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
-        //bgCam.position.set(cam.position.x, cam.position.y, 0);
+        bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         bgCam.update();
 	}
 
@@ -53,9 +54,18 @@ public class Background
 
 		if (texture != null)
 		{
-			bgCam.position.set(gameCam.position.x * Constants.BACKGROUND_SCROLL_SPEED + gameCam.viewportWidth * 0.44f,
-							   gameCam.position.y * Constants.BACKGROUND_SCROLL_SPEED + gameCam.viewportHeight * 0.44f, 0);
+			bgCam.position.add((gameCam.position.x - oldGameCamPos.x) * speed.x, (gameCam.position.y - oldGameCamPos.y) * speed.y, 0);
+			if(bgCam.position.x < bgCam.viewportWidth * .5f)
+			{
+				bgCam.position.x = bgCam.viewportWidth * .5f;
+			}
+			if(bgCam.position.y < bgCam.viewportHeight * .5f)
+			{
+				bgCam.position.y = bgCam.viewportHeight * .5f;
+			}
+			System.out.println(bgCam.position.x);
 			bgCam.update();
+			oldGameCamPos.set(gameCam.position);
 
 			spriteBatch.setProjectionMatrix(bgCam.combined);
 			spriteBatch.begin();
@@ -74,9 +84,11 @@ public class Background
 		}
 	}
 	
-	public void onAssetsLoaded()
+	public void onAssetsLoaded(OrthographicCamera gameCam)
 	{
 		texture = Assets.manager.get(textureName);
+		bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
+        oldGameCamPos.set(gameCam.position);
 	}
 
 	public void dispose()

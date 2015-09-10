@@ -277,6 +277,9 @@ public class SAXXMLHandler extends DefaultHandler
     {
         if(background.image != null)
             background.image = "data/" + background.image;
+		//background.posx = background.posx / 64;
+        //background.posy = convertY(background.posy, background.);
+        
     }
 
     private void fixBox(Box box)

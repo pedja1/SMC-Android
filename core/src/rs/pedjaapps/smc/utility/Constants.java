@@ -22,7 +22,6 @@ public class Constants
     public static final float MENU_DRAW_WIDTH = 12.444444444f;
     public static final float DRAW_WIDTH = 16f;
 
-    public static final float BACKGROUND_SCROLL_SPEED = 0.12f;
     public static final int GRAVITY = -20;
     static
     {
