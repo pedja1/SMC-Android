@@ -275,11 +275,34 @@ public class SAXXMLHandler extends DefaultHandler
 
     private void fixBackground(Background background)
     {
-        if(background.image != null)
-            background.image = "data/" + background.image;
-		//background.posx = background.posx / 64;
-        //background.posy = convertY(background.posy, background.);
-        
+		if(background.image == null)
+			return;
+		setBackgroundSettings(background);
+        background.image = "data/" + background.image;
+		background.posx = background.posx / 64f;
+    }
+	
+	private void setBackgroundSettings(Background item)
+    {
+        String fileName = item.image.replaceAll("png", "settings");
+        File settings = new File(Const.dataRoot, fileName);
+        String settingsData = readFileContents(settings);
+        String[] lines = settingsData.split("\n");
+        float origHeight = 0;
+        for(String s : lines)
+        {
+            String[] data = s.split(" ");
+            if("width".equals(data[0]))
+            {
+                item.width = Float.parseFloat(data[1]) / 64f;
+            }
+            else if("height".equals(data[0]))
+            {
+                origHeight = Float.parseFloat(data[1]);
+                item.height = origHeight / 64f;
+            }
+        }
+        item.posy = Math.abs(item.posy) / 64f;
     }
 
     private void fixBox(Box box)

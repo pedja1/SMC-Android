@@ -153,9 +153,17 @@ public class LevelLoader
 			
 			speed.x = (float) jBg.optDouble("speedx");
 			speed.y = (float) jBg.optDouble("speedy");
+			
+			Vector2 pos = new Vector2();
 
-            Background bg = new Background(new Vector2(0, 0), speed, textureName);
+			pos.x = (float) jBg.optDouble("posx");
+			pos.y = (float) jBg.optDouble("posy");
+			
+            Background bg = new Background(pos, speed, textureName);
             
+			bg.width = (float) jBg.optDouble("width");
+			bg.height = (float) jBg.optDouble("height");
+			
             float r1 = (float) jBg.getDouble("r_1") / 255;//convert from 0-255 range to 0-1 range
             float r2 = (float) jBg.getDouble("r_2") / 255;
             float g1 = (float) jBg.getDouble("g_1") / 255;

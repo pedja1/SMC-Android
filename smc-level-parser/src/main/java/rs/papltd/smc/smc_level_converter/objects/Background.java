@@ -19,7 +19,7 @@ public class Background
 
     public int type = 0;
     public int color1_red, color2_red, color1_green, color2_green, color1_blue, color2_blue;
-    public float posx, posy, speedx, speedy, const_vely, const_velx;
+    public float posx, posy, speedx, speedy, const_vely, const_velx, width, height;
     public String image;
 
     public void setFromAttributes(Attributes attributes)

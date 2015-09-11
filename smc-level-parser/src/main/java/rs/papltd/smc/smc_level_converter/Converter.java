@@ -100,6 +100,11 @@ public class Converter
                 background.put("texture_name", bg.image);
 				background.put("speedx", bg.speedx);
 				background.put("speedy", bg.speedy);
+				background.put("width", bg.width);
+				background.put("height", bg.height);
+				background.put("posy", bg.posy);
+				background.put("posx", bg.posx);
+				
             }
         }
 
