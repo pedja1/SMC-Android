@@ -239,7 +239,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void loadAssets()
     {
         loader.parseLevel(world);
-        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class, Assets.atlasTextureParameter);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class, Assets.atlasTextureParameter);
 		Assets.manager.load("data/hud/option.png", Texture.class, Assets.textureParameter);
 		Assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, Assets.textureParameter);

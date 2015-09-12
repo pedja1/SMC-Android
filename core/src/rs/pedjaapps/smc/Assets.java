@@ -31,12 +31,12 @@ public class Assets
     {
         textureParameter = new TextureLoader.TextureParameter();
         //textureParameter.genMipMaps = true;
-        textureParameter.magFilter = Texture.TextureFilter.Linear;
-        textureParameter.minFilter = Texture.TextureFilter.Linear;
+        textureParameter.magFilter = Texture.TextureFilter.Nearest;
+        textureParameter.minFilter = Texture.TextureFilter.Nearest;
 
         atlasTextureParameter = new SMCTextureAtlasLoader.TextureAtlasParameter(true);
-        atlasTextureParameter.magFilter = Texture.TextureFilter.Linear;
-        atlasTextureParameter.minFilter = Texture.TextureFilter.Linear;
+        atlasTextureParameter.magFilter = Texture.TextureFilter.Nearest;
+        atlasTextureParameter.minFilter = Texture.TextureFilter.Nearest;
         //atlasTextureParameter.genMipMaps = true;
 
         particleEffectParameter = new ParticleEffectLoader.ParticleEffectParameter();

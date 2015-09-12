@@ -31,8 +31,8 @@ import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
+import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.utility.*;
 
 public class HUD
 {
@@ -189,12 +189,12 @@ public class HUD
 	
 	public void loadAssets()
 	{
-		Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-        Assets.manager.load("data/hud/pause.png", Texture.class);
-		Assets.manager.load("data/hud/itembox.png", Texture.class);
-        Assets.manager.load("data/hud/maryo_l.png", Texture.class);
-        Assets.manager.load("data/hud/gold_m.png", Texture.class);
-		Assets.manager.load("data/hud/game_over.png", Texture.class);
+		Assets.manager.load("data/hud/controls.pack", TextureAtlas.class, Assets.atlasTextureParameter);
+        Assets.manager.load("data/hud/pause.png", Texture.class, Assets.textureParameter);
+		Assets.manager.load("data/hud/itembox.png", Texture.class, Assets.textureParameter);
+        Assets.manager.load("data/hud/maryo_l.png", Texture.class, Assets.textureParameter);
+        Assets.manager.load("data/hud/gold_m.png", Texture.class, Assets.textureParameter);
+		Assets.manager.load("data/hud/game_over.png", Texture.class, Assets.textureParameter);
 		
 		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         ttsTextParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;

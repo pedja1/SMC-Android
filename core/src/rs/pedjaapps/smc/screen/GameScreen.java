@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.PerformanceCounter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,6 +133,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
     private String objectDebugText;
+    PerformanceCounter performanceCounter = new PerformanceCounter("pc");
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -181,7 +183,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         music = Assets.manager.get(loader.level.music.first());
         Audio.play(music);
-        GLProfiler.enable();
+        if(debug)GLProfiler.enable();
         if (!resumed || forceCheckEnter)
         {
             world.maryo.checkLevelEnter();
@@ -208,9 +210,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //long now = System.currentTimeMillis();
         //debug
         if (delta > 0.1f) delta = 0.1f;
-        //debug
-        //delta = 0.02f;//debug, 50 fps
-        //debug end
+
         if (timeStep == FIXED_DELTA)
             delta = 1f / 60f;
 
@@ -218,7 +218,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //physics
-
         if (timeStep == FIXED_TIMESTEP)
         {
             fixedTimeStep(delta);
@@ -227,7 +226,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             semiFixedTimeStep(delta);
         }
-        else /*if (timeStep == DINAMYC_TIMESTEP)*/
+        else //if (timeStep == DINAMYC_TIMESTEP)
         {
             updateObjects(delta);
         }
@@ -267,14 +266,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
-        GLProfiler.reset();
+        if(debug)GLProfiler.reset();
         stateTime += delta;
+
         //debug
-        /*long end = System.currentTimeMillis() - now;
-        if (end >= 15)
-        {
-            System.out.println("render time total: " + end);
-        }*/
         if (gameState == GAME_STATE.GAME_EDIT_MODE)
         {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
@@ -294,6 +289,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 cameraEditModeTranslate.y -= 0.1f;
             }
         }
+        //long end = System.currentTimeMillis() - now;
+        //System.out.println("render time total: " + end);
         //debug
     }
 
@@ -444,6 +441,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void updateObjects(float delta)
     {
+        //performanceCounter.tick();
+        //performanceCounter.start();
         //int count = 0;
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
         for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
@@ -463,6 +462,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         World.RECT_POOL.free(maryoBWO);
         //System.out.println(count);
+        //performanceCounter.stop();
+        //System.out.println(performanceCounter.time.average);
     }
 
     private void interpolateObjects(float alpha)
@@ -642,16 +643,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         loader.parseLevel(world);
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
-            Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
+            Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class, Assets.atlasTextureParameter);
         }
-        Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
+        Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class, Assets.atlasTextureParameter);
         Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class);
         Assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class);
-        Assets.manager.load("data/animation/iceball.png", Texture.class);
+        Assets.manager.load("data/animation/iceball.png", Texture.class, Assets.textureParameter);
         hud.loadAssets();
 
         //audio

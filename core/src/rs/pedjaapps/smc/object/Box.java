@@ -215,11 +215,11 @@ public class Box extends Sprite
         if (jBox.has("texture_atlas"))
         {
             box.textureAtlas = jBox.getString("texture_atlas");
-            Assets.manager.load(box.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(box.textureAtlas, TextureAtlas.class, Assets.atlasTextureParameter);
         }
         if("spin".equals(box.boxType))
         {
-            Assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class);
+            Assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class, Assets.atlasTextureParameter);
         }
         Assets.manager.load("data/game/box/yellow/default.png", Texture.class, Assets.textureParameter);
         Assets.manager.load("data/game/box/brown1_1.png", Texture.class, Assets.textureParameter);
@@ -257,7 +257,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load(Coin.DEF_ATL, TextureAtlas.class);
+                Assets.manager.load(Coin.DEF_ATL, TextureAtlas.class, Assets.atlasTextureParameter);
             }
             else
             {
@@ -275,7 +275,7 @@ public class Box extends Sprite
             if(loadAssets)
             {
                 Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
-                Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
+                Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class, Assets.atlasTextureParameter);
                 Assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
             }
             else
@@ -287,7 +287,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load("data/game/items/star.png", Texture.class);
+                Assets.manager.load("data/game/items/star.png", Texture.class, Assets.textureParameter);
             }
             else
             {
@@ -298,7 +298,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
+                Assets.manager.load("data/game/items/moon.pack", TextureAtlas.class, Assets.atlasTextureParameter);
             }
             else
             {

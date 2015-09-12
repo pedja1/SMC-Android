@@ -244,7 +244,7 @@ public class LevelLoader
         sprite.textureAtlas = jSprite.optString("texture_atlas", null);
         if(sprite.textureAtlas != null)
         {
-            Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(sprite.textureAtlas, TextureAtlas.class, Assets.atlasTextureParameter);
         }
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
@@ -260,12 +260,12 @@ public class LevelLoader
         if (jEnemy.has("texture_atlas"))
         {
             enemy.textureAtlas = jEnemy.getString("texture_atlas");
-            Assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(enemy.textureAtlas, TextureAtlas.class, Assets.atlasTextureParameter);
         }
         if (jEnemy.has("texture_name"))
         {
             enemy.textureName = jEnemy.getString("texture_name");
-            Assets.manager.load(enemy.textureName, Texture.class);
+            Assets.manager.load(enemy.textureName, Texture.class, Assets.textureParameter);
         }
         if(!levelParsed)level.gameObjects.add(enemy);
     }
@@ -322,7 +322,7 @@ public class LevelLoader
         if (jItem.has("texture_atlas"))
         {
             item.textureAtlas = jItem.getString("texture_atlas");
-            Assets.manager.load(item.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(item.textureAtlas, TextureAtlas.class, Assets.atlasTextureParameter);
         }
         if(!levelParsed)level.gameObjects.add(item);
     }

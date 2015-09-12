@@ -69,7 +69,7 @@ public class ConfirmDialog
 
     public void loadAssets()
     {
-        Assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class, Assets.atlasTextureParameter);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
