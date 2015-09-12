@@ -1,1 +1,1 @@
-include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser', 'tools', 'TAGenerator'
+include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser', 'tools', 'TAGenerator', ':test_math'
