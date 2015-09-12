@@ -135,8 +135,6 @@ public class Maryo extends DynamicObject
     public boolean facingLeft = false;
     public boolean longJump = false;
 
-    public float groundY = 0;
-
     private boolean handleCollision = true;
     DyingAnimation dyingAnim = new DyingAnimation();
 
@@ -892,38 +890,11 @@ public class Maryo extends DynamicObject
             else
             {
                 super._update(delta);
-                //TODO ovo se vec proverava u checkY
-                //check where ground is
-                Array<GameObject> objects = world.getVisibleObjects();
-                Rectangle rect = World.RECT_POOL.obtain();
-                debugRayRect = rect;
-                rect.set(position.x, 0, mColRect.width, position.y);
-                float tmpGroundY = 0;
-                float distance = mColRect.y;
-                GameObject closestObject = null;
-                //for(GameObject go : objects)
-                for (int i = 0, size = objects.size; i < size; i++)
+                if(closestObject != null)
                 {
-                    GameObject go = objects.get(i);
-                    if (go == null) continue;
-                    if (go instanceof Sprite
-                            && (((Sprite) go).type == Sprite.Type.massive || ((Sprite) go).type == Sprite.Type.halfmassive)
-                            && rect.overlaps(go.mColRect))
-                    {
-                        if (((Sprite) go).type == Sprite.Type.halfmassive && mColRect.y < go.mColRect.y + go.mColRect.height)
-                        {
-                            continue;
-                        }
-                        float tmpDistance = mColRect.y - (go.mColRect.y + go.mColRect.height);
-                        if (tmpDistance < distance)
-                        {
-                            distance = tmpDistance;
-                            tmpGroundY = go.mColRect.y + go.mColRect.height;
-                            closestObject = go;
-                        }
-                    }
+                    debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y);
                 }
-                groundY = tmpGroundY;
+
                 if (closestObject != null
                         && closestObject instanceof Sprite
                         && ((Sprite) closestObject).type == Sprite.Type.halfmassive
@@ -931,7 +902,6 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
-                World.RECT_POOL.free(rect);
             }
         }
         if (powerJump)

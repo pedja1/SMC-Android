@@ -31,6 +31,7 @@ public abstract class DynamicObject extends GameObject
     }
 
     protected float velocityDump = DEF_VEL_DUMP;
+    protected GameObject closestObject = null;
 	
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
@@ -199,6 +200,7 @@ public abstract class DynamicObject extends GameObject
                 {
                     distance = tmpDistance;
                     tmpGroundY = object.mColRect.y + object.mColRect.height;
+                    closestObject = object;
                 }
             }
         }
