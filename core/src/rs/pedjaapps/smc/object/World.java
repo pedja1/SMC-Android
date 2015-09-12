@@ -29,6 +29,7 @@ public class World
      */
     public Level level;
     private Array<GameObject> visibleObjects = new Array<>(50);
+    private Array<GameObject> tmpObjects = new Array<>();
 
 	/**
 	 * 
@@ -112,9 +113,9 @@ public class World
         float wH = camHeight + 1;
         Rectangle worldBounds = RECT_POOL.obtain();
 		worldBounds.set(wX, wY, wW, wH);
-        for (int i = 0, size = level.gSize(); i < size; i++)
+        for (int i = 0, size = level.gameObjects.size(); i < size; i++)
         {
-            GameObject object = level.gGet(i);
+            GameObject object = level.gameObjects.get(i);
             Rectangle bounds = object.mDrawRect;
             if (bounds.overlaps(worldBounds))
             {
@@ -125,6 +126,27 @@ public class World
         RECT_POOL.free(worldBounds);
     }
 
+	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
+    {
+        tmpObjects.clear();
+        float wX = center.mColRect.x - offset;
+        float wY = center.mColRect.y - offset;
+        float wW = center.mColRect.x + center.mColRect.width + offset * 2;
+        float wH = center.mColRect.y + center.mColRect.height + offset * 2;
+        Rectangle offsetBounds = RECT_POOL.obtain();
+		offsetBounds.set(wX, wY, wW, wH);
+        for (GameObject object : level.gameObjects)
+        {
+            Rectangle bounds = object.mDrawRect;
+            if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
+            {
+                tmpObjects.add(object);
+            }
+        }
+        RECT_POOL.free(offsetBounds);
+        return tmpObjects;
+    }
+	
 	public Rectangle createMaryoRectWithOffset(OrthographicCamera cam, float offset)
 	{
         float offsetX = Math.max(offset, Constants.CAMERA_WIDTH/*(cam.viewportWidth * cam.zoom)*/);

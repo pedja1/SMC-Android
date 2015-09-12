@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -841,7 +842,7 @@ public class Maryo extends DynamicObject
             if (isDone)
             {
                 position.z = POSITION_Z;
-                world.level.sort();
+                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
                 entering = false;
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             }
@@ -1105,7 +1106,7 @@ public class Maryo extends DynamicObject
 
                 item.updateBounds();
 
-                world.level.add(item);
+                world.level.gameObjects.add(item);
                 item.drop();
 
                 ((GameScreen) world.screen).hud.item = null;
@@ -1296,7 +1297,7 @@ public class Maryo extends DynamicObject
     public void checkLevelEnter()
     {
         //check if maryo is overlapping level entry and if so call enterLevel
-        for (GameObject go : world.getVisibleObjects())
+        for (GameObject go : world.level.gameObjects)
         {
             if (go instanceof LevelEntry && mColRect.overlaps(go.mColRect) && ((LevelEntry) go).type == LevelExit.LEVEL_EXIT_WARP)
             {
@@ -1368,7 +1369,7 @@ public class Maryo extends DynamicObject
         updateBounds();
         exitEnterStartPosition.set(position);
         position.z = LevelLoader.m_pos_z_passive_start;
-        world.level.sort();
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
 
         //todo sound
     }
@@ -1409,7 +1410,7 @@ public class Maryo extends DynamicObject
                 updateBounds();
                 exitEnterStartPosition.set(position);
                 position.z = LevelLoader.m_pos_z_passive_start;
-                world.level.sort();
+                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
 
                 //todo sound
                 break;
@@ -1457,8 +1458,8 @@ public class Maryo extends DynamicObject
         iceball.reset();
         iceball.direction = facingLeft ? Direction.left : Direction.right;
         iceball.velocity.y = velY;
-        world.level.add(iceball);
-        world.level.sort();
+        world.level.gameObjects.add(iceball);
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
     }
 
     private void addFireball(float velY)
@@ -1470,8 +1471,8 @@ public class Maryo extends DynamicObject
         fireball.reset();
         fireball.direction = facingLeft ? Direction.left : Direction.right;
         fireball.velocity.y = velY;
-        world.level.add(fireball);
-        world.level.sort();
+        world.level.gameObjects.add(fireball);
+        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
     }
 
     public void starPicked()

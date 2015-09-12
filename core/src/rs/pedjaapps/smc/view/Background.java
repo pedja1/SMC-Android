@@ -63,6 +63,7 @@ public class Background
 			{
 				bgCam.position.y = bgCam.viewportHeight * .5f;
 			}
+			System.out.println(bgCam.position.x);
 			bgCam.update();
 			oldGameCamPos.set(gameCam.position);
 

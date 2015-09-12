@@ -205,10 +205,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void render(float delta)
     {
         //debug
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         //debug
         if (delta > 0.1f) delta = 0.1f;
-
+        //debug
+        //delta = 0.02f;//debug, 50 fps
+        //debug end
         if (timeStep == FIXED_DELTA)
             delta = 1f / 60f;
 
@@ -262,17 +264,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //cleanup
         for (int i = 0, size = world.trashObjects.size; i < size; i++)
         {
-            world.level.remove(world.trashObjects.get(i));
+            world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
         GLProfiler.reset();
         stateTime += delta;
         //debug
-        long end = System.currentTimeMillis() - now;
-        //if (end >= 15)
+        /*long end = System.currentTimeMillis() - now;
+        if (end >= 15)
         {
             System.out.println("render time total: " + end);
-        }
+        }*/
         if (gameState == GAME_STATE.GAME_EDIT_MODE)
         {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
@@ -444,10 +446,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         //int count = 0;
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
-        for (int i = 0, size = world.level.cSize(); i < size; i++)
+        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         //for (GameObject go : world.level.gameObjects)
         {
-            GameObject go = world.level.cGet(i);
+            GameObject go = world.level.gameObjects.get(i);
             go.prevPosition.set(go.position);
             if (maryoBWO.overlaps(go.mColRect))
             {
@@ -466,10 +468,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void interpolateObjects(float alpha)
     {
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
-        for (int i = 0, size = world.level.cSize(); i < size; i++)
+        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         //for (GameObject go : world.level.gameObjects)
         {
-            GameObject go = world.level.cGet(i);
+            GameObject go = world.level.gameObjects.get(i);
             if (maryoBWO.overlaps(go.mColRect))
             {
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
@@ -544,12 +546,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         float y = invertY(Gdx.input.getY());
         Utility.guiPositionToGamePosition(x, y, this, point);
 
-        for (int i = 0, size = world.level.gSize(); i < size; i++)
+        for (GameObject gameObject : world.level.gameObjects)
         {
-            GameObject go = world.level.gGet(i);
-            if (go.mDrawRect.contains(point))
+            if (gameObject.mDrawRect.contains(point))
             {
-                objectDebugText = go.toString();
+                objectDebugText = gameObject.toString();
                 float tWidth = width * 0.4f;
                 debugGlyph.setText(debugObjectFont, objectDebugText, Color.BLACK, tWidth, Align.left, true);
                 float height = debugGlyph.height;
@@ -725,8 +726,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         debugObjectFont = Assets.manager.get("debug_object.ttf");
         debugGlyph = new GlyphLayout();
 
-        for (int i = 0, size = world.level.gSize(); i < size; i++)
-            world.level.gGet(i).initAssets();
+        for (GameObject go : loader.level.gameObjects)
+            go.initAssets();
 
         BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);

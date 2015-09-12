@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.Array;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
+
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.items.Coin;
@@ -427,8 +429,8 @@ public class Box extends Sprite
             if (item != null)
             {
                 item.isInBox = true;
-                world.level.add(item);
-                world.level.sort();
+                world.level.gameObjects.add(item);
+                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
                 item.popOutFromBox(position.y + mDrawRect.height);
                 if (item instanceof Coin)
                 {
