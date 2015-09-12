@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -493,14 +492,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void drawObjects()
     {
-
-        Array<GameObject> drawableObjects = world.getDrawableObjects(cam);
-        for (int i = 0, size = drawableObjects.size; i < size; i++)
-        //for (GameObject object : drawableObjects)
-        {
-            GameObject object = drawableObjects.get(i);
-            object._render(spriteBatch);
-        }
+        world.drawVisibleObjects(cam, spriteBatch);
     }
 
     private void drawDebug()

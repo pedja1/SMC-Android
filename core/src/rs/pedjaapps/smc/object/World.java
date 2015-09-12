@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -99,7 +100,7 @@ public class World
      * Return only the blocks that need to be drawn *
      * 
      */
-    public Array<GameObject> getDrawableObjects(OrthographicCamera cam)
+    public void drawVisibleObjects(OrthographicCamera cam, SpriteBatch batch)
     {
         visibleObjects.clear();
         float camX = cam.position.x;
@@ -112,18 +113,17 @@ public class World
         float wH = camHeight + 1;
         Rectangle worldBounds = RECT_POOL.obtain();
 		worldBounds.set(wX, wY, wW, wH);
-        //for (GameObject object : level.gameObjects)
         for (int i = 0, size = level.gameObjects.size(); i < size; i++)
         {
             GameObject object = level.gameObjects.get(i);
             Rectangle bounds = object.mDrawRect;
-            if (bounds.overlaps(worldBounds)/* || object instanceof Enemy*/)
+            if (bounds.overlaps(worldBounds))
             {
                 visibleObjects.add(object);
+                object._render(batch);
             }
         }
         RECT_POOL.free(worldBounds);
-        return visibleObjects;
     }
 
 	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
