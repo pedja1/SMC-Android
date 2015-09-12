@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.List;
-
 import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -171,12 +169,11 @@ public abstract class DynamicObject extends GameObject
 
         mColRect.y += velocity.y;
 
-        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+        for (int i = 0, size = world.level.cSize(); i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = surroundingObjects.get(i);
+            GameObject object = world.level.cGet(i);
             if (object == null) continue;
             if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
             {
@@ -224,13 +221,12 @@ public abstract class DynamicObject extends GameObject
         // simulate maryos's movement on the X
         mColRect.x += velocity.x;
 
-        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+        for (int i = 0, size = world.level.cSize(); i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = surroundingObjects.get(i);
+            GameObject object = world.level.cGet(i);
             if (object == null) continue;
             if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
             {

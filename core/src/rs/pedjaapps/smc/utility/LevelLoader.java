@@ -13,12 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Level;
@@ -30,6 +28,7 @@ import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.EnemyStopper;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.view.Background;
 
 /**
  * Created by pedja on 2/2/14.
@@ -116,7 +115,7 @@ public class LevelLoader
             }
         }
         //this.level.gameObjects.sort(new ZSpriteComparator());
-        Collections.sort(this.level.gameObjects, new ZSpriteComparator());
+        this.level.sort();
     }
 
     private void parseInfo(JSONObject jLevel) throws JSONException
@@ -189,7 +188,7 @@ public class LevelLoader
         level.spanPosition = new Vector3(x, y, Maryo.POSITION_Z);
         Maryo maryo = new Maryo(world, level.spanPosition, new Vector2(0.9f, 0.9f));
         world.maryo = maryo;
-        level.gameObjects.add(maryo);
+        level.add(maryo);
     }
 
     private void parseSprite(World world, JSONObject jSprite) throws JSONException
@@ -249,7 +248,7 @@ public class LevelLoader
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
         sprite.mRotationZ = jSprite.optInt("rotationZ");
-        if(!levelParsed)level.gameObjects.add(sprite);
+        if(!levelParsed)level.add(sprite);
 
     }
 
@@ -267,7 +266,7 @@ public class LevelLoader
             enemy.textureName = jEnemy.getString("texture_name");
             Assets.manager.load(enemy.textureName, Texture.class);
         }
-        if(!levelParsed)level.gameObjects.add(enemy);
+        if(!levelParsed)level.add(enemy);
     }
 
     private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
@@ -279,7 +278,7 @@ public class LevelLoader
 
         EnemyStopper stopper = new EnemyStopper(world, new Vector2(width, height), position);
 
-        level.gameObjects.add(stopper);
+        level.add(stopper);
     }
 
     private void parseLevelEntry(World world, JSONObject jEntry) throws JSONException
@@ -294,7 +293,7 @@ public class LevelLoader
         entry.type = jEntry.optInt("type");
         entry.name = jEntry.optString("name");
 
-        level.gameObjects.add(entry);
+        level.add(entry);
     }
 
     private void parseLevelExit(World world, JSONObject jExit) throws JSONException
@@ -310,7 +309,7 @@ public class LevelLoader
         exit.entry = jExit.optString("entry");
         exit.direction = jExit.optString("direction");
 
-        level.gameObjects.add(exit);
+        level.add(exit);
     }
 
     private void parseItem(World world, JSONObject jItem) throws JSONException
@@ -324,13 +323,13 @@ public class LevelLoader
             item.textureAtlas = jItem.getString("texture_atlas");
             Assets.manager.load(item.textureAtlas, TextureAtlas.class);
         }
-        if(!levelParsed)level.gameObjects.add(item);
+        if(!levelParsed)level.add(item);
     }
 
     private void parseBox(World world, JSONObject jBox) throws JSONException
     {
         Box box = Box.initBox(world, jBox, this);
-        if(!levelParsed)level.gameObjects.add(box);
+        if(!levelParsed)level.add(box);
     }
 
     /**

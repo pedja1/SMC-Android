@@ -154,10 +154,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private void drawObjects(float deltaTime)
     {
         //noinspection ForLoopReplaceableByForEach
-        for(int i = 0, size = loader.level.gameObjects.size(); i < size; i++)
+        for(int i = 0, size = loader.level.gSize(); i < size; i++)
         //for (GameObject gameObject : loader.level.gameObjects)
         {
-            GameObject gameObject = loader.level.gameObjects.get(i);
+            GameObject gameObject = loader.level.gGet(i);
 			gameObject._update(deltaTime);
             gameObject._render(batch);
         }
@@ -168,10 +168,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         // render blocks
         shapeRenderer.setProjectionMatrix(drawCam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for(int i = 0; i < loader.level.gameObjects.size(); i++)
+        for(int i = 0; i < loader.level.gSize(); i++)
         //for (GameObject go : world.getVisibleObjects())
         {
-            GameObject go = loader.level.gameObjects.get(i);
+            GameObject go = loader.level.gGet(i);
             Rectangle body = go.mColRect;
             Rectangle bounds = go.mDrawRect;
             shapeRenderer.setColor(0, 1, 0, 1);
@@ -300,8 +300,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		selectionAdapter.initAssets();
         exitDialog.initAssets();
 
-        for(GameObject go : loader.level.gameObjects)
-            go.initAssets();
+        for (int i = 0, size = world.level.gSize(); i < size; i++)
+            world.level.gGet(i).initAssets();
     }
 
     @Override
