@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -157,9 +157,9 @@ public class Iceball extends DynamicObject
     @Override
     public void initAssets()
     {
-        texture = Assets.manager.get("data/animation/iceball.png");
-        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_emitter.p", ParticleEffect.class));
-        explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
+        texture = world.screen.game.assets.manager.get("data/animation/iceball.png");
+        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/iceball_emitter.p", ParticleEffect.class));
+        explosion = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
     }
 
     @Override

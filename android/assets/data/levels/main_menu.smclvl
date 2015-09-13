@@ -220,7 +220,7 @@
             "texture_atlas": "data/ground/jungle_1/slider/green.pack",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-left"
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1_green_left"
         },
         {
             "height": 0.34375,
@@ -230,7 +230,7 @@
             "texture_atlas": "data/ground/jungle_1/slider/green.pack",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1_green_middle"
         },
         {
             "height": 0.34375,
@@ -240,7 +240,7 @@
             "texture_atlas": "data/ground/jungle_1/slider/green.pack",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1_green_middle"
         },
         {
             "height": 0.34375,
@@ -250,7 +250,7 @@
             "texture_atlas": "data/ground/jungle_1/slider/green.pack",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-middle"
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1_green_middle"
         },
         {
             "flip_data": {
@@ -265,7 +265,7 @@
             "massive_type": "massive",
             "obj_class": "sprite",
             "rotationY": 180,
-            "texture_name": "data/ground/jungle_1/slider/green.pack:1-green-left"
+            "texture_name": "data/ground/jungle_1/slider/green.pack:1_green_left"
         },
         {
             "height": 0.375,
@@ -327,7 +327,7 @@
         "level_height": 62,
         "level_width": 312,
         "level_music": [
-            "data/music/game/menu.ogg"
+            "data/music/game/menu.mp3"
         ]
     }
 }

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -51,8 +50,8 @@ public class Star extends Item
     @Override
     public void initAssets()
     {
-        texture = Assets.manager.get(textureName);
-        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
+        texture = world.screen.game.assets.manager.get(textureName);
+        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
     }
 
     @Override

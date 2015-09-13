@@ -16,7 +16,7 @@ public class Settings
         String value = attributes.getValue("value");
         if("lvl_music".equals(name))
         {
-            music = value;
+            music = value.substring(0, value.lastIndexOf(".")) + ".mp3";
         }
         else if("cam_limit_w".equals(name))
         {

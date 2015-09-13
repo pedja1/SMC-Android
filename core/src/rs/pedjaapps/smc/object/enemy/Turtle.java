@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -54,12 +53,12 @@ public class Turtle extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         Array<TextureRegion> walkFrames = new Array<TextureRegion>();
 
         for(int i = 1; i < 9; i++)
         {
-            TextureRegion region = atlas.findRegion("walk-" + i);
+            TextureRegion region = atlas.findRegion("walk", i);
             walkFrames.add(region);
         }
 
@@ -67,7 +66,7 @@ public class Turtle extends Enemy
         walkAnimation = new Animation(0.07f, walkFrames);
         tTurn = atlas.findRegion("turn");
         tShell = atlas.findRegion("shell");
-        tDead = atlas.findRegion("walk-1");
+        tDead = atlas.findRegion("walk", 1);
 
     }
 

@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Assets;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -61,8 +60,12 @@ public class Flyon extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+        frames.add(atlas.findRegion("closed", 1));
+        frames.add(atlas.findRegion("closed", 2));
+        frames.add(atlas.findRegion("open", 1));
+        frames.add(atlas.findRegion("open", 2));
         animation = new Animation(0.13f, frames);
     }
 

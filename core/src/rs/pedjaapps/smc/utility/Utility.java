@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Base64Coder;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.screen.GameScreen;
 
@@ -47,7 +46,6 @@ public class Utility
     {
         boolean currentState = PrefsManager.isPlaySounds();
         PrefsManager.setPlaySounds(!currentState);
-        Assets.playSounds = !currentState;
         return !currentState;
     }
 
@@ -58,7 +56,6 @@ public class Utility
     {
         boolean currentState = PrefsManager.isPlayMusic();
         PrefsManager.setPlayMusic(!currentState);
-        Assets.playMusic = !currentState;
         return !currentState;
     }
 

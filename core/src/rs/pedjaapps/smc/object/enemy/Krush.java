@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import rs.pedjaapps.smc.Assets;
+
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -47,7 +47,7 @@ public class Krush extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
 
         Array<TextureRegion> smallFrames = new Array<>();
         Array<TextureRegion> bigFrames = new Array<>();
@@ -195,7 +195,7 @@ public class Krush extends Enemy
                 stateTime = 0;
                 handleCollision = false;
                 dying = true;
-                Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.ogg");
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
                 Audio.play(sound);
                 return HIT_RESOLUTION_ENEMY_DIED;
             }

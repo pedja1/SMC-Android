@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
@@ -15,11 +16,22 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
 {
+	public Assets assets;
+	private String androidAssetsZipFilePath;
 
+	public MaryoGame(String androidAssetsZipFilePath)
+	{
+		this.androidAssetsZipFilePath = androidAssetsZipFilePath;
+	}
 
-    @Override
+	public MaryoGame()
+	{
+	}
+
+	@Override
 	public void create()
 	{
+		assets = new Assets(androidAssetsZipFilePath);
 		setScreen(new SplashScreen(this));
 		GA.sendGameStarted();
 	}
@@ -29,7 +41,7 @@ public class MaryoGame extends Game
 	{
 		Screen currentScreen = getScreen();
 		if(currentScreen instanceof SplashScreen)return;
-		Texture.setAssetManager(Assets.manager);
+		Texture.setAssetManager(assets.manager);
 		setScreen(new LoadingScreen((AbstractScreen)currentScreen, true));
 	}
 
@@ -43,11 +55,11 @@ public class MaryoGame extends Game
     public void dispose()
     {
         super.dispose();
-        Assets.dispose();
+        assets.dispose();
 		GA.sendGameEnded();
 		GA.dispose();
 		GameSaveUtility.getInstance().dispose();
-
+		assets = null;
     }
 
     public void exit()

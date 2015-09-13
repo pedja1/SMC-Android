@@ -62,7 +62,8 @@ public class GameSaveUtility
 
     public boolean isUnlocked(String levelName)
     {
-        return save.unlockedLevels.contains(levelName);
+        //return save.unlockedLevels.contains(levelName);
+        return true;
     }
 
     /**

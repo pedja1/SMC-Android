@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
@@ -60,7 +60,7 @@ public class Thromp extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         tDefault = atlas.findRegion("default");
         tActive = atlas.findRegion("active");
     }

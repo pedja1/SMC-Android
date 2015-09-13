@@ -1,9 +1,13 @@
 package rs.pedjaapps.smc.android;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+
+import java.io.File;
 
 import rs.pedjaapps.smc.MaryoGame;
 
@@ -30,10 +34,26 @@ public class AndroidLauncher extends AndroidApplication
 		config.useImmersiveMode = true;
 		config.useGLSurfaceView20API18 = true;
         //config.useGL20 = true;
-		
-		game = new MaryoGame();
+
+		String dir = "/Android/obb/" + getPackageName();
+		String obbName = "main." + getVersionCode() + "." + getPackageName() + ".obb";
+		String androidZipPath = new File(dir, obbName).getAbsolutePath();
+		game = new MaryoGame(androidZipPath);
         initialize(game, config);
     }
+
+	private int getVersionCode()
+	{
+		try
+		{
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			return pInfo.versionCode;
+		}
+		catch (PackageManager.NameNotFoundException e)
+		{
+			throw new IllegalStateException("huston we have a problem");
+		}
+	}
 
 	@Override
 	protected void onDestroy()

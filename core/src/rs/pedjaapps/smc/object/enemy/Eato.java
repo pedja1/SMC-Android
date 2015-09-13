@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -70,7 +70,7 @@ public class Eato extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = new Array<>();
         		frames.add(atlas.findRegion(TKey.one.toString()));
         		frames.add(atlas.findRegion(TKey.two.toString()));

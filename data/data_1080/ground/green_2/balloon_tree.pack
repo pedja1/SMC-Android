@@ -1,0 +1,40 @@
+
+balloon_tree.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bottom
+  rotate: false
+  xy: 1, 67
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+middle
+  rotate: false
+  xy: 259, 67
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+top
+  rotate: false
+  xy: 517, 67
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+trunk
+  rotate: false
+  xy: 1, 1
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+trunk_node
+  rotate: false
+  xy: 775, 131
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

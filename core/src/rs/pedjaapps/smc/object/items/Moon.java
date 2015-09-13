@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -34,7 +33,7 @@ public class Moon extends Item
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         animation = new Animation(2f, atlas.getRegions());
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);//TODO how to set frame time to each frame
     }
@@ -91,7 +90,7 @@ public class Moon extends Item
         GameSaveUtility.getInstance().save.lifes += 3;
         GameSaveUtility.getInstance().save.points += 4000;
 
-        Sound sound = Assets.manager.get("data/sounds/item/moon.ogg");
+        Sound sound = world.screen.game.assets.manager.get("data/sounds/item/moon.mp3");
         Audio.play(sound);
                 ((GameScreen) world.screen).killPointsTextHandler.add(4000, position.x, position.y + mDrawRect.height);
     }

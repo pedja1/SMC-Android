@@ -653,7 +653,7 @@ public class SAXXMLHandler extends DefaultHandler
         else if(sprite.image.contains("trees/balloon_tree"))
         {
             sprite.texture_atlas = "data/ground/green_2/balloon_tree.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replaceAll("trunk_node", "trunk-node");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
         }
         else if(sprite.image.contains("snow_1/trees/balloon"))
         {
@@ -699,7 +699,7 @@ public class SAXXMLHandler extends DefaultHandler
         else if(sprite.image.contains("green_1/slider"))
         {
             sprite.texture_atlas = "data/ground/green_1/slider/brown.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
         }
         else if(sprite.image.contains("jungle_1/slider"))
         {
@@ -715,32 +715,37 @@ public class SAXXMLHandler extends DefaultHandler
             {
                 sprite.texture_atlas = "data/ground/jungle_1/slider/green.pack";
             }
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
         }
         else if(sprite.image.contains("jungle_1/kplant"))
         {
             sprite.texture_atlas = "data/ground/jungle_1/kplant.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
+        }
+        else if(sprite.image.contains("green_1/kplant"))
+        {
+            sprite.texture_atlas = "data/ground/green_1/kplant.pack";
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."));
         }
         else if(sprite.image.contains("green_2/tendril"))
         {
             sprite.texture_atlas = "data/ground/green_2/tendril.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
         }
         else if(sprite.image.contains("ground/underground/rope"))
         {
             sprite.texture_atlas = "data/ground/underground/rope.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
         }
         else if(sprite.image.contains("ground/underground/cain"))
         {
             sprite.texture_atlas = "data/ground/underground/cain.pack";
-            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+            sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
         }
 		else if(sprite.image.startsWith("ground/desert_1/bones"))
         {
 			sprite.texture_atlas = "data/ground/desert_1/bones.pack";
-			sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf(".")).replace("_", "-");
+			sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
 		}
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))
         {

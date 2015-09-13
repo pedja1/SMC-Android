@@ -1,0 +1,19 @@
+
+cain.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+cain
+  rotate: false
+  xy: 1, 1
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1
+cain_end
+  rotate: false
+  xy: 11, 1
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: -1

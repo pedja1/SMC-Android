@@ -1,19 +1,39 @@
 package rs.pedjaapps.smc.screen;
 
-import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.*;
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-import rs.pedjaapps.smc.*;
-import rs.pedjaapps.smc.object.*;
-import rs.pedjaapps.smc.object.maryo.*;
-import rs.pedjaapps.smc.utility.*;
-import rs.pedjaapps.smc.view.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.NATypeConverter;
+import rs.pedjaapps.smc.utility.PrefsManager;
+import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.view.Background;
+import rs.pedjaapps.smc.view.ConfirmDialog;
+import rs.pedjaapps.smc.view.SelectionAdapter;
 
 /**
  * Created by pedja on 2/17/14.
@@ -96,7 +116,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
-        music = Assets.manager.get(loader.level.music.first());
+        music = world.screen.game.assets.manager.get(loader.level.music.first());
         Audio.play(music);
     }
 
@@ -131,8 +151,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			batch.begin();
 
 			batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
-			batch.draw(soundT ? (Assets.playSounds ? soundOnP : soundOffP) : (Assets.playSounds ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
-			batch.draw(musicT ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+			batch.draw(soundT ? (PrefsManager.isPlaySounds() ? soundOnP : soundOffP) : (PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+			batch.draw(musicT ? (PrefsManager.isPlayMusic() ? musicOnP : musicOffP) : (PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
 
 			batch.end();
 		}
@@ -228,7 +248,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void dispose()
     {
         Gdx.input.setInputProcessor(null);
-        Assets.dispose();
+        game.assets.dispose();
         background.dispose();
         batch.dispose();
         exitDialog.dispose();
@@ -239,18 +259,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void loadAssets()
     {
         loader.parseLevel(world);
-        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class, Assets.atlasTextureParameter);
-        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class, Assets.atlasTextureParameter);
-		Assets.manager.load("data/hud/option.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/hud/option_selected.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/sounds/audio_on.ogg", Sound.class);
+        game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
+        game.assets.manager.load("data/hud/option.png", Texture.class, game.assets.textureParameter);
+        game.assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, game.assets.textureParameter);
+        game.assets.manager.load("data/hud/option_selected.png", Texture.class, game.assets.textureParameter);
+        game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
+        cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
-        cloudsPEffect.start();
+        cloudsPEffect.start();//TODO load with loader
 
-        Assets.manager.load("data/hud/lock.png", Texture.class, Assets.textureParameter);
+        game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
         exitDialog.loadAssets();
 		
     }
@@ -258,7 +278,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void onAssetsLoaded()
     {
-        TextureAtlas controlsAtlas = Assets.manager.get("data/hud/controls.pack");
+        TextureAtlas controlsAtlas = game.assets.manager.get("data/hud/controls.pack");
         play = controlsAtlas.findRegion("play");
         playP = controlsAtlas.findRegion("play-pressed");
         playR = new Rectangle(screenWidth / 2f - (screenWidth / 10f) / 2,
@@ -284,18 +304,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
  
         background.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
         background.color2 = new Color(0f, 0.392f, 0.039f, 0f);
-		background.onAssetsLoaded(drawCam);
+		background.onAssetsLoaded(drawCam, game.assets);
 
-        gameLogo = Assets.manager.get("data/game/logo/smc_big_1.png");
+        gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         world.level = loader.level;
 
-        TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
+        TextureAtlas atlas = game.assets.manager.get("data/maryo/small.pack");
         marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
 
-        audioOn = Assets.manager.get("data/sounds/audio_on.ogg", Sound.class);
+        audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
 
 		selectionAdapter.initAssets();
         exitDialog.initAssets();

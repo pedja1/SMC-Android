@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
@@ -184,7 +183,7 @@ public class Maryo extends DynamicObject
         setupBoundingBox();
 
         position.y = mColRect.y = mDrawRect.y += 0.5f;
-        Assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        world.screen.game.assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
     }
 
     private void setupBoundingBox()
@@ -235,8 +234,8 @@ public class Maryo extends DynamicObject
             loadTextures(ms);
         }
         setJumpSound();
-        powerJumpEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
-        starEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
+        powerJumpEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
+        starEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
     }
 
@@ -248,15 +247,15 @@ public class Maryo extends DynamicObject
 
     private void loadTextures(MaryoState state)
     {
-        TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");
+        TextureAtlas atlas = world.screen.game.assets.manager.get("data/maryo/" + state + ".pack");
 
         TextureRegion tmpStandRight;
         tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
 
         TextureRegion[] walkFrames = new TextureRegion[4];
         walkFrames[0] = tmpStandRight;
-        walkFrames[1] = atlas.findRegion(TKey.walk_right_1 + "");
-        walkFrames[2] = atlas.findRegion(TKey.walk_right_2 + "");
+        walkFrames[1] = atlas.findRegion("walk_right", 1);
+        walkFrames[2] = atlas.findRegion("walk_right", 2);
         walkFrames[3] = walkFrames[1];
         aMap[aIndex(state, AKey.walk)] = new Animation(RUNNING_FRAME_DURATION, walkFrames);
 
@@ -268,8 +267,8 @@ public class Maryo extends DynamicObject
         if (state == MaryoState.ice || state == MaryoState.fire)
         {
             TextureRegion[] throwFrames = new TextureRegion[2];
-            throwFrames[0] = atlas.findRegion(TKey.throw_right_1.toString());
-            throwFrames[1] = atlas.findRegion(TKey.throw_right_2.toString());
+            throwFrames[0] = atlas.findRegion("throw_right_1", 1);
+            throwFrames[1] = atlas.findRegion("throw_right_2", 2);
             aMap[aIndex(state, AKey._throw)] = new Animation(THROW_FRAME_DURATION, throwFrames);
         }
 
@@ -1123,13 +1122,13 @@ public class Maryo extends DynamicObject
         switch (newState)
         {
             case big:
-                return Assets.manager.get("data/sounds/item/mushroom.ogg");
+                return world.screen.game.assets.manager.get("data/sounds/item/mushroom.mp3");
             case fire:
-                return Assets.manager.get("data/sounds/item/fireplant.ogg");
+                return world.screen.game.assets.manager.get("data/sounds/item/fireplant.mp3");
             case ice:
-                return Assets.manager.get("data/sounds/item/mushroom_blue.wav");
+                return world.screen.game.assets.manager.get("data/sounds/item/mushroom_blue.mp3");
             case ghost:
-                return Assets.manager.get("data/sounds/item/mushroom_ghost.ogg");
+                return world.screen.game.assets.manager.get("data/sounds/item/mushroom_ghost.mp3");
         }
         return null;
     }
@@ -1185,11 +1184,8 @@ public class Maryo extends DynamicObject
             diedTime = stateTime;
             handleCollision = false;
             diedPosition = new Vector3(position);
-            if (Assets.playSounds)
-            {
-                Sound sound = Assets.manager.get("data/sounds/player/dead.ogg");
-                Audio.play(sound);
-            }
+            Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
+            Audio.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSaveUtility.getInstance().save.lifes--;
         }
@@ -1240,15 +1236,15 @@ public class Maryo extends DynamicObject
         switch (maryoState)
         {
             case small:
-                jumpSound = Assets.manager.get("data/sounds/player/jump_small.ogg");
+                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small.mp3");
                 break;
             case big:
             case fire:
             case ice:
-                jumpSound = Assets.manager.get("data/sounds/player/jump_big.ogg");
+                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
                 break;
             case ghost:
-                jumpSound = Assets.manager.get("data/sounds/player/jump_ghost.ogg");
+                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_ghost.mp3");
                 break;
         }
     }
@@ -1521,11 +1517,9 @@ public class Maryo extends DynamicObject
             setWorldState(GameObject.WorldState.JUMPING);
             keys.add(Keys.JUMP);
 
-            if(Assets.playSounds)
-            {
-                Sound sound = jumpSound;
-                Audio.play(sound);
-            }
+            Sound sound = jumpSound;
+            Audio.play(sound);
+
             jumpClickTime = System.currentTimeMillis();
         }
     }

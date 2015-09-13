@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -36,7 +36,7 @@ public class Fireplant extends Item
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         animation = new Animation(2f, atlas.getRegions());
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
@@ -74,7 +74,7 @@ public class Fireplant extends Item
         popFromBox = true;
         velocity.y = VELOCITY_POP;
         originalPosY = position.y;
-        ParticleEffect effect = Assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
+        ParticleEffect effect = world.screen.game.assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
         effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
         effect.start();
     }
@@ -86,7 +86,7 @@ public class Fireplant extends Item
         TextureRegion frame = animation.getKeyFrame(stateTime, true);
         Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
 
-        ParticleEffect effect = Assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
+        ParticleEffect effect = world.screen.game.assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
         effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
         effect.draw(spriteBatch, Gdx.graphics.getDeltaTime());
     }

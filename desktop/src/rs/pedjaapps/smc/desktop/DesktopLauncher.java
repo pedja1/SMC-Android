@@ -21,9 +21,9 @@ public class DesktopLauncher
         //config.vSyncEnabled = false;
         //config.foregroundFPS = 0;
         //config.backgroundFPS = 0;
-        config.addIcon("data/game/icons/desktop_mac.png", Files.FileType.Internal);
-        config.addIcon("data/game/icons/desktop_win_lin.png", Files.FileType.Internal);
-        config.addIcon("data/game/icons/desktop_win.png", Files.FileType.Internal);
+        config.addIcon("data/icons/desktop_mac.png", Files.FileType.Internal);
+        config.addIcon("data/icons/desktop_win_lin.png", Files.FileType.Internal);
+        config.addIcon("data/icons/desktop_win.png", Files.FileType.Internal);
         new LwjglApplication(new MaryoGame(), config);
     }
 }

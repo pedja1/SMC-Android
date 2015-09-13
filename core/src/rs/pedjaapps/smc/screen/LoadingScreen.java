@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Align;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.utility.Constants;
 
 /**
@@ -47,7 +46,7 @@ public class LoadingScreen extends AbstractScreen
         float camHeight = height/(width/camWidth);
         cam = new OrthographicCamera(camWidth, camHeight);
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(game.assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParams.size = (int) camHeight / 20;
         fontParams.magFilter = Texture.TextureFilter.Linear;
@@ -59,7 +58,7 @@ public class LoadingScreen extends AbstractScreen
         generator.dispose();
 
         batch = new SpriteBatch();
-        Texture bgTexture = new Texture(Gdx.files.internal("data/loading/loading_bg.jpg"));
+        Texture bgTexture = new Texture(game.assets.resolver.resolve("data/loading/loading_bg.jpg"));
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         bgSprite = new Sprite(bgTexture);
@@ -81,7 +80,7 @@ public class LoadingScreen extends AbstractScreen
         // Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (Assets.manager.update())
+        if (game.assets.manager.update())
         {
             // Load some, will return true if done loading
             /*if(!resume)*/screenToLoadAfter.onAssetsLoaded();
@@ -92,7 +91,7 @@ public class LoadingScreen extends AbstractScreen
             game.setScreen(screenToLoadAfter);
         }
         // Interpolate the percentage to make it more smooth
-        percent = Interpolation.linear.apply(percent, Assets.manager.getProgress(), 0.1f);
+        percent = Interpolation.linear.apply(percent, game.assets.manager.getProgress(), 0.1f);
 
         batch.setProjectionMatrix(cam.combined);
         batch.begin();

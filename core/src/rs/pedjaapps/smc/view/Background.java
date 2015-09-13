@@ -4,7 +4,8 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.*;
 import com.badlogic.gdx.math.*;
-import rs.pedjaapps.smc.*;
+
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.utility.*;
 
 public class Background
@@ -83,9 +84,9 @@ public class Background
 		}
 	}
 	
-	public void onAssetsLoaded(OrthographicCamera gameCam)
+	public void onAssetsLoaded(OrthographicCamera gameCam, Assets assets)
 	{
-		texture = Assets.manager.get(textureName);
+		texture = assets.manager.get(textureName);
 		bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         oldGameCamPos.set(gameCam.position);
 	}

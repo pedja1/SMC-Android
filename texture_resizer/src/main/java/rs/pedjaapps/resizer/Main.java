@@ -1,8 +1,8 @@
 package rs.pedjaapps.resizer;
 
 import org.apache.commons.io.FileUtils;
+import org.imgscalr.Scalr;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class Main
 
     public static void main(String[] args) throws IOException
     {
-        float[] resolutionHeights = new float[]{1080f, 600f, 768f, 480f, 320f};
+        float[] resolutionHeights = new float[]{1080f, 768f, 540f};
         Collection<File> files = FileUtils.listFiles(new File("/home/pedja/workspace/SMC-Android/texture_resizer/playground/pixmaps/"), new String[]{"png"}, true);
         for (float resolutionHeight : resolutionHeights)
         {
@@ -40,14 +40,10 @@ public class Main
 
     private static BufferedImage resizeImage(BufferedImage originalImage, File file, float targetResolutionHeight) throws IOException
     {
-        int height = calculateNewHeight(file, targetResolutionHeight);
+        int height = Math.min(calculateNewHeight(file, targetResolutionHeight), originalImage.getHeight());
         int width = (int) ((float)height * ((float)originalImage.getWidth() / (float)originalImage.getHeight()));
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width, height, null);
-        g.dispose();
 
-        return resizedImage;
+        return Scalr.resize(originalImage, Scalr.Method.QUALITY, width, height, Scalr.OP_ANTIALIAS);
     }
 
     private static int calculateNewHeight(File file, float targetResolutionHeight) throws IOException

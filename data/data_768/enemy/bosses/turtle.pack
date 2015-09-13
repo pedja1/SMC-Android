@@ -1,0 +1,54 @@
+
+turtle.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+shell_front
+  rotate: false
+  xy: 1, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+shell_move
+  rotate: false
+  xy: 775, 259
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 1
+shell_move
+  rotate: false
+  xy: 131, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 2
+shell_move
+  rotate: false
+  xy: 261, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 3
+walk
+  rotate: false
+  xy: 1, 131
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: 0
+walk
+  rotate: false
+  xy: 259, 131
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: 1
+walk
+  rotate: false
+  xy: 517, 131
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: 2

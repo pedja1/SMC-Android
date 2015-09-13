@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 import java.util.Collections;
 
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.items.Coin;
 import rs.pedjaapps.smc.object.items.Fireplant;
@@ -83,12 +83,12 @@ public class Box extends Sprite
     @Override
     public void initAssets()
     {
-        txDisabled = new TextureRegion(Assets.manager.get("data/game/box/brown1_1.png", Texture.class));
+        txDisabled = new TextureRegion(world.screen.game.assets.manager.get("data/game/box/brown1_1.png", Texture.class));
         if (textureName == null)
         {
             textureName = "data/game/box/yellow/default.png";
         }
-        texture = Assets.manager.get(textureName);
+        texture = world.screen.game.assets.manager.get(textureName);
         if (animationName == null || "default".equalsIgnoreCase(animationName))
         {
             if(!"spin".equals(boxType))return;
@@ -98,7 +98,7 @@ public class Box extends Sprite
             textureAtlas = "data/game/box/yellow/spin.pack";
         }
         if (textureAtlas == null) return;
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         Array<TextureRegion> frames = new Array<TextureRegion>();
         float animSpeed = 0;
         if ("bonus".equalsIgnoreCase(animationName))
@@ -121,7 +121,7 @@ public class Box extends Sprite
         }
         if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
         {
-            frames.add(new TextureRegion(Assets.manager.get("data/game/box/yellow/default.png", Texture.class)));
+            frames.add(new TextureRegion(world.screen.game.assets.manager.get("data/game/box/yellow/default.png", Texture.class)));
             frames.add(atlas.findRegion("1"));
             frames.add(atlas.findRegion("2"));
             frames.add(atlas.findRegion("3"));
@@ -191,7 +191,7 @@ public class Box extends Sprite
         }
     }
 
-    public static Box initBox(World world, JSONObject jBox, LevelLoader loader) throws JSONException
+    public static Box initBox(World world, JSONObject jBox, Assets assets) throws JSONException
     {
         Vector3 position = new Vector3((float) jBox.getDouble("posx"), (float) jBox.getDouble("posy"), 0);
         Vector2 size = new Vector2(SIZE, SIZE);
@@ -210,25 +210,25 @@ public class Box extends Sprite
         box.textureName = jBox.optString("texture_name", null);
         if(box.textureAtlas != null && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
         {
-            Assets.manager.load(box.textureName, Texture.class, Assets.textureParameter);
+            world.screen.game.assets.manager.load(box.textureName, Texture.class, world.screen.game.assets.textureParameter);
         }
         if (jBox.has("texture_atlas"))
         {
             box.textureAtlas = jBox.getString("texture_atlas");
-            Assets.manager.load(box.textureAtlas, TextureAtlas.class, Assets.atlasTextureParameter);
+            world.screen.game.assets.manager.load(box.textureAtlas, TextureAtlas.class);
         }
         if("spin".equals(box.boxType))
         {
-            Assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class, Assets.atlasTextureParameter);
+            world.screen.game.assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class);
         }
-        Assets.manager.load("data/game/box/yellow/default.png", Texture.class, Assets.textureParameter);
-        Assets.manager.load("data/game/box/brown1_1.png", Texture.class, Assets.textureParameter);
-        addBoxItem(box, true);
+        world.screen.game.assets.manager.load("data/game/box/yellow/default.png", Texture.class, world.screen.game.assets.textureParameter);
+        world.screen.game.assets.manager.load("data/game/box/brown1_1.png", Texture.class, world.screen.game.assets.textureParameter);
+        addBoxItem(box, true, assets);
         //addBoxItem(box, loader.getLevel());
         return box;
     }
 
-    private static Item addBoxItem(Box box, boolean loadAssets)
+    private static Item addBoxItem(Box box, boolean loadAssets, Assets assets)
     {
         //create item contained in box
         if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
@@ -238,7 +238,7 @@ public class Box extends Sprite
         {
             int defBoxItem = box.item;
             box.item = Item.TYPE_MUSHROOM_DEFAULT;
-            Item item = createMushroom(box, loadAssets);
+            Item item = createMushroom(box, loadAssets, assets);
             if(loadAssets)
             {
                 if(defBoxItem != box.item)
@@ -246,7 +246,7 @@ public class Box extends Sprite
                     box.item = defBoxItem;
                     boolean tmpForceBestItem = box.forceBestItem;
                     box.forceBestItem = true;
-                    addBoxItem(box, true);
+                    addBoxItem(box, true, assets);
                     box.forceBestItem = tmpForceBestItem;
                 }
                 box.item = defBoxItem;
@@ -257,7 +257,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load(Coin.DEF_ATL, TextureAtlas.class, Assets.atlasTextureParameter);
+                assets.manager.load(Coin.DEF_ATL, TextureAtlas.class);
             }
             else
             {
@@ -268,15 +268,15 @@ public class Box extends Sprite
                 || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_GHOST
                 || box.item == Item.TYPE_MUSHROOM_POISON)
         {
-            return createMushroom(box, loadAssets);
+            return createMushroom(box, loadAssets, assets);
         }
         else if(box.item == Item.TYPE_FIREPLANT)
         {
             if(loadAssets)
             {
-                Assets.manager.load("data/sounds/item/fireplant.ogg", Sound.class);
-                Assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class, Assets.atlasTextureParameter);
-                Assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+                assets.manager.load("data/sounds/item/fireplant.mp3", Sound.class);
+                assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
+                assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
             }
             else
             {
@@ -287,7 +287,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load("data/game/items/star.png", Texture.class, Assets.textureParameter);
+                assets.manager.load("data/game/items/star.png", Texture.class, assets.textureParameter);
             }
             else
             {
@@ -298,7 +298,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
-                Assets.manager.load("data/game/items/moon.pack", TextureAtlas.class, Assets.atlasTextureParameter);
+                assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
             }
             else
             {
@@ -308,7 +308,7 @@ public class Box extends Sprite
         return null;
     }
 
-    public static Item createMushroom(Box box, boolean loadAssets)
+    public static Item createMushroom(Box box, boolean loadAssets, Assets assets)
     {
         if(loadAssets)
         {
@@ -316,22 +316,22 @@ public class Box extends Sprite
             {
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
-                    Assets.manager.load("data/game/items/mushroom_red.png", Texture.class, Assets.textureParameter);
-                    Assets.manager.load("data/sounds/item/mushroom.ogg", Sound.class);
+                    assets.manager.load("data/game/items/mushroom_red.png", Texture.class, assets.textureParameter);
+                    assets.manager.load("data/sounds/item/mushroom.mp3", Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
-                    Assets.manager.load("data/game/items/mushroom_green.png", Texture.class, Assets.textureParameter);
+                    assets.manager.load("data/game/items/mushroom_green.png", Texture.class, assets.textureParameter);
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
-                    Assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, Assets.textureParameter);
-                    Assets.manager.load("data/sounds/item/mushroom_blue.wav", Sound.class);
+                    assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, assets.textureParameter);
+                    assets.manager.load("data/sounds/item/mushroom_blue.mp3", Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_GHOST:
-                    Assets.manager.load("data/game/items/mushroom_ghost.png", Texture.class, Assets.textureParameter);
-                    Assets.manager.load("data/sounds/item/mushroom_ghost.ogg", Sound.class);
+                    assets.manager.load("data/game/items/mushroom_ghost.png", Texture.class, assets.textureParameter);
+                    assets.manager.load("data/sounds/item/mushroom_ghost.mp3", Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
-                    Assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, Assets.textureParameter);
+                    assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, assets.textureParameter);
                     break;
             }
         }
@@ -425,7 +425,7 @@ public class Box extends Sprite
             if (usableCount != -1) usableCount--;
             hitByPlayer = true;
             velocity.y = 3f;
-            Item item = addBoxItem(this, false);
+            Item item = addBoxItem(this, false, world.screen.game.assets);
             if (item != null)
             {
                 item.isInBox = true;
@@ -436,22 +436,22 @@ public class Box extends Sprite
                 {
                     if (item.textureAtlas.contains("yellow"))
                     {
-                        sound = Assets.manager.get("data/sounds/item/goldpiece_1.ogg");
+                        sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_1.mp3");
                     }
                     else
                     {
-                        sound = Assets.manager.get("data/sounds/item/goldpiece_red.wav");
+                        sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
                     }
                 }
                 else if(item instanceof Mushroom)
                 {
-                    sound = Assets.manager.get("data/sounds/sprout_1.ogg");
+                    sound = world.screen.game.assets.manager.get("data/sounds/sprout_1.mp3");
                 }
             }
         }
         else
         {
-            sound = Assets.manager.get("data/sounds/wall_hit.wav");
+            sound = world.screen.game.assets.manager.get("data/sounds/wall_hit.mp3");
         }
         Audio.play(sound);
     }

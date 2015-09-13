@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -84,12 +83,12 @@ public class SelectionAdapter
 
 	public void initAssets()
 	{
-		txItemBg = Assets.manager.get("data/hud/option.png");
-		txItemBgSelected = Assets.manager.get("data/hud/option_selected.png");
-		txLock = Assets.manager.get("data/hud/lock.png");
+		txItemBg = mainMenuScreen.game.assets.manager.get("data/hud/option.png");
+		txItemBgSelected = mainMenuScreen.game.assets.manager.get("data/hud/option_selected.png");
+		txLock = mainMenuScreen.game.assets.manager.get("data/hud/lock.png");
 
 		//TODO load this fonts with asset manager
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(mainMenuScreen.game.assets.resolver.resolve("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 96;
         parameter.characters = "SECTLV";

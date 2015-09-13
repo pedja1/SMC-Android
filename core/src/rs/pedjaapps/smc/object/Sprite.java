@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.Rect;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -54,6 +53,10 @@ public class Sprite extends GameObject
             }
 
         }
+        else
+        {
+            throw new IllegalStateException("both Texture and TextureRegion are null");
+        }
         //debug
         //mRotationZ = mRotationZ + 0.1f;
         //if(mRotationZ > 360)mRotationZ = 0;
@@ -79,7 +82,7 @@ public class Sprite extends GameObject
         TextureAtlas atlas = null;
         if (textureAtlas != null && textureAtlas.length() > 0)
         {
-            atlas = Assets.manager.get(textureAtlas);
+            atlas = world.screen.game.assets.manager.get(textureAtlas);
         }
 
         if (atlas != null)
@@ -88,7 +91,7 @@ public class Sprite extends GameObject
         }
         else
         {
-            txt = Assets.manager.get(textureName);
+            txt = world.screen.game.assets.manager.get(textureName);
         }
         if(!rotationAplied)
         {

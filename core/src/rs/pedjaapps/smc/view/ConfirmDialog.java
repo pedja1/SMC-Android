@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 
-import rs.pedjaapps.smc.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -69,7 +68,7 @@ public class ConfirmDialog
 
     public void loadAssets()
     {
-        Assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class, Assets.atlasTextureParameter);
+        screen.game.assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
@@ -77,17 +76,17 @@ public class ConfirmDialog
         params.fontParameters.minFilter = Texture.TextureFilter.Linear;
         params.fontParameters.size = (int) (cam.viewportHeight / 20);
         params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQ";
-        Assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
+        screen.game.assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
     }
 
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get("data/hud/SMCLook512.pack");
+        TextureAtlas atlas = screen.game.assets.manager.get("data/hud/SMCLook512.pack");
         back = atlas.findRegion("ClientBrush");
         TextureRegion buttonNormal = atlas.findRegion("button-normal");
         TextureRegion buttonPressed = atlas.findRegion("button-pressed");
 
-        font = Assets.manager.get("confirm_dialog.ttf");
+        font = screen.game.assets.manager.get("confirm_dialog.ttf");
         fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();

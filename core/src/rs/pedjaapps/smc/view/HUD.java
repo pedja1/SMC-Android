@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.HashSet;
 
-import rs.pedjaapps.smc.Assets;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
@@ -189,28 +189,28 @@ public class HUD
 	
 	public void loadAssets()
 	{
-		Assets.manager.load("data/hud/controls.pack", TextureAtlas.class, Assets.atlasTextureParameter);
-        Assets.manager.load("data/hud/pause.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/hud/itembox.png", Texture.class, Assets.textureParameter);
-        Assets.manager.load("data/hud/maryo_l.png", Texture.class, Assets.textureParameter);
-        Assets.manager.load("data/hud/gold_m.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/hud/game_over.png", Texture.class, Assets.textureParameter);
+		world.screen.game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+		world.screen.game.assets.manager.load("data/hud/pause.png", Texture.class, world.screen.game.assets.textureParameter);
+		world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets.textureParameter);
+        world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets.textureParameter);
+        world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets.textureParameter);
+		world.screen.game.assets.manager.load("data/game/game_over.png", Texture.class, world.screen.game.assets.textureParameter);
 		
 		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         ttsTextParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
         ttsTextParams.fontParameters.size = (int) C_H / 15;
         ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
-        Assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
+		world.screen.game.assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
 
 		FreetypeFontLoader.FreeTypeFontLoaderParameter boxPD = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
 		boxPD.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
 		boxPD.fontParameters.size = (int) HUD.C_H / 30;
-		Assets.manager.load("btf.ttf", BitmapFont.class, boxPD);
+		world.screen.game.assets.manager.load("btf.ttf", BitmapFont.class, boxPD);
 	}
 
     public void initAssets()
 	{
-		TextureAtlas atlas = Assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
+		TextureAtlas atlas = world.screen.game.assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		pause = atlas.findRegion("pause");
 		pauseP = atlas.findRegion("pause-pressed");
 		play = atlas.findRegion("play");
@@ -245,16 +245,16 @@ public class HUD
 			downP.flip(false, true);
 		}
 
-		itemBox = Assets.manager.get("data/hud/itembox.png");
-		maryoL = Assets.manager.get("data/hud/maryo_l.png");
-		goldM = Assets.manager.get("data/hud/gold_m.png");
+		itemBox = world.screen.game.assets.manager.get("data/game/itembox.png");
+		maryoL = world.screen.game.assets.manager.get("data/game/maryo_l.png");
+		goldM = world.screen.game.assets.manager.get("data/game/gold_m.png");
 		
 		Texture.TextureFilter filter = Texture.TextureFilter.Linear;
 		itemBox.setFilter(filter, filter);
 		maryoL.setFilter(filter, filter);
 		goldM.setFilter(filter, filter);
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/Roboto-Bold.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(world.screen.game.assets.resolver.resolve("data/fonts/Roboto-Bold.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) C_H / 25;
         parameter.characters = "0123456789TimePontsx:";
@@ -266,12 +266,12 @@ public class HUD
 		
 		generator.dispose();
 		
-		tts = Assets.manager.get("touch_to_start.ttf");
+		tts = world.screen.game.assets.manager.get("touch_to_start.ttf");
 		tts.setColor(1, 1, 1, 1);
 		ttsGlyphLayout = new GlyphLayout(font, ttsText);
-		BitmapFont btf = Assets.manager.get("btf.ttf");
+		BitmapFont btf = world.screen.game.assets.manager.get("btf.ttf");
 		btf.setColor(1, 1, 1, 1);
-		boxTextPopup = new BoxTextPopup(btf);
+		boxTextPopup = new BoxTextPopup(btf, world.screen.game.assets);
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
@@ -423,15 +423,15 @@ public class HUD
 
 		//pause
 		float pHeight = C_H / 6;
-		Texture pause = Assets.manager.get("data/hud/pause.png");
+		Texture pause = world.screen.game.assets.manager.get("data/hud/pause.png");
 		float pWidth = pHeight * pause.getWidth() / pause.getHeight();
 
 		batch.draw(pause, C_W / 2 - pWidth / 2, C_H / 1.9f, pWidth, pHeight);
 		
 		batch.draw(pressedKeys.contains(Key.play) ? playP : play, playR.x, playR.y, playR.width, playR.height);
 		
-		batch.draw(pressedKeys.contains(Key.sound) ? (Assets.playSounds ? soundOnP : soundOffP) : (Assets.playSounds ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
-        batch.draw(pressedKeys.contains(Key.music) ? (Assets.playMusic ? musicOnP : musicOffP) : (Assets.playMusic ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+		batch.draw(pressedKeys.contains(Key.sound) ? (PrefsManager.isPlaySounds() ? soundOnP : soundOffP) : (PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+        batch.draw(pressedKeys.contains(Key.music) ? (PrefsManager.isPlayMusic() ? musicOnP : musicOffP) : (PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
 		
 		//batch.draw(pressedKeys.contains(Key.sound) ? soundP : sound, soundR.x, soundR.y, soundR.width, soundR.height);
 		
@@ -548,11 +548,11 @@ public class HUD
 		TextureRegion back;
 		String text;
 
-		public BoxTextPopup(BitmapFont font)
+		public BoxTextPopup(BitmapFont font, Assets assets)
 		{
 			this.font = font;
 			glyphLayout = new GlyphLayout();
-			TextureAtlas atlas = Assets.manager.get("data/hud/SMCLook512.pack");
+			TextureAtlas atlas = assets.manager.get("data/hud/SMCLook512.pack");
 			back = atlas.findRegion("ClientBrush");
 		}
 
