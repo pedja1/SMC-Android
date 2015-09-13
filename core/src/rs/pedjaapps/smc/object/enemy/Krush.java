@@ -52,20 +52,20 @@ public class Krush extends Enemy
         Array<TextureRegion> smallFrames = new Array<>();
         Array<TextureRegion> bigFrames = new Array<>();
 
-        bigFrames.add(atlas.findRegion("big-1"));
-        bigFrames.add(atlas.findRegion("big-2"));
-        bigFrames.add(atlas.findRegion("big-3"));
-        bigFrames.add(atlas.findRegion("big-4"));
+        bigFrames.add(atlas.findRegion("big", 1));
+        bigFrames.add(atlas.findRegion("big", 2));
+        bigFrames.add(atlas.findRegion("big", 3));
+        bigFrames.add(atlas.findRegion("big", 4));
 
-        smallFrames.add(atlas.findRegion("small-1"));
-        smallFrames.add(atlas.findRegion("small-2"));
-        smallFrames.add(atlas.findRegion("small-3"));
-        smallFrames.add(atlas.findRegion("small-4"));
+        smallFrames.add(atlas.findRegion("small", 1));
+        smallFrames.add(atlas.findRegion("small", 2));
+        smallFrames.add(atlas.findRegion("small", 3));
+        smallFrames.add(atlas.findRegion("small", 4));
 
         aSmall = new Animation(0.07f, smallFrames);
         aBig = new Animation(0.12f, bigFrames);
 
-        tDead = atlas.findRegion("small-1");
+        tDead = atlas.findRegion("small", 1);
     }
 
     @Override
