@@ -10,13 +10,13 @@ buildscript {
 apply plugin: 'com.github.triplet.play'
 
 android {
-    buildToolsVersion '22.0.1'
-    compileSdkVersion 22
+    buildToolsVersion '23.0.1'
+    compileSdkVersion 23
     defaultConfig {
-        versionCode 20150906
-        versionName "0.2 alpha"
+        versionCode 20150913
+        versionName "0.3 alpha"
         minSdkVersion 10
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
     sourceSets {
         main {
