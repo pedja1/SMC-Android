@@ -1,0 +1,131 @@
+
+hud.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+accept
+  rotate: false
+  xy: 259, 331
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+cancel
+  rotate: false
+  xy: 389, 331
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+check
+  rotate: false
+  xy: 519, 331
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+check_background
+  rotate: false
+  xy: 1, 1
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+down
+  rotate: false
+  xy: 649, 331
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+empty_square_button
+  rotate: false
+  xy: 1, 203
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+left
+  rotate: false
+  xy: 779, 331
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+menu
+  rotate: false
+  xy: 259, 201
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+music
+  rotate: false
+  xy: 389, 201
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+music_off
+  rotate: false
+  xy: 519, 201
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 649, 201
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 779, 201
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+right
+  rotate: false
+  xy: 203, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+score
+  rotate: false
+  xy: 333, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 463, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+sound
+  rotate: false
+  xy: 593, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+sound_off
+  rotate: false
+  xy: 723, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 853, 71
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
