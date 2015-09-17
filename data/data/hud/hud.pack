@@ -1,205 +1,130 @@
 
 hud.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: Linear,Linear
 repeat: none
 accept
   rotate: false
-<<<<<<< HEAD
   xy: 1, 103
-=======
-  xy: 259, 331
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 cancel
   rotate: false
-<<<<<<< HEAD
   xy: 259, 361
-=======
-  xy: 389, 331
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 check
   rotate: false
-<<<<<<< HEAD
   xy: 909, 425
   size: 64, 64
   orig: 64, 64
-=======
-  xy: 519, 331
-  size: 128, 128
-  orig: 128, 128
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   offset: 0, 0
   index: -1
 check_background
   rotate: false
   xy: 1, 1
-<<<<<<< HEAD
   size: 100, 100
   orig: 100, 100
-=======
-  size: 200, 200
-  orig: 200, 200
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   offset: 0, 0
   index: -1
 down
   rotate: false
-<<<<<<< HEAD
   xy: 389, 361
-=======
-  xy: 649, 331
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 empty_square_button
   rotate: false
-<<<<<<< HEAD
   xy: 1, 233
-=======
-  xy: 1, 203
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 left
   rotate: false
-<<<<<<< HEAD
   xy: 519, 361
-=======
-  xy: 779, 331
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 menu
   rotate: false
-<<<<<<< HEAD
   xy: 649, 361
-=======
-  xy: 259, 201
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 music
   rotate: false
-<<<<<<< HEAD
   xy: 779, 361
-=======
-  xy: 389, 201
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 music_off
   rotate: false
-<<<<<<< HEAD
   xy: 131, 103
-=======
-  xy: 519, 201
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 pause
   rotate: false
-<<<<<<< HEAD
   xy: 261, 231
-=======
-  xy: 649, 201
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 play
   rotate: false
-<<<<<<< HEAD
   xy: 391, 231
-=======
-  xy: 779, 201
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 right
   rotate: false
-<<<<<<< HEAD
   xy: 521, 231
-=======
-  xy: 203, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 score
   rotate: false
-<<<<<<< HEAD
   xy: 651, 231
-=======
-  xy: 333, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 settings
   rotate: false
-<<<<<<< HEAD
   xy: 261, 101
-=======
-  xy: 463, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 sound
   rotate: false
-<<<<<<< HEAD
   xy: 391, 101
-=======
-  xy: 593, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 sound_off
   rotate: false
-<<<<<<< HEAD
   xy: 521, 101
-=======
-  xy: 723, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 up
   rotate: false
-<<<<<<< HEAD
   xy: 651, 101
-=======
-  xy: 853, 71
->>>>>>> 89ba31adc302f13063e779fdcd7dc50f7ab55d20
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

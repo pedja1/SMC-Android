@@ -32,7 +32,7 @@ public class ConfirmDialog
 
     public boolean visible = false;
 
-    TextureRegion back;
+    Texture back;
 
     Button buttonNo, buttonYes;
 
@@ -53,13 +53,13 @@ public class ConfirmDialog
         this.screen = screen;
         this.cam = cam;
 
-        dialogHeight = cam.viewportHeight / 2;
-        dialogWidth = cam.viewportWidth / 2;
+        dialogWidth = cam.viewportWidth * .4f;
+		dialogHeight = dialogWidth;
+		
+        dialogPadding = dialogHeight * .006f;
 
-        dialogPadding = dialogHeight / 15;
-
-        dialogX = cam.position.x - dialogWidth / 2;
-        dialogY = cam.position.y - dialogHeight / 2;
+        dialogX = cam.position.x - dialogWidth * .5f;
+        dialogY = cam.position.y - dialogHeight * .5f;
 
         text = (screen instanceof GameScreen)
                 ? "Are you sure you want to quit?\nAll unsaved progress will be lost."
@@ -68,8 +68,9 @@ public class ConfirmDialog
 
     public void loadAssets()
     {
-        screen.game.assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
+        screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 
+		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class);
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
@@ -81,27 +82,25 @@ public class ConfirmDialog
 
     public void initAssets()
     {
-        TextureAtlas atlas = screen.game.assets.manager.get("data/hud/SMCLook512.pack");
-        back = atlas.findRegion("ClientBrush");
-        TextureRegion buttonNormal = atlas.findRegion("button-normal");
-        TextureRegion buttonPressed = atlas.findRegion("button-pressed");
-
-        font = screen.game.assets.manager.get("confirm_dialog.ttf");
+        TextureAtlas atlas = screen.game.assets.manager.get("data/hud/hud.pack");
+        back = screen.game.assets.manager.get("data/hud/dialog_background.png");
+        
+		TextureRegion btnCancel = atlas.findRegion("cancel");
+		TextureRegion btnAccept = atlas.findRegion("accept");
+		
+		font = screen.game.assets.manager.get("confirm_dialog.ttf");
         fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();
-        buttonNo.rect.width = dialogWidth / 4;
-        buttonNo.rect.height = dialogHeight / 6;
+        buttonNo.rect.width = dialogWidth * .2f;
+        buttonNo.rect.height = buttonNo.rect.width;
         buttonNo.rect.x = dialogX + dialogWidth - dialogPadding - buttonNo.rect.width;
         buttonNo.rect.y = dialogY + dialogPadding;
-        buttonNo.bgPressed = buttonPressed;
-        buttonNo.bgNormal = buttonNormal;
-        buttonNo.text = "NO";
-        buttonNo.font = font;
+        buttonNo.texture = btnCancel;
 
         buttonYes = new Button(buttonNo);
         buttonYes.rect.x = buttonNo.rect.x - dialogPadding - buttonNo.rect.width;
-        buttonYes.text = "YES";
+        buttonYes.texture = btnAccept;
 
         fontGlyph.setText(font, title);
         titleR = new Rectangle(dialogX + dialogWidth / 2 - fontGlyph.width / 2,
@@ -244,34 +243,24 @@ public class ConfirmDialog
     private static class Button
     {
         Rectangle rect = new Rectangle();
-        TextureRegion bgPressed, bgNormal;
-        String text;
-        BitmapFont font;
-        GlyphLayout fontGlyph;
+        TextureRegion texture;
 
         boolean pressed;
 
         public void render(SpriteBatch batch)
         {
-            batch.draw(pressed ? bgPressed : bgNormal, rect.x, rect.y, rect.width, rect.height);
-            font.setColor(0.368627451f, 0.141176471f, 0.050980392f, 1);
-            fontGlyph.setText(font, text);
-            font.draw(batch, text, rect.x + rect.width / 2 - fontGlyph.width / 2, rect.y + rect.height / 2 + fontGlyph.height / 2);
+            batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
         }
 
         public Button(Button button)
         {
             rect = new Rectangle(button.rect);
-            bgNormal = button.bgNormal;
-            bgPressed = button.bgPressed;
-            text = button.text;
-            font = button.font;
-            fontGlyph = new GlyphLayout();
+            texture = button.texture;
         }
 
         public Button()
         {
-            fontGlyph = new GlyphLayout();
+            
         }
     }
 

@@ -42,7 +42,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
     private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
     Texture gameLogo;
-    TextureRegion play, playP, musicOn, musicOff, musicOnP, musicOffP, soundOn, soundOff, soundOnP, soundOffP;
+    TextureRegion play, musicOn, musicOff, soundOn, soundOff;
     Rectangle playR, musicR, soundR;
     OrthographicCamera drawCam, debugCam, hudCam;
     SpriteBatch batch;
@@ -150,9 +150,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			batch.setProjectionMatrix(hudCam.combined);
 			batch.begin();
 
-			batch.draw(playT ? playP : play, playR.x, playR.y, playR.width, playR.height);
-			batch.draw(soundT ? (PrefsManager.isPlaySounds() ? soundOnP : soundOffP) : (PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
-			batch.draw(musicT ? (PrefsManager.isPlayMusic() ? musicOnP : musicOffP) : (PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+			batch.draw(play, playR.x, playR.y, playR.width, playR.height);
+			batch.draw((PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+			batch.draw((PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
 
 			batch.end();
 		}
@@ -259,6 +259,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void loadAssets()
     {
         loader.parseLevel(world);
+		game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
         game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         game.assets.manager.load("data/hud/option.png", Texture.class, game.assets.textureParameter);
@@ -278,23 +279,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void onAssetsLoaded()
     {
-        TextureAtlas controlsAtlas = game.assets.manager.get("data/hud/controls.pack");
-        play = controlsAtlas.findRegion("play");
-        playP = controlsAtlas.findRegion("play-pressed");
-        playR = new Rectangle(screenWidth / 2f - (screenWidth / 10f) / 2,
-							  screenHeight / 2f - (screenWidth / 10f) / 2, screenWidth / 10f, screenWidth / 10f);
+        TextureAtlas hud = game.assets.manager.get("data/hud/hud.pack");
+		play = hud.findRegion("play");
+        playR = new Rectangle(screenWidth / 2f - (screenWidth / 9f) / 2,
+							  screenHeight / 2f - (screenWidth / 9f) / 2, screenWidth / 9f, screenWidth / 9f);
 
-        musicOn = controlsAtlas.findRegion("music-on");
-        musicOnP = controlsAtlas.findRegion("music-on-pressed");
-        musicOff = controlsAtlas.findRegion("music-off");
-        musicOffP = controlsAtlas.findRegion("music-off-pressed");
+        musicOn = hud.findRegion("music");
+        musicOff = hud.findRegion("music_off");
         musicR = new Rectangle(screenWidth - (screenWidth / 18f) * 1.25f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        soundOn = controlsAtlas.findRegion("sound-on");
-        soundOnP = controlsAtlas.findRegion("sound-on-pressed");
-        soundOff = controlsAtlas.findRegion("sound-off");
-        soundOffP = controlsAtlas.findRegion("sound-off-pressed");
+        soundOn = hud.findRegion("sound");
+        soundOff = hud.findRegion("sound_off");
         soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
