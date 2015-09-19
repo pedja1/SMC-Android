@@ -177,6 +177,8 @@ public class Maryo extends DynamicObject
     private TextureRegion[] tMap = new TextureRegion[25];
     private Animation[] aMap = new Animation[12];
 
+    private GameObject pickedObject;
+
     public Maryo(World world, Vector3 position, Vector2 size)
     {
         super(world, size, position);

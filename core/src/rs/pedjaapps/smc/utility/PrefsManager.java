@@ -3,6 +3,8 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import rs.pedjaapps.smc.assets.ArchiveFileHandleResolver;
+
 /**
  * Created by pedja on 21.9.14..
  */
@@ -12,7 +14,7 @@ public class PrefsManager
 
     public enum PrefsKey
     {
-        sound, music, sg, debug, sound_volume, music_volume
+        sound, music, sg, debug, sound_volume, music_volume, texture_quality
     }
 
     public static boolean isPlayMusic()
@@ -78,6 +80,17 @@ public class PrefsManager
     public static void setDebug(boolean debug)
     {
         prefs.putBoolean(PrefsKey.debug.toString(), debug);
+        flush();
+    }
+
+    public static int getTextureQuality()
+    {
+        return prefs.getInteger(PrefsKey.texture_quality.toString(), ArchiveFileHandleResolver.DEFAULT_TEXTURE_QUALITY);
+    }
+
+    public static void setTextureQuality(int quality)
+    {
+        prefs.putInteger(PrefsKey.texture_quality.toString(), quality);
         flush();
     }
 	

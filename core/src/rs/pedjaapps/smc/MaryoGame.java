@@ -10,6 +10,7 @@ import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
+import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.screen.SplashScreen;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -66,6 +67,14 @@ public class MaryoGame extends Game
     {
         Gdx.app.exit();
     }
+
+	public void restart()
+	{
+		assets.dispose();
+		assets = null;
+		assets = new Assets(androidAssetsZipFilePath);
+		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
+	}
 
 	public static boolean showOnScreenControls()
 	{

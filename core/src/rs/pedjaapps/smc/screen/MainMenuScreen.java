@@ -35,6 +35,7 @@ import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.SelectionAdapter;
+import rs.pedjaapps.smc.view.SettingsDialog;
 
 /**
  * Created by pedja on 2/17/14.
@@ -43,8 +44,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
     private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
     Texture gameLogo;
-    TextureRegion play, musicOn, musicOff, soundOn, soundOff;
-    Rectangle playR, musicR, soundR;
+    TextureRegion play, musicOn, musicOff, soundOn, soundOff, settings;
+    Rectangle playR, musicR, soundR, settingsR;
     OrthographicCamera drawCam, debugCam, hudCam;
     SpriteBatch batch;
     public MaryoGame game;
@@ -52,7 +53,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     LevelLoader loader;
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
-    private boolean playT = false, musicT = false, soundT = false;
+    private boolean playT = false, musicT = false, soundT = false, settingsT = false;
 	public boolean debug = PrefsManager.isDebug();
     private static final String FPS_STRING = "FPS: ";
     private static final NATypeConverter<Integer> fpsCounter = new NATypeConverter<>();
@@ -69,6 +70,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	public boolean isSelection;
 
     ConfirmDialog exitDialog;
+    SettingsDialog settingsDialog;
 
     ShapeRenderer shapeRenderer = new ShapeRenderer();
     TextureRegion marioFrame;
@@ -97,6 +99,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 		selectionAdapter = new SelectionAdapter(loadSelectionItems(), this);
         exitDialog = new ConfirmDialog(this, hudCam);
+        settingsDialog = new SettingsDialog(this, hudCam);
     }
 
 	public Array<SelectionAdapter.Level> loadSelectionItems()
@@ -163,6 +166,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			batch.draw((PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
             batch.setShader(null);
 
+            if(settingsT)batch.setShader(Shader.GLOW_SHADER);
+			batch.draw(settings, settingsR.x, settingsR.y, settingsR.width, settingsR.height);
+            batch.setShader(null);
+
 			batch.end();
 		}
 
@@ -177,6 +184,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         }
 
         exitDialog.render(batch);
+        settingsDialog.render(batch);
         if (debug)drawDebug();
     }
 
@@ -233,6 +241,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
         exitDialog.resize();
+        settingsDialog.resize();
     }
 
     @Override
@@ -261,6 +270,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         background.dispose();
         batch.dispose();
         exitDialog.dispose();
+        settingsDialog.dispose();
         music.stop();
     }
 
@@ -280,7 +290,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
         exitDialog.loadAssets();
-		
+        settingsDialog.loadAssets();
+
     }
 
     @Override
@@ -299,6 +310,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         soundOn = hud.findRegion("sound");
         soundOff = hud.findRegion("sound_off");
         soundR = new Rectangle(screenWidth - (screenWidth / 18f) * 2.5f,
+							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
+
+        settings = hud.findRegion("settings");
+        settingsR = new Rectangle(screenWidth - (screenWidth / 18f) * 3.75f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
         background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png");
@@ -322,6 +337,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
 		selectionAdapter.initAssets();
         exitDialog.initAssets();
+        settingsDialog.initAssets();
 
         for(GameObject go : loader.level.gameObjects)
             go.initAssets();
@@ -378,6 +394,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             return true;
         }
 
+        if(settingsDialog.visible)
+        {
+            settingsDialog.touchDown(x, y);
+            return true;
+        }
+
 		if (isSelection)
 		{
 			selectionAdapter.touchDown(x, y);
@@ -396,6 +418,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			{
 				soundT = true;
 			}
+			if (settingsR.contains(x, y))
+			{
+				settingsT = true;
+			}
 		}
         return false;
     }
@@ -409,6 +435,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         if(exitDialog.visible)
         {
             exitDialog.touchUp(x, y);
+            return true;
+        }
+
+        if(settingsDialog.visible)
+        {
+            settingsDialog.touchUp(x, y);
             return true;
         }
 
@@ -445,6 +477,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
                     rs.pedjaapps.smc.Audio.play(audioOn);
                 }
             }
+
+            if (settingsR.contains(x, y))
+            {
+                settingsT = false;
+                settingsDialog.show();
+            }
         }
         return false;
     }
@@ -461,6 +499,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             return true;
         }
 
+        if(settingsDialog.visible)
+        {
+            settingsDialog.touchDragged(x, y);
+            return true;
+        }
+
         if (isSelection)
         {
             selectionAdapter.touchDragged(x, y);
@@ -470,6 +514,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             playT = playR.contains(x, y);
             musicT = musicR.contains(x, y);
             soundT = soundR.contains(x, y);
+            settingsT = settingsR.contains(x, y);
         }
         return false;
     }

@@ -178,7 +178,7 @@ public class ConfirmDialog
     {
     }
 
-    private static class Button
+    public static class Button
     {
         Rectangle rect = new Rectangle();
         TextureRegion texture;
