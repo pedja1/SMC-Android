@@ -310,10 +310,35 @@ public class Maryo extends DynamicObject
         }
         if (resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
         {
+            if(newState == MaryoState.small)
+            {
+                godMode = true;
+                godModeActivatedTime = System.currentTimeMillis();
+
+                if (((GameScreen) world.screen).hud.item != null)
+                {
+                    //drop item
+                    Item item = ((GameScreen) world.screen).hud.item;
+                    OrthographicCamera cam = ((GameScreen) world.screen).cam;
+
+                    item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
+                    item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
+
+                    item.updateBounds();
+
+                    world.level.gameObjects.add(item);
+                    item.drop();
+
+                    ((GameScreen) world.screen).hud.item = null;
+                }
+            }
+            else
+            {
+                godMode = false;
+            }
             resizeAnimStartTime = 0;
             resizingAnimation = null;
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
-            godMode = false;
             maryoState = newState;
             newState = null;
             oldState = null;
@@ -1062,38 +1087,16 @@ public class Maryo extends DynamicObject
         }
         else
         {
-            godMode = true;
-            godModeActivatedTime = System.currentTimeMillis();
-
-            if (((GameScreen) world.screen).hud.item != null)
-            {
-                //drop item
-                Item item = ((GameScreen) world.screen).hud.item;
-                OrthographicCamera cam = ((GameScreen) world.screen).cam;
-
-                item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
-                item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
-
-                item.updateBounds();
-
-                world.level.gameObjects.add(item);
-                item.drop();
-
-                ((GameScreen) world.screen).hud.item = null;
-            }
-
-            maryoState = MaryoState.small;
-            GameSaveUtility.getInstance().save.playerState = maryoState;
-            setupBoundingBox();
+            upgrade(MaryoState.small, false, null, true);
         }
     }
 
     /*
     * Level up*/
-    public void upgrade(MaryoState newState, boolean tempUpdate, Item item)
+    public void upgrade(MaryoState newState, boolean tempUpdate, Item item, boolean downgrade)
     {
         //cant upgrade from ice/fire to big
-        if ((maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
+        if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
             ((GameScreen) world.screen).hud.item = item;
@@ -1114,12 +1117,16 @@ public class Maryo extends DynamicObject
         ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
 
         //play new state sound
-        Sound sound = upgradeSound(newState);
+        Sound sound = upgradeSound(newState, downgrade);
         Audio.play(sound);
     }
 
-    private Sound upgradeSound(MaryoState newState)
+    private Sound upgradeSound(MaryoState newState, boolean downgrade)
     {
+        if(downgrade)
+        {
+            //TODO
+        }
         switch (newState)
         {
             case big:

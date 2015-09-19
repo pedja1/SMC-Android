@@ -26,7 +26,7 @@ public class MushroomGhost extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.ghost, true, null);
+        world.maryo.upgrade(Maryo.MaryoState.ghost, true, null, false);
         world.trashObjects.add(this);
         GameSaveUtility.getInstance().save.points += mPickPoints;
     }

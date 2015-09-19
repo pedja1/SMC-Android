@@ -26,7 +26,7 @@ public class MushroomBlue extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.ice, false, this);
+        world.maryo.upgrade(Maryo.MaryoState.ice, false, this, false);
         world.trashObjects.add(this);
         GameSaveUtility.getInstance().save.points += mPickPoints;
     }
