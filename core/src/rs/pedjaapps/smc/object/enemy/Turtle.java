@@ -12,7 +12,6 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -248,8 +247,8 @@ public class Turtle extends Enemy
         }
         else
         {
-            mDrawRect.x = (world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.x : mColRect.x) - ((mDrawRect.width - mColRect.width) - mColRect.width / 2);
-            mDrawRect.y =(world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.y : mColRect.y) - ((mDrawRect.height - mColRect.height) - mColRect.height / 2);
+            mDrawRect.x = (mColRect.x) - ((mDrawRect.width - mColRect.width) - mColRect.width / 2);
+            mDrawRect.y = (mColRect.y) - ((mDrawRect.height - mColRect.height) - mColRect.height / 2);
         }
     }
 

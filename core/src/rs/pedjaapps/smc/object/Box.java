@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -72,9 +73,9 @@ public class Box extends Sprite
     private Animation animation;
     private Texture texture;
 
-    public Box(World world, Vector2 size, Vector3 position)
+    public Box(World world, Vector2 size, Vector3 position, Rectangle rectangle)
     {
-        super(world, size, position);
+        super(world, size, position, rectangle);
         type = Type.massive;
         originalPosY = position.y;
         position.z = POSITION_Z;
@@ -196,7 +197,7 @@ public class Box extends Sprite
         Vector3 position = new Vector3((float) jBox.getDouble("posx"), (float) jBox.getDouble("posy"), 0);
         Vector2 size = new Vector2(SIZE, SIZE);
 
-        Box box = new Box(world, size, position);
+        Box box = new Box(world, size, position, null);
 
         box.goldColor = jBox.optString("gold_color");
         box.animationName = jBox.optString("animation", null);

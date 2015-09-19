@@ -131,6 +131,14 @@ public class Converter
                 jSprite.put("posy", sprite.posy);
                 jSprite.put("width", sprite.width);
                 jSprite.put("height", sprite.height);
+
+                if (sprite.colRect != null)
+                {
+                    jSprite.put("c_posx", sprite.colRect.x);
+                    jSprite.put("c_posy", sprite.colRect.y);
+                    jSprite.put("c_width", sprite.colRect.width);
+                    jSprite.put("c_height", sprite.colRect.height);
+                }
                 if(sprite.texture_atlas != null)
                 {
                     jSprite.put("texture_atlas", sprite.texture_atlas);

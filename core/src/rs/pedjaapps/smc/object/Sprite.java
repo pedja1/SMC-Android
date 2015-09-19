@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -22,11 +23,18 @@ public class Sprite extends GameObject
     Texture txt = null;
     TextureRegion region = null;
 
-    public Sprite(World world, Vector2 size, Vector3 position)
+    public Sprite(World world, Vector2 size, Vector3 position, Rectangle colRect)
     {
         super(world, size, position);
         this.position = position;
         mOrigDrawRect = new Rect(mDrawRect);
+        if (colRect != null)
+        {
+            mColRect.x = mDrawRect.x + Math.abs(colRect.x);
+            mColRect.y = mDrawRect.y + Math.abs(colRect.y);
+            mColRect.width = colRect.width;
+            mColRect.height = colRect.height;
+        }
     }
 
     @Override

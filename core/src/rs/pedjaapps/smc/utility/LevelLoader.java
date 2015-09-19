@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -222,8 +223,14 @@ public class LevelLoader
         {
             position.z = m_pos_z_front_passive_start;
         }
+        Vector2 size = new Vector2((float) jSprite.getDouble("width"), (float) jSprite.getDouble("height"));
 
-        Sprite sprite = new Sprite(world, new Vector2((float) jSprite.getDouble("width"), (float) jSprite.getDouble("height")), position);
+        Rectangle rectangle = new Rectangle();
+        rectangle.x = (float) jSprite.optDouble("c_posx", 0);
+        rectangle.y = (float) jSprite.optDouble("c_posy", 0);
+        rectangle.width = (float) jSprite.optDouble("c_width", size.x);
+        rectangle.height = (float) jSprite.optDouble("c_height", size.y);
+        Sprite sprite = new Sprite(world, size, position, rectangle);
         sprite.type = sType;
 
         sprite.textureName = jSprite.getString("texture_name");

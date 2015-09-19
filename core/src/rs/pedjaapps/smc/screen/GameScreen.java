@@ -128,7 +128,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private double accumulator;
     private float step = 1.0f / 30.0f;
-    private int timeStep = FIXED_DELTA;
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
     private String objectDebugText;
@@ -208,27 +207,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //debug
         //long now = System.currentTimeMillis();
         //debug
-        if (delta > 0.1f) delta = 0.1f;
 
-        if (timeStep == FIXED_DELTA)
-            delta = 1f / 60f;
+        delta = 1f / 60f;
 
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //physics
-        if (timeStep == FIXED_TIMESTEP)
-        {
-            fixedTimeStep(delta);
-        }
-        else if (timeStep == SEMI_FIXED_TIMESTEP)
-        {
-            semiFixedTimeStep(delta);
-        }
-        else //if (timeStep == DINAMYC_TIMESTEP)
-        {
-            updateObjects(delta);
-        }
+        updateObjects(delta);
+
 
         //physics end
         moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position, gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
@@ -291,49 +278,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //long end = System.currentTimeMillis() - now;
         //System.out.println("render time total: " + end);
         //debug
-    }
-
-    private void semiFixedTimeStep(float delta)
-    {
-        //debug
-        physicsAccumulatorIterations = 0;
-        //debug
-        while (delta > 0.0)
-        {
-            float deltaTime = Math.min(delta, step);
-            updateObjects(deltaTime);
-            delta -= deltaTime;
-
-            //debug
-            physicsAccumulatorIterations++;
-            //debug
-        }
-    }
-
-    private void fixedTimeStep(float delta)
-    {
-        accumulator += delta;
-        //currentTime = newTime;
-
-        //debug
-        physicsAccumulatorIterations = 0;
-        //debug
-
-        while (accumulator >= step)
-        {
-            //update, save last position
-            updateObjects(step);
-
-            accumulator -= step;
-
-            //debug
-            physicsAccumulatorIterations++;
-            //debug
-        }
-
-        //interpolate
-        double alpha = accumulator / step;
-        interpolateObjects((float) alpha);
     }
 
     public void showBoxText(Box box)
@@ -448,7 +392,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
-            go.prevPosition.set(go.position);
             if (maryoBWO.overlaps(go.mColRect))
             {
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
@@ -463,31 +406,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //System.out.println(count);
         //performanceCounter.stop();
         //System.out.println(performanceCounter.time.average);
-    }
-
-    private void interpolateObjects(float alpha)
-    {
-        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
-        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
-        //for (GameObject go : world.level.gameObjects)
-        {
-            GameObject go = world.level.gameObjects.get(i);
-            if (maryoBWO.overlaps(go.mColRect))
-            {
-                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
-                {
-                    //go.prevPosition.lerp(go.position, alpha);
-                    //go.position.interpolate(go.prevPosition, alpha, Interpolation.linear);
-                    //go.position.x = (float) (go.position.x * alpha + go.prevPosition.x * ( 1.0 - alpha ));
-                    //go.position.y = (float) (go.position.y * alpha + go.prevPosition.y * ( 1.0 - alpha ));
-                    go.interpPosition.set(go.prevPosition).lerp(go.position, alpha);
-                    //go.mColRect.x = go.prevPosition.x;
-                    //go.mColRect.y = go.prevPosition.y;
-                    go.updateBounds();
-                }
-            }
-        }
-        World.RECT_POOL.free(maryoBWO);
     }
 
     private void drawObjects()
@@ -574,7 +492,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
                 + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
                 + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
-                + "\n" + "TimeStep:" + (timeStep == FIXED_TIMESTEP ? "fixed" : (timeStep == SEMI_FIXED_TIMESTEP ? "semi-fixed" : "dynamic"))
                 + "\n" + "Screen w=" + width + "h=" + height
                 + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
@@ -683,7 +600,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("coin.ttf", BitmapFont.class, coinSize);*/
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+        debugFontParams.fontFileName = "data/fonts/MyriadPro-Regular.otf";
         debugFontParams.fontParameters.size = (int) (height / 25f);
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
         game.assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
@@ -733,12 +650,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
 		world.level.background.onAssetsLoaded(cam, game.assets);
-    }
-
-    @Override
-    public int getTimeStep()
-    {
-        return timeStep;
     }
 
     // * InputProcessor methods ***************************//

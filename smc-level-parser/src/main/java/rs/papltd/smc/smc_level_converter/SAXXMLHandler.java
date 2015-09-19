@@ -852,6 +852,14 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.rotationZ = Integer.parseInt(data[3]);
 				//System.out.println("rotation: " + Arrays.toString(data));
             }
+            else if("col_rect".equals(data[0]))
+            {
+                sprite.colRect = new Rectangle();
+                sprite.colRect.width = Float.parseFloat(data[3]) / 64f;
+                sprite.colRect.height = Float.parseFloat(data[4]) / 64f;
+                sprite.colRect.x = Float.parseFloat(data[1]) / 64f;
+                sprite.colRect.y = (origHeight / 64f) - (sprite.colRect.height + (Float.parseFloat(data[2]) / 64f));
+            }
         }
         /*if(sprite.rotationZ == 90 || sprite.rotationZ == 270)
         {

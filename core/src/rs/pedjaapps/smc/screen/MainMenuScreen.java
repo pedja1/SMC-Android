@@ -220,8 +220,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             }
             else
             {*/
-                shapeRenderer.setColor(1, 0, 0, 1);
-                shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+                //shapeRenderer.setColor(1, 0, 0, 1);
+                //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
             /*}*/
         }
         shapeRenderer.end();
@@ -341,12 +341,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         for(GameObject go : loader.level.gameObjects)
             go.initAssets();
-    }
-
-    @Override
-    public int getTimeStep()
-    {
-        return DINAMYC_TIMESTEP;
     }
 
     @Override

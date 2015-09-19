@@ -1,5 +1,7 @@
 package rs.papltd.smc.smc_level_converter.objects;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import org.xml.sax.Attributes;
 
 /**
@@ -18,6 +20,7 @@ public class Sprite
     public String type, texture_atlas, texture_name;
     public String image;
     public int rotationX, rotationY, rotationZ;//degrees
+    public Rectangle colRect;
 
     public void setFromAttributes(Attributes attributes)
     {

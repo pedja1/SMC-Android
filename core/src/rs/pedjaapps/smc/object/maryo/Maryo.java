@@ -34,7 +34,6 @@ import rs.pedjaapps.smc.object.enemy.Static;
 import rs.pedjaapps.smc.object.enemy.Thromp;
 import rs.pedjaapps.smc.object.enemy.Turtle;
 import rs.pedjaapps.smc.object.items.Item;
-import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
@@ -224,8 +223,8 @@ public class Maryo extends DynamicObject
     @Override
     public void updateBounds()
     {
-        mDrawRect.x = (world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.x : mColRect.x) - mDrawRect.width / 4;
-        mDrawRect.y = world.screen.getTimeStep() == AbstractScreen.FIXED_TIMESTEP ? interpPosition.y : mColRect.y;
+        mDrawRect.x = mColRect.x - mDrawRect.width / 4;
+        mDrawRect.y = mColRect.y;
     }
 
     public void initAssets()
