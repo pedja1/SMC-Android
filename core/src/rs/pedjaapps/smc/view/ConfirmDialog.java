@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
-import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.shader.Shader;
 
 /**
  * Created by pedja on 11.10.14..
@@ -38,7 +38,6 @@ public class ConfirmDialog
 
     float dialogX, dialogY;
     float dialogWidth, dialogHeight;
-    float dialogPadding;
 
     BitmapFont font;
     GlyphLayout fontGlyph;
@@ -46,37 +45,47 @@ public class ConfirmDialog
     String title = "Quit?";
     String text;
 
-    Rectangle titleR, textR;
+    Rectangle titleR, textR, contentRect;
 
     public ConfirmDialog(AbstractScreen screen, OrthographicCamera cam)
     {
         this.screen = screen;
         this.cam = cam;
 
-        dialogWidth = cam.viewportWidth * .4f;
-		dialogHeight = dialogWidth;
-		
-        dialogPadding = dialogHeight * .006f;
-
-        dialogX = cam.position.x - dialogWidth * .5f;
-        dialogY = cam.position.y - dialogHeight * .5f;
+        setupDialogBounds();
 
         text = (screen instanceof GameScreen)
                 ? "Are you sure you want to quit?\nAll unsaved progress will be lost."
                 : "Do you really want to leave?";
     }
 
+    private void setupDialogBounds()
+    {
+        dialogWidth = cam.viewportWidth * .45f;
+        dialogHeight = dialogWidth * 0.5f;
+
+        dialogX = cam.position.x - dialogWidth * .5f;
+        dialogY = cam.position.y - dialogHeight * .5f;
+
+        contentRect = new Rectangle();
+        contentRect.width = dialogWidth * .7f;
+        contentRect.height = dialogHeight * .6f;
+        contentRect.x = dialogX + dialogWidth * .5f - contentRect.width * .5f;
+        contentRect.y = dialogY + dialogHeight * .5f - contentRect.height * .5f;
+    }
+
     public void loadAssets()
     {
         screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 
-		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class);
+		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class, screen.game.assets.textureParameter);
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        params.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+        params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
         params.fontParameters.minFilter = Texture.TextureFilter.Linear;
         params.fontParameters.size = (int) (cam.viewportHeight / 20);
         params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQ";
+        params.fontParameters.borderWidth = 2f;
         screen.game.assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
     }
 
@@ -92,28 +101,28 @@ public class ConfirmDialog
         fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();
-        buttonNo.rect.width = dialogWidth * .2f;
+        buttonNo.rect.width = dialogWidth * .15f;
         buttonNo.rect.height = buttonNo.rect.width;
-        buttonNo.rect.x = dialogX + dialogWidth - dialogPadding - buttonNo.rect.width;
-        buttonNo.rect.y = dialogY + dialogPadding;
+        buttonNo.rect.x = dialogX + dialogWidth * .35f - buttonNo.rect.width * .5f;
+        buttonNo.rect.y = dialogY - buttonNo.rect.height * .5f;
         buttonNo.texture = btnCancel;
 
         buttonYes = new Button(buttonNo);
-        buttonYes.rect.x = buttonNo.rect.x - dialogPadding - buttonNo.rect.width;
+        buttonYes.rect.x = dialogX + dialogWidth * .65f - buttonNo.rect.width * .5f;
         buttonYes.texture = btnAccept;
 
         fontGlyph.setText(font, title);
-        titleR = new Rectangle(dialogX + dialogWidth / 2 - fontGlyph.width / 2,
-                dialogY + dialogHeight - dialogPadding,
+        titleR = new Rectangle(contentRect.x + contentRect.width * .5f - fontGlyph.width * .5f,
+                contentRect.y + contentRect.height,
                 fontGlyph.width, fontGlyph.height);
 
-        fontGlyph.setText(font, text, font.getColor(), dialogWidth - dialogPadding * 2, Align.center, true);
+        fontGlyph.setText(font, text, font.getColor(), contentRect.width, Align.center, true);
         //bounds = font.getWrappedBounds(text, dialogWidth - dialogPadding * 2);
-        float top = titleR.y - titleR.height - dialogPadding;
-        float bottom = buttonNo.rect.y + buttonNo.rect.height + dialogPadding;
-        float centerVer = top - ((top - bottom) / 2);
-        textR = new Rectangle(dialogX + dialogWidth / 2 - fontGlyph.width / 2,
-                centerVer + fontGlyph.height / 2,
+        float top = titleR.y - titleR.height;
+        float bottom = buttonNo.rect.y + buttonNo.rect.height;
+        float centerVer = top - ((top - bottom) * .5f);
+        textR = new Rectangle(dialogX + dialogWidth * .5f - fontGlyph.width * .5f,
+                centerVer + fontGlyph.height * .5f,
                 fontGlyph.width, fontGlyph.height);
 
     }
@@ -155,90 +164,19 @@ public class ConfirmDialog
             /*shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(1, 0, 0, 1);
-            shapeRenderer.rect(buttonNo.x, buttonNo.y, buttonNo.width, buttonNo.height);
+            shapeRenderer.rect(dialogX, dialogY, dialogWidth, dialogHeight);
             shapeRenderer.end();*/
         }
     }
 
     public void resize()
     {
-        dialogHeight = cam.viewportHeight / 2;
-        dialogWidth = cam.viewportWidth / 2;
+        setupDialogBounds();
     }
 
     public void dispose()
     {
     }
-
-    /*class ExitDialog extends Dialog
-    {
-        float dialogWidth = cam.viewportWidth / 2;
-        float dialogHeight = cam.viewportHeight / 2;
-        private static final int BUTTON_COUNT = 2;
-        public ExitDialog(String title, Skin skin)
-        {
-            super(title, skin);
-        }
-
-        public ExitDialog(String title, Skin skin, String windowStyleName)
-        {
-            super(title, skin, windowStyleName);
-        }
-
-        public ExitDialog(String title, WindowStyle windowStyle)
-        {
-            super(title, windowStyle);
-        }
-
-        {
-            setMovable(false);
-            setResizable(false);
-            padLeft(dialogWidth / 10);
-            padRight(dialogWidth / 10);
-            padBottom(dialogHeight / 10);
-            getButtonTable().defaults().height(dialogHeight / 5).width((dialogWidth * 0.95f) / BUTTON_COUNT);
-            if (screen instanceof GameScreen)
-            {
-                text("Are you sure you want to quit?\nAll unsaved progress will be lost.");
-            }
-            else
-            {
-                text("Do you really want to leave?");
-            }
-            button("YES", true);
-            button("NO", false);
-        }
-
-        @Override
-        public Dialog text(String text)
-        {
-            super.text(new Label(text, skin));
-            return this;
-        }
-
-        @Override
-        public float getPrefWidth()
-        {
-            return dialogWidth;
-        }
-
-        @Override
-        public float getPrefHeight()
-        {
-            return dialogHeight;
-        }
-
-        @Override
-        protected void result(Object object)
-        {
-            ConfirmDialog.this.hide();
-            if(((Boolean)object))
-            {
-                if(screen instanceof GameScreen) screen.exitToMenu();
-                else if(screen instanceof MainMenuScreen) screen.quit();
-            }
-        }
-    }*/
 
     private static class Button
     {
@@ -249,7 +187,9 @@ public class ConfirmDialog
 
         public void render(SpriteBatch batch)
         {
+            if(pressed)batch.setShader(Shader.GLOW_SHADER);
             batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
+            batch.setShader(null);
         }
 
         public Button(Button button)

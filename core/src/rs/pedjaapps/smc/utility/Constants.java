@@ -7,8 +7,7 @@ import com.badlogic.gdx.Gdx;
  */
 public class Constants
 {
-    public static final String DEFAULT_FONT_FILE_NAME = "data/fonts/Roboto-Regular.ttf";
-    public static final String DEFAULT_FONT_BOLD_FILE_NAME = "data/fonts/Roboto-Bold.ttf";
+    public static final String DEFAULT_FONT_FILE_NAME = "data/fonts/GROBOLD.ttf";
 
 
     public static float CAMERA_WIDTH/* = 10f*/;

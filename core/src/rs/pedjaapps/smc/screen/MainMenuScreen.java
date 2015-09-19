@@ -25,6 +25,7 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -150,9 +151,17 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			batch.setProjectionMatrix(hudCam.combined);
 			batch.begin();
 
+            if(playT)batch.setShader(Shader.GLOW_SHADER);
 			batch.draw(play, playR.x, playR.y, playR.width, playR.height);
+            batch.setShader(null);
+
+            if(soundT)batch.setShader(Shader.GLOW_SHADER);
 			batch.draw((PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+            batch.setShader(null);
+
+            if(musicT)batch.setShader(Shader.GLOW_SHADER);
 			batch.draw((PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+            batch.setShader(null);
 
 			batch.end();
 		}
@@ -262,9 +271,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
         game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
-        game.assets.manager.load("data/hud/option.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, game.assets.textureParameter);
-        game.assets.manager.load("data/hud/option_selected.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/clouds/default_1/"));

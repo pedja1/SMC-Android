@@ -26,6 +26,7 @@ import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.HUDTimeText;
@@ -39,8 +40,8 @@ public class HUD
 	World world;
 	
 	TextureRegion pause, play, fire, jump, up, down, right,
-		left, soundOn, soundOff, musicOn, musicOff, pauseP, playP, fireP, jumpP, upP, 
-		downP, leftP, rightP, soundOnP, soundOffP, musicOnP, musicOffP;
+		left, soundOn, soundOff, musicOn, musicOff, fireP, jumpP, upP,
+		downP, leftP, rightP;
     public Rectangle pauseR, playR, fireR, jumpR, upR, downR, rightR,
 		leftR, soundR, musicR, fireRT, jumpRT;
 	Texture itemBox, maryoL, goldM;
@@ -55,8 +56,8 @@ public class HUD
 
 	ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	public BitmapFont font, tts;
-	GlyphLayout ttsGlyphLayout, fontGlyphLayout;
+	public BitmapFont font, tts, pauseFont;
+	GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
 
 	public static float C_W = Gdx.graphics.getWidth();
 	public static float C_H = Gdx.graphics.getHeight();
@@ -72,6 +73,7 @@ public class HUD
 	public boolean updateTimer = true;
 	
 	private static final String ttsText = "TOUCH ANYWHERE TO START";
+	private static final String pauseText = "PAUSE";
 	boolean ttsFadeIn;
 	float ttsAlpha = 1;
 	private int points;
@@ -190,40 +192,45 @@ public class HUD
 	public void loadAssets()
 	{
 		world.screen.game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-		world.screen.game.assets.manager.load("data/hud/pause.png", Texture.class, world.screen.game.assets.textureParameter);
+		world.screen.game.assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
+		world.screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 		world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets.textureParameter);
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets.textureParameter);
         world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets.textureParameter);
 		world.screen.game.assets.manager.load("data/game/game_over.png", Texture.class, world.screen.game.assets.textureParameter);
 		
 		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        ttsTextParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
+        ttsTextParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         ttsTextParams.fontParameters.size = (int) C_H / 15;
         ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
+		ttsTextParams.fontParameters.borderWidth = 2f;
 		world.screen.game.assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
 
 		FreetypeFontLoader.FreeTypeFontLoaderParameter boxPD = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-		boxPD.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+		boxPD.fontFileName = "data/fonts/MyriadPro-Regular.otf";
 		boxPD.fontParameters.size = (int) HUD.C_H / 30;
+		boxPD.fontParameters.borderWidth = 2f;
 		world.screen.game.assets.manager.load("btf.ttf", BitmapFont.class, boxPD);
+
+		FreetypeFontLoader.FreeTypeFontLoaderParameter pauseParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+		pauseParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+		pauseParams.fontParameters.size = (int) C_H / 4;
+		pauseParams.fontParameters.characters = "PAUSE";
+		pauseParams.fontParameters.borderWidth = 2f;
+		world.screen.game.assets.manager.load("pause.ttf", BitmapFont.class, pauseParams);
 	}
 
     public void initAssets()
 	{
 		TextureAtlas atlas = world.screen.game.assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
-		pause = atlas.findRegion("pause");
-		pauseP = atlas.findRegion("pause-pressed");
-		play = atlas.findRegion("play");
-		playP = atlas.findRegion("play-pressed");
-		musicOn = atlas.findRegion("music-on");
-        musicOnP = atlas.findRegion("music-on-pressed");
-        musicOff = atlas.findRegion("music-off");
-        musicOffP = atlas.findRegion("music-off-pressed");
+		TextureAtlas hud = world.screen.game.assets.manager.get("data/hud/hud.pack", TextureAtlas.class);
+		pause = hud.findRegion("pause");
+		play = hud.findRegion("play");
+		musicOn = hud.findRegion("music");
+        musicOff = hud.findRegion("music_off");
         
-		soundOn = atlas.findRegion("sound-on");
-        soundOnP = atlas.findRegion("sound-on-pressed");
-        soundOff = atlas.findRegion("sound-off");
-        soundOffP = atlas.findRegion("sound-off-pressed");
+		soundOn = hud.findRegion("sound");
+        soundOff = hud.findRegion("sound_off");
 
 		if (MaryoGame.showOnScreenControls())
 		{
@@ -254,12 +261,13 @@ public class HUD
 		maryoL.setFilter(filter, filter);
 		goldM.setFilter(filter, filter);
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(world.screen.game.assets.resolver.resolve("data/fonts/Roboto-Bold.ttf"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(world.screen.game.assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) C_H / 25;
         parameter.characters = "0123456789TimePontsx:";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.borderWidth = 2f;
         font = generator.generateFont(parameter);
 		font.setColor(1, 1, 1, 1);//white
 		fontGlyphLayout = new GlyphLayout();
@@ -272,6 +280,10 @@ public class HUD
 		BitmapFont btf = world.screen.game.assets.manager.get("btf.ttf");
 		btf.setColor(1, 1, 1, 1);
 		boxTextPopup = new BoxTextPopup(btf, world.screen.game.assets);
+
+		pauseFont = world.screen.game.assets.manager.get("pause.ttf");
+		pauseFont.setColor(1, 1, 1, 1);
+		pauseGlyph = new GlyphLayout(pauseFont, pauseText);
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
@@ -303,7 +315,9 @@ public class HUD
 			if(updateTimer)stateTime += deltaTime;
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
-			batch.draw(pressedKeys.contains(Key.pause) ? pauseP : pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
+			if(pressedKeys.contains(Key.pause))batch.setShader(Shader.GLOW_SHADER);
+			batch.draw(pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
+			batch.setShader(null);
 			if (MaryoGame.showOnScreenControls())
 			{
 				batch.draw(pressedKeys.contains(Key.fire) ? fireP : fire, fireR.x, fireR.y , fireR.width, fireR.height);
@@ -325,8 +339,6 @@ public class HUD
 			fontGlyphLayout.setText(font, pointsText);
 			float pointsX = C_W * 0.03f;
 			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
-			font.setColor(0, 0, 0, 1);
-			font.draw(batch, pointsText, pointsX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, pointsText, pointsX, pointsY);
 			
@@ -336,8 +348,6 @@ public class HUD
 			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
 			
 			String coins =  this.coins.toString(GameSaveUtility.getInstance().save.coins);
-			font.setColor(0, 0, 0, 1);
-			font.draw(batch, coins, goldX + goldHeight * 2 + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
@@ -345,8 +355,6 @@ public class HUD
 			time.update(stateTime);
 			fontGlyphLayout.setText(font, time);
 			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - fontGlyphLayout.width / 2;
-			font.setColor(0, 0, 0, 1);
-			font.draw(batch, time, timeX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, time, timeX, pointsY);
 			
@@ -354,8 +362,6 @@ public class HUD
 			String lives = this.lives.toString(Math.max(GameSaveUtility.getInstance().save.lifes, 0));
 			fontGlyphLayout.setText(font, lives);
 			float lifesX = maryoLR.x - fontGlyphLayout.width;
-			font.setColor(0, 0, 0, 1);
-			font.draw(batch, lives, lifesX + C_W * 0.001f, pointsY - C_H * 0.001f);
 			font.setColor(0, 1, 0, 1);
 			font.draw(batch, lives, lifesX, pointsY);
 
@@ -417,23 +423,23 @@ public class HUD
 		shapeRenderer.rect(0, 0, C_W, C_H);
 		shapeRenderer.end();
 
-
 		batch.setProjectionMatrix(cam.combined);
 		batch.begin();
 
 		//pause
-		float pHeight = C_H / 6;
-		Texture pause = world.screen.game.assets.manager.get("data/hud/pause.png");
-		float pWidth = pHeight * pause.getWidth() / pause.getHeight();
+		pauseFont.draw(batch, pauseGlyph, C_W * .5f - pauseGlyph.width * .5f, C_H * .8f);
 
-		batch.draw(pause, C_W / 2 - pWidth / 2, C_H / 1.9f, pWidth, pHeight);
-		
-		batch.draw(pressedKeys.contains(Key.play) ? playP : play, playR.x, playR.y, playR.width, playR.height);
-		
-		batch.draw(pressedKeys.contains(Key.sound) ? (PrefsManager.isPlaySounds() ? soundOnP : soundOffP) : (PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
-        batch.draw(pressedKeys.contains(Key.music) ? (PrefsManager.isPlayMusic() ? musicOnP : musicOffP) : (PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
-		
-		//batch.draw(pressedKeys.contains(Key.sound) ? soundP : sound, soundR.x, soundR.y, soundR.width, soundR.height);
+		if(pressedKeys.contains(Key.play))batch.setShader(Shader.GLOW_SHADER);
+		batch.draw(play, playR.x, playR.y, playR.width, playR.height);
+		batch.setShader(null);
+
+		if(pressedKeys.contains(Key.sound))batch.setShader(Shader.GLOW_SHADER);
+		batch.draw((PrefsManager.isPlaySounds() ? soundOn : soundOff), soundR.x, soundR.y, soundR.width, soundR.height);
+		batch.setShader(null);
+
+		if(pressedKeys.contains(Key.music))batch.setShader(Shader.GLOW_SHADER);
+        batch.draw((PrefsManager.isPlayMusic() ? musicOn : musicOff), musicR.x, musicR.y, musicR.width, musicR.height);
+		batch.setShader(null);
 		
 
 		batch.end();

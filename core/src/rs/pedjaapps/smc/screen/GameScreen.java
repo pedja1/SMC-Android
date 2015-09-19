@@ -697,7 +697,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.loadAssets();
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        pointsParams.fontFileName = Constants.DEFAULT_FONT_BOLD_FILE_NAME;
+        pointsParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         pointsParams.fontParameters.size = (int) HUD.C_H / 35;
         pointsParams.fontParameters.characters = "0123456789";
         game.assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);

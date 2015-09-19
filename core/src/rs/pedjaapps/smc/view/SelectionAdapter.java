@@ -1,4 +1,5 @@
 package rs.pedjaapps.smc.view;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -7,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
+import rs.pedjaapps.smc.shader.Shader;
 
 public class SelectionAdapter
 {
@@ -34,8 +38,8 @@ public class SelectionAdapter
 	int page = 0;
 
 	Texture txNextEnabled, txNextDisabled,
-	txPrevEnabled, txPrevDisabled,
-	txItemBg, txItemBgSelected, txLock;
+	txPrevEnabled, txPrevDisabled, txLock;
+	TextureRegion txItemBg;
     BitmapFont font96, font32;
 	GlyphLayout font96Glyph, font32Glyph;
 
@@ -48,6 +52,7 @@ public class SelectionAdapter
 	private float lockSize;
 
 	Rectangle backBounds;
+	boolean backPressed;
 
     private Level touchDownLevel;
 
@@ -83,20 +88,19 @@ public class SelectionAdapter
 
 	public void initAssets()
 	{
-		txItemBg = mainMenuScreen.game.assets.manager.get("data/hud/option.png");
-		txItemBgSelected = mainMenuScreen.game.assets.manager.get("data/hud/option_selected.png");
+		TextureAtlas hud = mainMenuScreen.game.assets.manager.get("data/hud/hud.pack");
+		txItemBg = hud.findRegion("empty_square_button");
 		txLock = mainMenuScreen.game.assets.manager.get("data/hud/lock.png");
 
 		//TODO load this fonts with asset manager
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(mainMenuScreen.game.assets.resolver.resolve("data/fonts/Roboto-Bold.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(mainMenuScreen.game.assets.resolver.resolve("data/fonts/GROBOLD.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 96;
+        parameter.size = 90;
         parameter.characters = "SECTLV";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
-		parameter.shadowColor = new Color(.5f, .5f, .5f, .75f);
-		parameter.shadowOffsetX = 3;
-		parameter.shadowOffsetY = 3;
+		parameter.borderWidth = 3f;
+		parameter.borderColor = new Color(0, .5f, 0, 1);
         font96 = generator.generateFont(parameter);
 		font96Glyph = new GlyphLayout();
 
@@ -105,6 +109,7 @@ public class SelectionAdapter
         parameter.characters = "0123456789BACK";
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.minFilter = Texture.TextureFilter.Linear;
+		parameter.borderWidth = 2f;
         font32 = generator.generateFont(parameter);
 		font32Glyph = new GlyphLayout();
         generator.dispose();
@@ -142,16 +147,27 @@ public class SelectionAdapter
 
 			level.bounds.set(x, y, cellSize, cellSize);
 
-			batch.draw(level.isTouched ? txItemBgSelected : txItemBg, x, y, cellSize, cellSize);
+			if(!level.isUnlocked)
+				batch.setShader(Shader.GS_SHADER);
+			else if(level.isTouched)
+				batch.setShader(Shader.GLOW_SHADER);
+
+			batch.draw(txItemBg, x, y, cellSize, cellSize);
+
+			batch.setShader(null);
+
+			if(!level.isUnlocked)
+			{
+				font32.setColor(.7f, .7f, .7f, 1);
+			}
+			font32Glyph.setText(font32, offset + 1 + "");
+			font32.draw(batch, offset + 1 + "", x + cellSize * .5f - font32Glyph.width * .5f, y + cellSize * .5f + font32Glyph.height * .5f);
+			font32.setColor(Color.WHITE);
 
 			if (!level.isUnlocked)
 			{
-				batch.draw(txLock, x + cellSize - lockSize, y, lockSize, lockSize);
+				batch.draw(txLock, x + cellSize - lockSize * 1.5f, y + lockSize * .5f, lockSize, lockSize);
 			}
-
-			//BitmapFont.TextBounds bounds = font32.getBounds(offset + 1 + "");
-			font32Glyph.setText(font32, offset + 1 + "");
-			font32.draw(batch, offset + 1 + "", x + cellSize / 2 - font32Glyph.width / 2, y + cellSize / 2 + font32Glyph.height / 2);
 
 			if (column == 7)
 			{
@@ -168,7 +184,9 @@ public class SelectionAdapter
 		//BitmapFont.TextBounds bounds = font32.getBounds("BACK");
 		font32Glyph.setText(font32, "BACK");
 		backBounds.set(20, 20, font32Glyph.width + 40, font32Glyph.height + 40);
+		//if(backPressed)batch.setShader(Shader.GLOW_SHADER);
 		font32.draw(batch, "BACK", 40f, 40 + font32Glyph.height);
+		//batch.setShader(null);
 
 		batch.end();
 
@@ -200,6 +218,7 @@ public class SelectionAdapter
 		if (backBounds.contains(x, y))
 		{
 			mainMenuScreen.isSelection = false;
+			backPressed = false;
 			return;
 		}
         if(touchDownLevel != null && touchDownLevel.bounds.contains(x, y))
@@ -215,6 +234,12 @@ public class SelectionAdapter
         //convert touch point to camera point
         x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
         y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
+
+		if (backBounds.contains(x, y))
+		{
+			backPressed = true;
+			return;
+		}
 
         for (Level level : items)
         {
@@ -232,6 +257,11 @@ public class SelectionAdapter
     	//convert touch point to camera point
 		x = x / (Gdx.graphics.getWidth() / CAM_WIDTH);
 		y = y / (Gdx.graphics.getHeight() / CAM_HEIGHT);
+
+		if (!backBounds.contains(x, y))
+		{
+			backPressed = false;
+		}
 
 		if(touchDownLevel != null && !touchDownLevel.bounds.contains(x, y))
 		{

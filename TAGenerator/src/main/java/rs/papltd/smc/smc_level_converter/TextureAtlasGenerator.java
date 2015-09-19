@@ -57,7 +57,10 @@ public class TextureAtlasGenerator
             krush(resolutionHeight);
             spikeball(resolutionHeight);
             kplant(resolutionHeight);*/
-            turtle(resolutionHeight);
+            //turtle(resolutionHeight);
+            String path = "/home/pedja/workspace/SMC-Android/drafts/gui/hud/-2x";
+            TexturePacker2.process(settings, path, path, "hud.pack");
+
         }
 
     }
