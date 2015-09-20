@@ -3,21 +3,21 @@ brown.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-1/brown/left
+left
   rotate: false
   xy: 1, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-1/brown/middle
+middle
   rotate: false
   xy: 35, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-1/brown/right
+right
   rotate: false
   xy: 69, 1
   size: 32, 32

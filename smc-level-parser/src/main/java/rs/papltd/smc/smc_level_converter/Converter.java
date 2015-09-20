@@ -331,10 +331,11 @@ public class Converter
                 jPlatform.put("middle_img_count", platform.middle_img_count);
                 jPlatform.put("massive_type", platform.massive_type);
                 jPlatform.put("direction", platform.direction);
-                //jPlatform.put("image_top_left", platform.image_top_left);
-                //jPlatform.put("image_top_middle", platform.image_top_middle);
-                //jPlatform.put("image_top_right", platform.image_top_right);
+                jPlatform.put("image_top_left", platform.image_top_left);
+                jPlatform.put("image_top_middle", platform.image_top_middle);
+                jPlatform.put("image_top_right", platform.image_top_right);
                 jPlatform.put("texture_atlas", platform.texture_atlas);
+                jPlatform.put("path_identifier", platform.path_identifier);
                 jPlatform.put("obj_class", "moving_platform");
                 objects.put(jPlatform);
             }

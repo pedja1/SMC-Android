@@ -9,7 +9,8 @@ public class MovingPlatform
 {
     public float posx, posy, max_distance, speed, touch_time, shake_time, touch_move_time, width, height;
     public int move_type, middle_img_count;
-    public String massive_type, direction, image_top_left, image_top_middle, image_top_right, texture_atlas;
+    public String massive_type, direction, image_top_left, image_top_middle, image_top_right,
+            texture_atlas, path_identifier;
 
     public void setFromAttributes(Attributes attributes)
     {
@@ -58,6 +59,9 @@ public class MovingPlatform
                 break;
             case "touch_move_time":
                 touch_move_time = Float.parseFloat(value);
+                break;
+            case "path_identifier":
+                path_identifier = value;
                 break;
         }
     }

@@ -2492,9 +2492,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="1" />
 		<Property name="middle_img_count" value="5" />
-		<Property name="image_top_left" value="ground/jungle_1/bridge_plank.png" />
-		<Property name="image_top_middle" value="ground/jungle_1/bridge_plank.png" />
-		<Property name="image_top_right" value="ground/jungle_1/bridge_plank.png" />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<sprite>
 		<Property name="posx" value="7649" />

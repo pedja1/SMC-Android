@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.object.MovingPlatform;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
@@ -113,6 +114,9 @@ public class LevelLoader
                     break;
                 case level_exit:
                     parseLevelExit(world, jObject);
+                    break;
+                case moving_platform:
+                    parseMovingPlatform(world, jObject);
                     break;
             }
         }
@@ -318,6 +322,58 @@ public class LevelLoader
         exit.direction = jExit.optString("direction");
 
         level.gameObjects.add(exit);
+    }
+
+    private void parseMovingPlatform(World world, JSONObject jMovingPlatform) throws JSONException
+    {
+        if(levelParsed)return;
+        Vector3 position = new Vector3((float) jMovingPlatform.getDouble("posx"), (float) jMovingPlatform.getDouble("posy"), 0);
+        float width = (float) jMovingPlatform.getDouble("width");
+        float height = (float) jMovingPlatform.getDouble("height");
+        MovingPlatform platform = new MovingPlatform(world, new Vector2(width, height), position, null);
+        platform.max_distance = jMovingPlatform.optInt("max_distance");
+        platform.speed = jMovingPlatform.optInt("speed");
+        platform.touch_time = jMovingPlatform.optInt("touch_time");
+        platform.shake_time = jMovingPlatform.optInt("shake_time");
+        platform.touch_move_time = jMovingPlatform.optInt("touch_move_time");
+        platform.move_type = jMovingPlatform.optInt("move_type");
+        platform.middle_img_count = jMovingPlatform.optInt("middle_img_count");
+        platform.direction = jMovingPlatform.optString("direction");
+        platform.image_top_left = jMovingPlatform.optString("image_top_left");
+        platform.image_top_middle = jMovingPlatform.optString("image_top_middle");
+        platform.image_top_right = jMovingPlatform.optString("image_top_right");
+        platform.textureAtlas = jMovingPlatform.optString("texture_atlas");
+
+        Sprite.Type sType = null;
+        if (jMovingPlatform.has("massive_type"))
+        {
+            sType = Sprite.Type.valueOf(jMovingPlatform.getString("massive_type"));
+            switch (sType)
+            {
+                case massive:
+                    position.z = m_pos_z_massive_start;
+                    break;
+                case passive:
+                    position.z = m_pos_z_passive_start;
+                    break;
+                case halfmassive:
+                    position.z = m_pos_z_halfmassive_start;
+                    break;
+                case front_passive:
+                    position.z = m_pos_z_front_passive_start;
+                    break;
+                case climbable:
+                    position.z = m_pos_z_halfmassive_start;
+                    break;
+            }
+        }
+        else
+        {
+            position.z = m_pos_z_front_passive_start;
+        }
+        platform.type = sType;
+
+        level.gameObjects.add(platform);
     }
 
     private void parseItem(World world, JSONObject jItem, Assets assets) throws JSONException

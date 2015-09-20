@@ -1150,9 +1150,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="pipes/green/left.png" />
-		<Property name="image_top_middle" value="pipes/green/hor.png" />
-		<Property name="image_top_right" value="pipes/green/right.png" />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<sprite>
 		<Property name="posx" value="1633" />
@@ -1360,9 +1360,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/top/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/top/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/top/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1376,9 +1376,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1392,9 +1392,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1408,9 +1408,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1424,9 +1424,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1440,9 +1440,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1456,9 +1456,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<moving_platform>
 		<Property name="posx" value="2471" />
@@ -1472,9 +1472,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="2" />
-		<Property name="image_top_left" value="ground/green_3/ground/middle/left.png" />
-		<Property name="image_top_middle" value="ground/green_3/ground/middle/1.png" />
-		<Property name="image_top_right" value="ground/green_3/ground/middle/right." />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<sprite>
 		<Property name="posx" value="2311" />

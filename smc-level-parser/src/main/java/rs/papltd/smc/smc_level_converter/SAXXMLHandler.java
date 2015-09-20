@@ -248,8 +248,9 @@ public class SAXXMLHandler extends DefaultHandler
         {
             tmpPlatform.posy = convertY(tmpPlatform.posy, 18);
             tmpPlatform.texture_atlas = "data/ground/green_1/slider/brown.pack";
-            tmpPlatform.height = (18 / 64f) * (2 + tmpPlatform.middle_img_count);
-            tmpPlatform.width = 18 / 64f;
+            tmpPlatform.width = (18 / 64f) * (2 + tmpPlatform.middle_img_count);
+            tmpPlatform.height = 18 / 64f;
+            setPlatformImagesForAtlas(tmpPlatform);
         }
         else if(tmpPlatform.image_top_left.contains("jungle_1"))
         {
@@ -267,10 +268,41 @@ public class SAXXMLHandler extends DefaultHandler
                 tmpPlatform.texture_atlas = "data/ground/jungle_1/slider/green.pack";
             }
 
-            tmpPlatform.height = (22 / 64f) * (2 + tmpPlatform.middle_img_count);
-            tmpPlatform.width = 22 / 64f;
+            tmpPlatform.width = (22 / 64f) * (2 + tmpPlatform.middle_img_count);
+            tmpPlatform.height = 22 / 64f;
+            setPlatformImagesForAtlas(tmpPlatform);
         }
-        //TODO other maybe
+        else if(tmpPlatform.image_top_left.contains("mushroom_1"))
+        {
+            tmpPlatform.posy = convertY(tmpPlatform.posy, 64);
+            if(tmpPlatform.image_top_left.contains("blue"))
+            {
+                tmpPlatform.texture_atlas = "data/ground/mushroom_1/platform/blue.pack";
+            }
+            else if(tmpPlatform.image_top_left.contains("gold"))
+            {
+                tmpPlatform.texture_atlas = "data/ground/mushroom_1/platform/gold.pack";
+            }
+            else if(tmpPlatform.image_top_left.contains("green"))
+            {
+                tmpPlatform.texture_atlas = "data/ground/mushroom_1/platform/green.pack";
+            }
+            else if(tmpPlatform.image_top_left.contains("red"))
+            {
+                tmpPlatform.texture_atlas = "data/ground/mushroom_1/platform/red.pack";
+            }
+
+            tmpPlatform.width = (64 / 64f) * (2 + tmpPlatform.middle_img_count);
+            tmpPlatform.height = 64 / 64f;
+            setPlatformImagesForAtlas(tmpPlatform);
+        }
+    }
+
+    private void setPlatformImagesForAtlas(MovingPlatform tmpPlatform)
+    {
+        tmpPlatform.image_top_left = tmpPlatform.image_top_left.substring(tmpPlatform.image_top_left.lastIndexOf("/") + 1, tmpPlatform.image_top_left.lastIndexOf("."));
+        tmpPlatform.image_top_middle = tmpPlatform.image_top_middle.substring(tmpPlatform.image_top_middle.lastIndexOf("/") + 1, tmpPlatform.image_top_middle.lastIndexOf("."));
+        tmpPlatform.image_top_right = tmpPlatform.image_top_right.substring(tmpPlatform.image_top_right.lastIndexOf("/") + 1, tmpPlatform.image_top_right.lastIndexOf("."));
     }
 
     private void fixBackground(Background background)
@@ -683,12 +715,6 @@ public class SAXXMLHandler extends DefaultHandler
         {
 			String tmp = sprite.image.replace("plant_l", "plant_r");
             sprite.texture_name = "data/" + tmp;
-        }
-        else if(sprite.image.contains("top/right") || sprite.image.contains("middle/right"))
-        {
-			String tmp = sprite.image.replace("right", "left");
-            sprite.texture_name = "data/" + tmp;
-            
         }
         else if(sprite.image.contains("1_ending_left") && !sprite.image.contains("1_ending_left_up"))
         {

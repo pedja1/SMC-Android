@@ -2341,9 +2341,9 @@
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
 		<Property name="middle_img_count" value="3" />
-		<Property name="image_top_left" value="slider/grey_1/slider_left.png" />
-		<Property name="image_top_middle" value="slider/grey_1/slider_middle.png" />
-		<Property name="image_top_right" value="slider/grey_1/slider_right.png" />
+		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
+		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
+		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
 	</moving_platform>
 	<item>
 		<Property name="type" value="moon" />
