@@ -75,9 +75,18 @@ public class Background
 			{
 				spriteBatch.draw(texture, position.x + width, position.y, width, height);
 			}
+			if(position.x > bgCam.position.x - bgCam.viewportWidth * .5f)
+			{
+				spriteBatch.draw(texture, position.x - width, position.y, width, height);
+			}
+			
 			if(position.x + width < bgCam.position.x - bgCam.viewportWidth * .5f)
 			{
 				position.x = position.x + width;
+			}
+			if(position.x > bgCam.position.x + bgCam.viewportWidth * .5f)
+			{
+				position.x = position.x - width;
 			}
 
 			spriteBatch.end();
