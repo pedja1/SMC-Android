@@ -409,6 +409,7 @@ public class Box extends Sprite
     public void handleHitByPlayer()
     {
         if (hitByPlayer) return;
+		if(invisible)invisible = false;
         Sound sound = null;
         if("text".equals(boxType))
         {
