@@ -1,4 +1,4 @@
-![smc logo](https://raw.githubusercontent.com/pedja1/SMC-Android/master/android/data/data/game/logo/smc_big_1.png)  
+![smc logo](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/smc_big_1.png)  
 Secret Maryo Chronicles for Android
 ===========
 
@@ -22,7 +22,7 @@ If you want to test alpha release, you can opt-in here:
 
 ## ENGINE
 Engine used for this port is **[libgdx](https://github.com/libgdx/libgdx)**  
-![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/android/data/data/game/logo/libgdx.png)
+![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/libgdx.png)
 
 ## CONTRIBUTION
 Im still new in game development, i would appreciate any help/tips/whatever.
