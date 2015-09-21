@@ -11,11 +11,9 @@ If you want to test alpha release, you can opt-in here:
 [Secret Maryo Chronicles - Alpha Testing](https://play.google.com/apps/testing/rs.pedjaapps.smc.android)
 
 ## SCREENSHOTS
-![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2014-10-02-21-31-10.png)  
-![smc screenshot 2](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2014-10-02-21-31-28.png)  
-![smc screenshot 3](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2014-10-02-21-31-44.png)  
-![smc screenshot 4](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2014-10-02-21-32-08.png)  
-![smc screenshot 5](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2014-10-02-21-32-32.png)  
+![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2015-09-21-18-52-17.jpg)  
+![smc screenshot 2](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2015-09-21-18-52-27.jpg)  
+![smc screenshot 3](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2015-09-21-18-53-03.jpg)  
 
 ##SHORT VIDEO
 [![SMC GAMEPLAY VIDEO](http://img.youtube.com/vi/vTlNifB44EA/0.jpg)](http://www.youtube.com/watch?v=vTlNifB44EA)
