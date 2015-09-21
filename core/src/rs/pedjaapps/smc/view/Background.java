@@ -86,9 +86,12 @@ public class Background
 	
 	public void onAssetsLoaded(OrthographicCamera gameCam, Assets assets)
 	{
-		texture = assets.manager.get(textureName);
-		bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
-        oldGameCamPos.set(gameCam.position);
+		if(textureName != null)
+		{
+			texture = assets.manager.get(textureName);
+			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
+        	oldGameCamPos.set(gameCam.position);
+		}
 	}
 
 	public void dispose()
