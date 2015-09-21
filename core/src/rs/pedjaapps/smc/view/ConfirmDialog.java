@@ -83,7 +83,7 @@ public class ConfirmDialog
         params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
         params.fontParameters.minFilter = Texture.TextureFilter.Linear;
-        params.fontParameters.size = (int) (cam.viewportHeight / 20);
+        params.fontParameters.size = (int) (cam.viewportHeight / 23);
         params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQ";
         params.fontParameters.borderWidth = 2f;
         screen.game.assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
