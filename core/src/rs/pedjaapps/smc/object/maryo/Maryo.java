@@ -268,8 +268,8 @@ public class Maryo extends DynamicObject
         if (state == MaryoState.ice || state == MaryoState.fire)
         {
             TextureRegion[] throwFrames = new TextureRegion[2];
-            throwFrames[0] = atlas.findRegion("throw_right_1", 1);
-            throwFrames[1] = atlas.findRegion("throw_right_2", 2);
+            throwFrames[0] = atlas.findRegion("throw_right", 1);
+            throwFrames[1] = atlas.findRegion("throw_right", 2);
             aMap[aIndex(state, AKey._throw)] = new Animation(THROW_FRAME_DURATION, throwFrames);
         }
 
