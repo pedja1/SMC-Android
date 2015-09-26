@@ -947,8 +947,8 @@ public class Maryo extends DynamicObject
 				}
 				if(attachedTo != null)
 				{
-					//mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
-					//updateBounds();
+					mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
+					updateBounds();
 					//distanceOnPlatform += position.x - prevPos.x;
 				}
             }

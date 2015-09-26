@@ -220,6 +220,42 @@ public class MovingPlatform extends Sprite
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
+
+		if (world.maryo.mColRect.overlaps(mColRect))
+		{
+			if(velocity.x < 0)//moving left
+            {
+                if(world.maryo.mColRect.x + world.maryo.mColRect.width > mColRect.x)
+                {
+                    world.maryo.mColRect.x = world.maryo.position.x = mColRect.x - world.maryo.mColRect.width;
+                    world.maryo.updateBounds();
+                }
+            }
+            else if(velocity.x > 0)//moving right
+            {
+				if(mColRect.x + mColRect.width > world.maryo.mColRect.x)
+				{
+					world.maryo.mColRect.x = world.maryo.position.x = mColRect.x + mColRect.width;
+					world.maryo.updateBounds();
+				}
+            }
+            if(velocity.y < 0)//down
+            {
+				if(world.maryo.mColRect.y + world.maryo.mColRect.height > mColRect.y)
+				{
+					world.maryo.mColRect.y = world.maryo.position.y = mColRect.y - world.maryo.mColRect.height;
+					world.maryo.updateBounds();
+				}
+            }
+            else if(velocity.y > 0)//up
+            {
+				if(world.maryo.mColRect.y < mColRect.x + mColRect.height)
+				{
+					world.maryo.mColRect.y = world.maryo.position.y = mColRect.y + mColRect.height;
+					world.maryo.updateBounds();
+				}
+            }
+		}
 	}
 
     @Override
