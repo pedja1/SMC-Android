@@ -39,6 +39,7 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.object.*;
 
 public class Maryo extends DynamicObject
 {
@@ -177,6 +178,10 @@ public class Maryo extends DynamicObject
     private Animation[] aMap = new Animation[12];
 
     private GameObject pickedObject;
+	
+	private MovingPlatform attachedTo;
+	private float distanceOnPlatform;
+	private Vector3 prevPos = new Vector3();
 
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -927,6 +932,25 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
+				if(grounded && closestObject instanceof MovingPlatform)
+				{
+					if(attachedTo != closestObject)
+					{
+						attachedTo = (MovingPlatform) closestObject;
+						distanceOnPlatform = attachedTo.position.x - position.x;
+					}
+				}
+				else
+				{
+					attachedTo = null;
+					distanceOnPlatform = 0;
+				}
+				if(attachedTo != null)
+				{
+					//mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
+					//updateBounds();
+					//distanceOnPlatform += position.x - prevPos.x;
+				}
             }
         }
         if (powerJump)
@@ -955,6 +979,7 @@ public class Maryo extends DynamicObject
                 starEffectTime = 0;
             }
         }
+		prevPos.set(position);
     }
 
     @Override

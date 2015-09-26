@@ -296,6 +296,7 @@ public class SAXXMLHandler extends DefaultHandler
             tmpPlatform.height = 64 / 64f;
             setPlatformImagesForAtlas(tmpPlatform);
         }
+		tmpPlatform.max_distance = tmpPlatform.max_distance / 64f;
     }
 
     private void setPlatformImagesForAtlas(MovingPlatform tmpPlatform)
