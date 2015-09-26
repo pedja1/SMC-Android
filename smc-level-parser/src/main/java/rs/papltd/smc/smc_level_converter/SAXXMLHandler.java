@@ -267,6 +267,10 @@ public class SAXXMLHandler extends DefaultHandler
             {
                 tmpPlatform.texture_atlas = "data/ground/jungle_1/slider/green.pack";
             }
+            if(tmpPlatform.image_top_right.contains("1") && tmpPlatform.image_top_right.contains("right"))
+            {
+                tmpPlatform.image_top_right = "ground/jungle_1/slider/2_brown_right.png";
+            }
 
             tmpPlatform.width = (22 / 64f) * (2 + tmpPlatform.middle_img_count);
             tmpPlatform.height = 22 / 64f;
@@ -772,6 +776,11 @@ public class SAXXMLHandler extends DefaultHandler
 		else if(sprite.image.startsWith("ground/desert_1/bones"))
         {
 			sprite.texture_atlas = "data/ground/desert_1/bones.pack";
+			sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
+		}
+		else if(sprite.image.startsWith("ground/jungle_1/bridge"))
+        {
+			sprite.texture_atlas = "data/ground/jungle_1/bridge.pack";
 			sprite.texture_name = sprite.texture_atlas + ":" + sprite.image.substring(sprite.image.lastIndexOf("/") + 1, sprite.image.lastIndexOf("."))/*.replace("_", "-")*/;
 		}
         else if(sprite.image.contains("ground/green_3/ground") && sprite.image.contains("right"))

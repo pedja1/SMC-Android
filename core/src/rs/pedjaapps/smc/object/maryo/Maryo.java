@@ -937,19 +937,25 @@ public class Maryo extends DynamicObject
 					if(attachedTo != closestObject)
 					{
 						attachedTo = (MovingPlatform) closestObject;
-						distanceOnPlatform = attachedTo.position.x - position.x;
+						distanceOnPlatform = position.x - attachedTo.position.x;
 					}
 				}
 				else
 				{
 					attachedTo = null;
 					distanceOnPlatform = 0;
+                    prevPos.x = 0;
 				}
 				if(attachedTo != null)
 				{
+                    if(prevPos.x != 0)distanceOnPlatform += position.x - prevPos.x;
 					mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
-					updateBounds();
-					//distanceOnPlatform += position.x - prevPos.x;
+                    if (velocity.y <= 0)
+                    {
+                        mColRect.y = position.y = attachedTo.position.y + attachedTo.mColRect.height;
+                    }
+                    updateBounds();
+                    prevPos.set(position);
 				}
             }
         }
@@ -979,7 +985,6 @@ public class Maryo extends DynamicObject
                 starEffectTime = 0;
             }
         }
-		prevPos.set(position);
     }
 
     @Override

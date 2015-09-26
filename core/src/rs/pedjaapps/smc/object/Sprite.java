@@ -44,7 +44,7 @@ public class Sprite extends GameObject
         {
             float width = txt == null ? Utility.getWidth(region, mOrigDrawRect.height) : Utility.getWidth(txt, mOrigDrawRect.height);
             float originX = width * 0.5f;
-            float originY = 0;//mOrigDrawRect.height * 0.5f;
+            float originY = getOriginY();
             float rotation = mRotationZ;
             boolean flipX = mRotationY == 180;
             boolean flipY = mRotationX == 180;
@@ -81,6 +81,7 @@ public class Sprite extends GameObject
     @Override
     public void initAssets()
     {
+        //mRotationX = mRotationY = mRotationZ = 0;
         if(mRotationZ == 90 && mRotationX == 0 && mRotationY == 0)
         {
             mRotationY = 180;
@@ -184,9 +185,22 @@ public class Sprite extends GameObject
         position.y = mColRect.y;*/
         if(mRotationZ != 0)
         {
-            rotate2(mOrigDrawRect, mDrawRect, mOrigDrawRect.width / 2, /*mOrigDrawRect.height / 2*/0, mRotationZ);
-            rotate2(mColRect, mColRect, mColRect.width / 2, /*mColRect.height / 2*/0, mRotationZ);
+            float originY = getOriginY();
+            rotate2(mOrigDrawRect, mDrawRect, mOrigDrawRect.width / 2, getOriginY(), mRotationZ);
+            rotate2(mColRect, mColRect, mColRect.width / 2, originY, mRotationZ);
         }
+    }
+
+    private float getOriginY()
+    {
+        //TODO for some reason this is the only way that rotation works as expected
+        //TODO need to take a deeper investigation into original code to determine how rotation should actually work
+        float originY = 0;
+        if(mDrawRect.width == mDrawRect.height)
+        {
+            originY = mOrigDrawRect.height / 2;
+        }
+        return originY;
     }
 
     /**
