@@ -259,7 +259,7 @@ public class LevelLoader
         }
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
-        sprite.mRotationZ = jSprite.optInt("rotationZ");
+        sprite.mRotationZ = -jSprite.optInt("rotationZ");
         if(!levelParsed)level.gameObjects.add(sprite);
 
     }
