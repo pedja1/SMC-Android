@@ -922,7 +922,7 @@ public class Maryo extends DynamicObject
                 super._update(delta);
                 if(closestObject != null)
                 {
-                    debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y);
+                    debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y - (closestObject.mDrawRect.y + closestObject.mDrawRect.height));
                 }
 
                 if (closestObject != null
