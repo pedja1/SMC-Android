@@ -35,7 +35,6 @@ public class Flyon extends Enemy
         this.maxDistance = maxDistance;
         this.speed = 3f;//speed;
         this.direction = direction;
-        mOriginPosition = new Vector3(position);
         if("left".equals(direction))
         {
             rotation = 90f;
@@ -49,6 +48,8 @@ public class Flyon extends Enemy
             rotation = 180f;
         }
         mKillPoints = 100;
+        mDrawRect.y = mColRect.y = position.y = position.y - .1f;
+        mOriginPosition = new Vector3(position);
     }
 
     @Override
