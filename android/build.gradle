@@ -46,6 +46,11 @@ android {
             applicationIdSuffix ".debug"
         }
     }
+
+    aaptOptions {
+        ignoreAssetsPattern "!assets.zip"
+    }
+
 }
 
 play {
