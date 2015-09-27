@@ -260,6 +260,10 @@ public class LevelLoader
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
         sprite.mRotationZ = jSprite.optInt("rotationZ");
+        if(sprite.mRotationZ == 270)
+        {
+            sprite.mRotationZ = -sprite.mRotationZ;
+        }
         if(!levelParsed)level.gameObjects.add(sprite);
 
     }
