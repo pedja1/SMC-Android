@@ -397,7 +397,7 @@ public class Maryo extends DynamicObject
         }
         else if (worldState == WorldState.DYING)
         {
-            marioFrame = tMap[tIndex(maryoState, TKey.dead_right)];
+            marioFrame = tMap[tIndex(MaryoState.small, TKey.dead_right)];
         }
         else if (worldState == WorldState.CLIMBING)
         {
