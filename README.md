@@ -20,7 +20,7 @@ If you want to test alpha release, you can opt-in here:
 
 ## ENGINE
 Engine used for this port is **[libgdx](https://github.com/libgdx/libgdx)**  
-![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/libgdx.png)
+![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/dd75f1aeadd8fdb8bf0511a9d99486be981632c9/data/data/game/logo/libgdx.png)
 
 ## CONTRIBUTION
 If you want to hellp with something please dont hesistate to make a pull request.
