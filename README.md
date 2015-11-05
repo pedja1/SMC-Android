@@ -1,6 +1,7 @@
 ![smc logo](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/smc_big_1.png)  
 Secret Maryo Chronicles for Android
 ===========
+[![Build Status](http://teamcity.android-forever.com/teamcity/app/rest/builds/buildType:(id:Pedjaapps_Smc_Build)/statusIcon)](http://teamcity.android-forever.com/teamcity/project.html?projectId=Pedjaapps_Smc&tab=projectOverview)
 
 This is an Android port of PC platformer game [Secret Maryo Chronicles](https://github.com/FluXy/SMC)
 
