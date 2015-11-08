@@ -525,6 +525,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void hide()
     {
+        gameState = GAME_STATE.GAME_PAUSED;
         //Gdx.input.setInputProcessor(null);
         music.stop();
     }
