@@ -12,6 +12,7 @@ import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.screen.SplashScreen;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSaveUtility;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
@@ -33,6 +34,7 @@ public class MaryoGame extends Game
 	public void create()
 	{
 		assets = new Assets(androidAssetsZipFilePath);
+		Shader.init();
 		setScreen(new SplashScreen(this));
 		GA.sendGameStarted();
 	}
@@ -61,6 +63,7 @@ public class MaryoGame extends Game
 		GA.dispose();
 		GameSaveUtility.getInstance().dispose();
 		assets = null;
+		Shader.dispose();
     }
 
     public void exit()
