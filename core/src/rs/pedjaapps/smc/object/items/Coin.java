@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -156,8 +156,8 @@ public class Coin extends Item
             sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
         }
         Audio.play(sound);
-        GameSaveUtility.getInstance().save.coins++;
-        GameSaveUtility.getInstance().save.points += points;
+        GameSave.save.coins++;
+        GameSave.save.points += points;
 
         collect();
     }
@@ -170,7 +170,7 @@ public class Coin extends Item
         popFromBox = true;
         velocity.y = 4f;
         originalPosY = position.y;
-        GameSaveUtility.getInstance().save.points += points;
+        GameSave.save.points += points;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 
 /**
  * Created by pedja on 29.3.15..
@@ -25,10 +25,10 @@ public class MushroomLive1 extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        GameSaveUtility.getInstance().save.lifes += 1;
+        GameSave.save.lifes += 1;
         //Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
         //if(sound != null && Assets.playSounds)sound.play();
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += mPickPoints;
+        GameSave.save.points += mPickPoints;
     }
 }

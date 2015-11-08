@@ -33,7 +33,7 @@ import rs.pedjaapps.smc.object.items.mushroom.MushroomPoison;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -233,9 +233,9 @@ public class Box extends Sprite
     {
         //create item contained in box
         if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
-                (GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.small
-                        || ((GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.fire
-                        || GameSaveUtility.getInstance().save.playerState == Maryo.MaryoState.ice))))
+                (GameSave.save.playerState == Maryo.MaryoState.small
+                        || ((GameSave.save.playerState == Maryo.MaryoState.fire
+                        || GameSave.save.playerState == Maryo.MaryoState.ice))))
         {
             int defBoxItem = box.item;
             box.item = Item.TYPE_MUSHROOM_DEFAULT;

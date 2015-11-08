@@ -27,7 +27,7 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -105,11 +105,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 	public Array<SelectionAdapter.Level> loadSelectionItems()
 	{
 		Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
-		for (int i = 0; i < GameSaveUtility.LEVELS.size(); i++)
+		for (int i = 0; i < GameSave.LEVELS.size(); i++)
 		{
 			SelectionAdapter.Level level = new SelectionAdapter.Level();
-            if(i < GameSaveUtility.LEVELS.size())level.levelId = GameSaveUtility.LEVELS.get(i);
-            level.isUnlocked = i == 0 || GameSaveUtility.getInstance().isUnlocked(level.levelId);
+            if(i < GameSave.LEVELS.size())level.levelId = GameSave.LEVELS.get(i);
+            level.isUnlocked = i == 0 || GameSave.isUnlocked(level.levelId);
 			items.add(level);
 		}
 		return items;

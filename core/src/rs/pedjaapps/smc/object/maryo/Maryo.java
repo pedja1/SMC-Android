@@ -37,7 +37,7 @@ import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.object.*;
 
@@ -130,7 +130,7 @@ public class Maryo extends DynamicObject
     private static final float BULLET_COOLDOWN = 1f;//1 sec
 
     WorldState worldState = WorldState.JUMPING;
-    private MaryoState maryoState = GameSaveUtility.getInstance().save.playerState;
+    private MaryoState maryoState = GameSave.save.playerState;
     public boolean facingLeft = false;
     public boolean longJump = false;
 
@@ -320,10 +320,10 @@ public class Maryo extends DynamicObject
                 godMode = true;
                 godModeActivatedTime = System.currentTimeMillis();
 
-                if (((GameScreen) world.screen).hud.item != null)
+                if (GameSave.save.item != null)
                 {
                     //drop item
-                    Item item = ((GameScreen) world.screen).hud.item;
+                    Item item = GameSave.save.item;
                     OrthographicCamera cam = ((GameScreen) world.screen).cam;
 
                     item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
@@ -334,7 +334,7 @@ public class Maryo extends DynamicObject
                     world.level.gameObjects.add(item);
                     item.drop();
 
-                    ((GameScreen) world.screen).hud.item = null;
+                    GameSave.save.item = null;
                 }
             }
             else
@@ -348,7 +348,7 @@ public class Maryo extends DynamicObject
             newState = null;
             oldState = null;
             setupBoundingBox();
-            GameSaveUtility.getInstance().save.playerState = maryoState;
+            GameSave.save.playerState = maryoState;
         }
         if (resizingAnimation != null)
         {
@@ -775,7 +775,7 @@ public class Maryo extends DynamicObject
                 if (exit.levelName == null)
                 {
                     String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-                    nextLevelName = GameSaveUtility.getInstance().getNextLevel(currentLevel);
+                    nextLevelName = GameSave.getNextLevel(currentLevel);
                 }
                 else
                 {
@@ -1008,7 +1008,7 @@ public class Maryo extends DynamicObject
                     if(worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
                     {
                         ((Enemy) object).downgradeOrDie(this, true);
-                        GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
+                        GameSave.save.points += ((Enemy) object).mKillPoints;
                     }
                     else
                     {
@@ -1018,7 +1018,7 @@ public class Maryo extends DynamicObject
                 else if (((Enemy) object).frozen)
                 {
                     ((Enemy) object).downgradeOrDie(this, true);
-                    GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
+                    GameSave.save.points += ((Enemy) object).mKillPoints;
                 }
                 else if (deadAnyway)
                 {
@@ -1049,7 +1049,7 @@ public class Maryo extends DynamicObject
                         if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
                         {
                             velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                            GameSaveUtility.getInstance().save.points += ((Enemy) object).mKillPoints;
+                            GameSave.save.points += ((Enemy) object).mKillPoints;
                         }
                         else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
                         {
@@ -1129,7 +1129,7 @@ public class Maryo extends DynamicObject
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
-            ((GameScreen) world.screen).hud.item = item;
+            GameSave.save.item = item;
             return;
         }
         else if (maryoState == newState)
@@ -1225,7 +1225,7 @@ public class Maryo extends DynamicObject
             Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
             Audio.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
-            GameSaveUtility.getInstance().save.lifes--;
+            GameSave.save.lifes--;
         }
 
         public boolean update(float delat)
@@ -1388,7 +1388,7 @@ public class Maryo extends DynamicObject
                 if (exit.levelName == null)
                 {
                     String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-                    nextLevelName = GameSaveUtility.getInstance().getNextLevel(currentLevel);
+                    nextLevelName = GameSave.getNextLevel(currentLevel);
                 }
                 else
                 {

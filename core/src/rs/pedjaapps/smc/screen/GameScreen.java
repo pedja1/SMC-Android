@@ -37,7 +37,7 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -171,7 +171,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
         loader = new LevelLoader(levelName);
         //Gdx.graphics.setContinuousRendering(false);
-        if (fromMenu) GameSaveUtility.getInstance().startLevelFresh();
+        if (fromMenu) GameSave.startLevelFresh();
 
         exitDialog = new ConfirmDialog(this, guiCam);
     }
@@ -288,7 +288,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void handleGameOver(float delta)
     {
-        if (GameSaveUtility.getInstance().save.lifes < 0)
+        if (GameSave.save.lifes < 0)
         {
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -331,7 +331,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (goAlpha >= 1)
         {
-            if (GameSaveUtility.getInstance().save.lifes < 0)
+            if (GameSave.save.lifes < 0)
             {
                 game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
             }

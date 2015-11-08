@@ -24,11 +24,10 @@ import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
@@ -82,7 +81,6 @@ public class HUD
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
 	public BoxTextPopup boxTextPopup;
-    public Item item;
 
 	public HUD(World world)
 	{
@@ -327,7 +325,7 @@ public class HUD
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
-            if(item != null)
+            if(GameSave.save.item != null)
                 batch.setColor(Color.RED);
 			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
             batch.setColor(Color.WHITE);
@@ -335,7 +333,7 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			pointsText = formatPointsString(GameSaveUtility.getInstance().save.points);
+			pointsText = formatPointsString(GameSave.save.points);
 			fontGlyphLayout.setText(font, pointsText);
 			float pointsX = C_W * 0.03f;
 			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
@@ -347,7 +345,7 @@ public class HUD
 			float goldX = pointsX + fontGlyphLayout.width + goldHeight;
 			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
 			
-			String coins =  this.coins.toString(GameSaveUtility.getInstance().save.coins);
+			String coins =  this.coins.toString(GameSave.save.coins);
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
@@ -359,20 +357,20 @@ public class HUD
 			font.draw(batch, time, timeX, pointsY);
 			
 			//lives
-			String lives = this.lives.toString(Math.max(GameSaveUtility.getInstance().save.lifes, 0));
+			String lives = this.lives.toString(Math.max(GameSave.save.lifes, 0));
 			fontGlyphLayout.setText(font, lives);
 			float lifesX = maryoLR.x - fontGlyphLayout.width;
 			font.setColor(0, 1, 0, 1);
 			font.draw(batch, lives, lifesX, pointsY);
 
             //draw item if any
-            if(item != null)
+            if(GameSave.save.item != null)
             {
                 float w = itemBoxR.width * 0.5f;
                 float h = itemBoxR.height * 0.5f;
                 float x = itemBoxR.x + itemBoxR.width * 0.5f - w * 0.5f;
                 float y = itemBoxR.y + itemBoxR.height * 0.5f - h * 0.5f;
-                batch.draw(item.texture, x, y, w, h);
+                batch.draw(GameSave.save.item.texture, x, y, w, h);
             }
 
 			boxTextPopup.render(batch);

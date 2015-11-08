@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -97,7 +97,7 @@ public class Fireplant extends Item
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.fire, false, this, false);
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += POINTS;
+        GameSave.save.points += POINTS;
         ((GameScreen)world.screen).killPointsTextHandler.add(POINTS, position.x, position.y + mDrawRect.height);
     }
 

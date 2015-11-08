@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -87,8 +87,8 @@ public class Moon extends Item
         if(isInBox)return;
         playerHit = true;
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.lifes += 3;
-        GameSaveUtility.getInstance().save.points += 4000;
+        GameSave.save.lifes += 3;
+        GameSave.save.points += 4000;
 
         Sound sound = world.screen.game.assets.manager.get("data/sounds/item/moon.mp3");
         Audio.play(sound);

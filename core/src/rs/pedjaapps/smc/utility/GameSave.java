@@ -7,60 +7,51 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 
-public class GameSaveUtility
+public class GameSave
 {
     public static final List<String> LEVELS = Arrays.asList("lvl_1", "lvl_2", "lvl_3", "lvl_4", "lvl_5", "lvl_6", "lvl_7", "lvl_8", "lvl_9", "pasol_3", "stephane_1", "tower_1", "eatomania", "lvl_10", "pasol_1", "flippa_3", "dj_kirby_1", "jungle_1", "keywest_1", "underground", "clear_night", "wn_01", "wn_02", "wn_03", "wn_04", "wn_05", "wn_06", "wn_07", "sauer2_1", "sauer2_2", "sauer2_3", "sauer2_4", "sauer2_5", "sauer2_6", "sauer2_7");
-	private static GameSaveUtility instance = null;
 	
-	public Save save;
-	
-	private GameSaveUtility()
+	public static Save save;
+
+	public static void init()
 	{
 		save = read();
 	}
 
-	public void startLevelFresh()
+	public static void startLevelFresh()
 	{
 		reset();
 	}
 	
-	public void reset()
+	public static void reset()
 	{
 		save.lifes = 3;
 		save.playerState = Maryo.MaryoState.small;
+		save.item = null;
 	}
-	
-	public static GameSaveUtility getInstance()
-	{
-		if(instance ==  null)
-		{
-			instance = new GameSaveUtility();
-		}
-		return instance;
-	}
-	
-	public Save read()
+
+	public static Save read()
 	{
 		//read from prefs and deserialize to save
 		return Save.readFromString(PrefsManager.getSaveGame());
 	}
 	
-	public void save()
+	public static void save()
 	{
 		// serialize save game and store to prefs
 		PrefsManager.setSaveGame(Save.writeToString(save));
 	}
 	
-	public void dispose()
+	public static void dispose()
 	{
 		save();
 		save = null;
-		instance = null;
 	}
 
-    public boolean isUnlocked(String levelName)
+    public static boolean isUnlocked(String levelName)
     {
         //return save.unlockedLevels.contains(levelName);
         return true;
@@ -68,7 +59,7 @@ public class GameSaveUtility
 
     /**
      * Get next level, or null if no more levels*/
-    public String getNextLevel(String currentLevel)
+    public static String getNextLevel(String currentLevel)
     {
         for(int i = 0; i < LEVELS.size(); i++)
         {
@@ -98,6 +89,7 @@ public class GameSaveUtility
 		//in memory only
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
+		public Item item;
 		
 		
 		//copy constructor, only persistent objects are copied

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 
 /**
  * Created by pedja on 29.3.15..
@@ -28,6 +28,6 @@ public class MushroomBlue extends Mushroom
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.ice, false, this, false);
         world.trashObjects.add(this);
-        GameSaveUtility.getInstance().save.points += mPickPoints;
+        GameSave.save.points += mPickPoints;
     }
 }

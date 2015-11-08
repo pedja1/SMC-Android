@@ -12,7 +12,7 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.GameSaveUtility;
+import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -243,7 +243,7 @@ public class Star extends Item
         playerHit = true;
         //TODO play ""game/star.ogg","
         //TODO play music for star, or whatewer
-        GameSaveUtility.getInstance().save.points += 1000;
+        GameSave.save.points += 1000;
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();
         world.trashObjects.add(this);
