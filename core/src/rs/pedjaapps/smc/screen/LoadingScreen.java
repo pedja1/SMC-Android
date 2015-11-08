@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.utility.Constants;
+import rs.pedjaapps.smc.utility.PrefsManager;
 
 /**
  * @author Mats Svensson
@@ -100,6 +101,10 @@ public class LoadingScreen extends AbstractScreen
         font.draw(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
 
         batch.end();
+        //async loading is just for show, since loading takes less than a second event for largest levels
+        //if debug mode just load it all at once
+        if(PrefsManager.isDebug())
+            game.assets.manager.finishLoading();
     }
 
     @Override
