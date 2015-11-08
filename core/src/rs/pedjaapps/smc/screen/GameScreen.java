@@ -228,7 +228,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         spriteBatch.setProjectionMatrix(pCamera.combined);
         spriteBatch.begin();
-        if (gameState == GAME_STATE.GAME_RUNNING) leafEffect.draw(spriteBatch, delta);
+        leafEffect.draw(spriteBatch);
+
+        if (gameState == GAME_STATE.GAME_RUNNING) leafEffect.update(delta);
         spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(guiCam.combined);
