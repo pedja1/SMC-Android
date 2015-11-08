@@ -1,6 +1,7 @@
 ![smc logo](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/smc_big_1.png)  
 Secret Maryo Chronicles for Android
 ===========
+[![Build Status](http://teamcity.android-forever.com/teamcity/app/rest/builds/buildType:(id:Pedjaapps_Smc_Build)/statusIcon)](http://teamcity.android-forever.com/teamcity/project.html?projectId=Pedjaapps_Smc&tab=projectOverview)
 
 This is an Android port of PC platformer game [Secret Maryo Chronicles](https://github.com/FluXy/SMC)
 
@@ -20,7 +21,7 @@ If you want to test alpha release, you can opt-in here:
 
 ## ENGINE
 Engine used for this port is **[libgdx](https://github.com/libgdx/libgdx)**  
-![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/data/data/game/logo/libgdx.png)
+![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/dd75f1aeadd8fdb8bf0511a9d99486be981632c9/data/data/game/logo/libgdx.png)
 
 ## CONTRIBUTION
 If you want to hellp with something please dont hesistate to make a pull request.
