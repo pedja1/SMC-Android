@@ -24,7 +24,8 @@ public class Flyon extends Enemy
     public float maxDistance;
     public float speed;
     private Vector3 mOriginPosition;
-    private boolean forward = true, staying = true;
+    private boolean forward = true;
+    public boolean staying = true;
     private float waitTime;
     private float rotation;
     private Animation animation;
@@ -84,6 +85,12 @@ public class Flyon extends Enemy
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
         spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
+    }
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return false;
     }
 
     public void update(float deltaTime)

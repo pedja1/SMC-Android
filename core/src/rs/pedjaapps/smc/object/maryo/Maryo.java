@@ -24,14 +24,10 @@ import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.LevelEntry;
 import rs.pedjaapps.smc.object.LevelExit;
+import rs.pedjaapps.smc.object.MovingPlatform;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.enemy.Eato;
 import rs.pedjaapps.smc.object.enemy.Enemy;
-import rs.pedjaapps.smc.object.enemy.Flyon;
-import rs.pedjaapps.smc.object.enemy.Spika;
-import rs.pedjaapps.smc.object.enemy.Static;
-import rs.pedjaapps.smc.object.enemy.Thromp;
 import rs.pedjaapps.smc.object.enemy.Turtle;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -39,7 +35,6 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
-import rs.pedjaapps.smc.object.*;
 
 public class Maryo extends DynamicObject
 {
@@ -1002,7 +997,7 @@ public class Maryo extends DynamicObject
         {
             if (!godMode)
             {
-                boolean deadAnyway = isDeadByJumpingOnTopOfEnemy(object);
+                boolean deadAnyway = isDeadByJumpingOnTopOfEnemy((Enemy) object);
                 if(mInvincibleStar)
                 {
                     if(worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
@@ -1070,11 +1065,9 @@ public class Maryo extends DynamicObject
         return false;
     }
 
-    private boolean isDeadByJumpingOnTopOfEnemy(GameObject object)
+    private boolean isDeadByJumpingOnTopOfEnemy(Enemy enemy)
     {
-        //TODO update this when you add new enemy classes
-        return object instanceof Flyon || object instanceof Eato || object instanceof Thromp
-                || object instanceof Spika || object instanceof Static;
+        return !enemy.canBeKilledByJumpingOnTop();
     }
 
     public WorldState getWorldState()
@@ -1494,8 +1487,8 @@ public class Maryo extends DynamicObject
     {
         keys.add(Keys.RIGHT);
         checkLeave("right");
-        //TODO this is called only when key is pressed, not continusly
-        //if player holds the key and walks to the exit, he will have to press it again to exit
+        //TODO this is called only when key is pressed, not continuously
+        //TODO if player holds the key and walks to the exit, he will have to press it again to exit
     }
 
     public void upPressed()

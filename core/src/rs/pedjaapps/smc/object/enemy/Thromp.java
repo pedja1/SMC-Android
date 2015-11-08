@@ -7,9 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -80,6 +79,12 @@ public class Thromp extends Enemy
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
         spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
+    }
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return false;
     }
 
     public void update(float deltaTime)

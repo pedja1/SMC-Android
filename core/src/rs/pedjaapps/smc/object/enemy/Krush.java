@@ -97,6 +97,12 @@ public class Krush extends Enemy
     }
 
     @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return true;
+    }
+
+    @Override
     public void update(float deltaTime)
     {
         stateTime += deltaTime;

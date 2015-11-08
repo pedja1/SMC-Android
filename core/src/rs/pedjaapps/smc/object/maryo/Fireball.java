@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -179,6 +178,12 @@ public class Fireball extends DynamicObject
         trail = null;
         explosion.dispose();
         explosion = null;
+    }
+
+    @Override
+    public boolean isBullet()
+    {
+        return true;
     }
 
     public void destroy()

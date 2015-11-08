@@ -143,6 +143,12 @@ public class Gee extends Enemy
         }
     }
 
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return true;
+    }
+
     public void update(float deltaTime)
     {
         if (deadByBullet)

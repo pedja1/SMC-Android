@@ -8,9 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -97,6 +96,12 @@ public class Rokko extends Enemy
             effect.setPosition(position.x, position.y);
             effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
         }
+    }
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return true;
     }
 
     public void update(float deltaTime)

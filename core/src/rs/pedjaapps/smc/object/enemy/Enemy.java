@@ -14,7 +14,6 @@ import java.util.Collections;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.maryo.Fireball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
@@ -84,8 +83,6 @@ public abstract class Enemy extends DynamicObject
      */
     public int hitByPlayer(Maryo maryo, boolean vertical)
     {
-        //TODO implement this in subclasses and dont call super
-        //TODO this is just here to remove enemies that aren't finished yet
         if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             downgradeOrDie(maryo, false);
@@ -99,7 +96,7 @@ public abstract class Enemy extends DynamicObject
 
     public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
     {
-        if (forceBulletKill || killedBy instanceof Turtle || killedBy instanceof Spika || killedBy instanceof Fireball || killedBy instanceof Static)//todo bullet, fireball...
+        if (forceBulletKill || killedBy.isBullet())
         {
             deadByBullet = true;
             handleCollision = false;
@@ -254,6 +251,7 @@ public abstract class Enemy extends DynamicObject
 
     protected abstract void render(SpriteBatch spriteBatch);
     //protected abstract int getKilledPoints(SpriteBatch spriteBatch);
+    public abstract boolean canBeKilledByJumpingOnTop();
 
     @Override
     public final void _update(float delta)
@@ -331,6 +329,12 @@ public abstract class Enemy extends DynamicObject
     protected boolean handleLevelEdge()
     {
         turn();
+        return false;
+    }
+
+    @Override
+    public boolean isBullet()
+    {
         return false;
     }
 }

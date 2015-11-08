@@ -125,13 +125,20 @@ public class Furball extends Enemy
     }
 
     @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return true;
+    }
+
+    @Override
     public void update(float deltaTime)
     {
         stateTime += deltaTime;
         if(dying)
         {
             //resize it by state time
-            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;//TODO ovako zavisi brzina animacije od fps-a
+            //TODO ovako zavisi brzina animacije od fps-a. S obzirom da je fps zakucan na 60, ok je valjda
+            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
             mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
             if(mDrawRect.height < 0)
                 world.trashObjects.add(this);

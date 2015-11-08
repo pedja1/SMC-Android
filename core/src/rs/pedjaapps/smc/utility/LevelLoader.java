@@ -271,7 +271,7 @@ public class LevelLoader
     private void parseEnemy(World world, JSONObject jEnemy, Assets assets) throws JSONException
     {
         Enemy enemy = Enemy.initEnemy(world, jEnemy);
-        if (enemy == null) return;//TODO this has to go aways after levels are fixed
+        if (enemy == null) return;
         if (jEnemy.has("texture_atlas"))
         {
             enemy.textureAtlas = jEnemy.getString("texture_atlas");

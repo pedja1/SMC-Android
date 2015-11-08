@@ -45,6 +45,12 @@ public class Static extends Enemy
     }
 
     @Override
+    public boolean isBullet()
+    {
+        return true;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         if (texture != null)
@@ -55,6 +61,12 @@ public class Static extends Enemy
             spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
                     1, 1, -mRotationZ, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
         }
+    }
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return false;
     }
 
     private float getRotation()

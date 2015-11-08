@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import rs.pedjaapps.smc.assets.Assets;
+
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -103,8 +103,14 @@ public class Eato extends Enemy
         frame.flip(flipX, flipY);//return it to original
 
     }
-	
-	@Override
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return false;
+    }
+
+    @Override
 	public void update(float delta)
 	{
 		super.update(delta);

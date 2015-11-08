@@ -79,6 +79,12 @@ public abstract class GameObject
     public abstract void initAssets();
     public abstract void dispose();
 
+    /**whether this object acts as bullet when hitting other objects (enemies, mario)*/
+    public boolean isBullet()
+    {
+        return false;
+    }
+
     @Override
     public String toString()
     {

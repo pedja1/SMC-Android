@@ -79,6 +79,12 @@ public class Turtle extends Enemy
     }
 
     @Override
+    public boolean isBullet()
+    {
+        return true;
+    }
+
+    @Override
     public void render(SpriteBatch spriteBatch)
     {
         TextureRegion frame;
@@ -106,6 +112,12 @@ public class Turtle extends Enemy
             spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mShellRotation);
             frame.flip(!isShell && !turn && direction == Direction.right, false);
         }
+    }
+
+    @Override
+    public boolean canBeKilledByJumpingOnTop()
+    {
+        return true;
     }
 
     private float getRotation(float delta)
@@ -279,10 +291,8 @@ public class Turtle extends Enemy
                 direction = (maryo.position.x + maryo.mColRect.width * 0.5f) > (position.x + mColRect.width * 0.5f) ? Direction.right : Direction.left;
                 isShellMoving = !isShellMoving;
             }
-            //TODO (v2.0)turtle should automatically transform back from shell after timeout if shell is standing
             return HIT_RESOLUTION_CUSTOM;
         }
-        //TODO (v2.0)player can also pick up shell if player is "not small" and if shell is not moving, if shell is moving than player dies
         else
         {
 
