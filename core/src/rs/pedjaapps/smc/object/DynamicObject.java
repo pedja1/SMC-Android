@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -283,7 +283,7 @@ public abstract class DynamicObject extends GameObject
                         Sound sound = world.screen.game.assets.manager.get("data/sounds/wall_hit.mp3");
                         if (sound != null && PrefsManager.isPlaySounds())
                         {
-                            Audio.play(sound);
+                            SoundManager.play(sound);
                             lasHitSoundPlayed = System.currentTimeMillis();
                         }
                     }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -91,7 +91,7 @@ public class Moon extends Item
         GameSave.save.points += 4000;
 
         Sound sound = world.screen.game.assets.manager.get("data/sounds/item/moon.mp3");
-        Audio.play(sound);
+        SoundManager.play(sound);
                 ((GameScreen) world.screen).killPointsTextHandler.add(4000, position.x, position.y + mDrawRect.height);
     }
 

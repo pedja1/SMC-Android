@@ -18,7 +18,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.MusicManager;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
@@ -978,6 +979,7 @@ public class Maryo extends DynamicObject
             {
                 mInvincibleStar = false;
                 starEffectTime = 0;
+                MusicManager.stop(false);
             }
         }
     }
@@ -1110,6 +1112,7 @@ public class Maryo extends DynamicObject
         }
         else
         {
+            SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
             upgrade(MaryoState.small, false, null, true);
         }
     }
@@ -1141,7 +1144,7 @@ public class Maryo extends DynamicObject
 
         //play new state sound
         Sound sound = upgradeSound(newState, downgrade);
-        Audio.play(sound);
+        SoundManager.play(sound);
     }
 
     private Sound upgradeSound(MaryoState newState, boolean downgrade)
@@ -1216,7 +1219,7 @@ public class Maryo extends DynamicObject
             handleCollision = false;
             diedPosition = new Vector3(position);
             Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
-            Audio.play(sound);
+            SoundManager.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSave.save.lifes--;
         }
@@ -1549,7 +1552,7 @@ public class Maryo extends DynamicObject
             keys.add(Keys.JUMP);
 
             Sound sound = jumpSound;
-            Audio.play(sound);
+            SoundManager.play(sound);
 
             jumpClickTime = System.currentTimeMillis();
         }

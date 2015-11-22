@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -234,7 +234,7 @@ public class Furball extends Enemy
             handleCollision = false;
             dying = true;
             Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
-            Audio.play(sound);
+            SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
         }
         else

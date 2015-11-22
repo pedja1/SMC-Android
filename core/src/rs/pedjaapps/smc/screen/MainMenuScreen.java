@@ -20,8 +20,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Audio;
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.audio.MusicManager;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -121,7 +122,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
-        Audio.play(music);
+        MusicManager.play(music);
     }
 
     @Override
@@ -259,7 +260,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void resume()
     {
-        Audio.play(music);
+        MusicManager.play(music);
     }
 
     @Override
@@ -456,7 +457,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
                 musicT = false;
                 if (Utility.toggleMusic())
                 {
-                    Audio.play(music);
+                    MusicManager.play(music);
                 }
                 else
                 {
@@ -468,7 +469,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
                 soundT = false;
                 if (Utility.toggleSound())
                 {
-                    rs.pedjaapps.smc.Audio.play(audioOn);
+                    SoundManager.play(audioOn);
                 }
             }
 

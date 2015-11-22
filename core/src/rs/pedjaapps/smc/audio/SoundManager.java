@@ -1,6 +1,5 @@
-package rs.pedjaapps.smc;
+package rs.pedjaapps.smc.audio;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -8,7 +7,7 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 /**
  * Created by pedja on 6.9.15..
  */
-public class Audio
+public class SoundManager
 {
     public static long play(Sound sound)
     {
@@ -19,17 +18,5 @@ public class Audio
     {
         if(sound == null || !PrefsManager.isPlaySounds())return -1;
         return sound.play(volume);
-    }
-
-    public static void play(Music music)
-    {
-        play(music, PrefsManager.getMusicVolume());
-    }
-
-    public static void play(Music music, float volume)
-    {
-        if(music == null || !PrefsManager.isPlayMusic())return;
-        music.setVolume(volume);
-        music.play();
     }
 }

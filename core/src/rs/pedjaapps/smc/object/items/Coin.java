@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -155,7 +155,7 @@ public class Coin extends Item
         {
             sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
         }
-        Audio.play(sound);
+        SoundManager.play(sound);
         GameSave.save.coins++;
         GameSave.save.points += points;
 

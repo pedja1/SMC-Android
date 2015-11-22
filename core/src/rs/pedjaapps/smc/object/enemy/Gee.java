@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.Audio;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -352,7 +352,7 @@ public class Gee extends Enemy
             stateTime = 0;
             handleCollision = false;
             Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/gee/die.mp3");
-            Audio.play(sound);
+            SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
         }
         else

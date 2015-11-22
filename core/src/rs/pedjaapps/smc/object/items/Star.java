@@ -1,11 +1,14 @@
 package rs.pedjaapps.smc.object.items;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -241,8 +244,13 @@ public class Star extends Item
     {
         if (isInBox) return;
         playerHit = true;
-        //TODO play ""game/star.ogg","
-        //TODO play music for star, or whatewer
+        AssetManager manager = world.screen.game.assets.manager;
+        if(!manager.isLoaded("data/music/game/star.mp3"))
+        {
+            manager.load("data/music/game/star.mp3", Music.class);
+            manager.finishLoading();
+        }
+        MusicManager.play(manager.get("data/music/game/star.mp3", Music.class), false);
         GameSave.save.points += 1000;
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();
