@@ -108,7 +108,7 @@ public abstract class Enemy extends DynamicObject
             handleCollision = false;
             world.trashObjects.add(this);
         }
-        ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+        if(mKillPoints > 0)((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 
     enum CLASS

@@ -11,6 +11,7 @@ import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.utility.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -87,6 +88,19 @@ public class Static extends Enemy
     {
         stateTime += deltaTime;
         mRotationZ = getRotation();
+		if(deadByBullet)
+        {
+            // Setting initial vertical acceleration
+            acceleration.y = Constants.GRAVITY;
+
+            // Convert acceleration to frame time
+            acceleration.scl(deltaTime);
+
+            // apply acceleration to change velocity
+            velocity.add(acceleration);
+
+            checkCollisionWithBlocks(deltaTime, false, false);
+        }
     }
 
     @Override

@@ -1145,6 +1145,7 @@ public class Maryo extends DynamicObject
         //play new state sound
         Sound sound = upgradeSound(newState, downgrade);
         SoundManager.play(sound);
+		fire = false;
     }
 
     private Sound upgradeSound(MaryoState newState, boolean downgrade)
