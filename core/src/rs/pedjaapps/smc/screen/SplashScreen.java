@@ -14,6 +14,7 @@ import rs.pedjaapps.smc.MaryoGame;
 
 public class SplashScreen implements Screen
 {
+    private float width, height;
     private Sprite libgdxSplashSprite;
     private Sprite gameSplashSprite;
     private Sprite afLogoSprite;
@@ -28,20 +29,20 @@ public class SplashScreen implements Screen
     }
 
     private long splashStartTime;
-    private static final long splashDuration = 2000;
+    private static final long splashDuration = 1500;
+    int screenToDisplay = 0;
 
     @Override
     public void show()
     {
 
         splashStartTime = System.currentTimeMillis();
+        width = Gdx.graphics.getWidth();
+        height = Gdx.graphics.getHeight();
 
-        float width = 1;
-        float height = (float)Gdx.graphics.getHeight() / (float)Gdx.graphics.getWidth();
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, width, height);
+        camera = new OrthographicCamera(1, height/width);
         batch = new SpriteBatch();
+
 
         Texture libgdxSplashTexture = new Texture(marioGame.assets.resolver.resolve("data/game/logo/libgdx.jpg"));
         libgdxSplashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -53,16 +54,19 @@ public class SplashScreen implements Screen
         afLogoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         libgdxSplashSprite = new Sprite( new TextureRegion(libgdxSplashTexture));
-        libgdxSplashSprite.setSize(width * 0.4f, (width * 0.4f) * (libgdxSplashSprite.getHeight() / libgdxSplashSprite.getWidth()));
-        libgdxSplashSprite.setPosition(width * .75f - libgdxSplashSprite.getWidth() * .5f, height * .25f - libgdxSplashSprite.getHeight() * .5f);
+        libgdxSplashSprite.setSize(0.9f, 0.9f * libgdxSplashSprite.getHeight() / libgdxSplashSprite.getWidth());
+        libgdxSplashSprite.setOrigin(libgdxSplashSprite.getWidth()/2, libgdxSplashSprite.getHeight()/2);
+        libgdxSplashSprite.setPosition(-libgdxSplashSprite.getWidth()/2, -libgdxSplashSprite.getHeight()/2);
 
         gameSplashSprite = new Sprite(gameSplashTexture);
-        gameSplashSprite.setSize(width * 0.7f, (width * 0.7f) * (gameSplashSprite.getHeight() / gameSplashSprite.getWidth()));
-        gameSplashSprite.setPosition(width * .5f - gameSplashSprite.getWidth() * .5f, height * .5f + height * 0.05f);
+        gameSplashSprite.setSize(0.9f, 0.9f * gameSplashSprite.getHeight() / gameSplashSprite.getWidth());
+        gameSplashSprite.setOrigin(gameSplashSprite.getWidth()/2, gameSplashSprite.getHeight()/2);
+        gameSplashSprite.setPosition(-gameSplashSprite.getWidth()/2, -gameSplashSprite.getHeight()/2);
 
         afLogoSprite = new Sprite(afLogoTexture);
-        afLogoSprite.setSize(width * 0.4f, (width * 0.4f) * (afLogoSprite.getHeight() / afLogoSprite.getWidth()));
-        afLogoSprite.setPosition(width * .25f - afLogoSprite.getWidth() * .5f, height * .25f - afLogoSprite.getHeight() * .5f);
+        afLogoSprite.setSize(0.9f, 0.9f * afLogoSprite.getHeight() / afLogoSprite.getWidth());
+        afLogoSprite.setOrigin(afLogoSprite.getWidth()/2, afLogoSprite.getHeight()/2);
+        afLogoSprite.setPosition(-afLogoSprite.getWidth()/2, -afLogoSprite.getHeight()/2);
     }
 
     @Override
@@ -74,15 +78,29 @@ public class SplashScreen implements Screen
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        libgdxSplashSprite.draw(batch);
-        afLogoSprite.draw(batch);
-        gameSplashSprite.draw(batch);
+        if(screenToDisplay == 0)
+        {
+            libgdxSplashSprite.draw(batch);
+        }
+        else if(screenToDisplay == 1)
+        {
+            afLogoSprite.draw(batch);
+        }
+        else if(screenToDisplay == 2)
+        {
+            gameSplashSprite.draw(batch);
+        }
+        else
+        {
+            marioGame.setScreen(new LoadingScreen(new MainMenuScreen(marioGame), false));
+        }
 
         batch.end();
 
         if(System.currentTimeMillis() > splashStartTime + splashDuration)
         {
-            marioGame.setScreen(new LoadingScreen(new MainMenuScreen(marioGame), false));
+            screenToDisplay++;
+            splashStartTime = System.currentTimeMillis();
         }
 
     }
@@ -90,8 +108,8 @@ public class SplashScreen implements Screen
     @Override
     public void resize(int width, int height)
     {
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1, (float)height / (float)width);
+        this.width = width;
+        this.height = height;
     }
 
     @Override
