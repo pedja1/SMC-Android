@@ -305,7 +305,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             spriteBatch.setProjectionMatrix(guiCam.combined);
             spriteBatch.begin();
 
-            Texture go = game.assets.manager.get("data/hud/game_over.png");
+            Texture go = game.assets.manager.get("data/game/game_over.png");
             go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             float width = this.width * 0.8f;
             float height = width / 4;
@@ -573,6 +573,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, game.assets.particleEffectParameter);
         game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets.particleEffectParameter);
         game.assets.manager.load("data/animation/iceball.png", Texture.class, game.assets.textureParameter);
+        game.assets.manager.load("data/game/game_over.png", Texture.class);
         hud.loadAssets();
 
         //audio

@@ -2978,14 +2978,6 @@
         <property name="useable_count" value="-1" />
         <property name="text" value="            ---    Enemies   ---&lt;br/&gt;&lt;br/&gt;Most enemies can be hit through jumping on their head like the hairy Furball on the ground but not the plant which jumps out of the pipe.&lt;br/&gt;" />
     </box>
-    <!--<box >
-        <property name="posx" value="3033" />
-        <property name="posy" value="-473" />
-        <property name="type" value="text" />
-        <property name="invisible" value="0" />
-        <property name="useable_count" value="-1" />
-        <property name="text" value="            ---    High Jump   ---&lt;br/&gt;&lt;br/&gt;To overcome large spaces press the Run key all the time and jump on the last moment.&lt;br/&gt;&lt;br/&gt;If you want to stop the jump early release the jump button.&lt;br/&gt;&lt;br/&gt;" />
-    </box>-->
     <box >
         <property name="posx" value="3876" />
         <property name="posy" value="-90" />
@@ -3095,12 +3087,4 @@
         <property name="useable_count" value="-1" />
         <property name="text" value="What happened ?&lt;br/&gt;&lt;br/&gt;Monsters are everywhere but luckily they seem to have missed me.&lt;br/&gt;&lt;br/&gt;I should find out what happened...&lt;br/&gt;" />
     </box>
-    <!--<box >
-        <property name="posx" value="7317" />
-        <property name="posy" value="-246" />
-        <property name="type" value="text" />
-        <property name="invisible" value="0" />
-        <property name="useable_count" value="-1" />
-        <property name="text" value="          ---   Savegames   ---&lt;br/&gt;&lt;br/&gt;You can always save on the world but in a level you need 3000 points.&lt;br/&gt;&lt;br/&gt;Save before running into difficult passages.&lt;br/&gt;&lt;br/&gt;If you need more points find all the Waffles, Powerups and the secret areas.&lt;br/&gt;" />
-    </box>-->
 </level>

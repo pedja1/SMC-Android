@@ -425,6 +425,8 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if("furball".equals(enemy.type))
         {
+            if("black".equals(enemy.color))
+                enemy.color = "boss";
             enemy.texture_atlas = "data/enemy/furball/" + enemy.color + ".pack";
             enemy.image_dir = "enemy/furball/" + enemy.color + "/";
             enemy.posx = enemy.posx / 64;

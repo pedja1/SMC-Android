@@ -116,7 +116,7 @@ public class LevelLoader
                     parseLevelExit(world, jObject);
                     break;
                 case moving_platform:
-                    parseMovingPlatform(world, jObject);
+                    parseMovingPlatform(world, jObject, assets);
                     break;
             }
         }
@@ -328,7 +328,7 @@ public class LevelLoader
         level.gameObjects.add(exit);
     }
 
-    private void parseMovingPlatform(World world, JSONObject jMovingPlatform) throws JSONException
+    private void parseMovingPlatform(World world, JSONObject jMovingPlatform, Assets assets) throws JSONException
     {
         if(levelParsed)return;
         Vector3 position = new Vector3((float) jMovingPlatform.getDouble("posx"), (float) jMovingPlatform.getDouble("posy"), 0);
@@ -347,6 +347,7 @@ public class LevelLoader
         platform.image_top_middle = jMovingPlatform.optString("image_top_middle");
         platform.image_top_right = jMovingPlatform.optString("image_top_right");
         platform.textureAtlas = jMovingPlatform.optString("texture_atlas");
+        assets.manager.load(platform.textureAtlas, TextureAtlas.class);
 
         Sprite.Type sType = null;
         if (jMovingPlatform.has("massive_type"))

@@ -60,10 +60,6 @@ public class Enemy
         {
             direction = value;
         }
-        else if("color".equals(name))
-        {
-            color = value;
-        }
         else if("speed".equals(name))
         {
             speed = Float.parseFloat(value);

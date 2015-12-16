@@ -37,10 +37,10 @@ public class Converter
         {
             File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
             //File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
-			File[] files = levelsFolder.listFiles();
-            for(File file : files)
+            File[] files = levelsFolder.listFiles();
+            for (File file : files)
             {
-				if(file.isDirectory())continue;
+                if (file.isDirectory()) continue;
                 System.out.println("Processing: " + file.getName());
                 XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
                 // create a SAXXMLHandler
@@ -61,7 +61,7 @@ public class Converter
                 writer.close();
                 fis.close();
             }
-			System.out.println("done");
+            System.out.println("done");
         }
         catch (SAXException | ParserConfigurationException | IOException e)
         {
@@ -74,6 +74,80 @@ public class Converter
     {
         JSONObject jsonLevel = new JSONObject();
 
+        /*
+        //test
+        List<Poly> plist = new ArrayList<>();
+        for (Object object : level.objects)
+        {
+            if (object instanceof Sprite && "massive".equals(((Sprite) object).type))
+            {
+                Sprite sprite = (Sprite) object;
+                Rectangle rectangle = new Rectangle();
+                rectangle.x = sprite.posx;
+                rectangle.y = sprite.posy;
+                rectangle.width = sprite.width + 0.01f;//Float.MIN_VALUE;
+                rectangle.height = sprite.height + 0.01f;//Float.MIN_VALUE;
+
+                if(sprite.colRect != null)
+                {
+                    rectangle.x += sprite.colRect.x;
+                    rectangle.y += sprite.colRect.y;
+                    rectangle.width = sprite.colRect.width;
+                    rectangle.height = sprite.colRect.height;
+                }
+
+                Poly poly = new PolyDefault();
+                poly.add(rectangle.x, rectangle.y);
+                poly.add(rectangle.x, rectangle.y + rectangle.height);
+                poly.add(rectangle.x + rectangle.width, rectangle.y + rectangle.height);
+                poly.add(rectangle.x + rectangle.width, rectangle.y);
+                plist.add(poly);
+            }
+        }
+
+        for (int i = 0; i < plist.size(); i++)
+        {
+            Poly p1 = plist.get(i);
+            boolean distinct = false;
+            while (!distinct)
+            {
+                distinct = true;
+                for (int j = plist.size() - 1; j > i; j--)
+                {
+                    Poly p2 = plist.get(j);
+                    Poly p3 = p1.intersection(p2);
+                    if (!p3.isEmpty())
+                    {
+                        // Merge the two polygons
+                        Poly temp = p1.union(p2);
+                        p1.clear();
+                        p1.add(temp);
+                        // One less shape
+                        plist.remove(j);
+                        distinct = false;
+                    }
+                }
+            }
+        }
+
+        JSONArray jCollPolies = new JSONArray();
+        for(Poly poly : plist)
+        {
+            JSONArray jPoints = new JSONArray();
+            Poly p = poly.getInnerPoly(0);
+            for( int j = 0 ; j < p.getNumPoints() ; j++ )
+            {
+                JSONObject jPoint = new JSONObject();
+                jPoint.put("x", p.getX(j));
+                jPoint.put("y", p.getY(j));
+                jCollPolies.put(jPoint);
+            }
+            jCollPolies.put(jPoints);
+        }
+        jsonLevel.put("col_polies", jCollPolies);
+        //test end
+        */
+
         JSONObject info = new JSONObject();
         info.put("level_width", level.settings.width);
         info.put("level_height", level.settings.height);
@@ -84,9 +158,9 @@ public class Converter
         jsonLevel.put("info", info);
 
         JSONObject background = new JSONObject();
-        for(Background bg : level.backgrounds)
+        for (Background bg : level.backgrounds)
         {
-            if(bg.type == 103)
+            if (bg.type == 103)
             {
                 background.put("r_1", bg.color1_red);
                 background.put("g_1", bg.color1_green);
@@ -95,16 +169,16 @@ public class Converter
                 background.put("g_2", bg.color2_green);
                 background.put("b_2", bg.color2_blue);
             }
-            else if(bg.type == 1)
+            else if (bg.type == 1)
             {
                 background.put("texture_name", bg.image);
-				background.put("speedx", bg.speedx);
-				background.put("speedy", bg.speedy);
-				background.put("width", bg.width);
-				background.put("height", bg.height);
-				background.put("posy", bg.posy);
-				background.put("posx", bg.posx);
-				
+                background.put("speedx", bg.speedx);
+                background.put("speedy", bg.speedy);
+                background.put("width", bg.width);
+                background.put("height", bg.height);
+                background.put("posy", bg.posy);
+                background.put("posx", bg.posx);
+
             }
         }
 
@@ -112,20 +186,20 @@ public class Converter
         jsonLevel.put("background", background);
 
         JSONArray objects = new JSONArray();
-        for(Object obj : level.objects)
+        for (Object obj : level.objects)
         {
-            if(obj instanceof Player)
+            if (obj instanceof Player)
             {
-                Player player = (Player)obj;
+                Player player = (Player) obj;
                 JSONObject jPlayer = new JSONObject();
                 jPlayer.put("posx", player.posx);
                 jPlayer.put("posy", player.posy);
                 jPlayer.put("obj_class", "player");
                 objects.put(jPlayer);
             }
-            else if(obj instanceof Sprite)
+            else if (obj instanceof Sprite)
             {
-                Sprite sprite = (Sprite)obj;
+                Sprite sprite = (Sprite) obj;
                 JSONObject jSprite = new JSONObject();
                 jSprite.put("posx", sprite.posx);
                 jSprite.put("posy", sprite.posy);
@@ -139,7 +213,7 @@ public class Converter
                     jSprite.put("c_width", sprite.colRect.width);
                     jSprite.put("c_height", sprite.colRect.height);
                 }
-                if(sprite.texture_atlas != null)
+                if (sprite.texture_atlas != null)
                 {
                     jSprite.put("texture_atlas", sprite.texture_atlas);
                 }
@@ -150,12 +224,12 @@ public class Converter
                 jSprite.put("rotationZ", sprite.rotationZ);
 
                 jSprite.put("obj_class", "sprite");
-				jSprite.put("massive_type", sprite.type);
+                jSprite.put("massive_type", sprite.type);
                 objects.put(jSprite);
             }
-            else if(obj instanceof Enemy)
+            else if (obj instanceof Enemy)
             {
-                Enemy enemy = (Enemy)obj;
+                Enemy enemy = (Enemy) obj;
                 JSONObject jEnemy = new JSONObject();
                 jEnemy.put("posx", enemy.posx);
                 jEnemy.put("posy", enemy.posy);
@@ -165,43 +239,43 @@ public class Converter
                 jEnemy.put("enemy_class", enemy.type);
                 jEnemy.put("color", enemy.color);
                 jEnemy.put("obj_class", "enemy");
-                if("eato".equals(enemy.type))
+                if ("eato".equals(enemy.type))
                 {
                     jEnemy.put("direction", enemy.direction);
                 }
-                if("furball".equals(enemy.type))
+                if ("furball".equals(enemy.type))
                 {
                     jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
                 }
-                if("flyon".equals(enemy.type))
+                if ("flyon".equals(enemy.type))
                 {
                     jEnemy.put("max_distance", enemy.max_distance);
                     jEnemy.put("speed", enemy.speed);
                     jEnemy.put("direction", enemy.direction);
                 }
-                if("gee".equals(enemy.type))
+                if ("gee".equals(enemy.type))
                 {
                     jEnemy.put("max_distance", enemy.max_distance);
                     jEnemy.put("fly_distance", enemy.flyDistance);
                     jEnemy.put("wait_time", enemy.waitTime);
                     jEnemy.put("direction", enemy.direction);
                 }
-                if("thromp".equals(enemy.type))
+                if ("thromp".equals(enemy.type))
                 {
                     jEnemy.put("max_distance", enemy.max_distance);
                     jEnemy.put("speed", enemy.speed);
                     jEnemy.put("direction", enemy.direction);
                 }
-                if("spika".equals(enemy.type))
+                if ("spika".equals(enemy.type))
                 {
                     jEnemy.put("texture_name", enemy.texture_name);
                 }
-                if("rokko".equals(enemy.type))
+                if ("rokko".equals(enemy.type))
                 {
                     jEnemy.put("texture_name", enemy.texture_name);
                     jEnemy.put("direction", enemy.direction);
                 }
-                if("static".equals(enemy.type))
+                if ("static".equals(enemy.type))
                 {
                     jEnemy.put("texture_name", enemy.texture_name);
                     jEnemy.put("rotation_speed", enemy.rotationSpeed);
@@ -217,9 +291,9 @@ public class Converter
                 }*/
                 objects.put(jEnemy);
             }
-            else if(obj instanceof Box)
+            else if (obj instanceof Box)
             {
-                Box box = (Box)obj;
+                Box box = (Box) obj;
                 JSONObject jBox = new JSONObject();
                 jBox.put("posx", box.posx);
                 jBox.put("posy", box.posy);
@@ -243,9 +317,9 @@ public class Converter
                 }*/
                 objects.put(jBox);
             }
-            else if(obj instanceof EnemyStopper)
+            else if (obj instanceof EnemyStopper)
             {
-                EnemyStopper stopper = (EnemyStopper)obj;
+                EnemyStopper stopper = (EnemyStopper) obj;
                 JSONObject jStopper = new JSONObject();
                 jStopper.put("posx", stopper.posx);
                 jStopper.put("posy", stopper.posy);
@@ -254,9 +328,9 @@ public class Converter
                 jStopper.put("obj_class", "enemy_stopper");
                 objects.put(jStopper);
             }
-            else if(obj instanceof Item)
+            else if (obj instanceof Item)
             {
-                Item item = (Item)obj;
+                Item item = (Item) obj;
                 JSONObject jItem = new JSONObject();
                 jItem.put("type", item.type);
                 jItem.put("color", item.color);
@@ -277,11 +351,11 @@ public class Converter
                 }*/
                 objects.put(jItem);
             }
-            else if(obj instanceof LevelEntry)
+            else if (obj instanceof LevelEntry)
             {
 /*LEVEL_ENTRY_BEAM		= 0,	// no animation ( f.e. a door or hole )
-	LEVEL_ENTRY_WARP		= 1		// rotated player moves slowly into the destination direction*/
-                LevelEntry entry = (LevelEntry)obj;
+    LEVEL_ENTRY_WARP		= 1		// rotated player moves slowly into the destination direction*/
+                LevelEntry entry = (LevelEntry) obj;
                 JSONObject jEntry = new JSONObject();
                 jEntry.put("posx", entry.posx);
                 jEntry.put("posy", entry.posy);
@@ -293,11 +367,11 @@ public class Converter
                 jEntry.put("obj_class", "level_entry");
                 objects.put(jEntry);
             }
-            else if(obj instanceof LevelExit)
+            else if (obj instanceof LevelExit)
             {
                 /*LEVEL_EXIT_BEAM = 0,	// no animation ( f.e. a door or hole )
 	LEVEL_EXIT_WARP = 1		// rotated player moves slowly into the destination direction*/
-                LevelExit exit = (LevelExit)obj;
+                LevelExit exit = (LevelExit) obj;
                 JSONObject jExit = new JSONObject();
                 jExit.put("posx", exit.posx);
                 jExit.put("posy", exit.posy);
@@ -311,9 +385,9 @@ public class Converter
                 jExit.put("obj_class", "level_exit");
                 objects.put(jExit);
             }
-            else if(obj instanceof MovingPlatform)
+            else if (obj instanceof MovingPlatform)
             {
-                MovingPlatform platform = (MovingPlatform)obj;
+                MovingPlatform platform = (MovingPlatform) obj;
                 JSONObject jPlatform = new JSONObject();
                 /*public float posx, posy, max_distance, speed, touch_time, shake_time, touch_move_time, width, height;
     public int move_type, middle_img_count;
@@ -341,6 +415,7 @@ public class Converter
             }
             //TODO other objects
         }
+
         jsonLevel.put("objects", objects);
 
         return jsonLevel.toString();
