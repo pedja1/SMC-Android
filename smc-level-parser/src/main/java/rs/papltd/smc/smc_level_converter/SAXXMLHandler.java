@@ -23,6 +23,7 @@ import rs.papltd.smc.smc_level_converter.objects.Item;
 import rs.papltd.smc.smc_level_converter.objects.LevelEntry;
 import rs.papltd.smc.smc_level_converter.objects.LevelExit;
 import rs.papltd.smc.smc_level_converter.objects.MovingPlatform;
+import rs.papltd.smc.smc_level_converter.objects.Path;
 import rs.papltd.smc.smc_level_converter.objects.Player;
 import rs.papltd.smc.smc_level_converter.objects.Settings;
 import rs.papltd.smc.smc_level_converter.objects.Sprite;
@@ -46,6 +47,7 @@ public class SAXXMLHandler extends DefaultHandler
     private Sprite tmpSprite;
     private MovingPlatform tmpPlatform;
     private Information tmpInformation;
+    private Path tmpPath;
 
     public SAXXMLHandler()
     {
@@ -93,6 +95,9 @@ public class SAXXMLHandler extends DefaultHandler
             case "moving_platform":
                 tmpPlatform = new MovingPlatform();
                 break;
+            case "path":
+                tmpPath = new Path();
+                break;
             case "Property":
             case "property":
                 setPropertyToElement(attributes);
@@ -101,7 +106,6 @@ public class SAXXMLHandler extends DefaultHandler
                 //do nothing, level is our main tag
             case "particle_emitter":
             case "global_effect":
-            case "path":
                 //we don't need this elements
                 break;
             case "sound":
@@ -161,6 +165,10 @@ public class SAXXMLHandler extends DefaultHandler
         else if(tmpInformation != null)
         {
             tmpInformation.setFromAttributes(attributes);
+        }
+        else if(tmpPath != null)
+        {
+            tmpPath.setFromAttributes(attributes);
         }
         else
         {
@@ -233,6 +241,10 @@ public class SAXXMLHandler extends DefaultHandler
                 fixPlatform(tmpPlatform);
                 level.objects.add(tmpPlatform);
                 tmpPlatform = null;
+                break;
+            case "path":
+                level.objects.add(tmpPath);
+                tmpPath = null;
                 break;
         }
 

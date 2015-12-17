@@ -25,14 +25,15 @@ public class Path
      <Property name="segment_1_x2" value="720" />
      <Property name="segment_1_y2" value="700" />*/
     public float posx, posy;
-    public int id, rewind;
+    public int rewind;
+    public String id;
     public List<Segment> segments;
 
     {
         segments = new ArrayList<>();
     }
 
-    private static class Segment
+    public static class Segment
     {
         public Vector2 start, end;
 
@@ -57,7 +58,7 @@ public class Path
         }
         else if("identifier".equals(name))
         {
-            id = Integer.parseInt(value);
+            id = value;
         }
         else if("rewind".equals(name))
         {

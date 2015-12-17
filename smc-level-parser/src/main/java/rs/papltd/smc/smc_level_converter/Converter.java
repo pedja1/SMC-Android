@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,6 +25,7 @@ import rs.papltd.smc.smc_level_converter.objects.Item;
 import rs.papltd.smc.smc_level_converter.objects.LevelEntry;
 import rs.papltd.smc.smc_level_converter.objects.LevelExit;
 import rs.papltd.smc.smc_level_converter.objects.MovingPlatform;
+import rs.papltd.smc.smc_level_converter.objects.Path;
 import rs.papltd.smc.smc_level_converter.objects.Player;
 import rs.papltd.smc.smc_level_converter.objects.Sprite;
 
@@ -156,6 +159,9 @@ public class Converter
         info.put("level_music", levelMusic);
         //TODO put sounds
         jsonLevel.put("info", info);
+
+        List<Path> pathList = new ArrayList<>();
+        List<MovingPlatform> platforms = new ArrayList<>();
 
         JSONObject background = new JSONObject();
         for (Background bg : level.backgrounds)
@@ -387,33 +393,70 @@ public class Converter
             }
             else if (obj instanceof MovingPlatform)
             {
-                MovingPlatform platform = (MovingPlatform) obj;
-                JSONObject jPlatform = new JSONObject();
-                /*public float posx, posy, max_distance, speed, touch_time, shake_time, touch_move_time, width, height;
-    public int move_type, middle_img_count;
-    public String massive_type, direction, image_top_left, image_top_middle, image_top_right, texture_atlas;*/
-                jPlatform.put("posx", platform.posx);
-                jPlatform.put("posy", platform.posy);
-                jPlatform.put("max_distance", platform.max_distance);
-                jPlatform.put("speed", platform.speed);
-                jPlatform.put("touch_time", platform.touch_time);
-                jPlatform.put("shake_time", platform.shake_time);
-                jPlatform.put("touch_move_time", platform.touch_move_time);
-                jPlatform.put("width", platform.width);
-                jPlatform.put("height", platform.height);
-                jPlatform.put("move_type", platform.move_type);
-                jPlatform.put("middle_img_count", platform.middle_img_count);
-                jPlatform.put("massive_type", platform.massive_type);
-                jPlatform.put("direction", platform.direction);
-                jPlatform.put("image_top_left", platform.image_top_left);
-                jPlatform.put("image_top_middle", platform.image_top_middle);
-                jPlatform.put("image_top_right", platform.image_top_right);
-                jPlatform.put("texture_atlas", platform.texture_atlas);
-                jPlatform.put("path_identifier", platform.path_identifier);
-                jPlatform.put("obj_class", "moving_platform");
-                objects.put(jPlatform);
+                platforms.add((MovingPlatform) obj);
+            }
+            else if (obj instanceof Path)
+            {
+                pathList.add((Path) obj);
             }
             //TODO other objects
+        }
+
+        for(MovingPlatform platform : platforms)
+        {
+            JSONObject jPlatform = new JSONObject();
+            jPlatform.put("posx", platform.posx);
+            jPlatform.put("posy", platform.posy);
+            jPlatform.put("max_distance", platform.max_distance);
+            jPlatform.put("speed", platform.speed);
+            jPlatform.put("touch_time", platform.touch_time);
+            jPlatform.put("shake_time", platform.shake_time);
+            jPlatform.put("touch_move_time", platform.touch_move_time);
+            jPlatform.put("width", platform.width);
+            jPlatform.put("height", platform.height);
+            jPlatform.put("move_type", platform.move_type);
+            jPlatform.put("middle_img_count", platform.middle_img_count);
+            jPlatform.put("massive_type", platform.massive_type);
+            jPlatform.put("direction", platform.direction);
+            jPlatform.put("image_top_left", platform.image_top_left);
+            jPlatform.put("image_top_middle", platform.image_top_middle);
+            jPlatform.put("image_top_right", platform.image_top_right);
+            jPlatform.put("texture_atlas", platform.texture_atlas);
+            jPlatform.put("path_identifier", platform.path_identifier);
+            jPlatform.put("obj_class", "moving_platform");
+
+            Path found = null;
+            for(Path path : pathList)
+            {
+                if(path.id.equals(platform.path_identifier))
+                {
+                    found = path;
+                    break;
+                }
+            }
+            if(found != null)
+            {
+                JSONObject jPath = new JSONObject();
+                jPath.put("posx", found.posx);
+                jPath.put("posy", found.posy);
+                jPath.put("rewind", found.rewind);
+
+                JSONArray jSegments = new JSONArray();
+                for(Path.Segment segment : found.segments)
+                {
+                    JSONObject jSegment = new JSONObject();
+                    jSegment.put("startx", segment.start.x);
+                    jSegment.put("starty", segment.start.y);
+                    jSegment.put("endx", segment.end.x);
+                    jSegment.put("endy", segment.end.y);
+                    jSegments.put(jSegment);
+                }
+                jPath.put("segments", jSegments);
+                jPlatform.put("path", jPath);
+            }
+
+
+            objects.put(jPlatform);
         }
 
         jsonLevel.put("objects", objects);
