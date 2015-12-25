@@ -3,6 +3,7 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -22,6 +23,8 @@ public class MovingPlatform extends Sprite
     public String direction, image_top_left, image_top_middle, image_top_right;
     private TextureRegion rLeft, rMiddle, rRight;
     boolean touched, forward = true;
+    private float movingAngle;
+    private Vector2 origin = new Vector2();
 
     public static final int MOVING_PLATFORM_TYPE_LINE = 0;//left, right, up, down
     public static final int MOVING_PLATFORM_TYPE_CIRCLE = 1;//circle
@@ -63,6 +66,7 @@ public class MovingPlatform extends Sprite
             if(type == Type.halfmassive)
                 type = Type.massive;
         }
+        origin.set(mOriginPosition.x, mOriginPosition.y + max_distance);
     }
 
     @Override
@@ -199,6 +203,34 @@ public class MovingPlatform extends Sprite
                     }
                 }
             }
+            else if(move_type == MOVING_PLATFORM_TYPE_CIRCLE)
+            {
+                if("right".equals(direction))
+                {
+                    movingAngle += speed * delta;
+
+                    if( movingAngle > 360.0f )
+                    {
+                        movingAngle -= 360.0f;
+                    }
+                }
+                else
+                {
+                    movingAngle -= speed * delta;
+
+                    if( movingAngle < 0.0f )
+                    {
+                        movingAngle += 360.0f;
+                    }
+                }
+                velocity.x =  position.x - (MathUtils.cosDeg(movingAngle) * (position.x - origin.x) - MathUtils.sinDeg(movingAngle) * (position.y - origin.y) + origin.x);
+                velocity.y =  position.y - (MathUtils.sinDeg(movingAngle) * (position.x - origin.x) + MathUtils.cosDeg(movingAngle) * (position.y - origin.y) + origin.y);
+
+                position.add(velocity);
+                mColRect.x = position.x;
+                mColRect.y = position.y;
+                updateBounds();
+            }
         }
         else if (platformState == MOVING_PLATFORM_SHAKE)
         {
@@ -213,15 +245,18 @@ public class MovingPlatform extends Sprite
             //do nothing
             velocity.set(0, 0, 0);
         }
-        velocity.scl(delta);
-        // update position
-        position.add(velocity);
-        mColRect.x = position.x;
-        mColRect.y = position.y;
-        updateBounds();
+        if (move_type != MOVING_PLATFORM_TYPE_CIRCLE)
+        {
+            velocity.scl(delta);
+            // update position
+            position.add(velocity);
+            mColRect.x = position.x;
+            mColRect.y = position.y;
+            updateBounds();
 
-        // un-scale velocity (not in frame time)
-        velocity.scl(1 / delta);
+            // un-scale velocity (not in frame time)
+            velocity.scl(1 / delta);
+        }
 
 
         if (velocity.x < 0)//moving left
