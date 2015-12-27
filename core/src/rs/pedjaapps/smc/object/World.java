@@ -1,7 +1,7 @@
 package rs.pedjaapps.smc.object;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -9,11 +9,11 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 
+import rs.pedjaapps.smc.object.items.Coin;
 import rs.pedjaapps.smc.object.maryo.Fireball;
 import rs.pedjaapps.smc.object.maryo.Iceball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
-import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 
 
@@ -27,14 +27,12 @@ public class World
     /**
      * A world has a level through which Mario needs to go through *
      */
-    public Level level;
-    private Array<GameObject> visibleObjects = new Array<>(50);
-    private Array<GameObject> tmpObjects = new Array<>();
+    public Level level = new Level();
 
 	/**
 	 * 
 	 */
-	public final Array<GameObject> trashObjects = new Array<>();
+	public final Array<GameObject> trashObjects = new Array<>(1000);
 
 	// This is the rectangle pool used in collision detection
 	// Good to avoid instantiation each frame
@@ -95,58 +93,34 @@ public class World
             return fb;
         }
     };
-    
-    /**
-     * Return only the blocks that need to be drawn *
-     * 
-     */
-    public void drawVisibleObjects(OrthographicCamera cam, SpriteBatch batch)
-    {
-        visibleObjects.clear();
-        float camX = cam.position.x;
-        float camY = cam.position.y;
-        float camWidth = (cam.viewportWidth * cam.zoom);
-        float camHeight = (cam.viewportHeight * cam.zoom);
-        float wX = camX - camWidth * 0.5f - 1;
-        float wY = camY - camHeight * 0.5f - 1;
-        float wW = camWidth + 1;
-        float wH = camHeight + 1;
-        Rectangle worldBounds = RECT_POOL.obtain();
-		worldBounds.set(wX, wY, wW, wH);
-        for (int i = 0, size = level.gameObjects.size(); i < size; i++)
-        {
-            GameObject object = level.gameObjects.get(i);
-            Rectangle bounds = object.mDrawRect;
-            if (bounds.overlaps(worldBounds))
-            {
-                visibleObjects.add(object);
-                object._render(batch);
-            }
-        }
-        RECT_POOL.free(worldBounds);
-    }
 
-	public Array<GameObject> getSurroundingObjects(GameObject center, float offset)
+    public static Pool<Color> COLOR_POOL = new Pool<Color>()
     {
-        tmpObjects.clear();
-        float wX = center.mColRect.x - offset;
-        float wY = center.mColRect.y - offset;
-        float wW = center.mColRect.x + center.mColRect.width + offset * 2;
-        float wH = center.mColRect.y + center.mColRect.height + offset * 2;
-        Rectangle offsetBounds = RECT_POOL.obtain();
-		offsetBounds.set(wX, wY, wW, wH);
-        for (GameObject object : level.gameObjects)
+        @Override
+        protected Color newObject()
         {
-            Rectangle bounds = object.mDrawRect;
-            if (bounds.overlaps(offsetBounds)/* || object instanceof Enemy*/)
-            {
-                tmpObjects.add(object);
-            }
+            return new Color();
         }
-        RECT_POOL.free(offsetBounds);
-        return tmpObjects;
-    }
-	
+    };
+
+    public Pool<Sprite> SPRITE_POOL = new Pool<Sprite>()
+    {
+        @Override
+        protected Sprite newObject()
+        {
+            return new Sprite(World.this, VECTOR2_POOL.obtain(), VECTOR3_POOL.obtain(), null);
+        }
+    };
+
+    public Pool<Coin> COIN_POOL = new Pool<Coin>()
+    {
+        @Override
+        protected Coin newObject()
+        {
+            return new Coin(World.this, VECTOR2_POOL.obtain(), VECTOR3_POOL.obtain());
+        }
+    };
+
 	public Rectangle createMaryoRectWithOffset(OrthographicCamera cam, float offset)
 	{
         float offsetX = Math.max(offset, Constants.CAMERA_WIDTH/*(cam.viewportWidth * cam.zoom)*/);
@@ -164,32 +138,6 @@ public class World
     public World(AbstractScreen screen)
     {
 		this.screen = screen;
-    }
-
-    public Array<GameObject> getVisibleObjects()
-    {
-        return visibleObjects == null ? new Array<GameObject>() : visibleObjects;
-    }
-
-    /**
-     * Check if obejct is visible in current camera bounds
-     * @param fallback value to return if cant determine if object is visible
-     *
-     */
-    public boolean isObjectVisible(GameObject object, boolean fallback)
-    {
-        if(!(screen instanceof GameScreen))return fallback;
-        float camX = ((GameScreen) screen).cam.position.x;
-        float camY = ((GameScreen) screen).cam.position.y;;
-        float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
-        float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
-        float wW = Constants.CAMERA_WIDTH + 1;
-        float wH = Constants.CAMERA_HEIGHT + 1;
-        Rectangle worldBounds = RECT_POOL.obtain();
-        worldBounds.set(wX, wY, wW, wH);
-        boolean result = object.mDrawRect.overlaps(worldBounds);
-        RECT_POOL.free(worldBounds);
-        return result;
     }
 
     public void dispose()

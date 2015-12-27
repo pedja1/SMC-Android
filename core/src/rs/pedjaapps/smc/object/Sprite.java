@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Rect;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class Sprite extends GameObject
@@ -19,7 +18,7 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
-    private Rect mOrigDrawRect;
+    public Rectangle mOrigDrawRect;
     Texture txt = null;
     TextureRegion region = null;
 
@@ -27,7 +26,8 @@ public class Sprite extends GameObject
     {
         super(world, size, position);
         this.position = position;
-        mOrigDrawRect = new Rect(mDrawRect);
+        mOrigDrawRect = World.RECT_POOL.obtain();
+        mOrigDrawRect.set(mDrawRect);
         if (colRect != null)
         {
             mColRect.x = mDrawRect.x + Math.abs(colRect.x);
@@ -107,14 +107,31 @@ public class Sprite extends GameObject
             applyRotation();
             rotationAplied = true;
         }
+        if(mDrawRect.width == 0)
+        {
+            float width;
+            if(region == null)
+            {
+                width = Utility.getWidth(txt, mDrawRect.height);
+            }
+            else
+            {
+                width = Utility.getWidth(region, mDrawRect.height);
+            }
+            mDrawRect.width = width;
+            updateBounds();
+        }
 
     }
 
     @Override
     public void dispose()
     {
+        super.dispose();
         txt = null;
         region = null;
+        World.RECT_POOL.free(mOrigDrawRect);
+        world.SPRITE_POOL.free(this);
     }
 
     private void applyRotation()
@@ -205,7 +222,7 @@ public class Sprite extends GameObject
 
     /**
      * @param originX , originY, rotation point relative to self*/
-    public void rotate2(Rect sourceRect, Rect destRect, float originX, float originY, float rotate)
+    public void rotate2(Rectangle sourceRect, Rectangle destRect, float originX, float originY, float rotate)
     {
         float x = sourceRect.x;
         float y = sourceRect.y;
@@ -233,7 +250,7 @@ public class Sprite extends GameObject
         destRect.set(polygon.getBoundingRectangle());
     }
 
-    public Vector2 rotate(Rect rect, float originX, float originY, float rotation)
+    public Vector2 rotate(Rectangle rect, float originX, float originY, float rotation)
     {
         /*
         degree = 90

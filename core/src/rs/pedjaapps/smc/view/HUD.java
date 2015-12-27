@@ -181,6 +181,7 @@ public class HUD
     {
         C_W = Gdx.graphics.getWidth();
         C_H = Gdx.graphics.getHeight();
+        C_H = Gdx.graphics.getHeight();
         cam = new OrthographicCamera(C_W, C_H);
         cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
         cam.update();
@@ -333,7 +334,7 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			pointsText = formatPointsString(GameSave.save.points);
+			pointsText = formatPointsString(GameSave.save.points + (int)(world.maryo.position.x - world.maryo.startPositionX));
 			fontGlyphLayout.setText(font, pointsText);
 			float pointsX = C_W * 0.03f;
 			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
@@ -376,18 +377,6 @@ public class HUD
 			boxTextPopup.render(batch);
 			batch.end();
 		}
-		if(PrefsManager.isDebug())drawDebug();
-	}
-	
-	private void drawDebug()
-	{
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.setColor(1, 0, 0, 1f);
-		shapeRenderer.rect(fireRT.x, fireRT.y, fireRT.width, fireRT.height);
-		shapeRenderer.rect(jumpRT.x, jumpRT.y, jumpRT.width, jumpRT.height);
-		
-		shapeRenderer.end();
 	}
 
     private String formatPointsString(int points)

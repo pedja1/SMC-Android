@@ -1,0 +1,96 @@
+
+clouds.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+default-1
+  rotate: false
+  xy: 773, 905
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+default-2
+  rotate: false
+  xy: 515, 385
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+default-3
+  rotate: false
+  xy: 1, 1
+  size: 256, 64
+  orig: 256, 64
+  offset: 0, 0
+  index: -1
+yellow-1
+  rotate: false
+  xy: 515, 841
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-10
+  rotate: false
+  xy: 1, 197
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-2
+  rotate: false
+  xy: 515, 711
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-3
+  rotate: false
+  xy: 1, 67
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-4
+  rotate: false
+  xy: 1, 327
+  size: 512, 128
+  orig: 512, 128
+  offset: 0, 0
+  index: -1
+yellow-5
+  rotate: false
+  xy: 515, 581
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-6
+  rotate: false
+  xy: 515, 451
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-7
+  rotate: false
+  xy: 259, 197
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-8
+  rotate: false
+  xy: 259, 67
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+yellow-9
+  rotate: false
+  xy: 1, 457
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1

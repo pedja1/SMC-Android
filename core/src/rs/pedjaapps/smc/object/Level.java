@@ -1,29 +1,27 @@
 package rs.pedjaapps.smc.object;
 
-import com.badlogic.gdx.math.*;
-import com.badlogic.gdx.utils.*;
-import java.util.*;
-import rs.pedjaapps.smc.view.*;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
+
+import rs.pedjaapps.smc.view.Background;
+import rs.pedjaapps.smc.view.Parallax;
 
 /**
  * Created by pedja on 1/31/14.
  */
 public class Level
 {
-    public float width;
-    public float height;
-    public List<GameObject> gameObjects;
+    public Array<GameObject> gameObjects;
     public Vector3 spanPosition;
 	public Background background;
-    public Array<String> music;
-	public String levelName;
+	public Parallax parallaxClouds, parallaxGround1, parallaxGround2;
+    public String music;
 
 	public static final String LEVEL_EXT = ".smclvl";
 
-	public Level(String levelName)
+	public Level()
 	{
-		this.gameObjects = new ArrayList<>(5000);//set initial capacity so that we avoid alloc during game loop
-		this.levelName = levelName;
+		this.gameObjects = new Array<>(1000);//set initial capacity so that we avoid alloc during game loop
 	}
 
 	public void dispose()
@@ -35,5 +33,11 @@ public class Level
 		gameObjects = null;
 		background.dispose();
 		background = null;
+		parallaxClouds.dispose();
+		parallaxClouds = null;
+		parallaxGround1.dispose();
+		parallaxGround1 = null;
+		parallaxGround2.dispose();
+		parallaxGround2 = null;
 	}
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -68,7 +67,7 @@ public class ArchiveFileHandle extends FileHandle
         {
             return archive.getInputStream(archiveEntry);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             throw new GdxRuntimeException("File not found: " + file + " (Archive)");
         }

@@ -1,28 +1,27 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
-import rs.pedjaapps.smc.Rect;
 
 /**
  * Created by pedja on 18.5.14..
  */
 public abstract class GameObject
 {
-    public Rect mDrawRect = new Rect();//used for draw
-    public Rect mColRect = new Rect();//used for collision detection
-	public Vector3 position = new Vector3();
-    public Vector3 velocity = new Vector3();
-    public Vector3 acceleration = new Vector3();
+    public Rectangle mDrawRect;//used for draw
+    public Rectangle mColRect;//used for collision detection
+	public Vector3 position;
+    public Vector3 velocity;
+    public Vector3 acceleration;
     protected World world;
     public boolean isFront = false;// is sprite drawn after player, so that it appears like player walks behind it
     public float mRotationX, mRotationY, mRotationZ;//degrees
     
 	public enum WorldState
     {
-        IDLE, WALKING, JUMPING, DYING, DUCKING, CLIMBING
+        WALKING, JUMPING, DYING, DUCKING
     }
 
     public enum TKey
@@ -57,15 +56,17 @@ public abstract class GameObject
 
     public enum AKey
     {
-        walk, climb, _throw
+        walk, _throw
     }
 
     public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.mDrawRect = new Rect(position.x, position.y, size.x, size.y);
-        mColRect = new Rect(mDrawRect);
+        this.mDrawRect = World.RECT_POOL.obtain().set(position.x, position.y, size.x, size.y);
+        mColRect = World.RECT_POOL.obtain().set(mDrawRect);
 		this.position = position;
         this.world = world;
+        velocity = World.VECTOR3_POOL.obtain();
+        acceleration = World.VECTOR3_POOL.obtain();
     }
 	
 	public void updateBounds()
@@ -77,7 +78,15 @@ public abstract class GameObject
     public abstract void _render(SpriteBatch spriteBatch);
     public abstract void _update(float delta);
     public abstract void initAssets();
-    public abstract void dispose();
+
+    public void dispose()
+    {
+        World.RECT_POOL.free(mDrawRect);
+        World.RECT_POOL.free(mColRect);
+        World.VECTOR3_POOL.free(position);
+        World.VECTOR3_POOL.free(acceleration);
+        World.VECTOR3_POOL.free(velocity);
+    }
 
     /**whether this object acts as bullet when hitting other objects (enemies, mario)*/
     public boolean isBullet()

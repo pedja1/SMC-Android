@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'com.github.triplet.play'
 
 android {
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
     compileSdkVersion 23
     defaultConfig {
         versionCode 20151216
@@ -118,8 +118,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
     }
 
     classpath {

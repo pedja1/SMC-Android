@@ -15,8 +15,6 @@ import com.badlogic.gdx.utils.Array;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.items.Coin;
@@ -27,7 +25,6 @@ import rs.pedjaapps.smc.object.items.Star;
 import rs.pedjaapps.smc.object.items.mushroom.Mushroom;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomBlue;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
-import rs.pedjaapps.smc.object.items.mushroom.MushroomGhost;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomLive1;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomPoison;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -266,7 +263,7 @@ public class Box extends Sprite
             }
         }
         else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
-                || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_GHOST
+                || box.item == Item.TYPE_MUSHROOM_BLUE
                 || box.item == Item.TYPE_MUSHROOM_POISON)
         {
             return createMushroom(box, loadAssets, assets);
@@ -327,10 +324,6 @@ public class Box extends Sprite
                     assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, assets.textureParameter);
                     assets.manager.load("data/sounds/item/mushroom_blue.mp3", Sound.class);
                     break;
-                case Item.TYPE_MUSHROOM_GHOST:
-                    assets.manager.load("data/game/items/mushroom_ghost.png", Texture.class, assets.textureParameter);
-                    assets.manager.load("data/sounds/item/mushroom_ghost.mp3", Sound.class);
-                    break;
                 case Item.TYPE_MUSHROOM_POISON:
                     assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, assets.textureParameter);
                     break;
@@ -350,9 +343,6 @@ public class Box extends Sprite
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
                     mushroom = new MushroomBlue(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
-                    break;
-                case Item.TYPE_MUSHROOM_GHOST:
-                    mushroom = new MushroomGhost(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
                     mushroom = new MushroomPoison(box.world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(box.position));
@@ -432,7 +422,7 @@ public class Box extends Sprite
             {
                 item.isInBox = true;
                 world.level.gameObjects.add(item);
-                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+                //Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
                 item.popOutFromBox(position.y + mDrawRect.height);
                 if (item instanceof Coin)
                 {

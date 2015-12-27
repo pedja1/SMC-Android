@@ -9,15 +9,12 @@ import com.badlogic.gdx.math.Vector3;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
-
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
-import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
@@ -101,7 +98,7 @@ public abstract class Enemy extends DynamicObject
             deadByBullet = true;
             handleCollision = false;
             position.z = 1;
-            Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+            //Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
         }
         else
         {
@@ -148,8 +145,6 @@ public abstract class Enemy extends DynamicObject
     {
         stopper, player, enemy
     }
-
-    WorldState worldState = WorldState.IDLE;
 
     protected Enemy(World world, Vector2 size, Vector3 position)
     {
