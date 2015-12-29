@@ -134,6 +134,33 @@ public class LevelGenerator
 		world.level.parallaxGround1 = new Parallax(World.VECTOR2_POOL.obtain().set(.9f, .9f));
 		world.level.parallaxGround2 = new Parallax(World.VECTOR2_POOL.obtain().set(.4f, .4f));
 
+        world.level.parallaxClouds.nextViewportCallback = new Parallax.NextViewportCallback()
+        {
+            @Override
+            public void onNextViewport(float viewportStartX, float viewportWidth, float viewportHeight)
+            {
+                addClouds(viewportStartX, viewportWidth, viewportHeight);
+            }
+        };
+
+        world.level.parallaxGround1.nextViewportCallback = new Parallax.NextViewportCallback()
+        {
+            @Override
+            public void onNextViewport(float viewportStartX, float viewportWidth, float viewportHeight)
+            {
+                addGroundDecorationLevel1(viewportStartX, viewportWidth);
+            }
+        };
+
+        world.level.parallaxGround2.nextViewportCallback = new Parallax.NextViewportCallback()
+        {
+            @Override
+            public void onNextViewport(float viewportStartX, float viewportWidth, float viewportHeight)
+            {
+                addGroundDecorationLevel2(viewportStartX, viewportWidth);
+            }
+        };
+
 		//load ground for visible area(screen width)
 		float groundStartX = -0.328125f;
 		loadGround(groundStartX, cam.viewportWidth);
@@ -151,13 +178,11 @@ public class LevelGenerator
 		for(int i = 0; i < width; i++)
 		{
 			float posx = groundStartX + i;
-			//Sprite sprite = new Sprite(world, new Vector2(1, 1), new Vector3(posx, groundBlockY, m_pos_z_massive_start), null);
 			Sprite sprite = world.SPRITE_POOL.obtain();
             sprite.textureAtlas = null;
 			sprite.position.set(posx, groundBlockY, m_pos_z_massive_start);
 			sprite.mDrawRect.set(posx, groundBlockY, 1, 1);
 			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.mOrigDrawRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.textureName = "data/environment/ground/green.png";
 			sprite.type = Sprite.Type.massive;
@@ -203,15 +228,16 @@ public class LevelGenerator
 				loadGround(lastGroundBlockEnd, camWidth);
 			}
 
-			addClouds(lastGroundBlockEnd, camWidth, camHeight);
 			addGroundDecorationNoParallax(lastGroundBlockEnd, camWidth);
-			addGroundDecorationLevel1(lastGroundBlockEnd, camWidth);
-			addGroundDecorationLevel2(lastGroundBlockEnd, camWidth);
-			addCoins(lastGroundBlockEnd, camWidth);
+            addCoins(lastGroundBlockEnd, camWidth);
 		}
 		World.RECT_POOL.free(rect);
 
-	}
+        /*
+        addGroundDecorationLevel1(lastGroundBlockEnd, camWidth);
+        addGroundDecorationLevel2(lastGroundBlockEnd, camWidth);
+        */
+    }
 
 	private void addClouds(float camStartX, float camWidth, float camHeight)
 	{
@@ -228,7 +254,6 @@ public class LevelGenerator
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.mOrigDrawRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureAtlas = "data/environment/clouds/clouds.pack";
@@ -283,7 +308,6 @@ public class LevelGenerator
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.mOrigDrawRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureName = sd.texture;
@@ -307,7 +331,6 @@ public class LevelGenerator
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.mOrigDrawRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureName = sd.texture;
@@ -331,7 +354,6 @@ public class LevelGenerator
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.mOrigDrawRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureName = sd.texture;

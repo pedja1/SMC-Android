@@ -141,7 +141,7 @@ public class Furball extends Enemy
             mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
             mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
             if(mDrawRect.height < 0)
-                world.trashObjects.add(this);
+                world.level.gameObjects.removeValue(this, true);
             return;
         }
 

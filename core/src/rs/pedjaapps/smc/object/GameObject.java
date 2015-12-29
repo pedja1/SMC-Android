@@ -65,8 +65,8 @@ public abstract class GameObject
         mColRect = World.RECT_POOL.obtain().set(mDrawRect);
 		this.position = position;
         this.world = world;
-        velocity = World.VECTOR3_POOL.obtain();
-        acceleration = World.VECTOR3_POOL.obtain();
+        velocity = World.VECTOR3_POOL.obtain().set(0, 0, 0);
+        acceleration = World.VECTOR3_POOL.obtain().set(0, 0, 0);
     }
 	
 	public void updateBounds()

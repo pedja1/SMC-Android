@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -90,7 +89,7 @@ public class Iceball extends DynamicObject
         {
             if(explosion.isComplete())
             {
-                world.trashObjects.add(this);
+                world.level.gameObjects.removeValue(this, true);
                 world.ICEBALL_POOL.free(this);
             }
             explosion.update(delta);

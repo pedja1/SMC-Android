@@ -116,6 +116,7 @@ public abstract class Item extends DynamicObject
     @Override
     public void dispose()
     {
-        if(texture != null)texture.dispose();
+        super.dispose();
+        if(texture != null)texture = null;
     }
 }

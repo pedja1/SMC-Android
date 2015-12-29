@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.PerformanceCounter;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public OrthographicCamera cam;
     private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
-    
+
     ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private ParticleEffect leafEffect;
@@ -158,7 +159,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         music = game.assets.manager.get(world.level.music);
         MusicManager.play(music);
-        if(debug)GLProfiler.enable();
+        if (debug) GLProfiler.enable();
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
         if (!resumed)
@@ -185,7 +186,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         updateObjects(delta);
         //physics end
 
-        if(gameState == GAME_STATE.GAME_RUNNING)generator.update(cam);
+        if (gameState == GAME_STATE.GAME_RUNNING) generator.update(cam);
 
         moveCamera(cam, world.maryo.position);
         drawBackground();
@@ -228,34 +229,28 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.render(spriteBatch);
 
         //cleanup
-        for(int i = 0; i < world.level.gameObjects.size; i++)
+        for (int i = 0; i < world.level.gameObjects.size; i++)
         {
             GameObject go = world.level.gameObjects.get(i);
-            removeObject(cam, go);
+            removeObject(world.level.gameObjects, cam, go);
         }
-        for(int i = 0; i < world.level.parallaxClouds.objects.size; i++)
+        for (int i = 0; i < world.level.parallaxClouds.objects.size; i++)
         {
             GameObject go = world.level.parallaxClouds.objects.get(i);
-            removeObject(world.level.parallaxClouds.cam, go);
+            removeObject( world.level.parallaxClouds.objects, world.level.parallaxClouds.cam, go);
         }
-        for(int i = 0; i < world.level.parallaxGround2.objects.size; i++)
+        for (int i = 0; i < world.level.parallaxGround2.objects.size; i++)
         {
             GameObject go = world.level.parallaxGround2.objects.get(i);
-            removeObject(world.level.parallaxGround2.cam, go);
+            removeObject(world.level.parallaxGround2.objects, world.level.parallaxGround2.cam, go);
         }
-        for(int i = 0; i < world.level.parallaxGround1.objects.size; i++)
+        for (int i = 0; i < world.level.parallaxGround1.objects.size; i++)
         {
             GameObject go = world.level.parallaxGround1.objects.get(i);
-            removeObject(world.level.parallaxGround1.cam, go);
+            removeObject(world.level.parallaxGround1.objects, world.level.parallaxGround1.cam, go);
         }
-        //TODO this is stupid
-        world.level.gameObjects.removeAll(world.trashObjects, true);
-        world.level.parallaxGround1.objects.removeAll(world.trashObjects, true);
-        world.level.parallaxGround2.objects.removeAll(world.trashObjects, true);
-        world.level.parallaxClouds.objects.removeAll(world.trashObjects, true);
-        world.trashObjects.clear();
 
-    if(debug)GLProfiler.reset();
+        if (debug) GLProfiler.reset();
         stateTime += delta;
 
         //debug
@@ -264,16 +259,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //debug
     }
 
-    private void removeObject(OrthographicCamera cam, GameObject go)
+    private void removeObject(Array<GameObject> objects, OrthographicCamera cam, GameObject go)
     {
-        if(go.mDrawRect.x + go.mDrawRect.width < cam.position.x - cam.viewportWidth * .5f)
+        if (go.mDrawRect.x + go.mDrawRect.width < cam.position.x - cam.viewportWidth * .5f)
         {
-            /*go.dispose();
-            if(go instanceof Coin)
-                world.COIN_POOL.free((Coin) go);
-            if(go instanceof Sprite)
-                world.SPRITE_POOL.free((Sprite) go);*/
-            world.trashObjects.add(go);
+            if(objects.removeValue(go, true))
+            {
+                go.dispose();
+            }
         }
     }
 
@@ -350,12 +343,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             return;
         pos = World.VECTOR3_POOL.obtain().set(pos);
         pos.x = pos.x + cam.viewportWidth * .25f;
-        if(pos.x - cam.viewportWidth / 2 < 0)
+        if (pos.x - cam.viewportWidth / 2 < 0)
         {
             pos.x = cam.viewportWidth / 2;
         }
 
-        if(pos.y - cam.viewportHeight / 2 < 0)
+        if (pos.y - cam.viewportHeight / 2 < 0)
         {
             pos.y = cam.viewportHeight / 2;
         }
@@ -370,7 +363,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //performanceCounter.start();
         //int count = 0;
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
-        for (int i = 0, size = world.level.gameObjects.size; i < size; i++)
+        for (int i = 0; i < world.level.gameObjects.size; i++)
         //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
@@ -385,7 +378,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         World.RECT_POOL.free(maryoBWO);
-        if(gameState == GAME_STATE.GAME_RUNNING || gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
+        if (gameState == GAME_STATE.GAME_RUNNING || gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
         {
             world.maryo._update(delta);
         }
@@ -434,17 +427,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         return
                 "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
-                + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
-                + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
-                + "\n" + "BG Camera: x=" + world.level.background.bgCam.position.x + ", y=" + world.level.background.bgCam.position.y
-                + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
-                + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
-                + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
-                + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
-                + "\n" + "Object Count: " + (world.level.gameObjects.size + world.level.parallaxClouds.objects.size + world.level.parallaxGround1.objects.size + world.level.parallaxGround2.objects.size)
-                + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
-                + "\n" + "Screen w=" + width + "h=" + height
-                + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
+                        + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
+                        + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
+                        + "\n" + "BG Camera: x=" + world.level.background.bgCam.position.x + ", y=" + world.level.background.bgCam.position.y
+                        + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
+                        + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
+                        + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
+                        + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
+                        + "\n" + "Object Count: " + (world.level.gameObjects.size + world.level.parallaxClouds.objects.size + world.level.parallaxGround1.objects.size + world.level.parallaxGround2.objects.size)
+                        + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
+                        + "\n" + "Screen w=" + width + "h=" + height
+                        + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
 
     @Override
@@ -468,10 +461,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-   		world.level.background.resize(cam);
-   		world.level.parallaxClouds.resize(cam);
-   		world.level.parallaxGround1.resize(cam);
-   		world.level.parallaxGround2.resize(cam);
+        world.level.background.resize(cam);
+        world.level.parallaxClouds.resize(cam);
+        world.level.parallaxGround1.resize(cam);
+        world.level.parallaxGround2.resize(cam);
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -529,17 +522,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/game/items/goldpiece/yellow.pack", TextureAtlas.class);
         game.assets.manager.load("data/environment/background/green_junglehills.png", Texture.class);
 
-        for(LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationNoParallax)
+        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationNoParallax)
         {
             game.assets.manager.load(sd.texture, Texture.class);
         }
 
-        for(LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel1)
+        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel1)
         {
             game.assets.manager.load(sd.texture, Texture.class);
         }
 
-        for(LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel2)
+        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel2)
         {
             game.assets.manager.load(sd.texture, Texture.class);
         }
@@ -625,10 +618,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-		world.level.background.onAssetsLoaded(cam, game.assets);
-		world.level.parallaxClouds.onAssetsLoaded(cam);
-		world.level.parallaxGround1.onAssetsLoaded(cam);
-		world.level.parallaxGround2.onAssetsLoaded(cam);
+        world.level.background.onAssetsLoaded(cam, game.assets);
+        world.level.parallaxClouds.onAssetsLoaded(cam);
+        world.level.parallaxGround1.onAssetsLoaded(cam);
+        world.level.parallaxGround2.onAssetsLoaded(cam);
     }
 
     // * InputProcessor methods ***************************//

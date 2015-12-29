@@ -846,7 +846,7 @@ public class Maryo extends DynamicObject
             if (mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
             {
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
-                world.trashObjects.add(Maryo.this);
+                world.level.gameObjects.removeValue(Maryo.this, true);
                 return false;
             }
 

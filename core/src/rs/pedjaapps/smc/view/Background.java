@@ -10,6 +10,7 @@ import rs.pedjaapps.smc.utility.*;
 
 public class Background
 {
+	boolean cameraPositioned;
 	public static final float WIDTH = Constants.CAMERA_WIDTH;
 	public static final float HEIGHT = Constants.CAMERA_HEIGHT;
 	public Vector2 position, speed;
@@ -97,9 +98,12 @@ public class Background
 	{
 		if(textureName != null)
 		{
+			if(cameraPositioned)
+				return;
 			texture = assets.manager.get(textureName);
 			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         	oldGameCamPos.set(gameCam.position);
+			cameraPositioned = true;
 		}
 	}
 

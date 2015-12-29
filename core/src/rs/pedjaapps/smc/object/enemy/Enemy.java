@@ -103,7 +103,7 @@ public abstract class Enemy extends DynamicObject
         else
         {
             handleCollision = false;
-            world.trashObjects.add(this);
+            world.level.gameObjects.removeValue(this, true);
         }
         if(mKillPoints > 0)((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
@@ -292,7 +292,7 @@ public abstract class Enemy extends DynamicObject
     @Override
     protected boolean handleDroppedBelowWorld()
     {
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
         return true;
     }
 

@@ -86,7 +86,7 @@ public class Moon extends Item
     {
         if(isInBox)return;
         playerHit = true;
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
         GameSave.save.lifes += 3;
         GameSave.save.points += 4000;
 

@@ -254,7 +254,7 @@ public class Star extends Item
         GameSave.save.points += 1000;
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
     }
 
     @Override

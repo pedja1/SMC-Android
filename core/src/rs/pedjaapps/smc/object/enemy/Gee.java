@@ -174,7 +174,7 @@ public class Gee extends Enemy
             deadEffect.update(deltaTime);
             if(effect.isComplete())
             {
-                world.trashObjects.add(this);
+                world.level.gameObjects.removeValue(this, true);
                 ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
             }
             return;

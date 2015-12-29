@@ -93,7 +93,7 @@ public class Fireball extends DynamicObject
         {
             if(explosion.isComplete())
             {
-                world.trashObjects.add(this);
+                world.level.gameObjects.removeValue(this, true);
                 world.FIREBALL_POOL.free(this);
             }
             explosion.update(delta);

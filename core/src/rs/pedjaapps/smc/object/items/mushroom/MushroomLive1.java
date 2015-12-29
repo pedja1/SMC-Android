@@ -28,7 +28,7 @@ public class MushroomLive1 extends Mushroom
         GameSave.save.lifes += 1;
         //Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
         //if(sound != null && Assets.playSounds)sound.play();
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
         GameSave.save.points += mPickPoints;
     }
 }

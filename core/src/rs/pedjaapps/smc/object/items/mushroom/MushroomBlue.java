@@ -27,7 +27,7 @@ public class MushroomBlue extends Mushroom
     {
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.ice, false, this, false);
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
         GameSave.save.points += mPickPoints;
     }
 }

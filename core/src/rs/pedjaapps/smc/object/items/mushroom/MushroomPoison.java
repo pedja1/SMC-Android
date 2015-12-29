@@ -24,6 +24,6 @@ public class MushroomPoison extends Mushroom
     {
         playerHit = true;
         world.maryo.downgradeOrDie(false);
-        world.trashObjects.add(this);
+        world.level.gameObjects.removeValue(this, true);
     }
 }

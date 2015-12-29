@@ -12,12 +12,17 @@ import rs.pedjaapps.smc.utility.Constants;
 
 public class Parallax
 {
+    boolean cameraPositioned;
     public Vector2 speed;
     public Vector3 oldGameCamPos = new Vector3();
 
     public OrthographicCamera cam;
 
+    public float lastViewportRight;
+
     public Array<GameObject> objects;
+
+    public NextViewportCallback nextViewportCallback;
 
     public Parallax(Vector2 speed)
     {
@@ -30,10 +35,10 @@ public class Parallax
 
     public void resize(OrthographicCamera gameCam)
     {
-        cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+        /*cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         cam.position.set(gameCam.position.x, gameCam.position.y, 0);
-        cam.update();
+        cam.update();*/
     }
 
     public void render(OrthographicCamera mainCam, SpriteBatch spriteBatch)
@@ -61,12 +66,23 @@ public class Parallax
 
         spriteBatch.end();
 
+        if(lastViewportRight < cam.position.x + cam.viewportWidth * .5f)
+        {
+            lastViewportRight += cam.viewportWidth;
+            if(nextViewportCallback != null)
+                nextViewportCallback.onNextViewport(lastViewportRight, cam.viewportWidth, cam.viewportHeight);
+        }
+
     }
 
     public void onAssetsLoaded(OrthographicCamera mainCam)
     {
+        if(cameraPositioned)
+            return;
         cam.position.set(mainCam.position.x, mainCam.position.y, 0);
+        lastViewportRight = cam.position.x - cam.viewportWidth * .5f;
         oldGameCamPos.set(mainCam.position);
+        cameraPositioned = true;
     }
 
     public void dispose()
@@ -77,6 +93,11 @@ public class Parallax
         }
         objects = null;
         World.VECTOR2_POOL.free(speed);
+    }
+
+    public interface NextViewportCallback
+    {
+        void onNextViewport(float viewportStartX, float viewportWidth, float viewportHeight);
     }
 
 }
