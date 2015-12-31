@@ -74,15 +74,9 @@ public class Coin extends Item
     public void _render(SpriteBatch spriteBatch)
     {
         if (!visible) return;
-        //if (!playerHit)
-        //{
+
         TextureRegion frame = animation.getKeyFrame(stateTime, true);
         Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
-        //}
-        //else
-        //{
-        //    font.draw(spriteBatch, position + "", pointsTextPosition.x, pointsTextPosition.y);
-        //}
     }
 
     @Override
@@ -90,25 +84,6 @@ public class Coin extends Item
     {
         super.updateItem(delta);
         //pointsTextPosition.y += 3f * delta;
-        if (popFromBox)
-        {
-            // scale velocity to frame units
-            velocity.scl(delta);
-
-            // update position
-            position.add(velocity);
-            mColRect.y = position.y;
-            updateBounds();
-
-            // un-scale velocity (not in frame time)
-            velocity.scl(1 / delta);
-
-            if (position.y >= originalPosY + mColRect.height + 0.3f)
-            {
-                popFromBox = false;
-                collect();
-            }
-        }
         if (scrollOut)
         {
             velocity.scl(delta);
@@ -166,17 +141,6 @@ public class Coin extends Item
     }
 
     @Override
-    public void popOutFromBox(float popTargetPositionY)
-    {
-        super.popOutFromBox(popTargetPositionY);
-        visible = true;
-        popFromBox = true;
-        velocity.y = 4f;
-        originalPosY = position.y;
-        GameSave.save.points += points;
-    }
-
-    @Override
     public void dispose()
     {
         super.dispose();
@@ -189,5 +153,7 @@ public class Coin extends Item
     {
         super.reset();
         scrollOut = false;
+        collectible = true;
+        velocity.set(0, 0, 0);
     }
 }

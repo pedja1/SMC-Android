@@ -19,7 +19,6 @@ import java.util.Set;
 
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
-import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -681,10 +680,6 @@ public class Maryo extends DynamicObject
                     }
                 }
             }
-        }
-        else if (object instanceof Box && position.y + mColRect.height <= object.position.y)
-        {
-            ((Box) object).handleHitByPlayer();
         }
         return false;
     }

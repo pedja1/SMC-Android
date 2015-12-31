@@ -32,7 +32,6 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.ga.GA;
-import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -268,12 +267,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 go.dispose();
             }
         }
-    }
-
-    public void showBoxText(Box box)
-    {
-        setGameState(GAME_STATE.NO_UPDATE);
-        hud.boxTextPopup.show(box, this);
     }
 
     private void handleGameOver(float delta)
@@ -719,7 +712,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (keycode == Input.Keys.ENTER)
         {
-            hud.boxTextPopup.hide();
             setGameState(GAME_STATE.GAME_RUNNING);
         }
         return true;
@@ -792,11 +784,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 hud.playPressed();
             }
             World.VECTOR2_POOL.free(vect);
-        }
-        if (hud.boxTextPopup.showing)
-        {
-            hud.boxTextPopup.hide();
-            setGameState(GAME_STATE.GAME_RUNNING);
         }
         return true;
     }

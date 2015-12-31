@@ -41,44 +41,6 @@ public class Fireplant extends Item
     }
 
     @Override
-    public void updateItem(float delta)
-    {
-        super.updateItem(delta);
-        if(popFromBox)
-        {
-            // scale velocity to frame units
-            velocity.scl(delta);
-
-            // update position
-            position.add(velocity);
-            mColRect.y = position.y;
-            updateBounds();
-
-            // un-scale velocity (not in frame time)
-            velocity.scl(1 / delta);
-
-            if(position.y >= popTargetPosY)
-            {
-                popFromBox = false;
-                isInBox = false;
-            }
-        }
-    }
-
-    @Override
-    public void popOutFromBox(float popTargetPosY)
-    {
-        super.popOutFromBox(popTargetPosY);
-        visible = true;
-        popFromBox = true;
-        velocity.y = VELOCITY_POP;
-        originalPosY = position.y;
-        ParticleEffect effect = world.screen.game.assets.manager.get("data/animation/particles/fireplant_emitter.p", ParticleEffect.class);
-        effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
-        effect.start();
-    }
-
-    @Override
     public void _render(SpriteBatch spriteBatch)
     {
         if(!visible)return;
@@ -93,7 +55,6 @@ public class Fireplant extends Item
     @Override
     public void hitPlayer()
     {
-        if(isInBox)return;
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.fire, false, this, false);
         world.level.gameObjects.removeValue(this, true);

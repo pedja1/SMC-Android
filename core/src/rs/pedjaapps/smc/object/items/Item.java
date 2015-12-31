@@ -28,7 +28,6 @@ public abstract class Item extends DynamicObject
 
     public String textureName, textureAtlas;
 
-    protected float popTargetPosY;
     public boolean playerHit;
     protected float stateTime;
     enum CLASS
@@ -44,11 +43,7 @@ public abstract class Item extends DynamicObject
     public boolean collectible = true;
     public Texture texture;
 
-    /**
-     * Coin will smoothly pop out of the box*/
-    public boolean popFromBox;
     private boolean dropping;
-    public boolean isInBox;
 
     public Item(World world, Vector2 size, Vector3 position)
     {
@@ -94,11 +89,6 @@ public abstract class Item extends DynamicObject
             updateItem(delta);
         }
     }
-	
-	public void popOutFromBox(float popTargetPosY)
-	{
-		this.popTargetPosY = popTargetPosY;
-	}
 
     public abstract void hitPlayer();
 
@@ -118,5 +108,12 @@ public abstract class Item extends DynamicObject
     {
         super.dispose();
         if(texture != null)texture = null;
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        playerHit = false;
     }
 }

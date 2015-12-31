@@ -13,12 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.Box;
-import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Level;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -44,7 +41,7 @@ public class LevelLoader
 
     private enum ObjectClass
     {
-        sprite, item, box, player, enemy, enemy_stopper,
+        sprite, item, player, enemy, enemy_stopper,
     }
 
     public static final float m_pos_z_passive_start = 0.01f;
@@ -101,9 +98,6 @@ public class LevelLoader
                     break;
                 case enemy_stopper:
                     parseEnemyStopper(world, jObject);
-                    break;
-                case box:
-                    parseBox(world, jObject, assets);
                     break;
             }
         }
@@ -286,28 +280,6 @@ public class LevelLoader
             assets.manager.load(item.textureAtlas, TextureAtlas.class);
         }
         if(!levelParsed)level.gameObjects.add(item);
-    }
-
-    private void parseBox(World world, JSONObject jBox, Assets assets) throws JSONException
-    {
-        Box box = Box.initBox(world, jBox, assets);
-        if(!levelParsed)level.gameObjects.add(box);
-    }
-
-    /**
-     * Comparator used for sorting, sorts in ascending order (biggset z to smallest z).
-     *
-     * @author mzechner
-     */
-    public static class ZSpriteComparator implements Comparator<GameObject>
-    {
-        @Override
-        public int compare(GameObject sprite1, GameObject sprite2)
-        {
-            if (sprite1.position.z > sprite2.position.z) return 1;
-            if (sprite1.position.z < sprite2.position.z) return -1;
-            return 0;
-        }
     }
 
 }

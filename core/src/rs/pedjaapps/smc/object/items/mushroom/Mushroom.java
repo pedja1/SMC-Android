@@ -58,28 +58,7 @@ public abstract class Mushroom extends Item
     public void updateItem(float delta)
     {
         super.updateItem(delta);
-        if(popFromBox)
-        {
-            // scale velocity to frame units
-            velocity.scl(delta);
-
-            // update position
-            position.add(velocity);
-            mColRect.y = position.y;
-            updateBounds();
-
-            // un-scale velocity (not in frame time)
-            velocity.scl(1 / delta);
-
-            if(position.y >= popTargetPosY)
-            {
-                isInBox = false;
-                popFromBox = false;
-                moving = true;
-                velocity.x = direction == Direction.right ? VELOCITY : -VELOCITY;
-            }
-        }
-        else if(moving)
+        if(moving)
         {
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
@@ -140,21 +119,10 @@ public abstract class Mushroom extends Item
     @Override
     public void hitPlayer()
     {
-        if(isInBox)return;
         playerHit = true;
         performCollisionAction();
         if(mPickPoints > 0)
             ((GameScreen)world.screen).killPointsTextHandler.add(mPickPoints, position.x, position.y + mDrawRect.height);
-    }
-
-    @Override
-    public void popOutFromBox(float popTargetPositionY)
-    {
-        super.popOutFromBox(popTargetPositionY);
-        visible = true;
-        popFromBox = true;
-        velocity.y = VELOCITY_POP;
-        originalPosY = position.y;
     }
 
     @Override

@@ -99,28 +99,7 @@ public class Star extends Item
     public void updateItem(float delta)
     {
         super.updateItem(delta);
-        if (popFromBox)
-        {
-            // scale velocity to frame units
-            velocity.scl(delta);
-
-            // update position
-            position.add(velocity);
-            mColRect.y = position.y;
-            updateBounds();
-
-            // un-scale velocity (not in frame time)
-            velocity.scl(1 / delta);
-
-            if (position.y >= popTargetPosY)
-            {
-                isInBox = false;
-                popFromBox = false;
-                moving = true;
-                velocity.x = direction == Direction.right ? VELOCITY_X : -VELOCITY_X;
-            }
-        }
-        else if (moving)
+        if (moving)
         {
             trail.update(delta);
             // Setting initial vertical acceleration
@@ -242,7 +221,6 @@ public class Star extends Item
     @Override
     public void hitPlayer()
     {
-        if (isInBox) return;
         playerHit = true;
         AssetManager manager = world.screen.game.assets.manager;
         if(!manager.isLoaded("data/music/game/star.mp3"))
@@ -255,16 +233,6 @@ public class Star extends Item
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();
         world.level.gameObjects.removeValue(this, true);
-    }
-
-    @Override
-    public void popOutFromBox(float popTargetPositionY)
-    {
-        super.popOutFromBox(popTargetPositionY);
-        visible = true;
-        popFromBox = true;
-        velocity.y = VELOCITY_Y;
-        originalPosY = position.y;
     }
 
     @Override

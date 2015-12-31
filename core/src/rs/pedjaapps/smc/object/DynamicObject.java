@@ -276,7 +276,7 @@ public abstract class DynamicObject extends GameObject
 		{
 			if(vertical)
 			{
-                if(velocity.y > 0 && this instanceof Maryo && !(object instanceof Box))
+                if(velocity.y > 0 && this instanceof Maryo)
                 {
                     if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
                     {
