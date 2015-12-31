@@ -130,9 +130,9 @@ public class LevelGenerator
 		background.color2 = color2;
 		world.level.background = background;
 
-		world.level.parallaxClouds = new Parallax(World.VECTOR2_POOL.obtain().set(.6f, .6f));
-		world.level.parallaxGround1 = new Parallax(World.VECTOR2_POOL.obtain().set(.9f, .9f));
-		world.level.parallaxGround2 = new Parallax(World.VECTOR2_POOL.obtain().set(.4f, .4f));
+		world.level.parallaxClouds = new Parallax(new Vector2(.6f, .6f));
+		world.level.parallaxGround1 = new Parallax(new Vector2(.9f, .9f));
+		world.level.parallaxGround2 = new Parallax(new Vector2(.4f, .4f));
 
         world.level.parallaxClouds.nextViewportCallback = new Parallax.NextViewportCallback()
         {
@@ -232,11 +232,6 @@ public class LevelGenerator
             addCoins(lastGroundBlockEnd, camWidth);
 		}
 		World.RECT_POOL.free(rect);
-
-        /*
-        addGroundDecorationLevel1(lastGroundBlockEnd, camWidth);
-        addGroundDecorationLevel2(lastGroundBlockEnd, camWidth);
-        */
     }
 
 	private void addClouds(float camStartX, float camWidth, float camHeight)

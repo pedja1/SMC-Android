@@ -255,7 +255,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         //debug
         //long end = System.currentTimeMillis() - now;
-        //System.out.println("render time total: " + end);
+        //System.ou t.println("render time total: " + end);
         //debug
     }
 

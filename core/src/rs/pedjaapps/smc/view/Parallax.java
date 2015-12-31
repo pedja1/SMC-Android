@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 
 public class Parallax
@@ -92,7 +91,6 @@ public class Parallax
             object.dispose();
         }
         objects = null;
-        World.VECTOR2_POOL.free(speed);
     }
 
     public interface NextViewportCallback

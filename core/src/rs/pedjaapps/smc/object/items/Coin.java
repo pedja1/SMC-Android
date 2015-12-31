@@ -127,7 +127,10 @@ public class Coin extends Item
             float objBottom = position.y;
             if (objRight < camLeft || objBottom > camTop)//is visible
             {
-                world.level.gameObjects.removeValue(this, true);
+                if(world.level.gameObjects.removeValue(this, true))
+                {
+                    dispose();
+                }
             }
 
         }
@@ -179,5 +182,12 @@ public class Coin extends Item
         super.dispose();
         animation = null;
         world.COIN_POOL.free(this);
+    }
+
+    @Override
+    public void reset()
+    {
+        super.reset();
+        scrollOut = false;
     }
 }

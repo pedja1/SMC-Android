@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -42,15 +41,6 @@ public class World
 			return new Rectangle();
 		}
 	};
-
-    public static Pool<Polygon> POLY_POOL = new Pool<Polygon>()
-    {
-        @Override
-        protected Polygon newObject()
-        {
-            return new Polygon();
-        }
-    };
 
     public static Pool<Vector3> VECTOR3_POOL = new Pool<Vector3>()
     {
@@ -106,7 +96,7 @@ public class World
         @Override
         protected Sprite newObject()
         {
-            return new Sprite(World.this, VECTOR2_POOL.obtain(), VECTOR3_POOL.obtain(), null);
+            return new Sprite(World.this, new Vector2(), new Vector3(), null);
         }
     };
 
@@ -115,7 +105,7 @@ public class World
         @Override
         protected Coin newObject()
         {
-            return new Coin(World.this, VECTOR2_POOL.obtain(), VECTOR3_POOL.obtain());
+            return new Coin(World.this, new Vector2(), new Vector3());
         }
     };
 

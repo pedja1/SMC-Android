@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public abstract class GameObject
+public abstract class GameObject implements Pool.Poolable
 {
     public Rectangle mDrawRect;//used for draw
     public Rectangle mColRect;//used for collision detection
@@ -61,12 +62,12 @@ public abstract class GameObject
 
     public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.mDrawRect = World.RECT_POOL.obtain().set(position.x, position.y, size.x, size.y);
-        mColRect = World.RECT_POOL.obtain().set(mDrawRect);
+        this.mDrawRect = new Rectangle(position.x, position.y, size.x, size.y);
+        mColRect = new Rectangle(mDrawRect);
 		this.position = position;
         this.world = world;
-        velocity = World.VECTOR3_POOL.obtain().set(0, 0, 0);
-        acceleration = World.VECTOR3_POOL.obtain().set(0, 0, 0);
+        velocity = new Vector3(0, 0, 0);
+        acceleration = new Vector3(0, 0, 0);
     }
 	
 	public void updateBounds()
@@ -81,11 +82,16 @@ public abstract class GameObject
 
     public void dispose()
     {
-        World.RECT_POOL.free(mDrawRect);
-        World.RECT_POOL.free(mColRect);
-        World.VECTOR3_POOL.free(position);
-        World.VECTOR3_POOL.free(acceleration);
-        World.VECTOR3_POOL.free(velocity);
+    }
+
+    @Override
+    public void reset()
+    {
+        position.set(0, 0, 0);
+        velocity.set(0, 0, 0);
+        acceleration.set(0, 0, 0);
+        mDrawRect.set(0, 0, 0, 0);
+        mColRect.set(0, 0, 0, 0);
     }
 
     /**whether this object acts as bullet when hitting other objects (enemies, mario)*/
