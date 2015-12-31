@@ -258,18 +258,19 @@ public class LevelGenerator
 		}
 	}
 
-	/*TODO add coins in patterns (circle, line, half circle....), not on random positions*/
+
 	private void addCoins(float camStartX, float camWidth)
 	{
 		//add 4-15 coins on each screen on random elevations not too low
-		int cloudNum = MathUtils.random(4, 15);
-		for(int i = 0; i < cloudNum; i++)
+		int coinNum = MathUtils.random(4, 10);
+		float xStart = MathUtils.random(camStartX, camStartX + camWidth + 2);
+		float y = MathUtils.random(groundBlockY + 1f, groundBlockY + 1f + world.maryo.mDrawRect.height * 2.5f);
+		for(int i = 0; i < coinNum; i++)
 		{
-			float x = MathUtils.random(camStartX, camStartX + camWidth + 2);
-			float y = MathUtils.random(groundBlockY + 1f, groundBlockY + 1f + world.maryo.mDrawRect.height * 2.5f);
+			xStart += Coin.DEF_SIZE + Coin.DEF_SIZE * .25f;
 			Coin coin = world.COIN_POOL.obtain();
-			coin.position.set(x, y, m_pos_z_massive_start);
-			coin.mDrawRect.set(x, y, Coin.DEF_SIZE, Coin.DEF_SIZE);
+			coin.position.set(xStart, y, m_pos_z_massive_start);
+			coin.mDrawRect.set(xStart, y, Coin.DEF_SIZE, Coin.DEF_SIZE);
 			coin.mColRect.set(coin.mDrawRect);
 			coin.updateBounds();
 			int chance = MathUtils.random(0, 100);
