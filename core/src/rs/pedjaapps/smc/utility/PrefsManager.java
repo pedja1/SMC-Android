@@ -3,7 +3,7 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
-import rs.pedjaapps.smc.assets.ArchiveFileHandleResolver;
+import rs.pedjaapps.smc.assets.MaryoFileHandleResolver;
 
 /**
  * Created by pedja on 21.9.14..
@@ -85,7 +85,7 @@ public class PrefsManager
 
     public static int getTextureQuality()
     {
-        return prefs.getInteger(PrefsKey.texture_quality.toString(), ArchiveFileHandleResolver.DEFAULT_TEXTURE_QUALITY);
+        return prefs.getInteger(PrefsKey.texture_quality.toString(), MaryoFileHandleResolver.DEFAULT_TEXTURE_QUALITY);
     }
 
     public static void setTextureQuality(int quality)

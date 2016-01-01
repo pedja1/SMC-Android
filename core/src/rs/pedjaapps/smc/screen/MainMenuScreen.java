@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
@@ -99,7 +100,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
-        music = world.screen.game.assets.manager.get(loader.level.music);
+        music = Assets.manager.get(loader.level.music);
         MusicManager.play(music);
     }
 
@@ -211,7 +212,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void dispose()
     {
         Gdx.input.setInputProcessor(null);
-        game.assets.dispose();
+        Assets.dispose();
         background.dispose();
         batch.dispose();
         exitDialog.dispose();
@@ -223,17 +224,17 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     public void loadAssets()
     {
         loader.parseLevel(world);
-        game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
-        game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-        game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
-        game.assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, game.assets.textureParameter);
-        game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
+        Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
+        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
+        Assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, Assets.textureParameter);
+        Assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         /*cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/environment/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();//TODO load with loader*/
 
-        game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
+        Assets.manager.load("data/hud/lock.png", Texture.class, Assets.textureParameter);
         exitDialog.loadAssets();
         settingsDialog.loadAssets();
 
@@ -242,7 +243,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void onAssetsLoaded()
     {
-        TextureAtlas hud = game.assets.manager.get("data/hud/hud.pack");
+        TextureAtlas hud = Assets.manager.get("data/hud/hud.pack");
         play = hud.findRegion("play");
         playR = new Rectangle(screenWidth / 2f - (screenWidth / 9f) / 2,
                 screenHeight / 2f - (screenWidth / 9f) / 2, screenWidth / 9f, screenWidth / 9f);
@@ -267,18 +268,18 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 
         background.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
         background.color2 = new Color(0f, 0.392f, 0.039f, 0f);
-        background.onAssetsLoaded(drawCam, game.assets);
+        background.onAssetsLoaded(drawCam);
 
-        gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
+        gameLogo = Assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         world.level = loader.level;
 
-        TextureAtlas atlas = game.assets.manager.get("data/maryo/small.pack");
+        TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
         marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
 
-        audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
+        audioOn = Assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
 
         exitDialog.initAssets();
         settingsDialog.initAssets();

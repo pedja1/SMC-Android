@@ -7,11 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.utility.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -35,7 +36,7 @@ public class Static extends Enemy
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
+        texture = Assets.manager.get(textureName);
     }
 
     @Override

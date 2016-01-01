@@ -18,14 +18,6 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
 {
-	public Assets assets;
-	private String androidAssetsZipFilePath;
-
-	public MaryoGame(String androidAssetsZipFilePath)
-	{
-		this.androidAssetsZipFilePath = androidAssetsZipFilePath;
-	}
-
 	public MaryoGame()
 	{
 	}
@@ -33,7 +25,6 @@ public class MaryoGame extends Game
 	@Override
 	public void create()
 	{
-		assets = new Assets(androidAssetsZipFilePath);
 		Shader.init();
 		GameSave.init();
 		setScreen(new SplashScreen(this));
@@ -45,7 +36,7 @@ public class MaryoGame extends Game
 	{
 		Screen currentScreen = getScreen();
 		if(currentScreen instanceof SplashScreen)return;
-		Texture.setAssetManager(assets.manager);
+		Texture.setAssetManager(Assets.manager);
 		setScreen(new LoadingScreen((AbstractScreen)currentScreen, true));
 	}
 
@@ -59,11 +50,10 @@ public class MaryoGame extends Game
     public void dispose()
     {
         super.dispose();
-        assets.dispose();
+        Assets.dispose();
 		GA.sendGameEnded();
 		GA.dispose();
 		GameSave.dispose();
-		assets = null;
 		Shader.dispose();
     }
 
@@ -74,9 +64,7 @@ public class MaryoGame extends Game
 
 	public void restart()
 	{
-		assets.dispose();
-		assets = null;
-		assets = new Assets(androidAssetsZipFilePath);
+		Assets.dispose();
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 

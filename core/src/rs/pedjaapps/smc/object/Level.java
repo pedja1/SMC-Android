@@ -13,8 +13,8 @@ public class Level
 {
     public Array<GameObject> gameObjects;
     public Vector3 spanPosition;
-	public Background background;
-	public Parallax parallaxClouds, parallaxGround1, parallaxGround2;
+	public Background backgroundColor, background, background2;
+	public Parallax parallaxClouds, parallaxGround1;
     public String music;
 
 	public static final String LEVEL_EXT = ".smclvl";
@@ -33,11 +33,13 @@ public class Level
 		gameObjects = null;
 		background.dispose();
 		background = null;
+		background2.dispose();
+		background2 = null;
+		backgroundColor.dispose();
+		backgroundColor = null;
 		parallaxClouds.dispose();
 		parallaxClouds = null;
 		parallaxGround1.dispose();
 		parallaxGround1 = null;
-		parallaxGround2.dispose();
-		parallaxGround2 = null;
 	}
 }

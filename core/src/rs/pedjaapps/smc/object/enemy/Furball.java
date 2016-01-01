@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -54,7 +55,7 @@ public class Furball extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureRegion> walkFrames = new Array<TextureRegion>();
 
         for(int i = 1; i < 9; i++)
@@ -233,7 +234,7 @@ public class Furball extends Enemy
             stateTime = 0;
             handleCollision = false;
             dying = true;
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
+            Sound sound = Assets.manager.get("data/sounds/enemy/furball/die.mp3");
             SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
         }

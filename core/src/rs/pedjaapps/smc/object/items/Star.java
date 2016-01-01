@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -53,8 +54,8 @@ public class Star extends Item
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
-        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
+        texture = Assets.manager.get(textureName);
+        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
     }
 
     @Override
@@ -222,7 +223,7 @@ public class Star extends Item
     public void hitPlayer()
     {
         playerHit = true;
-        AssetManager manager = world.screen.game.assets.manager;
+        AssetManager manager = Assets.manager;
         if(!manager.isLoaded("data/music/game/star.mp3"))
         {
             manager.load("data/music/game/star.mp3", Music.class);

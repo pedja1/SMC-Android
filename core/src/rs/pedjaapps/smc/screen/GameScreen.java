@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.ga.GA;
@@ -156,7 +157,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
-        music = game.assets.manager.get(world.level.music);
+        music = Assets.manager.get(world.level.music);
         MusicManager.play(music);
         if (debug) GLProfiler.enable();
         Gdx.input.setCatchBackKey(true);
@@ -188,10 +189,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (gameState == GAME_STATE.GAME_RUNNING) generator.update(cam);
 
         moveCamera(cam, world.maryo.position);
-        drawBackground();
 
-        world.level.parallaxGround2.render(cam, spriteBatch);
+        world.level.backgroundColor.render(cam, spriteBatch);
         world.level.parallaxGround1.render(cam, spriteBatch);
+        world.level.background.render(cam, spriteBatch);
+        world.level.background2.render(cam, spriteBatch);
+
         world.level.parallaxClouds.render(cam, spriteBatch);
 
         spriteBatch.setProjectionMatrix(cam.combined);
@@ -238,11 +241,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             GameObject go = world.level.parallaxClouds.objects.get(i);
             removeObject( world.level.parallaxClouds.objects, world.level.parallaxClouds.cam, go);
         }
-        for (int i = 0; i < world.level.parallaxGround2.objects.size; i++)
-        {
-            GameObject go = world.level.parallaxGround2.objects.get(i);
-            removeObject(world.level.parallaxGround2.objects, world.level.parallaxGround2.cam, go);
-        }
         for (int i = 0; i < world.level.parallaxGround1.objects.size; i++)
         {
             GameObject go = world.level.parallaxGround1.objects.get(i);
@@ -285,7 +283,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             spriteBatch.setProjectionMatrix(guiCam.combined);
             spriteBatch.begin();
 
-            Texture go = game.assets.manager.get("data/game/game_over.png");
+            Texture go = Assets.manager.get("data/game/game_over.png");
             go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             float width = this.width * 0.8f;
             float height = width / 4;
@@ -323,11 +321,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 game.setScreen(new LoadingScreen(new GameScreen(game), false));
             }
         }
-    }
-
-    private void drawBackground()
-    {
-        world.level.background.render(cam, spriteBatch);
     }
 
     public void moveCamera(OrthographicCamera cam, Vector3 pos)
@@ -427,7 +420,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                         + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
                         + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
                         + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
-                        + "\n" + "Object Count: " + (world.level.gameObjects.size + world.level.parallaxClouds.objects.size + world.level.parallaxGround1.objects.size + world.level.parallaxGround2.objects.size)
+                        + "\n" + "Object Count: " + (world.level.gameObjects.size + world.level.parallaxClouds.objects.size + world.level.parallaxGround1.objects.size)
                         + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
                         + "\n" + "Screen w=" + width + "h=" + height
                         + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
@@ -454,10 +447,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
+        world.level.backgroundColor.resize(cam);
         world.level.background.resize(cam);
+        world.level.background2.resize(cam);
         world.level.parallaxClouds.resize(cam);
         world.level.parallaxGround1.resize(cam);
-        world.level.parallaxGround2.resize(cam);
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -488,7 +482,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         music.stop();
         Gdx.input.setInputProcessor(null);
-        game.assets.dispose();
+        Assets.dispose();
         exitDialog.dispose();
         world.dispose();
         GA.sendLevelEnded(levelName, stateTime);
@@ -499,60 +493,49 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
-            game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
+            Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
-        game.assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
-        game.assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/iceball.png", Texture.class, game.assets.textureParameter);
-        game.assets.manager.load("data/game/game_over.png", Texture.class);
-        game.assets.manager.load("data/environment/clouds/clouds.pack", TextureAtlas.class);
-        game.assets.manager.load("data/game/items/goldpiece/red.pack", TextureAtlas.class);
-        game.assets.manager.load("data/game/items/goldpiece/yellow.pack", TextureAtlas.class);
-        game.assets.manager.load("data/environment/background/green_junglehills.png", Texture.class);
+        Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
+        Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/animation/iceball.png", Texture.class, Assets.textureParameter);
+        Assets.manager.load("data/game/game_over.png", Texture.class);
+        Assets.manager.load("data/environment/clouds/clouds.pack", TextureAtlas.class);
+        Assets.manager.load("data/game/items/goldpiece/red.pack", TextureAtlas.class);
+        Assets.manager.load("data/game/items/goldpiece/yellow.pack", TextureAtlas.class);
+        Assets.manager.load("data/environment/background/forest_1.png", Texture.class);
+        Assets.manager.load("data/environment/background/forest_2.png", Texture.class);
+        Assets.manager.load("data/environment/ground/green.png", Texture.class);
 
-        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationNoParallax)
-        {
-            game.assets.manager.load(sd.texture, Texture.class);
-        }
-
-        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel1)
-        {
-            game.assets.manager.load(sd.texture, Texture.class);
-        }
-
-        for (LevelGenerator.SpriteDescriptor sd : LevelGenerator.groundDecorationParallaxLevel2)
-        {
-            game.assets.manager.load(sd.texture, Texture.class);
-        }
+        Assets.manager.load("data/environment/decoration/decoration.pack", TextureAtlas.class);
 
         hud.loadAssets();
 
         //audio
-        game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/goldpiece_1.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/goldpiece_red.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/dead.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_big.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_big_power.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_small.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_small_power.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_ghost.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/ghost_end.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/pickup_item.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/powerdown.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/run_stop.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/wall_hit.mp3", Sound.class);
+        Assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
+        Assets.manager.load("data/sounds/item/goldpiece_1.mp3", Sound.class);
+        Assets.manager.load("data/sounds/item/goldpiece_red.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/dead.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_big.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_big_power.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_small.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_small_power.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/jump_ghost.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/ghost_end.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/pickup_item.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/powerdown.mp3", Sound.class);
+        Assets.manager.load("data/sounds/player/run_stop.mp3", Sound.class);
+        Assets.manager.load("data/sounds/wall_hit.mp3", Sound.class);
 
-        game.assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
+        Assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
 
-        game.assets.manager.load("data/sounds/enemy/furball/die.mp3", Sound.class);
+        Assets.manager.load("data/sounds/enemy/furball/die.mp3", Sound.class);
 
-        game.assets.manager.load("data/music/land/land_5.mp3", Music.class);
+        Assets.manager.load("data/music/land/land_5.mp3", Music.class);
 
 
 
@@ -565,13 +548,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         debugFontParams.fontFileName = "data/fonts/MyriadPro-Regular.otf";
         debugFontParams.fontParameters.size = (int) (height / 25f);
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        game.assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
+        Assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
 
         debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         debugFontParams.fontParameters.size = (int) (height / 40f);
         debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        game.assets.manager.load("debug_object.ttf", BitmapFont.class, debugFontParams);
+        Assets.manager.load("debug_object.ttf", BitmapFont.class, debugFontParams);
 
         exitDialog.loadAssets();
 
@@ -579,14 +562,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         pointsParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         pointsParams.fontParameters.size = (int) HUD.C_H / 35;
         pointsParams.fontParameters.characters = "0123456789";
-        game.assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
+        Assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
 
     }
 
     private void loadTextures()
     {
         leafEffect = new ParticleEffect();
-        leafEffect.load(game.assets.resolver.resolve("data/animation/particles/leaf_emitter.p"), game.assets.resolver.resolve("data/animation/particles"));
+        leafEffect.load(Gdx.files.internal("data/animation/particles/leaf_emitter.p"), Assets.resolver.resolve("data/animation/particles"));
         leafEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
         leafEffect.start();
     }
@@ -596,25 +579,26 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         generator.preLoad(cam);
         hud.initAssets();
-        audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
+        audioOn = Assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
         exitDialog.initAssets();
 
-        debugFont = game.assets.manager.get("debug.ttf");
+        debugFont = Assets.manager.get("debug.ttf");
         debugFont.setColor(1, 0, 0, 1);
 
-        debugObjectFont = game.assets.manager.get("debug_object.ttf");
+        debugObjectFont = Assets.manager.get("debug_object.ttf");
         debugGlyph = new GlyphLayout();
 
         for (GameObject go : world.level.gameObjects)
             go.initAssets();
 
-        BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
+        BitmapFont pointsFont = Assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-        world.level.background.onAssetsLoaded(cam, game.assets);
+        world.level.backgroundColor.onAssetsLoaded(cam);
+        world.level.background.onAssetsLoaded(cam);
+        world.level.background2.onAssetsLoaded(cam);
         world.level.parallaxClouds.onAssetsLoaded(cam);
         world.level.parallaxGround1.onAssetsLoaded(cam);
-        world.level.parallaxGround2.onAssetsLoaded(cam);
     }
 
     // * InputProcessor methods ***************************//

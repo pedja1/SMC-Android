@@ -58,7 +58,7 @@ public class TextureAtlasGenerator
             spikeball(resolutionHeight);
             kplant(resolutionHeight);*/
             //turtle(resolutionHeight);
-            String path = "/home/pedja/workspace/SMC-Android/data/data_" + resolutionHeight + "/environment/decoration";
+            String path = "/home/pedja/workspace/SMC-Android/android/assets/data_" + resolutionHeight + "/environment/decoration";
             TexturePacker2.process(settings, path, path, "decoration.pack");
 
         }

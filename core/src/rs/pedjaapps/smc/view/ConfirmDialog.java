@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -76,9 +77,9 @@ public class ConfirmDialog
 
     public void loadAssets()
     {
-        screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 
-		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class, screen.game.assets.textureParameter);
+		Assets.manager.load("data/hud/dialog_background.png", Texture.class, Assets.textureParameter);
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
@@ -86,18 +87,18 @@ public class ConfirmDialog
         params.fontParameters.size = (int) (cam.viewportHeight / 23);
         params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQ";
         params.fontParameters.borderWidth = 2f;
-        screen.game.assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
+        Assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
     }
 
     public void initAssets()
     {
-        TextureAtlas atlas = screen.game.assets.manager.get("data/hud/hud.pack");
-        back = screen.game.assets.manager.get("data/hud/dialog_background.png");
+        TextureAtlas atlas = Assets.manager.get("data/hud/hud.pack");
+        back = Assets.manager.get("data/hud/dialog_background.png");
         
 		TextureRegion btnCancel = atlas.findRegion("cancel");
 		TextureRegion btnAccept = atlas.findRegion("accept");
 		
-		font = screen.game.assets.manager.get("confirm_dialog.ttf");
+		font = Assets.manager.get("confirm_dialog.ttf");
         fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();

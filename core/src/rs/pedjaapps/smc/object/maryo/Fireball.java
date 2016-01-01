@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -161,13 +162,13 @@ public class Fireball extends DynamicObject
     {
         if (animation == null)
         {
-            TextureAtlas atlas = world.screen.game.assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
+            TextureAtlas atlas = Assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
             Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
 
             animation = new Animation(0.05f, regions);
         }
-        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_emitter.p", ParticleEffect.class));
-        explosion = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
+        trail = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_emitter.p", ParticleEffect.class));
+        explosion = new ParticleEffect(Assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
     }
 
     @Override

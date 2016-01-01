@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.HashSet;
 import java.util.Set;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.DynamicObject;
@@ -194,7 +195,7 @@ public class Maryo extends DynamicObject
             loadTextures(ms);
         }
         setJumpSound();
-        starEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
+        starEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
     }
 
@@ -206,7 +207,7 @@ public class Maryo extends DynamicObject
 
     private void loadTextures(MaryoState state)
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get("data/maryo/" + state + ".pack");
+        TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");
 
         TextureRegion tmpStandRight;
         tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
@@ -723,7 +724,7 @@ public class Maryo extends DynamicObject
         }
         else
         {
-            SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
+            SoundManager.play(Assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
             upgrade(MaryoState.small, false, null, true);
         }
     }
@@ -768,11 +769,11 @@ public class Maryo extends DynamicObject
         switch (newState)
         {
             case big:
-                return world.screen.game.assets.manager.get("data/sounds/item/mushroom.mp3");
+                return Assets.manager.get("data/sounds/item/mushroom.mp3");
             case fire:
-                return world.screen.game.assets.manager.get("data/sounds/item/fireplant.mp3");
+                return Assets.manager.get("data/sounds/item/fireplant.mp3");
             case ice:
-                return world.screen.game.assets.manager.get("data/sounds/item/mushroom_blue.mp3");
+                return Assets.manager.get("data/sounds/item/mushroom_blue.mp3");
         }
         return null;
     }
@@ -828,7 +829,7 @@ public class Maryo extends DynamicObject
             diedTime = stateTime;
             handleCollision = false;
             diedPosition = new Vector3(position);
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
+            Sound sound = Assets.manager.get("data/sounds/player/dead.mp3");
             SoundManager.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSave.save.lifes--;
@@ -880,12 +881,12 @@ public class Maryo extends DynamicObject
         switch (maryoState)
         {
             case small:
-                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small.mp3");
+                jumpSound = Assets.manager.get("data/sounds/player/jump_small.mp3");
                 break;
             case big:
             case fire:
             case ice:
-                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
+                jumpSound = Assets.manager.get("data/sounds/player/jump_big.mp3");
                 break;
         }
     }

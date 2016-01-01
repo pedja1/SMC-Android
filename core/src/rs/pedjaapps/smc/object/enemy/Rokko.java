@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
@@ -53,7 +54,7 @@ public class Rokko extends Enemy
         mMaxDistanceSides = 6.25f;
         mFireResistant = 1;
         mIceResistance = 1;
-        world.screen.game.assets.manager.load("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+        Assets.manager.load("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
     }
 
     @Override
@@ -69,8 +70,8 @@ public class Rokko extends Enemy
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
-        effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class));
+        texture = Assets.manager.get(textureName);
+        effect = new ParticleEffect(Assets.manager.get("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class));
         effect.start();
     }
 

@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -74,9 +75,9 @@ public class SettingsDialog
 
     public void loadAssets()
     {
-        screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
+        Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 
-		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class, screen.game.assets.textureParameter);
+		Assets.manager.load("data/hud/dialog_background.png", Texture.class, Assets.textureParameter);
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
@@ -84,7 +85,7 @@ public class SettingsDialog
         params.fontParameters.size = (int) (cam.viewportHeight / 30);
         params.fontParameters.characters = "YesNoStingTxurQaly";
         params.fontParameters.borderWidth = 2f;
-        screen.game.assets.manager.load("settings_dialog.ttf", BitmapFont.class, params);
+        Assets.manager.load("settings_dialog.ttf", BitmapFont.class, params);
 
         params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
@@ -93,20 +94,20 @@ public class SettingsDialog
         params.fontParameters.characters = "LOWHIGMEDU";
         params.fontParameters.size = (int) (cam.viewportHeight / 40);
         params.fontParameters.borderWidth = 2f;
-        screen.game.assets.manager.load("texture_quality.ttf", BitmapFont.class, params);
+        Assets.manager.load("texture_quality.ttf", BitmapFont.class, params);
     }
 
     public void initAssets()
     {
-        TextureAtlas atlas = screen.game.assets.manager.get("data/hud/hud.pack");
-        back = screen.game.assets.manager.get("data/hud/dialog_background.png");
+        TextureAtlas atlas = Assets.manager.get("data/hud/hud.pack");
+        back = Assets.manager.get("data/hud/dialog_background.png");
         TextureRegion check = atlas.findRegion("check");
         TextureRegion checkBackground = atlas.findRegion("check_background");
 
 		TextureRegion btnCancel = atlas.findRegion("cancel");
 		TextureRegion btnAccept = atlas.findRegion("accept");
 		
-		font = screen.game.assets.manager.get("settings_dialog.ttf");
+		font = Assets.manager.get("settings_dialog.ttf");
         fontGlyph = new GlyphLayout();
 
         buttonNo = new ConfirmDialog.Button();
@@ -137,7 +138,7 @@ public class SettingsDialog
         top = textR.y - textR.height;
 
 
-        BitmapFont ftn = screen.game.assets.manager.get("texture_quality.ttf");
+        BitmapFont ftn = Assets.manager.get("texture_quality.ttf");
         Rectangle rectangle = new Rectangle();
         rectangle.width = contentRect.width * .33f;
         rectangle.height = top - bottom;

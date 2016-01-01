@@ -37,7 +37,6 @@ public class LevelGenerator
 	static final Array<Array<String>> clouds = new Array<>();
 	public static final Array<SpriteDescriptor> groundDecorationNoParallax = new Array<>();
 	public static final Array<SpriteDescriptor> groundDecorationParallaxLevel1 = new Array<>();
-	public static final Array<SpriteDescriptor> groundDecorationParallaxLevel2 = new Array<>();
 
 	static
 	{
@@ -60,37 +59,16 @@ public class LevelGenerator
 		lightYellow.add("yellow-10");
 		clouds.add(lightYellow);
 
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/cactus_1.png", .5f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/gras_middle.png", .25f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/plant_m.png", .25f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/plant_r.png", .25f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/small_2.png", .25f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/small_4.png", .25f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/small_5.png", .5f));
-		groundDecorationNoParallax.add(new SpriteDescriptor("data/environment/decoration/small_6.png", .5f));
+		groundDecorationNoParallax.add(new SpriteDescriptor("gras-middle", .25f));
+		groundDecorationNoParallax.add(new SpriteDescriptor("plant-m", .25f));
+		groundDecorationNoParallax.add(new SpriteDescriptor("plant-r", .25f));
 
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/cactus_2.png", 1f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/cactus_3.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/cactus_4.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_1.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_2.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_4.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_5.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_6.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/big_plant_2.png", 2f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/medium_1.png", .5f));
-		groundDecorationParallaxLevel1.add(new SpriteDescriptor("data/environment/decoration/medium_2.png", .5f));
-
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/1.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/1_front.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/2.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/2_front.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/beanstalk.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/beanstalk_2.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/big_plant_1.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/lights.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/normal.png", 4f));
-		groundDecorationParallaxLevel2.add(new SpriteDescriptor("data/environment/decoration/snow.png", 4f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("cactus-1", .5f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("cactus-2", .5f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("cactus-3", .7f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("cactus-4", .8f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("big-plant-2", 1f));
+		groundDecorationParallaxLevel1.add(new SpriteDescriptor("big-plant-1", 1f));
 
 	}
 
@@ -121,18 +99,19 @@ public class LevelGenerator
 		world.level.music = "data/music/land/land_5.mp3";
 
 		//load first background
-		Background background = new Background(new Vector2(), new Vector2(.2f, .2f), "data/environment/background/green_junglehills.png");
-		Color color1 = World.COLOR_POOL.obtain();
-		color1.set(0.117647059f, 0.705882353f, 0.050980392f, 0);
-		background.color1 = color1;
-		Color color2 = World.COLOR_POOL.obtain();
-		color2.set(0, 0.392156863f, 0, 0);
-		background.color2 = color2;
-		world.level.background = background;
+		world.level.background = new Background(new Vector2(), new Vector2(.1f, .1f), "data/environment/background/forest_2.png");
+		world.level.background2 = new Background(new Vector2(), new Vector2(.2f, .2f), "data/environment/background/forest_1.png");
 
-		world.level.parallaxClouds = new Parallax(new Vector2(.6f, .6f));
-		world.level.parallaxGround1 = new Parallax(new Vector2(.9f, .9f));
-		world.level.parallaxGround2 = new Parallax(new Vector2(.4f, .4f));
+		world.level.backgroundColor = new Background(null, null, null);
+		Color color1 = World.COLOR_POOL.obtain();
+		color1.set(0.392156863f, 0.745098039f, 0.980392157f, 0);
+		world.level.backgroundColor.color1 = color1;
+		Color color2 = World.COLOR_POOL.obtain();
+		color2.set(0.039215686f, 0.588235294f, 0.784313725f, 0);
+		world.level.backgroundColor.color2 = color2;
+
+		world.level.parallaxClouds = new Parallax(new Vector2(.5f, .5f));
+		world.level.parallaxGround1 = new Parallax(new Vector2(.1f, .1f));
 
         world.level.parallaxClouds.nextViewportCallback = new Parallax.NextViewportCallback()
         {
@@ -152,22 +131,12 @@ public class LevelGenerator
             }
         };
 
-        world.level.parallaxGround2.nextViewportCallback = new Parallax.NextViewportCallback()
-        {
-            @Override
-            public void onNextViewport(float viewportStartX, float viewportWidth, float viewportHeight)
-            {
-                addGroundDecorationLevel2(viewportStartX, viewportWidth);
-            }
-        };
-
 		//load ground for visible area(screen width)
 		float groundStartX = -0.328125f;
 		loadGround(groundStartX, cam.viewportWidth);
 		addClouds(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth, cam.viewportHeight);
 		addGroundDecorationNoParallax(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth);
 		addGroundDecorationLevel1(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth);
-		addGroundDecorationLevel2(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth);
 		preLoaded = true;
 	}
 
@@ -300,7 +269,7 @@ public class LevelGenerator
 			float x = MathUtils.random(camStartX, camStartX + camWidth + 2);
 			float y = groundBlockY + 1;
 			Sprite sprite = world.SPRITE_POOL.obtain();
-            sprite.textureAtlas = null;
+            sprite.textureAtlas = "data/environment/decoration/decoration.pack";
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
@@ -323,7 +292,7 @@ public class LevelGenerator
 			float x = MathUtils.random(camStartX, camStartX + camWidth + 2);
 			float y = groundBlockY + 1;
 			Sprite sprite = world.SPRITE_POOL.obtain();
-            sprite.textureAtlas = null;
+			sprite.textureAtlas = "data/environment/decoration/decoration.pack";
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
 			sprite.mColRect.set(sprite.mDrawRect);
@@ -335,32 +304,9 @@ public class LevelGenerator
 		}
 	}
 
-	private void addGroundDecorationLevel2(float camStartX, float camWidth)
-	{
-		//add 1-5 bushes on each screen
-		int num = MathUtils.random(1, 3);
-		for(int i = 0; i < num; i++)
-		{
-			SpriteDescriptor sd = groundDecorationParallaxLevel2.get(MathUtils.random(groundDecorationParallaxLevel2.size - 1));
-			float height = sd.height;
-			float x = MathUtils.random(camStartX, camStartX + camWidth + 2);
-			float y = groundBlockY + 1;
-			Sprite sprite = world.SPRITE_POOL.obtain();
-            sprite.textureAtlas = null;
-			sprite.position.set(x, y, m_pos_z_massive_start);
-			sprite.mDrawRect.set(x, y, 0, height);
-			sprite.mColRect.set(sprite.mDrawRect);
-			sprite.updateBounds();
-			sprite.type = Sprite.Type.passive;
-			sprite.textureName = sd.texture;
-			sprite.initAssets();
-			world.level.parallaxGround2.objects.add(sprite);
-		}
-	}
-
 	public static class SpriteDescriptor
 	{
-		public String texture;
+		public String texture, textureAtlas;
 		float height;
 
 		public SpriteDescriptor(String texture, float height)

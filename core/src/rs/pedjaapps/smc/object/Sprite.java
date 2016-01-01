@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class Sprite extends GameObject
@@ -67,16 +68,17 @@ public class Sprite extends GameObject
         TextureAtlas atlas = null;
         if (textureAtlas != null && textureAtlas.length() > 0)
         {
-            atlas = world.screen.game.assets.manager.get(textureAtlas);
+            atlas = Assets.manager.get(textureAtlas);
         }
 
         if (atlas != null)
         {
-            region = atlas.findRegion(textureName.split(":")[1]);
+            String[] split = textureName.split(":");
+            region = atlas.findRegion(split.length == 2 ? split[1] : textureName);
         }
         else
         {
-            txt = world.screen.game.assets.manager.get(textureName);
+            txt = Assets.manager.get(textureName);
         }
         if(mDrawRect.width == 0)
         {

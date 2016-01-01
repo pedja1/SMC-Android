@@ -47,12 +47,15 @@ public class Background
 
 	public void render(OrthographicCamera gameCam, SpriteBatch spriteBatch)
 	{
-		renderer.setProjectionMatrix(gameCam.combined);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.rect(gameCam.position.x - Constants.CAMERA_WIDTH / 2, gameCam.position.y - Constants.CAMERA_HEIGHT / 2,
-					  Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, color2,
-					  color2, color1, color1);
-		renderer.end();
+		if (color1 != null && color2 != null)
+		{
+			renderer.setProjectionMatrix(gameCam.combined);
+			renderer.begin(ShapeRenderer.ShapeType.Filled);
+			renderer.rect(gameCam.position.x - Constants.CAMERA_WIDTH / 2, gameCam.position.y - Constants.CAMERA_HEIGHT / 2,
+                          Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, color2,
+                          color2, color1, color1);
+			renderer.end();
+		}
 
 		if (texture != null)
 		{
@@ -94,13 +97,13 @@ public class Background
 		}
 	}
 	
-	public void onAssetsLoaded(OrthographicCamera gameCam, Assets assets)
+	public void onAssetsLoaded(OrthographicCamera gameCam)
 	{
 		if(textureName != null)
 		{
 			if(cameraPositioned)
 				return;
-			texture = assets.manager.get(textureName);
+			texture = Assets.manager.get(textureName);
 			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         	oldGameCamPos.set(gameCam.position);
 			cameraPositioned = true;

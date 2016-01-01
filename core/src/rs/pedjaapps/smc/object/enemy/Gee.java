@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -69,14 +70,14 @@ public class Gee extends Enemy
         position.z = POSITION_Z;
         if("vertical".equals(direction))
         {
-            world.screen.game.assets.manager.load("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+            Assets.manager.load("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         }
         else
         {
-            world.screen.game.assets.manager.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+            Assets.manager.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         }
-        world.screen.game.assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
-        world.screen.game.assets.manager.load("data/sounds/enemy/gee/die.mp3", Sound.class);
+        Assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
+        Assets.manager.load("data/sounds/enemy/gee/die.mp3", Sound.class);
     }
 
     @Override
@@ -88,19 +89,19 @@ public class Gee extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = Assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
         frames.add(frames.removeIndex(1));
         animation = new Animation(0.14f, frames);
         if("vertical".equals(direction))
         {
-            effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
+            effect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
         }
         else
         {
-            effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class));
+            effect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class));
         }
-        deadEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class));
+        deadEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class));
         for(ParticleEmitter pe : effect.getEmitters())
         {
             pe.getTint().setColors(new float[]{color.r, color.g, color.b});
@@ -351,7 +352,7 @@ public class Gee extends Enemy
             deadEffect.start();
             stateTime = 0;
             handleCollision = false;
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/gee/die.mp3");
+            Sound sound = Assets.manager.get("data/sounds/enemy/gee/die.mp3");
             SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
         }

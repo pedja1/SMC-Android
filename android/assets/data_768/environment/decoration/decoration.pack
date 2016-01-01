@@ -1,0 +1,68 @@
+
+decoration.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+big-plant-1
+  rotate: false
+  xy: 1, 37
+  size: 85, 85
+  orig: 85, 85
+  offset: 0, 0
+  index: -1
+big-plant-2
+  rotate: false
+  xy: 88, 37
+  size: 43, 85
+  orig: 43, 85
+  offset: 0, 0
+  index: -1
+cactus-1
+  rotate: false
+  xy: 201, 80
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+cactus-2
+  rotate: false
+  xy: 201, 36
+  size: 42, 42
+  orig: 42, 42
+  offset: 0, 0
+  index: -1
+cactus-3
+  rotate: false
+  xy: 169, 62
+  size: 30, 60
+  orig: 30, 60
+  offset: 0, 0
+  index: -1
+cactus-4
+  rotate: false
+  xy: 133, 54
+  size: 34, 68
+  orig: 34, 68
+  offset: 0, 0
+  index: -1
+gras-middle
+  rotate: false
+  xy: 1, 1
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+plant-m
+  rotate: false
+  xy: 1, 19
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+plant-r
+  rotate: false
+  xy: 35, 19
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1

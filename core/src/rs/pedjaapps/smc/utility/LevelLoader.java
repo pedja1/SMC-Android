@@ -64,9 +64,9 @@ public class LevelLoader
         try
         {
             jLevel = new JSONObject(Gdx.files.internal("data/levels/" + levelName + Level.LEVEL_EXT).readString());
-            parseInfo(jLevel, world.screen.game.assets);
-            parseBg(jLevel, world.screen.game.assets);
-            parseGameObjects(world, jLevel, world.screen.game.assets);
+            parseInfo(jLevel);
+            parseBg(jLevel);
+            parseGameObjects(world, jLevel);
         }
         catch (JSONException e)
         {
@@ -76,7 +76,7 @@ public class LevelLoader
         levelParsed = true;
     }
 
-    private void parseGameObjects(World world, JSONObject level, Assets assets) throws JSONException
+    private void parseGameObjects(World world, JSONObject level) throws JSONException
     {
         JSONArray jObjects = level.getJSONArray("objects");
         for (int i = 0; i < jObjects.length(); i++)
@@ -85,16 +85,16 @@ public class LevelLoader
             switch (ObjectClass.valueOf(jObject.getString("obj_class")))
             {
                 case sprite:
-                    parseSprite(world, jObject, assets);
+                    parseSprite(world, jObject);
                     break;
                 case player:
                     parsePlayer(jObject, world);
                     break;
                 case item:
-                    parseItem(world, jObject, assets);
+                    parseItem(world, jObject);
                     break;
                 case enemy:
-                    parseEnemy(world, jObject, assets);
+                    parseEnemy(world, jObject);
                     break;
                 case enemy_stopper:
                     parseEnemyStopper(world, jObject);
@@ -105,24 +105,24 @@ public class LevelLoader
         //Collections.sort(this.level.gameObjects, new ZSpriteComparator());
     }
 
-    private void parseInfo(JSONObject jLevel, Assets assets) throws JSONException
+    private void parseInfo(JSONObject jLevel) throws JSONException
     {
         JSONObject jInfo = jLevel.getJSONObject("info");
         if (jInfo.has("level_music"))
         {
             String music = jInfo.getString("level_music");
-            assets.manager.load(music, Music.class);
+            Assets.manager.load(music, Music.class);
             if(!levelParsed)level.music = music;
         }
     }
 
-    private void parseBg(JSONObject jLevel, Assets assets) throws JSONException
+    private void parseBg(JSONObject jLevel) throws JSONException
     {
         if (jLevel.has("background"))
         {
             JSONObject jBg = jLevel.getJSONObject("background");
             String textureName = jBg.optString("texture_name", null);
-            if(textureName != null)assets.manager.load(textureName, Texture.class, assets.textureParameter);
+            if(textureName != null)Assets.manager.load(textureName, Texture.class, Assets.textureParameter);
             if(levelParsed)return;
 			
 			Vector2 speed = new Vector2();
@@ -168,7 +168,7 @@ public class LevelLoader
         level.gameObjects.add(maryo);
     }
 
-    private void parseSprite(World world, JSONObject jSprite, Assets assets) throws JSONException
+    private void parseSprite(World world, JSONObject jSprite) throws JSONException
     {
         Vector3 position = new Vector3((float) jSprite.getDouble("posx"), (float) jSprite.getDouble("posy"), 0);
         Sprite.Type sType = null;
@@ -216,7 +216,7 @@ public class LevelLoader
 
         if(!TXT_NAME_IN_ATLAS.matcher(sprite.textureName).matches())
         {
-            assets.manager.load(sprite.textureName, Texture.class, assets.textureParameter);
+            Assets.manager.load(sprite.textureName, Texture.class, Assets.textureParameter);
         }
         if (jSprite.has("is_front"))
         {
@@ -226,7 +226,7 @@ public class LevelLoader
         sprite.textureAtlas = jSprite.optString("texture_atlas", null);
         if(sprite.textureAtlas != null)
         {
-            assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
@@ -239,19 +239,19 @@ public class LevelLoader
 
     }
 
-    private void parseEnemy(World world, JSONObject jEnemy, Assets assets) throws JSONException
+    private void parseEnemy(World world, JSONObject jEnemy) throws JSONException
     {
         Enemy enemy = Enemy.initEnemy(world, jEnemy);
         if (enemy == null) return;
         if (jEnemy.has("texture_atlas"))
         {
             enemy.textureAtlas = jEnemy.getString("texture_atlas");
-            assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
         }
         if (jEnemy.has("texture_name"))
         {
             enemy.textureName = jEnemy.getString("texture_name");
-            assets.manager.load(enemy.textureName, Texture.class, assets.textureParameter);
+            Assets.manager.load(enemy.textureName, Texture.class, Assets.textureParameter);
         }
         if(!levelParsed)level.gameObjects.add(enemy);
     }
@@ -268,7 +268,7 @@ public class LevelLoader
         level.gameObjects.add(stopper);
     }
 
-    private void parseItem(World world, JSONObject jItem, Assets assets) throws JSONException
+    private void parseItem(World world, JSONObject jItem) throws JSONException
     {
         Vector3 position = new Vector3((float) jItem.getDouble("posx"), (float) jItem.getDouble("posy"), 0);
 
@@ -277,7 +277,7 @@ public class LevelLoader
         if (jItem.has("texture_atlas"))
         {
             item.textureAtlas = jItem.getString("texture_atlas");
-            assets.manager.load(item.textureAtlas, TextureAtlas.class);
+            Assets.manager.load(item.textureAtlas, TextureAtlas.class);
         }
         if(!levelParsed)level.gameObjects.add(item);
     }
