@@ -46,22 +46,12 @@ public class GameSave
 
 	public static class Save
 	{
-		//persistent
+		//in memory only
 		public int coins;
 		public int points;
-		
-		//in memory only
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
 		public Item item;
-		
-		
-		//copy constructor, only persistent objects are copied
-		public Save(Save save)
-		{
-			coins = save.coins;
-			points = save.points;
-		}
 		
 		public Save()
 		{
@@ -81,8 +71,8 @@ public class GameSave
 				map.put(keyValue[0], keyValue[1]);
 			}
 			Save save = new Save();
-			save.points = Utility.parseInt(map.get("points"), 0);
-			save.coins = Utility.parseInt(map.get("coins"), 0);
+			//save.points = Utility.parseInt(map.get("points"), 0);
+			//save.coins = Utility.parseInt(map.get("coins"), 0);
 			return save;
 		}
 
@@ -92,8 +82,8 @@ public class GameSave
 
 			//noinspection StringBufferReplaceableByString
 			StringBuilder builder = new StringBuilder();
-			builder.append("\n").append("points=").append(save.points);
-			builder.append("\n").append("coins=").append(save.coins);
+			//builder.append("\n").append("points=").append(save.points);
+			//builder.append("\n").append("coins=").append(save.coins);
 
 			return Utility.base64Encode(builder.toString());
 		}
