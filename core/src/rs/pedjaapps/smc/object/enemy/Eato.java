@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -22,9 +21,9 @@ public class Eato extends Enemy
     private String direction;
     private Animation animation;
 
-    public Eato(World world, Vector2 size, Vector3 position, String direction)
+    public Eato(World world, Vector3 position, float width, float height, String direction)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         this.direction = direction;
         position.z = POSITION_Z;
         mFireResistant = 1;

@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.World;
@@ -14,9 +13,9 @@ import rs.pedjaapps.smc.utility.GameSave;
  */
 public class MushroomLive1 extends Mushroom
 {
-    public MushroomLive1(World world, Vector2 size, Vector3 position)
+    public MushroomLive1(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         textureName = "data/game/items/mushroom_green.png";
         mPickPoints = 1000;
     }
@@ -25,7 +24,6 @@ public class MushroomLive1 extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        GameSave.save.lifes += 1;
         //Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
         //if(sound != null && Assets.playSounds)sound.play();
         world.level.gameObjects.removeValue(this, true);

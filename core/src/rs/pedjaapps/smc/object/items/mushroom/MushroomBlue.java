@@ -1,10 +1,8 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.GameSave;
 
 /**
@@ -15,9 +13,9 @@ import rs.pedjaapps.smc.utility.GameSave;
  */
 public class MushroomBlue extends Mushroom
 {
-    public MushroomBlue(World world, Vector2 size, Vector3 position)
+    public MushroomBlue(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         textureName = "data/game/items/mushroom_blue.png";
         mPickPoints = 700;
     }
@@ -26,7 +24,6 @@ public class MushroomBlue extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.ice, false, this, false);
         world.level.gameObjects.removeValue(this, true);
         GameSave.save.points += mPickPoints;
     }

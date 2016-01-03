@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -39,9 +38,9 @@ public class Gee extends Enemy
     private boolean dying;
     private Animation animation;
 
-    public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
+    public Gee(World world, Vector3 position, float width, float height, float flyDistance, String color, String direction, float waitTime)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         this.direction = direction;
         mOriginPosition = new Vector3(position);
         this.flyDistance = flyDistance;

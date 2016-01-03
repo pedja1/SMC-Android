@@ -45,9 +45,9 @@ public abstract class Item extends DynamicObject
 
     private boolean dropping;
 
-    public Item(World world, Vector2 size, Vector3 position)
+    public Item(World world, Vector3 position, float widht, float height)
     {
-        super(world, size, position);
+        super(world, position, widht, height);
         position.z = 0.05f;
     }
 
@@ -58,7 +58,7 @@ public abstract class Item extends DynamicObject
         switch (itemClass)
         {
             case goldpiece:
-                object = new Coin(world, size, position);
+                object = new Coin(world, position, size.x, size.y);
                 break;
             case mushroom:
                 break;

@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -24,9 +23,9 @@ public class Moon extends Item
     public static final float DEF_SIZE = 0.65625f;
     private Animation animation;
 
-    public Moon(World world, Vector2 size, Vector3 position)
+    public Moon(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         textureAtlas = "data/game/items/moon.pack";
         position.z = 0.052f;
     }
@@ -52,7 +51,6 @@ public class Moon extends Item
     {
         playerHit = true;
         world.level.gameObjects.removeValue(this, true);
-        GameSave.save.lifes += 3;
         GameSave.save.points += 4000;
 
         Sound sound = Assets.manager.get("data/sounds/item/moon.mp3");

@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.World;
@@ -13,9 +12,9 @@ import rs.pedjaapps.smc.object.World;
  */
 public class MushroomPoison extends Mushroom
 {
-    public MushroomPoison(World world, Vector2 size, Vector3 position)
+    public MushroomPoison(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         textureName = "data/game/items/mushroom_poison.png";
     }
 
@@ -23,7 +22,7 @@ public class MushroomPoison extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.downgradeOrDie(false);
+        world.maryo.die();
         world.level.gameObjects.removeValue(this, true);
     }
 }

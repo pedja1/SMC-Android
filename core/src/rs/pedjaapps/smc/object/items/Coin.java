@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -34,9 +33,9 @@ public class Coin extends Item
     boolean scrollOut;
 
 
-    public Coin(World world, Vector2 size, Vector3 position)
+    public Coin(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         position.z = 0.041f;
     }
 

@@ -6,12 +6,10 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
@@ -26,9 +24,9 @@ public class Fireplant extends Item
     public static final float DEF_SIZE = 0.65625f;
     private Animation animation;
 
-    public Fireplant(World world, Vector2 size, Vector3 position)
+    public Fireplant(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         textureAtlas = "data/game/items/fireplant.pack";
         position.z = 0.051f;
     }
@@ -57,7 +55,6 @@ public class Fireplant extends Item
     public void hitPlayer()
     {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.fire, false, this, false);
         world.level.gameObjects.removeValue(this, true);
         GameSave.save.points += POINTS;
         ((GameScreen)world.screen).killPointsTextHandler.add(POINTS, position.x, position.y + mDrawRect.height);

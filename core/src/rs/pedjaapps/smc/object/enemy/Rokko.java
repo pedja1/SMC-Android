@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -30,9 +29,9 @@ public class Rokko extends Enemy
     private Texture texture;
     private TextureRegion region;
 
-    public Rokko(World world, Vector2 size, Vector3 position,  String direction)
+    public Rokko(World world, Vector3 position, float width, float height, String direction)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         this.speed = 3.5f;//speed;
         this.direction = direction;
         if("left".equals(direction))

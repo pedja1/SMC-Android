@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -26,6 +25,11 @@ public abstract class DynamicObject extends GameObject
 
     protected float groundY;
 
+    public DynamicObject(World world, Vector3 position, float width, float height)
+    {
+        super(world, position, width, height);
+    }
+
     public enum Direction
     {
         right, left
@@ -33,11 +37,6 @@ public abstract class DynamicObject extends GameObject
 
     protected float velocityDump = DEF_VEL_DUMP;
     protected GameObject closestObject = null;
-	
-	public DynamicObject(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
-    }
 	
 	protected void updatePosition(float deltaTime)
 	{
@@ -179,7 +178,7 @@ public abstract class DynamicObject extends GameObject
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
+            if (object == null || mColRect == null || object.mColRect == null) continue;
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, true);
@@ -234,19 +233,13 @@ public abstract class DynamicObject extends GameObject
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
+            if (object == null || mColRect == null || object.mColRect == null) continue;
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, false);
                 if(tmp)
                     collides = true;
             }
-        }
-        if (mColRect.x < 0)
-        {
-            boolean tmp = handleLevelEdge();
-            if(tmp)
-                collides = true;
         }
 
         // reset the x position of the collision box
@@ -262,12 +255,6 @@ public abstract class DynamicObject extends GameObject
             grounded = true;
         }
         velocity.y = 0;
-        return false;
-    }
-
-    protected boolean handleLevelEdge()
-    {
-        velocity.x = 0;
         return false;
     }
 
@@ -297,7 +284,14 @@ public abstract class DynamicObject extends GameObject
 			}
 			else
 			{
-				velocity.x = 0;
+                if(this instanceof Maryo)
+                {
+                    ((Maryo)this).die();
+                }
+                else
+                {
+                    velocity.x = 0;
+                }
 			}
             return true;
 		}

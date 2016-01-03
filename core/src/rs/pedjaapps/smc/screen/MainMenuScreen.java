@@ -24,10 +24,8 @@ import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
@@ -40,7 +38,6 @@ import rs.pedjaapps.smc.view.SettingsDialog;
  */
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
-    private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
     Texture gameLogo;
     TextureRegion play, musicOn, musicOff, soundOn, soundOff, settings;
     Rectangle playR, musicR, soundR, settingsR;
@@ -48,7 +45,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     SpriteBatch batch;
     public MaryoGame game;
     Background background;
-    LevelLoader loader;
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
     private boolean playT = false, musicT = false, soundT = false, settingsT = false;
@@ -84,7 +80,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         hudCam.position.set(screenWidth / 2, screenHeight / 2, 0);
         hudCam.update();
 
-        loader = new LevelLoader("main_menu");
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
@@ -100,7 +95,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
-        music = Assets.manager.get(loader.level.music);
+        //music = Assets.manager.get(loader.level.music);
         MusicManager.play(music);
     }
 
@@ -165,13 +160,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private void drawObjects(float deltaTime)
     {
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = loader.level.gameObjects.size; i < size; i++)
+        /*for (int i = 0, size = loader.level.gameObjects.size; i < size; i++)
         //for (GameObject gameObject : loader.level.gameObjects)
         {
             GameObject gameObject = loader.level.gameObjects.get(i);
             gameObject._update(deltaTime);
             gameObject._render(batch);
-        }
+        }*/
     }
 
     @Override
@@ -223,7 +218,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        loader.parseLevel(world);
+        //loader.parseLevel(world);
         Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
         Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
@@ -274,7 +269,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        world.level = loader.level;
+       // world.level = loader.level;
 
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
         marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
@@ -284,8 +279,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         exitDialog.initAssets();
         settingsDialog.initAssets();
 
-        for (GameObject go : loader.level.gameObjects)
-            go.initAssets();
+        /*for (GameObject go : loader.level.gameObjects)
+            go.initAssets();*/
     }
 
     @Override

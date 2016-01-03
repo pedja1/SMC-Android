@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -32,9 +31,9 @@ public class Turtle extends Enemy
     private Animation walkAnimation;
     private TextureRegion tTurn, tShell, tDead;
 
-    public Turtle(World world, Vector2 size, Vector3 position, String color)
+    public Turtle(World world, Vector3 position, float width, float height, String color)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         if(!"green".equals(color))
         {
             mKillPoints = 50;

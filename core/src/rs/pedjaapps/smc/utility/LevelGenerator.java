@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.object.Collider;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -91,7 +92,7 @@ public class LevelGenerator
 			return;
 		//load player at starting position
 
-		Maryo maryo = new Maryo(world, new Vector3(2, 2, 0.0999f), new Vector2(0.9f, 0.9f));
+		Maryo maryo = new Maryo(world, new Vector3(2, 2, 0.0999f), 0.9f, 0.9f);
 		maryo.initAssets();
 		world.maryo = maryo;
 
@@ -134,10 +135,18 @@ public class LevelGenerator
 		//load ground for visible area(screen width)
 		float groundStartX = -0.328125f;
 		loadGround(groundStartX, cam.viewportWidth);
+		addGroundCollider(groundStartX);
 		addClouds(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth, cam.viewportHeight);
 		addGroundDecorationNoParallax(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth);
 		addGroundDecorationLevel1(cam.position.x - cam.viewportWidth / 2, cam.viewportWidth);
 		preLoaded = true;
+	}
+
+	private void addGroundCollider(float groundStartX)
+	{
+		Collider collider = new Collider(world, new Vector3(groundStartX, groundBlockY, 0), Integer.MAX_VALUE, 1);
+        collider.mColRect = new Rectangle(collider.mDrawRect);
+		world.level.gameObjects.add(collider);
 	}
 
 	/**
@@ -151,7 +160,6 @@ public class LevelGenerator
             sprite.textureAtlas = null;
 			sprite.position.set(posx, groundBlockY, m_pos_z_massive_start);
 			sprite.mDrawRect.set(posx, groundBlockY, 1, 1);
-			sprite.mColRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.textureName = "data/environment/ground/green.png";
 			sprite.type = Sprite.Type.massive;
@@ -177,15 +185,15 @@ public class LevelGenerator
 		for(int i = 0; i < world.level.gameObjects.size; i++)
 		{
 			GameObject go = world.level.gameObjects.get(i);
-			if(go instanceof Sprite && go.position.y == groundBlockY)
+			if(!(go instanceof Collider) && go instanceof Sprite && go.position.y == groundBlockY)
 			{
-				if(rect.overlaps(go.mColRect))
+				if(rect.overlaps(go.mDrawRect))
 				{
 					foundGroundAtEndOfViewport = true;
 				}
-				if(go.position.x + go.mColRect.width > lastGroundBlockEnd)
+				if(go.position.x + go.mDrawRect.width > lastGroundBlockEnd)
 				{
-					lastGroundBlockEnd = go.position.x + go.mColRect.width;
+					lastGroundBlockEnd = go.position.x + go.mDrawRect.width;
 				}
 			}
 		}
@@ -199,6 +207,7 @@ public class LevelGenerator
 
 			addGroundDecorationNoParallax(lastGroundBlockEnd, camWidth);
             addCoins(lastGroundBlockEnd, camWidth);
+            addPlatforms(lastGroundBlockEnd, camWidth);
 		}
 		World.RECT_POOL.free(rect);
     }
@@ -217,7 +226,6 @@ public class LevelGenerator
 			Sprite sprite = world.SPRITE_POOL.obtain();
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
-			sprite.mColRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureAtlas = "data/environment/clouds/clouds.pack";
@@ -240,6 +248,7 @@ public class LevelGenerator
 			Coin coin = world.COIN_POOL.obtain();
 			coin.position.set(xStart, y, m_pos_z_massive_start);
 			coin.mDrawRect.set(xStart, y, Coin.DEF_SIZE, Coin.DEF_SIZE);
+            coin.mColRect = new Rectangle();
 			coin.mColRect.set(coin.mDrawRect);
 			coin.updateBounds();
 			int chance = MathUtils.random(0, 100);
@@ -257,6 +266,34 @@ public class LevelGenerator
 		}
 	}
 
+	private void addPlatforms(float camStartX, float camWidth)
+	{
+		final float platformWidth = 0.67f;
+		//add 4-15 coins on each screen on random elevations not too low
+		int coinNum = MathUtils.random(4, 10);
+		float xStart = MathUtils.random(camStartX, camStartX + camWidth + 2);
+		float y = MathUtils.random(groundBlockY + 2f, groundBlockY + 1f + world.maryo.mDrawRect.height * 2.5f);
+
+        Collider collider = new Collider(world, new Vector3(xStart, y, 0), platformWidth * coinNum, platformWidth);
+        collider.mColRect = new Rectangle(collider.mDrawRect);
+        collider.type = Sprite.Type.halfmassive;
+        world.level.gameObjects.add(collider);
+
+		for(int i = 0; i < coinNum; i++)
+		{
+			xStart += platformWidth;
+			Sprite sprite = world.SPRITE_POOL.obtain();
+			sprite.position.set(xStart, y, m_pos_z_massive_start);
+			sprite.mDrawRect.set(xStart, y, 0, platformWidth);
+			sprite.updateBounds();
+			sprite.type = Sprite.Type.massive;
+			sprite.textureAtlas = null;
+			sprite.textureName = "data/game/box/brown.png";
+			sprite.initAssets();
+			world.level.gameObjects.add(sprite);
+		}
+
+	}
 
 	private void addGroundDecorationNoParallax(float camStartX, float camWidth)
 	{
@@ -272,7 +309,6 @@ public class LevelGenerator
             sprite.textureAtlas = "data/environment/decoration/decoration.pack";
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
-			sprite.mColRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureName = sd.texture;
@@ -295,7 +331,6 @@ public class LevelGenerator
 			sprite.textureAtlas = "data/environment/decoration/decoration.pack";
 			sprite.position.set(x, y, m_pos_z_massive_start);
 			sprite.mDrawRect.set(x, y, 0, height);
-			sprite.mColRect.set(sprite.mDrawRect);
 			sprite.updateBounds();
 			sprite.type = Sprite.Type.passive;
 			sprite.textureName = sd.texture;

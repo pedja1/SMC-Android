@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -28,9 +27,9 @@ public class Spika extends Enemy
     private Texture texture;
     private TextureRegion region;
 
-    public Spika(World world, Vector2 size, Vector3 position, String color)
+    public Spika(World world, Vector3 position, float width, float height, String color)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         if("orange".equals(color))
         {
             mSpeed = 2;

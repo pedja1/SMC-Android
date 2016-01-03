@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -23,9 +22,9 @@ public class Static extends Enemy
     private Texture texture;
     private TextureRegion region;
 
-    public Static(World world, Vector2 size, Vector3 position, float speed, int fireResistance, float iceResistance)
+    public Static(World world, Vector3 position, float width, float height, float speed, int fireResistance, float iceResistance)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         mSpeed = speed;
         mCanBeHitFromShell = 0;
         mFireResistant = fireResistance;

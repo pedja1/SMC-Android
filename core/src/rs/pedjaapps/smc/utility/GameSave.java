@@ -3,7 +3,6 @@ package rs.pedjaapps.smc.utility;
 import java.util.HashMap;
 
 import rs.pedjaapps.smc.object.items.Item;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 
 public class GameSave
 {
@@ -21,8 +20,6 @@ public class GameSave
 	
 	public static void reset()
 	{
-		save.lifes = 3;
-		save.playerState = Maryo.MaryoState.small;
 		save.item = null;
 	}
 
@@ -49,8 +46,6 @@ public class GameSave
 		//in memory only
 		public int coins;
 		public int points;
-		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
-		public int lifes;
 		public Item item;
 		
 		public Save()

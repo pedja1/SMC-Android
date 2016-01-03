@@ -3,11 +3,7 @@ package rs.pedjaapps.smc.object.enemy;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
@@ -146,54 +142,9 @@ public abstract class Enemy extends DynamicObject
         stopper, player, enemy
     }
 
-    protected Enemy(World world, Vector2 size, Vector3 position)
+    protected Enemy(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
-    }
-
-    public static Enemy initEnemy(World world, JSONObject jEnemy) throws JSONException
-    {
-        Vector3 position = new Vector3((float) jEnemy.getDouble("posx"), (float) jEnemy.getDouble("posy"), 0);
-        String enemyClassString = jEnemy.getString("enemy_class");
-        Vector2 size = new Vector2((float) jEnemy.getDouble("width"), (float) jEnemy.getDouble("height"));
-        CLASS enemyClass = CLASS.fromString(enemyClassString);
-        Enemy enemy = null;
-        switch (enemyClass)
-        {
-            case eato:
-                enemy = new Eato(world, size, position, jEnemy.optString("direction"));
-                break;
-            case flyon:
-                enemy = new Flyon(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
-                break;
-            case furball:
-                position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position, jEnemy.optInt("max_downgrade_count"));
-                break;
-            case turtle:
-                position.z = Turtle.POS_Z;
-                enemy = new Turtle(world, size, position, jEnemy.optString("color"));
-                break;
-            case gee:
-                enemy = new Gee(world, size, position, (float) jEnemy.getDouble("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), (float) jEnemy.getDouble("wait_time"));
-                break;
-            case krush:
-                enemy = new Krush(world, size, position);
-                break;
-            case thromp:
-                enemy = new Thromp(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
-                break;
-            case spika:
-                enemy = new Spika(world, size, position, jEnemy.optString("color"));
-                break;
-            case rokko:
-                enemy = new Rokko(world, size, position, jEnemy.optString("direction"));
-                break;
-            case _static:
-                enemy = new Static(world, size, position, jEnemy.optInt("rotation_speed"), jEnemy.optInt("fire_resistance"), jEnemy.optInt("ice_resistance"));
-                break;
-        }
-        return enemy;
+        super(world, position, width, height);
     }
 
     @Override
@@ -318,13 +269,6 @@ public abstract class Enemy extends DynamicObject
         turn = true;
         velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
         turned = true;
-    }
-
-    @Override
-    protected boolean handleLevelEdge()
-    {
-        turn();
-        return false;
     }
 
     @Override

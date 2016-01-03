@@ -239,7 +239,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         for (int i = 0; i < world.level.parallaxClouds.objects.size; i++)
         {
             GameObject go = world.level.parallaxClouds.objects.get(i);
-            removeObject( world.level.parallaxClouds.objects, world.level.parallaxClouds.cam, go);
+            removeObject(world.level.parallaxClouds.objects, world.level.parallaxClouds.cam, go);
         }
         for (int i = 0; i < world.level.parallaxGround1.objects.size; i++)
         {
@@ -260,7 +260,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (go.mDrawRect.x + go.mDrawRect.width < cam.position.x - cam.viewportWidth * .5f)
         {
-            if(objects.removeValue(go, true))
+            if (objects.removeValue(go, true))
             {
                 go.dispose();
             }
@@ -269,7 +269,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void handleGameOver(float delta)
     {
-        if (GameSave.save.lifes < 0)
+
         {
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -312,14 +312,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (goAlpha >= 1)
         {
-            if (GameSave.save.lifes < 0)
-            {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
-            }
-            else
-            {
-                game.setScreen(new LoadingScreen(new GameScreen(game), false));
-            }
+            game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
         }
     }
 
@@ -353,7 +346,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
-            if (maryoBWO.overlaps(go.mColRect))
+            if (go.mColRect != null && maryoBWO.overlaps(go.mColRect))
             {
                 if (gameState == GAME_STATE.GAME_RUNNING)
                 {
@@ -386,6 +379,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         // render blocks
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        for (int i = 0; i < world.level.gameObjects.size; i++)
+        {
+            GameObject go = world.level.gameObjects.get(i);
+            Rectangle colRect = go.mColRect;
+            Rectangle drawRect = go.mDrawRect;
+            shapeRenderer.setColor(0, 1, 0, 1);
+            if(colRect != null)shapeRenderer.rect(colRect.x, colRect.y, colRect.width, colRect.height);
+            shapeRenderer.setColor(1, 0, 0, 1);
+            //shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+        }
+
         // render maryo
         Maryo maryo = world.maryo;
         Rectangle body = maryo.mColRect;
@@ -491,10 +496,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        for (Maryo.MaryoState ms : Maryo.MaryoState.values())
-        {
-            Assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
-        }
+        Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
+
         Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
         Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
@@ -510,6 +513,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Assets.manager.load("data/environment/background/forest_1.png", Texture.class);
         Assets.manager.load("data/environment/background/forest_2.png", Texture.class);
         Assets.manager.load("data/environment/ground/green.png", Texture.class);
+        Assets.manager.load("data/game/box/brown.png", Texture.class);
 
         Assets.manager.load("data/environment/decoration/decoration.pack", TextureAtlas.class);
 
@@ -607,28 +611,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public boolean keyDown(int keycode)
     {
         if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
-        if (keycode == Input.Keys.LEFT)
-        {
-            hud.leftPressed();
-        }
-        if (keycode == Input.Keys.RIGHT)
-        {
-            hud.rightPressed();
-        }
         if (keycode == Input.Keys.SPACE)
         {
             world.maryo.jumpPressed();
             hud.jumpPressed();
-        }
-        if (keycode == Input.Keys.ALT_LEFT)
-        {
-            world.maryo.firePressed();
-            hud.firePressed();
-        }
-        if (keycode == Input.Keys.X)
-        {
-            world.maryo.firePressed();
-            hud.firePressed();
         }
         if (keycode == Input.Keys.DOWN)
         {
@@ -646,28 +632,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean keyUp(int keycode)
     {
-        if (keycode == Input.Keys.LEFT)
-        {
-            hud.leftReleased();
-        }
-        if (keycode == Input.Keys.RIGHT)
-        {
-            hud.rightReleased();
-        }
         if (keycode == Input.Keys.SPACE)
         {
             world.maryo.jumpReleased();
             hud.jumpReleased();
-        }
-        if (keycode == Input.Keys.ALT_LEFT)
-        {
-            world.maryo.fireReleased();
-            hud.fireReleased();
-        }
-        if (keycode == Input.Keys.X)
-        {
-            world.maryo.fireReleased();
-            hud.fireReleased();
         }
         if (keycode == Input.Keys.DOWN)
         {
@@ -740,12 +708,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     touches.get(pointer).clickArea = HUD.Key.jump;
                     hud.jumpPressed();
                 }
-                if (hud.fireRT.contains(x, invertY(y)))
-                {
-                    world.maryo.firePressed();
-                    touches.get(pointer).clickArea = HUD.Key.fire;
-                    hud.firePressed();
-                }
             }
             if (hud.pauseR.contains(x, invertY(y)))
             {
@@ -809,13 +771,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     {
                         world.maryo.jumpReleased();
                         hud.jumpReleased();
-                    }
-                    break;
-                case fire:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.fireReleased();
-                        hud.fireReleased();
                     }
                     break;
                 case pause:

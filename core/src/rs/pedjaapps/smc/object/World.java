@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool;
 
 import rs.pedjaapps.smc.object.items.Coin;
-import rs.pedjaapps.smc.object.maryo.Fireball;
-import rs.pedjaapps.smc.object.maryo.Iceball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.utility.Constants;
@@ -60,28 +58,6 @@ public class World
         }
     };
 
-    public Pool<Fireball> FIREBALL_POOL = new Pool<Fireball>()
-    {
-        @Override
-        protected Fireball newObject()
-        {
-            Fireball fb = new Fireball(World.this, new Vector3());
-            fb.initAssets();
-            return fb;
-        }
-    };
-
-    public Pool<Iceball> ICEBALL_POOL = new Pool<Iceball>()
-    {
-        @Override
-        protected Iceball newObject()
-        {
-            Iceball fb = new Iceball(World.this, new Vector3());
-            fb.initAssets();
-            return fb;
-        }
-    };
-
     public static Pool<Color> COLOR_POOL = new Pool<Color>()
     {
         @Override
@@ -96,7 +72,7 @@ public class World
         @Override
         protected Sprite newObject()
         {
-            return new Sprite(World.this, new Vector2(), new Vector3(), null);
+            return new Sprite(World.this, new Vector3(), 0, 0, null);
         }
     };
 
@@ -105,7 +81,7 @@ public class World
         @Override
         protected Coin newObject()
         {
-            return new Coin(World.this, new Vector2(), new Vector3());
+            return new Coin(World.this, new Vector3(), 0, 0);
         }
     };
 

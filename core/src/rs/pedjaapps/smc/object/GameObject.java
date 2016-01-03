@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool;
 
@@ -19,7 +18,7 @@ public abstract class GameObject implements Pool.Poolable
     protected World world;
     public boolean isFront = false;// is sprite drawn after player, so that it appears like player walks behind it
     public float mRotationX, mRotationY, mRotationZ;//degrees
-    
+
 	public enum WorldState
     {
         WALKING, JUMPING, DYING, DUCKING
@@ -55,15 +54,9 @@ public abstract class GameObject implements Pool.Poolable
         }
     }
 
-    public enum AKey
+    public GameObject(World world, Vector3 position, float width, float height)
     {
-        walk, _throw
-    }
-
-    public GameObject(World world, Vector2 size, Vector3 position)
-    {
-        this.mDrawRect = new Rectangle(position.x, position.y, size.x, size.y);
-        mColRect = new Rectangle(mDrawRect);
+        this.mDrawRect = new Rectangle(position.x, position.y, width, height);
 		this.position = position;
         this.world = world;
         velocity = new Vector3(0, 0, 0);
@@ -72,8 +65,11 @@ public abstract class GameObject implements Pool.Poolable
 	
 	public void updateBounds()
     {
-        mDrawRect.x = mColRect.x;
-        mDrawRect.y = mColRect.y;
+        if (mColRect != null)
+        {
+            mDrawRect.x = mColRect.x;
+            mDrawRect.y = mColRect.y;
+        }
     }
 
     public abstract void _render(SpriteBatch spriteBatch);
@@ -91,7 +87,7 @@ public abstract class GameObject implements Pool.Poolable
         velocity.set(0, 0, 0);
         acceleration.set(0, 0, 0);
         mDrawRect.set(0, 0, 0, 0);
-        mColRect.set(0, 0, 0, 0);
+        mColRect = null;
     }
 
     /**whether this object acts as bullet when hitting other objects (enemies, mario)*/

@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -45,9 +44,9 @@ public class Furball extends Enemy
     private Animation walkAnimation;
     private TextureRegion tTurn, tDead, tHit;
 
-    public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
+    public Furball(World world, Vector3 position, float width, float height, int maxDowngradeCount)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
     }

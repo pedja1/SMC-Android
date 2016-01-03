@@ -3,16 +3,13 @@ package rs.pedjaapps.smc.object.maryo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +32,7 @@ public class Maryo extends DynamicObject
 {
     enum Keys
     {
-        UP, DOWN, JUMP, FIRE
+        UP, DOWN, JUMP
     }
 
     private static final float MAX_JUMP_SPEED = 9f;
@@ -44,11 +41,6 @@ public class Maryo extends DynamicObject
 
     static Set<Keys> keys = new HashSet<>(Keys.values().length);
 
-    public enum MaryoState
-    {
-        small, big, fire, ice
-    }
-
     public static final float STAR_EFFECT_TIMEOUT = 15f;
     public static final float GLIM_COLOR_START_ALPHA = 0f;
     public static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
@@ -56,35 +48,12 @@ public class Maryo extends DynamicObject
     //this could be all done dynamically, but this way we minimize allocation in game loop
     //omg, this is a lot of constants :D
     private static final int A_KEY_WALKING_SMALL = 0;
-    private static final int A_KEY_WALKING_BIG = 2;
-    private static final int A_KEY_WALKING_FIRE = 4;
-    private static final int A_KEY_THROW_FIRE = 5;
-    private static final int A_KEY_WALKING_ICE = 9;
-    private static final int A_KEY_THROW_ICE = 10;
 
     private static final int T_KEY_DUCK_RIGHT_SMALL = 0;
     private static final int T_KEY_JUMP_RIGHT_SMALL = 1;
     private static final int T_KEY_FALL_RIGHT_SMALL = 2;
     private static final int T_KEY_DEAD_RIGHT_SMALL = 3;
     private static final int T_KEY_STAND_RIGHT_SMALL = 4;
-
-    private static final int T_KEY_DUCK_RIGHT_BIG = 5;
-    private static final int T_KEY_JUMP_RIGHT_BIG = 6;
-    private static final int T_KEY_FALL_RIGHT_BIG = 7;
-    private static final int T_KEY_DEAD_RIGHT_BIG = 8;
-    private static final int T_KEY_STAND_RIGHT_BIG = 9;
-
-    private static final int T_KEY_DUCK_RIGHT_FIRE = 10;
-    private static final int T_KEY_JUMP_RIGHT_FIRE = 11;
-    private static final int T_KEY_FALL_RIGHT_FIRE = 12;
-    private static final int T_KEY_DEAD_RIGHT_FIRE = 13;
-    private static final int T_KEY_STAND_RIGHT_FIRE = 14;
-
-    private static final int T_KEY_DUCK_RIGHT_ICE = 20;
-    private static final int T_KEY_JUMP_RIGHT_ICE = 21;
-    private static final int T_KEY_FALL_RIGHT_ICE = 22;
-    private static final int T_KEY_DEAD_RIGHT_ICE = 23;
-    private static final int T_KEY_STAND_RIGHT_ICE = 24;
 
     public static final float POSITION_Z = 0.0999f;
 
@@ -99,7 +68,6 @@ public class Maryo extends DynamicObject
     private static final float BULLET_COOLDOWN = 1f;//1 sec
 
     WorldState worldState = WorldState.JUMPING;
-    private MaryoState maryoState = GameSave.save.playerState;
     public boolean facingLeft = false;
 
     private boolean handleCollision = true;
@@ -116,15 +84,8 @@ public class Maryo extends DynamicObject
     boolean godMode = false;
     long godModeActivatedTime;
 
-    Animation resizingAnimation;
-    float resizeAnimStartTime;
-    private MaryoState newState;//used with resize animation
-    private MaryoState oldState;//used with resize animation
-
     public ParticleEffect starEffect;
     private float bulletShotTime = BULLET_COOLDOWN;
-    private boolean fire;
-    private float fireAnimationStateTime;
 
     private boolean mInvincibleStar;
     private final Color glimColor = new Color(0.160784314f, 0.654901961f, 1f, GLIM_COLOR_START_ALPHA);
@@ -136,11 +97,12 @@ public class Maryo extends DynamicObject
 
     //textures
     private TextureRegion[] tMap = new TextureRegion[25];
-    private Animation[] aMap = new Animation[12];
+    private Animation walkAnimation;
 
-    public Maryo(World world, Vector3 position, Vector2 size)
+    public Maryo(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
+        mColRect = new Rectangle(mDrawRect);
         setupBoundingBox();
 
         position.y = mColRect.y = mDrawRect.y += 0.5f;
@@ -151,19 +113,8 @@ public class Maryo extends DynamicObject
     private void setupBoundingBox()
     {
         float centerX = position.x + mColRect.width / 2;
-        switch (maryoState)
-        {
-            case small:
-                mDrawRect.width = 0.9f;
-                mDrawRect.height = 0.9f;
-                break;
-            case big:
-            case fire:
-            case ice:
-                mDrawRect.height = 1.09f;
-                mDrawRect.width = 1.09f;
-                break;
-        }
+        mDrawRect.width = 0.9f;
+        mDrawRect.height = 0.9f;
         mColRect.x = mDrawRect.x + mDrawRect.width / 4;
         mColRect.width = mDrawRect.width / 2;
         position.x = mColRect.x;
@@ -189,11 +140,23 @@ public class Maryo extends DynamicObject
 
     public void initAssets()
     {
-        MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ice};
-        for (MaryoState ms : states)
-        {
-            loadTextures(ms);
-        }
+        TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
+
+        TextureRegion tmpStandRight;
+        tMap[tIndex(TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
+
+        TextureRegion[] walkFrames = new TextureRegion[4];
+        walkFrames[0] = tmpStandRight;
+        walkFrames[1] = atlas.findRegion("walk_right", 1);
+        walkFrames[2] = atlas.findRegion("walk_right", 2);
+        walkFrames[3] = walkFrames[1];
+        walkAnimation = new Animation(RUNNING_FRAME_DURATION, walkFrames);
+
+        tMap[tIndex(TKey.jump_right)] = atlas.findRegion(TKey.jump_right.toString());
+        tMap[tIndex(TKey.fall_right)] = atlas.findRegion(TKey.fall_right.toString());
+        tMap[tIndex(TKey.dead_right)] = atlas.findRegion(TKey.dead_right.toString());
+        tMap[tIndex( TKey.duck_right)] = atlas.findRegion(TKey.duck_right.toString());
+
         setJumpSound();
         starEffect = new ParticleEffect(Assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
@@ -205,132 +168,36 @@ public class Maryo extends DynamicObject
         //we dont actually ahve to do anything here, since maryo is always present, and no new reources are created
     }
 
-    private void loadTextures(MaryoState state)
-    {
-        TextureAtlas atlas = Assets.manager.get("data/maryo/" + state + ".pack");
-
-        TextureRegion tmpStandRight;
-        tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
-
-        TextureRegion[] walkFrames = new TextureRegion[4];
-        walkFrames[0] = tmpStandRight;
-        walkFrames[1] = atlas.findRegion("walk_right", 1);
-        walkFrames[2] = atlas.findRegion("walk_right", 2);
-        walkFrames[3] = walkFrames[1];
-        aMap[aIndex(state, AKey.walk)] = new Animation(RUNNING_FRAME_DURATION, walkFrames);
-
-        if (state == MaryoState.ice || state == MaryoState.fire)
-        {
-            TextureRegion[] throwFrames = new TextureRegion[2];
-            throwFrames[0] = atlas.findRegion("throw_right", 1);
-            throwFrames[1] = atlas.findRegion("throw_right", 2);
-            aMap[aIndex(state, AKey._throw)] = new Animation(THROW_FRAME_DURATION, throwFrames);
-        }
-
-        tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(TKey.jump_right.toString());
-        tMap[tIndex(state, TKey.fall_right)] = atlas.findRegion(TKey.fall_right.toString());
-
-        if (MaryoState.small == state)
-        {
-            tMap[tIndex(state, TKey.dead_right)] = atlas.findRegion(TKey.dead_right.toString());
-        }
-
-        tMap[tIndex(state, TKey.duck_right)] = atlas.findRegion(TKey.duck_right.toString());
-    }
-
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
         TextureRegion marioFrame;
-        if (resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
+        if (worldState.equals(WorldState.WALKING))
         {
-            if(newState == MaryoState.small)
-            {
-                godMode = true;
-                godModeActivatedTime = System.currentTimeMillis();
-
-                if (GameSave.save.item != null)
-                {
-                    //drop item
-                    Item item = GameSave.save.item;
-                    OrthographicCamera cam = ((GameScreen) world.screen).cam;
-
-                    item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
-                    item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
-
-                    item.updateBounds();
-
-                    world.level.gameObjects.add(item);
-                    item.drop();
-
-                    GameSave.save.item = null;
-                }
-            }
-            else
-            {
-                godMode = false;
-            }
-            resizeAnimStartTime = 0;
-            resizingAnimation = null;
-            ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
-            maryoState = newState;
-            newState = null;
-            oldState = null;
-            setupBoundingBox();
-            GameSave.save.playerState = maryoState;
-        }
-        if (resizingAnimation != null)
-        {
-            int index = resizingAnimation.getKeyFrameIndex(stateTime);
-            marioFrame = resizingAnimation.getKeyFrames()[index];
-            if (index == 0)
-            {
-                maryoState = oldState;
-                setupBoundingBox();
-            }
-            else
-            {
-                maryoState = newState;
-                setupBoundingBox();
-            }
-        }
-        else if (fire)
-        {
-            Animation animation = aMap[aIndex(maryoState, AKey._throw)];
-            marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
-            if (animation.isAnimationFinished(fireAnimationStateTime))
-            {
-                fire = false;
-                fireAnimationStateTime = 0;
-                //doFire();
-            }
-        }
-        else if (worldState.equals(WorldState.WALKING))
-        {
-            marioFrame = aMap[aIndex(maryoState, AKey.walk)].getKeyFrame(stateTime, true);
+            marioFrame = walkAnimation.getKeyFrame(stateTime, true);
         }
         else if (worldState == WorldState.DUCKING)
         {
-            marioFrame = tMap[tIndex(maryoState, TKey.duck_right)];
+            marioFrame = tMap[tIndex(TKey.duck_right)];
         }
         else if (getWorldState().equals(WorldState.JUMPING))
         {
             if (velocity.y > 0)
             {
-                marioFrame = tMap[tIndex(maryoState, TKey.jump_right)];
+                marioFrame = tMap[tIndex(TKey.jump_right)];
             }
             else
             {
-                marioFrame = tMap[tIndex(maryoState, TKey.fall_right)];
+                marioFrame = tMap[tIndex(TKey.fall_right)];
             }
         }
         else if (worldState == WorldState.DYING)
         {
-            marioFrame = tMap[tIndex(MaryoState.small, TKey.dead_right)];
+            marioFrame = tMap[tIndex(TKey.dead_right)];
         }
         else
         {
-            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
+            marioFrame = tMap[tIndex(TKey.stand_right)];
         }
 
         if(mInvincibleStar)
@@ -384,117 +251,22 @@ public class Maryo extends DynamicObject
         spriteBatch.setColor(Color.WHITE);
     }
 
-    private int tIndex(MaryoState state, TKey tkey)
+    private int tIndex(TKey tkey)
     {
         switch (tkey)
         {
             case stand_right:
-                switch (state)
-                {
-                    case small:
-                        return T_KEY_STAND_RIGHT_SMALL;
-                    case big:
-                        return T_KEY_STAND_RIGHT_BIG;
-                    case fire:
-                        return T_KEY_STAND_RIGHT_FIRE;
-                    case ice:
-                        return T_KEY_STAND_RIGHT_ICE;
-                }
-                break;
+                return T_KEY_STAND_RIGHT_SMALL;
             case jump_right:
-                switch (state)
-                {
-                    case small:
-                        return T_KEY_JUMP_RIGHT_SMALL;
-                    case big:
-                        return T_KEY_JUMP_RIGHT_BIG;
-                    case fire:
-                        return T_KEY_JUMP_RIGHT_FIRE;
-                    case ice:
-                        return T_KEY_JUMP_RIGHT_ICE;
-                }
-                break;
+                return T_KEY_JUMP_RIGHT_SMALL;
             case fall_right:
-                switch (state)
-                {
-                    case small:
-                        return T_KEY_FALL_RIGHT_SMALL;
-                    case big:
-                        return T_KEY_FALL_RIGHT_BIG;
-                    case fire:
-                        return T_KEY_FALL_RIGHT_FIRE;
-                    case ice:
-                        return T_KEY_FALL_RIGHT_ICE;
-                }
-                break;
+                return T_KEY_FALL_RIGHT_SMALL;
             case dead_right:
-                switch (state)
-                {
-                    case small:
-                        return T_KEY_DEAD_RIGHT_SMALL;
-                    case big:
-                        return T_KEY_DEAD_RIGHT_BIG;
-                    case fire:
-                        return T_KEY_DEAD_RIGHT_FIRE;
-                    case ice:
-                        return T_KEY_DEAD_RIGHT_ICE;
-                }
-                break;
+                return T_KEY_DEAD_RIGHT_SMALL;
             case duck_right:
-                switch (state)
-                {
-                    case small:
-                        return T_KEY_DUCK_RIGHT_SMALL;
-                    case big:
-                        return T_KEY_DUCK_RIGHT_BIG;
-                    case fire:
-                        return T_KEY_DUCK_RIGHT_FIRE;
-                    case ice:
-                        return T_KEY_DUCK_RIGHT_ICE;
-                }
-                break;
+                return T_KEY_DUCK_RIGHT_SMALL;
         }
-        throw new IllegalArgumentException("Unknown texture key '" + tkey + "' or maryoState '" + maryoState + "'");
-    }
-
-    private int aIndex(MaryoState state, AKey akey)
-    {
-        switch (state)
-        {
-            case small:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_SMALL;
-                }
-                break;
-            case big:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_BIG;
-                }
-                break;
-            case fire:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_FIRE;
-                    case _throw:
-                        return A_KEY_THROW_FIRE;
-                }
-                break;
-            case ice:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_ICE;
-                    case _throw:
-                        return A_KEY_THROW_ICE;
-                }
-                break;
-        }
-        throw new IllegalArgumentException("Unknown animation key '" + akey + "' or maryoState '" + maryoState + "'");
+        throw new IllegalArgumentException("Unknown texture key '" + tkey + "'");
     }
 
     @Override
@@ -545,10 +317,6 @@ public class Maryo extends DynamicObject
                 setWorldState(WorldState.WALKING);
             }
         }
-        if (fire)
-        {
-            fireAnimationStateTime += delta;
-        }
         //disable godmod after timeot
         if (godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
         {
@@ -558,10 +326,6 @@ public class Maryo extends DynamicObject
         {
             stateTime += delta;
             if (dyingAnim.update(delta)) super._update(delta);
-        }
-        else if (resizingAnimation != null)
-        {
-            stateTime += delta;
         }
         else
         {
@@ -641,7 +405,7 @@ public class Maryo extends DynamicObject
                 }
                 else if (deadAnyway)
                 {
-                    downgradeOrDie(false);
+                    die();
                 }
                 else
                 {
@@ -672,7 +436,7 @@ public class Maryo extends DynamicObject
                         }
                         else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
                         {
-                            downgradeOrDie(false);
+                            die();
                         }
                         else
                         {
@@ -715,106 +479,10 @@ public class Maryo extends DynamicObject
         return MAX_VEL;
     }
 
-    public void downgradeOrDie(boolean forceDie)
+    public void die()
     {
-        if (maryoState == MaryoState.small || forceDie)
-        {
-            worldState = WorldState.DYING;
-            dyingAnim.start();
-        }
-        else
-        {
-            SoundManager.play(Assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
-            upgrade(MaryoState.small, false, null, true);
-        }
-    }
-
-    /*
-    * Level up*/
-    public void upgrade(MaryoState newState, boolean tempUpdate, Item item, boolean downgrade)
-    {
-        //cant upgrade from ice/fire to big
-        if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
-                || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
-        {
-            GameSave.save.item = item;
-            return;
-        }
-        else if (maryoState == newState)
-        {
-            return;
-        }
-        this.newState = newState;
-        oldState = maryoState;
-        Array<TextureRegion> frames = generateResizeAnimationFrames(maryoState, newState);
-        resizingAnimation = new Animation(RESIZE_ANIMATION_FRAME_DURATION, frames);
-        resizingAnimation.setPlayMode(Animation.PlayMode.LOOP);
-        resizeAnimStartTime = stateTime;
-        godMode = true;
-
-        ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
-
-        //play new state sound
-        Sound sound = upgradeSound(newState, downgrade);
-        SoundManager.play(sound);
-		fire = false;
-    }
-
-    private Sound upgradeSound(MaryoState newState, boolean downgrade)
-    {
-        if(downgrade)
-        {
-            //TODO
-        }
-        switch (newState)
-        {
-            case big:
-                return Assets.manager.get("data/sounds/item/mushroom.mp3");
-            case fire:
-                return Assets.manager.get("data/sounds/item/fireplant.mp3");
-            case ice:
-                return Assets.manager.get("data/sounds/item/mushroom_blue.mp3");
-        }
-        return null;
-    }
-
-    private Array<TextureRegion> generateResizeAnimationFrames(MaryoState stateFrom, MaryoState stateTo)
-    {
-        Array<TextureRegion> regions = new Array<>();
-        if (worldState.equals(WorldState.WALKING))
-        {
-            regions.add(aMap[aIndex(stateFrom, AKey.walk)].getKeyFrame(stateTime, true));
-            regions.add(aMap[aIndex(stateTo, AKey.walk)].getKeyFrame(stateTime, true));
-        }
-        else if (worldState == WorldState.DUCKING)
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.duck_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.duck_right)]);
-        }
-        else if (getWorldState().equals(WorldState.JUMPING))
-        {
-            if (velocity.y > 0)
-            {
-                regions.add(tMap[tIndex(stateFrom, TKey.jump_right)]);
-                regions.add(tMap[tIndex(stateTo, TKey.jump_right)]);
-            }
-            else
-            {
-                regions.add(tMap[tIndex(stateFrom, TKey.fall_right)]);
-                regions.add(tMap[tIndex(stateTo, TKey.fall_right)]);
-            }
-        }
-        else if (worldState == WorldState.DYING)
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.dead_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.dead_right)]);
-        }
-        else
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.stand_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.stand_right)]);
-        }
-        return regions;
+        worldState = WorldState.DYING;
+        dyingAnim.start();
     }
 
     public class DyingAnimation
@@ -832,7 +500,6 @@ public class Maryo extends DynamicObject
             Sound sound = Assets.manager.get("data/sounds/player/dead.mp3");
             SoundManager.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
-            GameSave.save.lifes--;
         }
 
         public boolean update(float delat)
@@ -871,93 +538,14 @@ public class Maryo extends DynamicObject
     {
         if (worldState != WorldState.DYING)
         {
-            downgradeOrDie(true);
+            die();
         }
         return true;
     }
 
     private void setJumpSound()
     {
-        switch (maryoState)
-        {
-            case small:
-                jumpSound = Assets.manager.get("data/sounds/player/jump_small.mp3");
-                break;
-            case big:
-            case fire:
-            case ice:
-                jumpSound = Assets.manager.get("data/sounds/player/jump_big.mp3");
-                break;
-        }
-    }
-
-    public MaryoState getMarioState()
-    {
-        return maryoState;
-    }
-
-    public void setMarioState(MaryoState marioState)
-    {
-        this.maryoState = marioState;
-        setJumpSound();
-    }
-
-    public void fire()
-    {
-        if (worldState == WorldState.DUCKING || (maryoState != MaryoState.fire && maryoState != MaryoState.ice))
-            return;
-        if (bulletShotTime < BULLET_COOLDOWN)
-            return;
-        fire = true;
-        doFire();
-    }
-
-    private void doFire()
-    {
-        if (maryoState == MaryoState.fire)
-        {
-            addFireball(0f);
-            if(mInvincibleStar)
-            {
-                addFireball(Fireball.VELOCITY_Y * 0.5f);
-            }
-            bulletShotTime = 0;
-        }
-        else if (maryoState == MaryoState.ice)
-        {
-            addIceball(0f);
-            if(mInvincibleStar)
-            {
-                addIceball(Fireball.VELOCITY_Y * 0.5f);
-            }
-            bulletShotTime = 0;
-        }
-    }
-
-    private void addIceball(float velY)
-    {
-        Iceball iceball = world.ICEBALL_POOL.obtain();
-        iceball.mColRect.x = iceball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-        iceball.mColRect.y = iceball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
-        iceball.updateBounds();
-        iceball.reset();
-        iceball.direction = facingLeft ? Direction.left : Direction.right;
-        iceball.velocity.y = velY;
-        world.level.gameObjects.add(iceball);
-        //Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
-    }
-
-    private void addFireball(float velY)
-    {
-        Fireball fireball = world.FIREBALL_POOL.obtain();
-        fireball.mColRect.x = fireball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-        fireball.mColRect.y = fireball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
-        fireball.updateBounds();
-        fireball.reset();
-        fireball.direction = facingLeft ? Direction.left : Direction.right;
-        fireball.velocity.y = velY;
-        world.level.gameObjects.add(fireball);
-        //Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+        jumpSound = Assets.manager.get("data/sounds/player/jump_small.mp3");
     }
 
     public void starPicked()
@@ -987,12 +575,6 @@ public class Maryo extends DynamicObject
         }
     }
 
-    public void firePressed()
-    {
-        keys.add(Keys.FIRE);
-        fire();
-    }
-
     public void upReleased()
     {
         keys.remove(Keys.UP);
@@ -1007,10 +589,5 @@ public class Maryo extends DynamicObject
     {
         keys.remove(Keys.JUMP);
         jumped = false;
-    }
-
-    public void fireReleased()
-    {
-        keys.remove(Keys.FIRE);
     }
 }

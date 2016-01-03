@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -27,9 +26,9 @@ public class Thromp extends Enemy
     private float rotation;
     private TextureRegion tDefault, tActive;
 
-    public Thromp(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
+    public Thromp(World world, Vector3 position, float width, float height, float maxDistance, float speed, String direction)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         this.maxDistance = maxDistance;
         this.speed = 3f;//speed;
         this.direction = direction;

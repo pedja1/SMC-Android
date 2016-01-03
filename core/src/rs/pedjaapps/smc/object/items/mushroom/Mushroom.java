@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -37,9 +36,9 @@ public abstract class Mushroom extends Item
 
     private Direction direction = Direction.right;
 
-    public Mushroom(World world, Vector2 size, Vector3 position)
+    public Mushroom(World world, Vector3 position, float width, float height)
     {
-        super(world, size, position);
+        super(world, position, width, height);
     }
 
     @Override

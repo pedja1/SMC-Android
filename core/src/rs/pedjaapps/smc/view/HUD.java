@@ -27,7 +27,6 @@ import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
-import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
@@ -35,15 +34,11 @@ public class HUD
 {
 	World world;
 	
-	TextureRegion pause, play, fire, jump, up, down, right,
-		left, soundOn, soundOff, musicOn, musicOff, fireP, jumpP, upP,
-		downP, leftP, rightP;
-    public Rectangle pauseR, playR, fireR, jumpR, upR, downR, rightR,
-		leftR, soundR, musicR, fireRT, jumpRT;
+	TextureRegion pause, play, jump, up, down, soundOn, soundOff, musicOn, musicOff, jumpP, upP,
+		downP;
+    public Rectangle pauseR, playR, jumpR, upR, downR, soundR, musicR, jumpRT;
 	Texture itemBox, maryoL, goldM;
 	Rectangle itemBoxR, maryoLR;
-    public Array<Vector2> leftPolygon = new Array<Vector2>(5);
-    public Array<Vector2> rightPolygon = new Array<Vector2>(5);
     public Array<Vector2> upPolygon = new Array<Vector2>(5);
     public Array<Vector2> downPolygon = new Array<Vector2>(5);
 
@@ -60,7 +55,7 @@ public class HUD
 
 	public enum Key
 	{
-		none, pause, fire, jump, left, right, up, down, play, sound, music
+		none, pause, jump, up, down, play, sound, music
 	}
 
 	public HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
@@ -75,7 +70,6 @@ public class HUD
 	private int points;
 	private String pointsText;
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
-	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
 
 	public HUD(World world)
@@ -100,12 +94,12 @@ public class HUD
         height = width;
         x = C_W - width * 1.5f;
         y = C_H - height * 5f;
-        fireR = new Rectangle(x, y, width, height);
+        //fireR = new Rectangle(x, y, width, height);
 		float bX = x - width * .25f;
 		float bY = y - height * .25f;
 		float bW = width + width *.5f;
 		float bH = height + height * 0.5f;
-		fireRT = new Rectangle(bX, bY, bW, bH);
+		//fireRT = new Rectangle(bX, bY, bW, bH);
 		
         x = bX - width * 1.25f;
         y = bY - height;
@@ -116,22 +110,22 @@ public class HUD
         x = width / 2f;
         y = height * 1.5f;
         width = width * 1.24f;
-        leftR = new Rectangle(x, y, width, height);
+        /*leftR = new Rectangle(x, y, width, height);
         leftPolygon.clear();
         leftPolygon.add(new Vector2(x, y + height));
         leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
         leftPolygon.add(new Vector2(x + width, y + height / 2));
         leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y));
-        leftPolygon.add(new Vector2(x, y));
+        leftPolygon.add(new Vector2(x, y));*/
 
         x = x + width + width / 4f;
-        rightR = new Rectangle(x, y, width, height);
+        /*rightR = new Rectangle(x, y, width, height);
         rightPolygon.clear();
         rightPolygon.add(new Vector2(x, y + height / 2));
         rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
         rightPolygon.add(new Vector2(x + width, y + height));
         rightPolygon.add(new Vector2(x + width, y));
-        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));
+        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));*/
 
         width = C_H / 7f;
         height = width * 1.24f;
@@ -229,16 +223,8 @@ public class HUD
 
 		if (MaryoGame.showOnScreenControls())
 		{
-			fire = atlas.findRegion("fire");
-			fireP = atlas.findRegion("fire-pressed");
 			jump = atlas.findRegion("jump");
 			jumpP = atlas.findRegion("jump-pressed");
-			left = atlas.findRegion("dpad-left");
-			leftP = atlas.findRegion("dpad-left-pressed");
-			right = new TextureRegion(left);
-			right.flip(true, false);
-			rightP = new TextureRegion(leftP);
-			rightP.flip(true, false);
 			up = atlas.findRegion("dpad-up");
 			upP = atlas.findRegion("dpad-up-pressed");
 			down = new TextureRegion(up);
@@ -314,10 +300,7 @@ public class HUD
 			batch.setShader(null);
 			if (MaryoGame.showOnScreenControls())
 			{
-				batch.draw(pressedKeys.contains(Key.fire) ? fireP : fire, fireR.x, fireR.y , fireR.width, fireR.height);
 				batch.draw(pressedKeys.contains(Key.jump) ? jumpP : jump, jumpR.x, jumpR.y , jumpR.width, jumpR.height);
-				batch.draw(pressedKeys.contains(Key.left) ? leftP : left, leftR.x, leftR.y , leftR.width, leftR.height);
-				batch.draw(pressedKeys.contains(Key.right) ? rightP : right, rightR.x, rightR.y , rightR.width, rightR.height);
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
@@ -351,13 +334,6 @@ public class HUD
 			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - fontGlyphLayout.width / 2;
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, time, timeX, pointsY);
-			
-			//lives
-			String lives = this.lives.toString(Math.max(GameSave.save.lifes, 0));
-			fontGlyphLayout.setText(font, lives);
-			float lifesX = maryoLR.x - fontGlyphLayout.width;
-			font.setColor(0, 1, 0, 1);
-			font.draw(batch, lives, lifesX, pointsY);
 
             //draw item if any
             if(GameSave.save.item != null)
@@ -426,26 +402,6 @@ public class HUD
 		batch.end();
 	}
 
-    public void leftPressed()
-    {
-        pressedKeys.add(Key.left);
-    }
-
-    public void leftReleased()
-    {
-        pressedKeys.remove(Key.left);
-    }
-
-    public void rightPressed()
-    {
-        pressedKeys.add(Key.right);
-    }
-
-    public void rightReleased()
-    {
-        pressedKeys.remove(Key.right);
-    }
-
     public void upPressed()
     {
         pressedKeys.add(Key.up);
@@ -464,16 +420,6 @@ public class HUD
     public void downReleased()
     {
         pressedKeys.remove(Key.down);
-    }
-
-    public void firePressed()
-    {
-        pressedKeys.add(Key.fire);
-    }
-
-    public void fireReleased()
-    {
-        pressedKeys.remove(Key.fire);
     }
 
     public void jumpPressed()

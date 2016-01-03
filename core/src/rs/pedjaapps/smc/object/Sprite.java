@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -19,9 +18,9 @@ public class Sprite extends GameObject
     Texture txt = null;
     TextureRegion region = null;
 
-    public Sprite(World world, Vector2 size, Vector3 position, Rectangle colRect)
+    public Sprite(World world, Vector3 position, float width, float height, Rectangle colRect)
     {
-        super(world, size, position);
+        super(world, position, width, height);
         this.position = position;
         if (colRect != null)
         {
