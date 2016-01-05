@@ -31,6 +31,8 @@ public class LevelGenerator
 
 	float groundBlockY = -0.265625f;
 
+    float currentCoinsY;
+
 	//RandomUtils random = new RandomUtils();
 
 	int currentCloudSetIndex = 1;
@@ -264,6 +266,7 @@ public class LevelGenerator
 			coin.initAssets();
 			world.level.gameObjects.add(coin);
 		}
+        currentCoinsY = y;
 	}
 
 	private void addPlatforms(float camStartX, float camWidth)
@@ -272,7 +275,12 @@ public class LevelGenerator
 		//add 4-15 coins on each screen on random elevations not too low
 		int coinNum = MathUtils.random(4, 10);
 		float xStart = MathUtils.random(camStartX, camStartX + camWidth + 2);
-		float y = MathUtils.random(groundBlockY + 2f, groundBlockY + 1f + world.maryo.mDrawRect.height * 2.5f);
+		float y;
+        do
+        {
+            y = MathUtils.random(groundBlockY + 2f, groundBlockY + 1f + world.maryo.mDrawRect.height * 2.5f);
+        }
+        while (y > currentCoinsY + platformWidth && y < currentCoinsY + Coin.DEF_SIZE);
 
         Collider collider = new Collider(world, new Vector3(xStart, y, 0), platformWidth * coinNum, platformWidth);
         collider.mColRect = new Rectangle(collider.mDrawRect);
