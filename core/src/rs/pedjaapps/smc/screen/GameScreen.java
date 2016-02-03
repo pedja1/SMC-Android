@@ -498,14 +498,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
 
-        Assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
         Assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, Assets.particleEffectParameter);
         Assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, Assets.particleEffectParameter);
-        Assets.manager.load("data/animation/iceball.png", Texture.class, Assets.textureParameter);
         Assets.manager.load("data/game/game_over.png", Texture.class);
         Assets.manager.load("data/environment/clouds/clouds.pack", TextureAtlas.class);
         Assets.manager.load("data/game/items/goldpiece/red.pack", TextureAtlas.class);
