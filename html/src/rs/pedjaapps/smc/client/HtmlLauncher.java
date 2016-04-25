@@ -13,7 +13,8 @@ public class HtmlLauncher extends GwtApplication {
         }
 
         @Override
-        public ApplicationListener getApplicationListener () {
+        public ApplicationListener createApplicationListener()
+        {
                 return new MaryoGame();
         }
 }

@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,22 +9,22 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Pool;
 
 import rs.pedjaapps.smc.object.items.Coin;
-import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.utility.Constants;
 
 
 public class World
 {
-	public AbstractScreen screen;
+    private static World instance;
+
+	public Screen screen;
     /**
      * Our player controlled hero *
      */
-    public Maryo maryo;
+    public Player player;
     /**
      * A world has a level through which Mario needs to go through *
      */
-    public Level level = new Level();
+    public Level level;
 
 	/**
 	 * 
@@ -72,7 +73,7 @@ public class World
         @Override
         protected Sprite newObject()
         {
-            return new Sprite(World.this, new Vector3(), 0, 0, null);
+            return new Sprite(0, 0, 0, 0);
         }
     };
 
@@ -81,7 +82,7 @@ public class World
         @Override
         protected Coin newObject()
         {
-            return new Coin(World.this, new Vector3(), 0, 0);
+            return new Coin(0, 0, 0, 0, false);
         }
     };
 
@@ -89,25 +90,40 @@ public class World
 	{
         float offsetX = Math.max(offset, Constants.CAMERA_WIDTH/*(cam.viewportWidth * cam.zoom)*/);
         float offsetY = Math.max(offset * 0.5f, Constants.CAMERA_HEIGHT/*(cam.viewportHeight * cam.zoom)*/);
-		float wX = maryo.mColRect.x - offsetX;
-        float wY = maryo.mColRect.y - offsetY;
-        float wW = maryo.mColRect.x + maryo.mColRect.width + offsetX * 2;
-        float wH = maryo.mColRect.y + maryo.mColRect.height + offsetY * 2;
+		float wX = player.collider.x - offsetX;
+        float wY = player.collider.y - offsetY;
+        float wW = player.collider.x + player.collider.width + offsetX * 2;
+        float wH = player.collider.y + player.collider.height + offsetY * 2;
         Rectangle offsetBounds = RECT_POOL.obtain();
 		offsetBounds.set(wX, wY, wW, wH);
      	return offsetBounds;
 	}
 	
     // --------------------
-    public World(AbstractScreen screen)
+    private World(Screen screen)
     {
 		this.screen = screen;
+        level = new Level();
+    }
+
+    public static World getInstance()
+    {
+        if(instance == null)
+            throw new IllegalStateException("Create instance first, call create(Screen)");
+        return instance;
+    }
+
+    public static void create(Screen screen)
+    {
+        if(instance != null)
+            throw new IllegalStateException("You can only create one instance. Call dispose first");
+        instance = new World(screen);
     }
 
     public void dispose()
     {
         level.dispose();
-        maryo.dispose();
-        maryo = null;
+        player.dispose();
+        player = null;
     }
 }

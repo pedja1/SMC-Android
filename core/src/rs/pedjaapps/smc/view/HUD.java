@@ -15,11 +15,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 
 import java.util.HashSet;
 
-import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -30,27 +28,26 @@ import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
+import static rs.pedjaapps.smc.view.HUD.Key.down;
+import static rs.pedjaapps.smc.view.HUD.Key.jump;
+import static rs.pedjaapps.smc.view.HUD.Key.up;
+
 public class HUD
 {
-	World world;
-	
-	TextureRegion pause, play, jump, up, down, soundOn, soundOff, musicOn, musicOff, jumpP, upP,
-		downP;
-    public Rectangle pauseR, playR, jumpR, upR, downR, soundR, musicR, jumpRT;
-	Texture itemBox, maryoL, goldM;
-	Rectangle itemBoxR, maryoLR;
-    public Array<Vector2> upPolygon = new Array<Vector2>(5);
-    public Array<Vector2> downPolygon = new Array<Vector2>(5);
+	private TextureRegion pause, play, soundOn, soundOff, musicOn, musicOff, maryoL;
+    public Rectangle pauseR, playR, soundR, musicR;
+	private Texture itemBox;
+	private Rectangle itemBoxR, maryoLR;
 
 	public OrthographicCamera cam;
-	SpriteBatch batch;
+	private SpriteBatch batch;
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	public BitmapFont font, tts, pauseFont;
-	GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
+	private BitmapFont font, tts, pauseFont;
+	private GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
 
-	public static float C_W = Gdx.graphics.getWidth();
+	private static float C_W = Gdx.graphics.getWidth();
 	public static float C_H = Gdx.graphics.getHeight();
 
 	public enum Key
@@ -58,23 +55,22 @@ public class HUD
 		none, pause, jump, up, down, play, sound, music
 	}
 
-	public HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
+	private HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
 	
-	float stateTime;
+	private float stateTime;
 	public boolean updateTimer = true;
 	
 	private static final String ttsText = "TOUCH ANYWHERE TO START";
 	private static final String pauseText = "PAUSE";
-	boolean ttsFadeIn;
-	float ttsAlpha = 1;
+	private boolean ttsFadeIn;
+	private float ttsAlpha = 1;
 	private int points;
 	private String pointsText;
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
 	private final HUDTimeText time = new HUDTimeText();
 
-	public HUD(World world)
+	public HUD()
 	{
-		this.world = world;
 		cam = new OrthographicCamera(C_W, C_H);
 		cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
 		cam.update();
@@ -100,53 +96,25 @@ public class HUD
 		float bW = width + width *.5f;
 		float bH = height + height * 0.5f;
 		//fireRT = new Rectangle(bX, bY, bW, bH);
-		
+
+		//TODO cleanup this mess
+
         x = bX - width * 1.25f;
         y = bY - height;
 		bY = bY + bH * .25f;
-        jumpR = new Rectangle(x, y, width, height);
-		jumpRT = new Rectangle(bX - bW, bY - bH, bW, bH);
 		
         x = width / 2f;
         y = height * 1.5f;
         width = width * 1.24f;
-        /*leftR = new Rectangle(x, y, width, height);
-        leftPolygon.clear();
-        leftPolygon.add(new Vector2(x, y + height));
-        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
-        leftPolygon.add(new Vector2(x + width, y + height / 2));
-        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y));
-        leftPolygon.add(new Vector2(x, y));*/
 
         x = x + width + width / 4f;
-        /*rightR = new Rectangle(x, y, width, height);
-        rightPolygon.clear();
-        rightPolygon.add(new Vector2(x, y + height / 2));
-        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
-        rightPolygon.add(new Vector2(x + width, y + height));
-        rightPolygon.add(new Vector2(x + width, y));
-        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));*/
 
         width = C_H / 7f;
         height = width * 1.24f;
         x = x - width / 2f - width / 8f;
         y = y + height / 2f;
-        upR = new Rectangle(x, y, width, height);
-        upPolygon.clear();
-        upPolygon.add(new Vector2(x, y + height));
-        upPolygon.add(new Vector2(x + width, y + height));
-        upPolygon.add(new Vector2(x + width, y + y / 100 * 23.25f));
-        upPolygon.add(new Vector2(x + width / 2, y));
-        upPolygon.add(new Vector2(x, y + y / 100 * 23.25f));
 
         y = y - height - height / 4f;
-        downR = new Rectangle(x, y, width, height);
-        downPolygon.clear();
-        downPolygon.add(new Vector2(x + width / 2, y + width));
-        downPolygon.add(new Vector2(x + width, y + height - y / 100 * 23.25f));
-        downPolygon.add(new Vector2(x + width, y));
-        downPolygon.add(new Vector2(x, y));
-        downPolygon.add(new Vector2(x, y + height - y / 100 * 23.25f));
 
 		width = C_H / 10f;
 		height = width;
@@ -180,14 +148,9 @@ public class HUD
 	
 	public void loadAssets()
 	{
-		Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-		Assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
 		Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
-		Assets.manager.load("data/game/itembox.png", Texture.class, Assets.textureParameter);
-        Assets.manager.load("data/game/maryo_l.png", Texture.class, Assets.textureParameter);
-        Assets.manager.load("data/game/gold_m.png", Texture.class, Assets.textureParameter);
-		Assets.manager.load("data/game/game_over.png", Texture.class, Assets.textureParameter);
-		
+		Assets.manager.load("data/hud/itembox.png", Texture.class, Assets.textureParameter);
+
 		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         ttsTextParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
         ttsTextParams.fontParameters.size = (int) C_H / 15;
@@ -211,7 +174,6 @@ public class HUD
 
     public void initAssets()
 	{
-		TextureAtlas atlas = Assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		TextureAtlas hud = Assets.manager.get("data/hud/hud.pack", TextureAtlas.class);
 		pause = hud.findRegion("pause");
 		play = hud.findRegion("play");
@@ -221,26 +183,11 @@ public class HUD
 		soundOn = hud.findRegion("sound");
         soundOff = hud.findRegion("sound_off");
 
-		if (MaryoGame.showOnScreenControls())
-		{
-			jump = atlas.findRegion("jump");
-			jumpP = atlas.findRegion("jump-pressed");
-			up = atlas.findRegion("dpad-up");
-			upP = atlas.findRegion("dpad-up-pressed");
-			down = new TextureRegion(up);
-			down.flip(false, true);
-			downP = new TextureRegion(upP);
-			downP.flip(false, true);
-		}
-
-		itemBox = Assets.manager.get("data/game/itembox.png");
-		maryoL = Assets.manager.get("data/game/maryo_l.png");
-		goldM = Assets.manager.get("data/game/gold_m.png");
+		itemBox = Assets.manager.get("data/hud/itembox.png");
+		maryoL = hud.findRegion("lives");
 		
 		Texture.TextureFilter filter = Texture.TextureFilter.Linear;
 		itemBox.setFilter(filter, filter);
-		maryoL.setFilter(filter, filter);
-		goldM.setFilter(filter, filter);
 		
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -298,12 +245,6 @@ public class HUD
 			if(pressedKeys.contains(Key.pause))batch.setShader(Shader.GLOW_SHADER);
 			batch.draw(pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
 			batch.setShader(null);
-			if (MaryoGame.showOnScreenControls())
-			{
-				batch.draw(pressedKeys.contains(Key.jump) ? jumpP : jump, jumpR.x, jumpR.y , jumpR.width, jumpR.height);
-				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
-				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
-			}
             if(GameSave.save.item != null)
                 batch.setColor(Color.RED);
 			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
@@ -312,21 +253,15 @@ public class HUD
 			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
-			pointsText = formatPointsString(GameSave.save.points + (int)(world.maryo.position.x - world.maryo.startPositionX));
+			World world = World.getInstance();
+			pointsText = formatPointsString(GameSave.save.points + (int)(world.player.position.x - world.player.startPositionX));
 			fontGlyphLayout.setText(font, pointsText);
 			float pointsX = C_W * 0.03f;
 			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, pointsText, pointsX, pointsY);
-			
-			//coins
-			float goldHeight = fontGlyphLayout.height * 1.1f;
-			float goldX = pointsX + fontGlyphLayout.width + goldHeight;
-			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
-			
-			String coins =  this.coins.toString(GameSave.save.coins);
+
 			font.setColor(1, 1, 1, 1);
-			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
 			//time
 			time.update(stateTime);
@@ -404,32 +339,32 @@ public class HUD
 
     public void upPressed()
     {
-        pressedKeys.add(Key.up);
+        pressedKeys.add(up);
     }
 
     public void upReleased()
     {
-        pressedKeys.remove(Key.up);
+        pressedKeys.remove(up);
     }
 
     public void downPressed()
     {
-        pressedKeys.add(Key.down);
+        pressedKeys.add(down);
     }
 
     public void downReleased()
     {
-        pressedKeys.remove(Key.down);
+        pressedKeys.remove(down);
     }
 
     public void jumpPressed()
     {
-        pressedKeys.add(Key.jump);
+        pressedKeys.add(jump);
     }
 
     public void jumpReleased()
     {
-        pressedKeys.remove(Key.jump);
+        pressedKeys.remove(jump);
     }
 
     public void pausePressed()

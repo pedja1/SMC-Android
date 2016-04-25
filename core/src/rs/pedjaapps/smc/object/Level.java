@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object;
 
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.view.Background;
@@ -12,9 +11,8 @@ import rs.pedjaapps.smc.view.Parallax;
 public class Level
 {
     public Array<GameObject> gameObjects;
-    public Vector3 spanPosition;
-	public Background backgroundColor, background, background2;
-	public Parallax parallaxClouds, parallaxGround1;
+	public Background backgroundColor, background, background2, background3;
+	public Parallax parallaxClouds, parallaxGround;
     public String music;
 
 	public static final String LEVEL_EXT = ".smclvl";
@@ -35,11 +33,13 @@ public class Level
 		background = null;
 		background2.dispose();
 		background2 = null;
+		background3.dispose();
+		background3 = null;
 		backgroundColor.dispose();
 		backgroundColor = null;
 		parallaxClouds.dispose();
 		parallaxClouds = null;
-		parallaxGround1.dispose();
-		parallaxGround1 = null;
+		parallaxGround.dispose();
+		parallaxGround = null;
 	}
 }

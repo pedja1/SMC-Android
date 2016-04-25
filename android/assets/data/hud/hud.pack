@@ -1,0 +1,138 @@
+
+hud.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+accept
+  rotate: false
+  xy: 1, 103
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+cancel
+  rotate: false
+  xy: 259, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+check
+  rotate: false
+  xy: 909, 425
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+check_background
+  rotate: false
+  xy: 1, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+down
+  rotate: false
+  xy: 389, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+empty_square_button
+  rotate: false
+  xy: 1, 233
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+left
+  rotate: false
+  xy: 519, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+menu
+  rotate: false
+  xy: 649, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+music
+  rotate: false
+  xy: 779, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+music_off
+  rotate: false
+  xy: 131, 103
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pause
+  rotate: false
+  xy: 261, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+play
+  rotate: false
+  xy: 391, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+right
+  rotate: false
+  xy: 521, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+score
+  rotate: false
+  xy: 651, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+lives
+  rotate: false
+  xy: 771, 231
+  size: 161, 128
+  orig: 161, 128
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 261, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+sound
+  rotate: false
+  xy: 391, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+sound_off
+  rotate: false
+  xy: 521, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 651, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

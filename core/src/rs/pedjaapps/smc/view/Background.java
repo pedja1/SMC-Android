@@ -10,26 +10,28 @@ import rs.pedjaapps.smc.utility.*;
 
 public class Background
 {
-	boolean cameraPositioned;
-	public static final float WIDTH = Constants.CAMERA_WIDTH;
-	public static final float HEIGHT = Constants.CAMERA_HEIGHT;
-	public Vector2 position, speed;
+	private boolean cameraPositioned;
+	private static final float WIDTH = Constants.CAMERA_WIDTH;
+	private static final float HEIGHT = Constants.CAMERA_HEIGHT;
+	private Vector2 position, speed;
 	public Texture texture;
-	public String textureName;
+	public TextureRegion region;
+	private String textureName, textureAtlas;
 	public float width;
 	public float height;
-	public Vector3 oldGameCamPos = new Vector3();
+	private Vector3 oldGameCamPos = new Vector3();
 
 	public Color color1;
     public Color color2;
-	ShapeRenderer renderer = new ShapeRenderer();
+	private ShapeRenderer renderer = new ShapeRenderer();
 	public OrthographicCamera bgCam;
 
-	public Background(Vector2 position, Vector2 speed, String textureName)
+	public Background(Vector2 position, Vector2 speed, String textureName, String textureAtlas)
 	{
 		this.speed = speed;
 		this.position = position;
 		this.textureName = textureName;
+		this.textureAtlas = textureAtlas;
 		width = WIDTH;
 		height = HEIGHT;
 		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
@@ -57,7 +59,7 @@ public class Background
 			renderer.end();
 		}
 
-		if (texture != null)
+		if (texture != null || region != null)
 		{
 			bgCam.position.add((gameCam.position.x - oldGameCamPos.x) * speed.x, (gameCam.position.y - oldGameCamPos.y) * speed.y, 0);
 			if(bgCam.position.x < bgCam.viewportWidth * .5f)
@@ -74,14 +76,35 @@ public class Background
 			spriteBatch.setProjectionMatrix(bgCam.combined);
 			spriteBatch.begin();
 
-			spriteBatch.draw(texture, position.x, position.y, width, height);
+			if(texture != null)
+			{
+				spriteBatch.draw(texture, position.x, position.y, width, height);
+			}
+			else
+			{
+				spriteBatch.draw(region, position.x, position.y, width, height);
+			}
 			if(position.x + width < bgCam.position.x + bgCam.viewportWidth * .5f)
 			{
-				spriteBatch.draw(texture, position.x + width, position.y, width, height);
+				if(texture != null)
+				{
+					spriteBatch.draw(texture, position.x + width, position.y, width, height);
+				}
+				else
+				{
+					spriteBatch.draw(region, position.x + width, position.y, width, height);
+				}
 			}
 			if(position.x > bgCam.position.x - bgCam.viewportWidth * .5f)
 			{
-				spriteBatch.draw(texture, position.x - width, position.y, width, height);
+				if(texture != null)
+				{
+					spriteBatch.draw(texture, position.x - width, position.y, width, height);
+				}
+				else
+				{
+					spriteBatch.draw(region, position.x - width, position.y, width, height);
+				}
 			}
 			
 			if(position.x + width < bgCam.position.x - bgCam.viewportWidth * .5f)
@@ -103,7 +126,15 @@ public class Background
 		{
 			if(cameraPositioned)
 				return;
-			texture = Assets.manager.get(textureName);
+			if(textureAtlas != null)
+			{
+				TextureAtlas atlas = Assets.manager.get(textureAtlas);
+				region = atlas.findRegion(textureName);
+			}
+			else
+			{
+				texture = Assets.manager.get(textureName);
+			}
 			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         	oldGameCamPos.set(gameCam.position);
 			cameraPositioned = true;

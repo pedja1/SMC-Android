@@ -22,7 +22,6 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
-import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
@@ -84,7 +83,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
         debugGlyph = new GlyphLayout();
-        world = new World(this);
+        World.create(this);
+        world = World.getInstance();
 
         exitDialog = new ConfirmDialog(this, hudCam);
         settingsDialog = new SettingsDialog(this, hudCam);
@@ -220,7 +220,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     {
         //loader.parseLevel(world);
         Assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
-        Assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         Assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         Assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, Assets.textureParameter);
         Assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
@@ -257,7 +256,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         settingsR = new Rectangle(screenWidth - (screenWidth / 18f) * 3.75f,
                 (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        background = new Background(new Vector2(0, 0), new Vector2(), "data/environment/background/more_hills.png");
+        background = new Background(new Vector2(0, 0), new Vector2(), "data/environment/background/more_hills.png", null);
         background.width = Constants.MENU_CAMERA_WIDTH;//8.7f;
         background.height = Constants.MENU_CAMERA_HEIGHT;//4.5f;
 
@@ -272,7 +271,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
        // world.level = loader.level;
 
         TextureAtlas atlas = Assets.manager.get("data/maryo/small.pack");
-        marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
+        //marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
 
         audioOn = Assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
 

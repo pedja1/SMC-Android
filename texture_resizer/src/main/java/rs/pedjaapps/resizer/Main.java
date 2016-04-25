@@ -13,97 +13,241 @@ import javax.imageio.ImageIO;
 /**
  * Created by pedja on 12.9.15..
  */
+@SuppressWarnings("ALL")
 public class Main
 {
-    //formula targetResolutionHeight / (gameCameraHeight / (targetHeight / 64))
-    //example 1080 / (9 / (70 / 64))
+    private enum ResChar
+    {
+        _1440(160),
+        _1080(120),
+        _720(80),
+        _480(53);
+
+        int mTargetRes;
+
+        ResChar(int targetRes)
+        {
+            mTargetRes = targetRes;
+        }
+    }
+
+    private enum ResBackground
+    {
+        _1440(750),
+        _1080(750),
+        _720(500),
+        _480(330);
+
+        int mTargetRes;
+
+        ResBackground(int targetRes)
+        {
+            mTargetRes = targetRes;
+        }
+    }
+
+    private enum ResTiles
+    {
+        _1440(128),
+        _1080(120),
+        _720(80),
+        _480(53);
+
+        int mTargetRes;
+
+        ResTiles(int targetRes)
+        {
+            mTargetRes = targetRes;
+        }
+    }
+
+    private enum ResCoin
+    {
+        _1440(96),
+        _1080(72),
+        _720(48),
+        _480(32);
+
+        int mTargetRes;
+
+        ResCoin(int targetRes)
+        {
+            mTargetRes = targetRes;
+        }
+    }
+
+    private enum ResCloud
+    {
+        _1440(143),
+        _1080(107),
+        _720(71),
+        _480(47);
+
+        int mTargetRes;
+
+        ResCloud(int targetRes)
+        {
+            mTargetRes = targetRes;
+        }
+    }
+
+    private enum ResObject
+    {
+        _1440(1),
+        _1080(1),
+        _720(1.5f),
+        _480(2.25f);
+
+        float mScale;
+
+        ResObject(float scale)
+        {
+            mScale = scale;
+        }
+    }
 
     public static void main(String[] args) throws IOException
     {
-        float[] resolutionHeights = new float[]{1080f, 768f, 540f};
-        Collection<File> files = FileUtils.listFiles(new File("/home/pedja/workspace/SMC-Android/texture_resizer/playground/pixmaps/"), new String[]{"png"}, true);
-        for (float resolutionHeight : resolutionHeights)
-        {
-            for (File file : files)
-            {
-                System.out.println("Processing: " + file.getName() + "@" + resolutionHeight);
-                BufferedImage image = ImageIO.read(file);
-                BufferedImage resized = resizeImage(image, file, resolutionHeight);
-                File newFile = new File(file.getAbsolutePath().replace("pixmaps", "pixmaps_" + (int)resolutionHeight));
-                newFile.getParentFile().mkdirs();
-                ImageIO.write(resized, "png", newFile);
-                //break;
-            }
-        }
+        //processCharacters();
+        //processBackground();
+        //processCoins();
+        //processTiles();
+        //processClouds();
+        processObjects();
+
         System.out.println("done");
     }
 
-    private static BufferedImage resizeImage(BufferedImage originalImage, File file, float targetResolutionHeight) throws IOException
+    private static void processCharacters() throws IOException
     {
-        int height = Math.min(calculateNewHeight(file, targetResolutionHeight), originalImage.getHeight());
-        int width = (int) ((float)height * ((float)originalImage.getWidth() / (float)originalImage.getHeight()));
+        String in = "/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/character";
+        Collection<File> files = FileUtils.listFiles(new File(in), new String[]{"png"}, true);
+
+        for (File file : files)
+        {
+            System.out.println("Processing: " + file.getName());
+            BufferedImage image = ImageIO.read(file);
+            for (ResChar resChar : ResChar.values())
+            {
+                System.out.println("res: " + resChar);
+                BufferedImage resized = resizeImage(image, resChar.mTargetRes);
+                File newFile = new File(file.getAbsolutePath().replace("data", "data" + resChar.toString()));
+                newFile.getParentFile().mkdirs();
+                ImageIO.write(resized, "png", newFile);
+            }
+        }
+    }
+
+    private static void processBackground() throws IOException
+    {
+        String in = "/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/environment/backgrounds";
+        Collection<File> files = FileUtils.listFiles(new File(in), new String[]{"png"}, true);
+
+        for (File file : files)
+        {
+            System.out.println("Processing: " + file.getName());
+            BufferedImage image = ImageIO.read(file);
+            for (ResBackground resBackground : ResBackground.values())
+            {
+                System.out.println("res: " + resBackground);
+                BufferedImage resized = resizeImage(image, resBackground.mTargetRes);
+                File newFile = new File(file.getAbsolutePath().replace("data", "data" + resBackground.toString()));
+                newFile.getParentFile().mkdirs();
+                ImageIO.write(resized, "png", newFile);
+            }
+        }
+    }
+
+    private static void processCoins() throws IOException
+    {
+        String in = "/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/environment/coins";
+        Collection<File> files = FileUtils.listFiles(new File(in), new String[]{"png"}, true);
+
+        for (File file : files)
+        {
+            System.out.println("Processing: " + file.getName());
+            BufferedImage image = ImageIO.read(file);
+            for (ResCoin resCoins : ResCoin.values())
+            {
+                System.out.println("res: " + resCoins);
+                BufferedImage resized = resizeImage(image, resCoins.mTargetRes);
+                File newFile = new File(file.getAbsolutePath().replace("data", "data" + resCoins.toString()));
+                newFile.getParentFile().mkdirs();
+                ImageIO.write(resized, "png", newFile);
+            }
+        }
+    }
+
+    private static void processTiles() throws IOException
+    {
+        String in = "/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/environment/tiles";
+        Collection<File> files = FileUtils.listFiles(new File(in), new String[]{"png"}, true);
+
+        for (File file : files)
+        {
+            System.out.println("Processing: " + file.getName());
+            BufferedImage image = ImageIO.read(file);
+            for (ResTiles resTiles : ResTiles.values())
+            {
+                System.out.println("res: " + resTiles);
+                BufferedImage resized = resizeImage(image, resTiles.mTargetRes);
+                File newFile = new File(file.getAbsolutePath().replace("data", "data" + resTiles.toString()));
+                newFile.getParentFile().mkdirs();
+                ImageIO.write(resized, "png", newFile);
+            }
+        }
+    }
+
+    private static void processClouds() throws IOException
+    {
+        File file = new File("/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/environment/clouds/cloud-3.png");
+
+        System.out.println("Processing: " + file.getName());
+        BufferedImage image = ImageIO.read(file);
+        for (ResCloud resTiles : ResCloud.values())
+        {
+            System.out.println("res: " + resTiles);
+            BufferedImage resized = resizeImage(image, resTiles.mTargetRes);
+            File newFile = new File(file.getAbsolutePath().replace("data", "data" + resTiles.toString()));
+            newFile.getParentFile().mkdirs();
+            ImageIO.write(resized, "png", newFile);
+        }
+
+    }
+
+    private static void processObjects() throws IOException
+    {
+        String in = "/home/pedja/workspace/SMC-Android/texture_resizer/in_out/data/environment/objects";
+        Collection<File> files = FileUtils.listFiles(new File(in), new String[]{"png"}, true);
+
+        for (File file : files)
+        {
+            System.out.println("Processing: " + file.getName());
+            BufferedImage image = ImageIO.read(file);
+            for (ResObject resObject : ResObject.values())
+            {
+                System.out.println("res: " + resObject);
+                BufferedImage resized = resizeImageWitScaleOfOriginal(image, resObject.mScale);
+                File newFile = new File(file.getAbsolutePath().replace("data", "data" + resObject.toString()));
+                newFile.getParentFile().mkdirs();
+                ImageIO.write(resized, "png", newFile);
+            }
+        }
+    }
+
+    private static BufferedImage resizeImage(BufferedImage originalImage, int targetHeight) throws IOException
+    {
+        int height = originalImage.getHeight() < targetHeight ? originalImage.getHeight() : targetHeight;
+        int width = (int) ((float) height * ((float) originalImage.getWidth() / (float) originalImage.getHeight()));
 
         return Scalr.resize(originalImage, Scalr.Method.QUALITY, width, height, Scalr.OP_ANTIALIAS);
     }
 
-    private static int calculateNewHeight(File file, float targetResolutionHeight) throws IOException
+    private static BufferedImage resizeImageWitScaleOfOriginal(BufferedImage originalImage, float scale) throws IOException
     {
-        float targetHeight = findTargetHeight(file);
-        int newHeight = (int) Math.min(targetResolutionHeight, (targetResolutionHeight / (9f / (targetHeight / 64f))));
-        if ((newHeight & (newHeight - 1)) == 0) return newHeight;//already pow 2
+        float height = (float)originalImage.getHeight() / scale;
+        int width = (int) ((float) height * ((float) originalImage.getWidth() / (float) originalImage.getHeight()));
 
-        //calc nearest pow 2
-        int larger = 2;
-        while (larger < newHeight)
-        {
-            larger *= 2;
-        }
-        int smaller = larger / 2;
-
-        return larger - newHeight > newHeight - smaller ? smaller : larger;
+        return Scalr.resize(originalImage, Scalr.Method.QUALITY, width, (int)height, Scalr.OP_ANTIALIAS);
     }
-
-    private static int findTargetHeight(File file) throws IOException
-    {
-        File settings = new File(file.getAbsolutePath().replaceAll("\\.png", ".settings"));
-        String settingsData = FileUtils.readFileToString(settings);
-        String[] lines = settingsData.split("\n");
-
-        if (lines.length > 0)
-        {
-            String[] data = lines[0].split(" ");
-            if ("base".equals(data[0]))
-            {
-                String path = settings.getAbsolutePath();
-                String baseFileName = path.replaceAll(path.substring(path.lastIndexOf("/") + 1, path.lastIndexOf(".")), data[1].replaceAll("\\.png", ""));
-                File baseFile = new File(baseFileName);
-                if (baseFile.exists())
-                {
-                    String baseSettingsData = FileUtils.readFileToString(baseFile);
-                    String[] baseLines = baseSettingsData.split("\n");
-                    String[] tmp = new String[lines.length + baseLines.length];
-                    System.arraycopy(lines, 0, tmp, 0, lines.length);
-                    System.arraycopy(baseLines, 0, tmp, lines.length, baseLines.length);
-
-                    lines = tmp;
-                }
-            }
-        }
-
-        int heght = 0;
-
-        for (String s : lines)
-        {
-            String[] data = s.split(" ");
-            if ("height".equals(data[0]))
-            {
-                heght = Integer.parseInt(data[1].trim());
-            }
-        }
-        if (heght > 0)
-            return heght;
-        else
-            throw new RuntimeException("cant determine height");
-    }
-
 }

@@ -10,34 +10,41 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
  */
 public class GA
 {
+    private static final boolean GA_ENABLED = false;
     public static final String APP_VERSION = String.valueOf(Gdx.app.getVersion());
     public static GoogleAnalytics ga = new GoogleAnalytics("UA-35780603-2");
     private static long gameStartTime;
 
     public static void sendGameStarted()
     {
+        if(!GA_ENABLED)
+            return;
         gameStartTime = System.currentTimeMillis();
         ga.postAsync(new EventHit("game", "started"));
     }
 
     public static void sendGameEnded()
     {
+        if(!GA_ENABLED)
+            return;
         StringBuilder builder = new StringBuilder("ended, time: ");
         builder.append(System.currentTimeMillis() - gameStartTime);
         ga.postAsync(new EventHit("game", builder.toString()));
     }
 
-    public static void sendLevelStarted(String levelName)
+    public static void sendLevelStarted()
     {
+        if(!GA_ENABLED)
+            return;
         StringBuilder builder = new StringBuilder("Level Started: ");
-        builder.append(levelName);
         ga.postAsync(new AppViewHit("Secret Maryo Chronicles", APP_VERSION, builder.toString()));
     }
 
-    public static void sendLevelEnded(String levelName, float time)
+    public static void sendLevelEnded(float time)
     {
+        if(!GA_ENABLED)
+            return;
         StringBuilder builder = new StringBuilder("Level Started: ");
-        builder.append(levelName);
         builder.append(", time: ");
         builder.append(time);
         ga.postAsync(new AppViewHit("Secret Maryo Chronicles", APP_VERSION, builder.toString()));

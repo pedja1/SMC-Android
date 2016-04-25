@@ -1,73 +1,37 @@
 package rs.pedjaapps.smc.object.items;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.object.DynamicObject;
-import rs.pedjaapps.smc.object.World;
 
 /**
  * Created by pedja on 24.5.14..
  */
 public abstract class Item extends DynamicObject
 {
-	//item types
-	public static final int
-	TYPE_POWERUP = 23,
-	TYPE_MUSHROOM_DEFAULT = 25,
-	TYPE_MUSHROOM_LIVE_1 = 35,
-	TYPE_MUSHROOM_POISON = 49,
-	TYPE_MUSHROOM_BLUE = 51,
-	TYPE_FIREPLANT = 24,
-	TYPE_JUMPING_GOLDPIECE = 22,
-	TYPE_FALLING_GOLDPIECE = 48,
-	TYPE_GOLDPIECE = 8,
-	TYPE_MOON = 37,
-	TYPE_STAR = 39;
-
-    public String textureName, textureAtlas;
-
     public boolean playerHit;
-    protected float stateTime;
-    enum CLASS
-    {
-        goldpiece, moon, jstar, mushroom, fireplant
-    }
 
     //is drawn
     public boolean visible = true;
 
-    protected float originalPosY;
     //collectible by player
     public boolean collectible = true;
     public Texture texture;
 
     private boolean dropping;
 
-    public Item(World world, Vector3 position, float widht, float height)
+    public Item(float x, float y, float widht, float height)
     {
-        super(world, position, widht, height);
-        position.z = 0.05f;
+        super(x, y, widht, height);
     }
 
-    public static Item initObject(World world, String objectClassString, Vector2 size, Vector3 position)
+    public Item()
     {
-        CLASS itemClass = CLASS.valueOf(objectClassString);
-        Item object = null;
-        switch (itemClass)
-        {
-            case goldpiece:
-                object = new Coin(world, position, size.x, size.y);
-                break;
-            case mushroom:
-                break;
-        }
-        return object;
+        super();
     }
 
     @Override
-    public final void _update(float delta)
+    protected final void _update(float delta)
     {
         if(dropping)
         {
@@ -78,9 +42,6 @@ public abstract class Item extends DynamicObject
             velocity.scl(delta);
 
             position.add(velocity);
-            mColRect.x = position.x;
-            mColRect.y = position.y;
-            updateBounds();
 
             velocity.scl(1 / delta);
         }

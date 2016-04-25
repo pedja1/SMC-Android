@@ -3,6 +3,6 @@ apply plugin: 'idea'
 sourceCompatibility = 1.6
 
 dependencies {
-    compile files('gdx-tools.jar')
+    compile "com.badlogicgames.gdx:gdx-tools:1.9.2"
     compile 'commons-io:commons-io:2.4'
 }

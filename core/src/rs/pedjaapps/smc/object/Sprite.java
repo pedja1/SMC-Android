@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.utility.Utility;
@@ -15,36 +15,50 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
-    Texture txt = null;
-    TextureRegion region = null;
+    private Texture txt = null;
+    public TextureRegion region = null;
 
-    public Sprite(World world, Vector3 position, float width, float height, Rectangle colRect)
+    public Sprite(float x, float y, float width, float height)
     {
-        super(world, position, width, height);
-        this.position = position;
-        if (colRect != null)
-        {
-            mColRect.x = mDrawRect.x + Math.abs(colRect.x);
-            mColRect.y = mDrawRect.y + Math.abs(colRect.y);
-            mColRect.width = colRect.width;
-            mColRect.height = colRect.height;
-        }
+        super(x, y, width, height);
+    }
+
+    public Sprite()
+    {
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
+    public void write(Json json)
+    {
+        super.write(json);
+        json.writeValue("type", type);
+        json.writeValue("textureAtlas", textureAtlas);
+        json.writeValue("textureName", textureName);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonMap)
+    {
+        super.read(json, jsonMap);
+        type = json.readValue(Type.class, jsonMap.get("type"));
+        textureAtlas = json.readValue(String.class, jsonMap.get("textureAtlas"));
+        textureName = json.readValue(String.class, jsonMap.get("textureName"));
+    }
+
+    @Override
+    protected void _render(SpriteBatch spriteBatch)
     {
         if (txt != null || region != null)
         {
-            float width = txt == null ? Utility.getWidth(region, mDrawRect.height) : Utility.getWidth(txt, mDrawRect.height);
+            float width = txt == null ? Utility.getWidth(region, bounds.height) : Utility.getWidth(txt, bounds.height);
 
             if (txt != null)
             {
-                spriteBatch.draw(txt, mDrawRect.x, mDrawRect.y, width, mDrawRect.getHeight());
+                spriteBatch.draw(txt, bounds.x, bounds.y, width, bounds.getHeight());
             }
             else
             {
-                spriteBatch.draw(region, mDrawRect.x, mDrawRect.y, width, mDrawRect.height);
+                spriteBatch.draw(region, bounds.x, bounds.y, width, bounds.height);
             }
 
         }
@@ -55,7 +69,7 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void _update(float delta)
+    protected void _update(float delta)
     {
 
     }
@@ -72,37 +86,36 @@ public class Sprite extends GameObject
 
         if (atlas != null)
         {
-            String[] split = textureName.split(":");
-            region = atlas.findRegion(split.length == 2 ? split[1] : textureName);
+            region = atlas.findRegion(textureName);
+            if(region == null)System.out.println("not found");
         }
         else
         {
             txt = Assets.manager.get(textureName);
         }
-        if(mDrawRect.width == 0)
+        if(bounds.width == 0)
         {
             float width;
             if(region == null)
             {
-                width = Utility.getWidth(txt, mDrawRect.height);
+                width = Utility.getWidth(txt, bounds.height);
             }
             else
             {
-                width = Utility.getWidth(region, mDrawRect.height);
+                width = Utility.getWidth(region, bounds.height);
             }
-            mDrawRect.width = width;
-            updateBounds();
+            bounds.width = width;
         }
-
     }
 
     @Override
     public void dispose()
     {
+        System.out.println("dispose");
         super.dispose();
         txt = null;
         region = null;
-        world.SPRITE_POOL.free(this);
+        World.getInstance().SPRITE_POOL.free(this);
     }
 
 
@@ -115,7 +128,7 @@ public class Sprite extends GameObject
      */
     public enum Type
     {
-        massive, passive, front_passive, halfmassive, climbable
+        massive, passive, halfmassive
     }
 
     @Override

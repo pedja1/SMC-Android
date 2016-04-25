@@ -1,2 +1,5 @@
 include 'desktop', 'android', 'ios', 'html', 'core', 'tools', 'TAGenerator', ':test_math'
 include 'texture_resizer'
+include 'renamer'
+include 'level_editor'
+

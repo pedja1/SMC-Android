@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -68,8 +67,4 @@ public class MaryoGame extends Game
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 
-	public static boolean showOnScreenControls()
-	{
-		return Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
-	}
 }

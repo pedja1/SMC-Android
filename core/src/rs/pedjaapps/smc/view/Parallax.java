@@ -11,13 +11,13 @@ import rs.pedjaapps.smc.utility.Constants;
 
 public class Parallax
 {
-    boolean cameraPositioned;
-    public Vector2 speed;
-    public Vector3 oldGameCamPos = new Vector3();
+    private boolean cameraPositioned;
+    private Vector2 speed;
+    private Vector3 oldGameCamPos = new Vector3();
 
     public OrthographicCamera cam;
 
-    public float lastViewportRight;
+    private float lastViewportRight;
 
     public Array<GameObject> objects;
 
@@ -60,7 +60,7 @@ public class Parallax
         for (int i = 0, size = objects.size; i < size; i++)
         {
             GameObject object = objects.get(i);
-            object._render(spriteBatch);
+            object.render(spriteBatch);
         }
 
         spriteBatch.end();

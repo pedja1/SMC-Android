@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
  */
 public class Assets
 {
+    public static final String DEFAULT_ATLAS = "data/assets.atlas";
     public static AssetManager manager;
     public static TextureLoader.TextureParameter textureParameter;
     public static ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;

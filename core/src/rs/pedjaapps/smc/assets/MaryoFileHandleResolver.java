@@ -8,7 +8,7 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoFileHandleResolver implements FileHandleResolver
 {
-    private static final int[] ASSETS_RESOLUTIONS = new int[]{1080, 768, 540};
+    private static final int[] ASSETS_RESOLUTIONS = new int[]{1440, 1080, 720, 480};
 
     public static int DEFAULT_TEXTURE_QUALITY = -1;
 
@@ -26,7 +26,7 @@ public class MaryoFileHandleResolver implements FileHandleResolver
         {
             int height = Gdx.graphics.getHeight();
 
-            int tmpRes = 768;
+            int tmpRes = 720;
             int diff = Integer.MAX_VALUE;
             int offset = ASSETS_RESOLUTIONS.length;
             for (int res : ASSETS_RESOLUTIONS)
@@ -43,6 +43,7 @@ public class MaryoFileHandleResolver implements FileHandleResolver
             DEFAULT_TEXTURE_QUALITY = offset;
             PrefsManager.setTextureQuality(DEFAULT_TEXTURE_QUALITY);
         }
+        System.out.println("resolution: " + resolution);
     }
 
     @Override
@@ -62,8 +63,45 @@ public class MaryoFileHandleResolver implements FileHandleResolver
         }
         else
         {
-            return fileName;
+            int resolutionIndex = finIndexForResolution(resolution);
+            if(resolutionIndex < 0)
+                return fileName;
+
+            //try smaller resolutions first
+            for(int i = resolutionIndex; i >= 0; i--)
+            {
+                int resolution = ASSETS_RESOLUTIONS[i];
+                newFileName = fileName.replaceFirst("data", "data_" + resolution);
+                handle = new FileHandle(newFileName);
+                if(handle.exists())
+                {
+                    return newFileName;
+                }
+            }
+
+            //try larger
+            for(int i = resolutionIndex; i < ASSETS_RESOLUTIONS.length; i++)
+            {
+                int resolution = ASSETS_RESOLUTIONS[i];
+                newFileName = fileName.replaceFirst("data", "data_" + resolution);
+                handle = new FileHandle(newFileName);
+                if(handle.exists())
+                {
+                    return newFileName;
+                }
+            }
         }
+        return fileName;
+    }
+
+    private int finIndexForResolution(int resolution)
+    {
+        for(int i = 0; i < ASSETS_RESOLUTIONS.length; i++)
+        {
+            if(resolution == ASSETS_RESOLUTIONS[i])
+                return i;
+        }
+        return -1;
     }
 
 

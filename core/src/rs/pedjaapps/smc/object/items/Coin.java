@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
@@ -23,20 +23,42 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Coin extends Item
 {
     public static final float DEF_SIZE = 0.59375f;
-    public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
-    public int points = 5;
-    private Animation animation;
+    public int points;
+    public boolean isRed;
 
     /**
      * Coin will move out of the screen when collected
      */
-    boolean scrollOut;
+    private boolean scrollOut;
+
+    private Animation animation;
 
 
-    public Coin(World world, Vector3 position, float width, float height)
+    public Coin(float x, float y, float width, float height, boolean isRed)
     {
-        super(world, position, width, height);
-        position.z = 0.041f;
+        super(x, y, width, height);
+        this.isRed = isRed;
+    }
+
+    public Coin()
+    {
+
+    }
+
+    @Override
+    public void write(Json json)
+    {
+        super.write(json);
+        json.writeValue("points", points);
+        json.writeValue("isRed", isRed);
+    }
+
+    @Override
+    public void read(Json json, JsonValue jsonMap)
+    {
+        super.read(json, jsonMap);
+        points = json.readValue(int.class, jsonMap.get("points"));
+        isRed = json.readValue(boolean.class, jsonMap.get("isRed"));
     }
 
     @Override
@@ -48,23 +70,39 @@ public class Coin extends Item
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = Assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = new Array<TextureAtlas.AtlasRegion>();
-
-        for (int i = 1; i < 11; i++)
+        if (animation == null)
         {
-            frames.add(atlas.findRegion(i + ""));
+            TextureAtlas atlas = Assets.manager.get(Assets.DEFAULT_ATLAS);
+            TextureRegion[] frames = new TextureRegion[6];
+
+            if (isRed)
+            {
+                frames[0] = atlas.findRegion("environment/coins/red/1");
+                frames[1] = atlas.findRegion("environment/coins/red/2");
+                frames[2] = atlas.findRegion("environment/coins/red/3");
+                frames[3] = atlas.findRegion("environment/coins/red/4");
+                frames[4] = atlas.findRegion("environment/coins/red/5");
+                frames[5] = atlas.findRegion("environment/coins/red/6");
+            }
+            else
+            {
+                frames[0] = atlas.findRegion("environment/coins/yellow/1");
+                frames[1] = atlas.findRegion("environment/coins/yellow/2");
+                frames[2] = atlas.findRegion("environment/coins/yellow/3");
+                frames[3] = atlas.findRegion("environment/coins/yellow/4");
+                frames[4] = atlas.findRegion("environment/coins/yellow/5");
+                frames[5] = atlas.findRegion("environment/coins/yellow/6");
+            }
+
+            animation = new Animation(0.10f, frames);
         }
-
-        animation = new Animation(0.10f, frames);
-
-        if (textureAtlas.contains("yellow"))
+        if(isRed)
         {
-            points = 5;
+            points = 100;
         }
         else
         {
-            points = 100;
+            points = 5;
         }
 
         stateTime = MathUtils.random(1.2f);
@@ -76,7 +114,7 @@ public class Coin extends Item
         if (!visible) return;
 
         TextureRegion frame = animation.getKeyFrame(stateTime, true);
-        Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+        Utility.draw(spriteBatch, frame, bounds.x, bounds.y, bounds.height);
     }
 
     @Override
@@ -89,20 +127,17 @@ public class Coin extends Item
             velocity.scl(delta);
 
             position.add(velocity);
-            mColRect.y = position.y;
-            mColRect.x = position.x;
-            updateBounds();
 
             // un-scale velocity (not in frame time)
             velocity.scl(1 / delta);
-            OrthographicCamera cam = ((GameScreen) world.screen).cam;
+            OrthographicCamera cam = ((GameScreen) World.getInstance().screen).cam;
             float camLeft = cam.position.x - cam.viewportWidth / 2;
             float camTop = cam.position.y + cam.viewportHeight / 2;
-            float objRight = position.x + mDrawRect.width;
+            float objRight = position.x + bounds.width;
             float objBottom = position.y;
             if (objRight < camLeft || objBottom > camTop)//is visible
             {
-                if(world.level.gameObjects.removeValue(this, true))
+                if(World.getInstance().level.gameObjects.removeValue(this, true))
                 {
                     dispose();
                 }
@@ -116,7 +151,7 @@ public class Coin extends Item
         scrollOut = true;
         velocity.x = -9f;
         velocity.y = 2f;
-        ((GameScreen) world.screen).killPointsTextHandler.add(points, position.x, position.y + mDrawRect.height);
+        ((GameScreen) World.getInstance().screen).killPointsTextHandler.add(points, position.x, position.y + bounds.height);
     }
 
     @Override
@@ -125,13 +160,13 @@ public class Coin extends Item
         if (!collectible) return;
         playerHit = true;
         Sound sound;
-        if (textureAtlas.contains("yellow"))
+        if (!isRed)
         {
-            sound = Assets.manager.get("data/sounds/item/goldpiece_1.mp3");
+            sound = Assets.manager.get("data/sounds/item/coin.mp3");
         }
         else
         {
-            sound = Assets.manager.get("data/sounds/item/goldpiece_red.mp3");
+            sound = Assets.manager.get("data/sounds/item/coin_red.mp3");
         }
         SoundManager.play(sound);
         GameSave.save.coins++;
@@ -145,7 +180,7 @@ public class Coin extends Item
     {
         super.dispose();
         animation = null;
-        world.COIN_POOL.free(this);
+        World.getInstance().COIN_POOL.free(this);
     }
 
     @Override
@@ -154,6 +189,6 @@ public class Coin extends Item
         super.reset();
         scrollOut = false;
         collectible = true;
-        velocity.set(0, 0, 0);
+        velocity.set(0, 0);
     }
 }
