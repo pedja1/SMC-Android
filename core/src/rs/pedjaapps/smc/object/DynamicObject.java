@@ -21,7 +21,7 @@ public abstract class DynamicObject extends GameObject
 
 	public boolean grounded = false;
 
-    long lasHitSoundPlayed;
+    private long lasHitSoundPlayed;
 
     protected float groundY;
 

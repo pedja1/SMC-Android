@@ -53,7 +53,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
     
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
      * Textures *
@@ -66,8 +66,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private BitmapFont debugFont, debugObjectFont;
     private GlyphLayout debugGlyph;
 
-    Vector2 camMin = new Vector2();
-    Vector2 camMax = new Vector2();
+    private Vector2 camMin = new Vector2();
+    private Vector2 camMax = new Vector2();
 
     public HUD hud;
 
@@ -95,13 +95,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private GAME_STATE gameState;
 
     private HashMap<Integer, TouchInfo> touches = new HashMap<>();
-    LevelLoader loader;
+    private LevelLoader loader;
 
-    Sound audioOn;
-    Music music;
+    private Sound audioOn;
+    private Music music;
 
-    float goAlpha = 0.0f;
-    boolean goTouched = false;
+    private float goAlpha = 0.0f;
+    private boolean goTouched = false;
 
     public void setSize(int w, int h)
     {
@@ -119,7 +119,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.debug = debug;
     }
 
-    ConfirmDialog exitDialog;
+    private ConfirmDialog exitDialog;
 
     public KillPointsTextHandler killPointsTextHandler;
 
@@ -127,12 +127,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public boolean resumed, forceCheckEnter;
     private float stateTime;
 
-    private double accumulator;
-    private float step = 1.0f / 30.0f;
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
     private String objectDebugText;
-    PerformanceCounter performanceCounter = new PerformanceCounter("pc");
+    private PerformanceCounter performanceCounter = new PerformanceCounter("pc");
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -200,25 +198,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
     }
 
-    int physicsAccumulatorIterations;
-
     @Override
     public void render(float delta)
     {
-        //debug
-        //long now = System.currentTimeMillis();
-        //debug
-
-        delta = 1f / 60f;
-
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //physics
         updateObjects(delta);
-
-
         //physics end
+
         moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position, gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
@@ -278,9 +267,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 cameraEditModeTranslate.y -= 0.1f;
             }
         }
-        //long end = System.currentTimeMillis() - now;
-        //System.out.println("render time total: " + end);
-        //debug
     }
 
     public void showBoxText(Box box)
@@ -387,12 +373,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void updateObjects(float delta)
     {
-        //performanceCounter.tick();
-        //performanceCounter.start();
-        //int count = 0;
         Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
         for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
-        //for (GameObject go : world.level.gameObjects)
         {
             GameObject go = world.level.gameObjects.get(i);
             if (maryoBWO.overlaps(go.mColRect))
@@ -400,15 +382,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
                 {
                     go._update(delta);
-                    /*if(go instanceof Enemy)*/
-                    //count++;
                 }
             }
         }
         World.RECT_POOL.free(maryoBWO);
-        //System.out.println(count);
-        //performanceCounter.stop();
-        //System.out.println(performanceCounter.time.average);
     }
 
     private void drawObjects()
@@ -422,23 +399,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (int i = 0; i < world.getVisibleObjects().size; i++)
-        //for (GameObject go : world.getVisibleObjects())
         {
             GameObject go = world.getVisibleObjects().get(i);
             Rectangle colRect = go.mColRect;
             Rectangle drawRect = go.mDrawRect;
             shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.rect(colRect.x, colRect.y, colRect.width, colRect.height);
-            /*if (go instanceof Sprite)
-            {
-                shapeRenderer.setColor(1, 0, 0, 1);
-                shapeRenderer.polygon(((Sprite)go).polygon.getTransformedVertices());
-            }
-            else
-            {*/
             shapeRenderer.setColor(1, 0, 0, 1);
             shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
-            /*}*/
         }
         // render maryo
         Maryo maryo = world.maryo;
@@ -494,7 +462,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
                 + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
                 + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
-                + "\n" + "Render/Physics: 1/" + physicsAccumulatorIterations
                 + "\n" + "Screen w=" + width + "h=" + height
                 + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
@@ -529,7 +496,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void hide()
     {
         gameState = GAME_STATE.GAME_PAUSED;
-        //Gdx.input.setInputProcessor(null);
         music.stop();
     }
 
@@ -543,7 +509,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void resume()
     {
-        //Gdx.input.setInputProcessor(this);
+
     }
 
     @Override
@@ -799,14 +765,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
                 {
                     world.maryo.rightPressed();
-                    //dPad.setClickedArea(DPad.CLICKED_AREA.RIGHT);
                     touches.get(pointer).clickArea = HUD.Key.right;
                     hud.rightPressed();
                 }
                 if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
                 {
                     world.maryo.leftPressed();
-                    //dPad.setClickedArea(DPad.CLICKED_AREA.LEFT);
                     touches.get(pointer).clickArea = HUD.Key.left;
                     hud.leftPressed();
                 }
@@ -1016,7 +980,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.height = height;
     }
 
-    class TouchInfo
+    private class TouchInfo
     {
         public float touchX = 0;
         public float touchY = 0;

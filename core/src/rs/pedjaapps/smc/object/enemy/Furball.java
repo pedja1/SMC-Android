@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,19 +26,19 @@ public class Furball extends Enemy
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
-    boolean dying = false;
-    boolean canBeHitFromShell = true;
+    private boolean dying = false;
+    private boolean canBeHitFromShell = true;
 
     //only for boss
-    int downgradeCount;
-    int maxDowngradeCount = 5;
+    private int downgradeCount;
+    private int maxDowngradeCount = 5;
 
     enum Type
     {
         brown, blue, boss
     }
 
-    Type type = Type.brown;
+    private Type type = Type.brown;
 
     private Animation walkAnimation;
     private TextureRegion tTurn, tDead, tHit;
@@ -138,8 +137,8 @@ public class Furball extends Enemy
         {
             //resize it by state time
             //TODO ovako zavisi brzina animacije od fps-a. S obzirom da je fps zakucan na 60, ok je valjda
-            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
-            mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
+            mDrawRect.height -= 1.26f * deltaTime;
+            mDrawRect.width -= 0.63f * deltaTime;
             if(mDrawRect.height < 0)
                 world.trashObjects.add(this);
             return;

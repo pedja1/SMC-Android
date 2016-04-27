@@ -39,13 +39,12 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 
 public class Maryo extends DynamicObject
 {
-    enum Keys
+    private enum Keys
     {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }
     private static final int POWER_JUMP_DELTA = 1;
 
-    private static final long LONG_JUMP_PRESS = 150l;
     private static final float MAX_JUMP_SPEED = 9f;
     private static final float POWER_MAX_JUMP_SPEED = 11f;
     private float mMaxJumpSpeed = MAX_JUMP_SPEED;
@@ -53,8 +52,6 @@ public class Maryo extends DynamicObject
     private boolean jumped;
 
     private float downPressTime;
-
-    private long jumpClickTime;
 
     static Set<Keys> keys = new HashSet<>(Keys.values().length);
 
@@ -141,11 +138,11 @@ public class Maryo extends DynamicObject
      * Makes player invincible and transparent for all enemies
      * Used (for limited time) when player is downgraded (or if you hack the game :D
      */
-    boolean godMode = false;
-    long godModeActivatedTime;
+    private boolean godMode = false;
+    private long godModeActivatedTime;
 
-    Animation resizingAnimation;
-    float resizeAnimStartTime;
+    private Animation resizingAnimation;
+    private float resizeAnimStartTime;
     private MaryoState newState;//used with resize animation
     private MaryoState oldState;//used with resize animation
 
@@ -625,14 +622,10 @@ public class Maryo extends DynamicObject
             boolean resetDownPressedTime = true;
             if (keys.contains(Keys.JUMP))
             {
-                if (!jumped && velocity.y < mMaxJumpSpeed/* && System.currentTimeMillis() - jumpClickTime < LONG_JUMP_PRESS*/)
+                if (!jumped && velocity.y < mMaxJumpSpeed)
                 {
-                    //vel.scl(delta);
+                    velocity.add(0, 6, 0);
 
-                    velocity.add(0, 120f * delta, 0);
-
-                    //vel.scl(1 / delta);
-                    //maryo.velocity.set(vel.x, vel.y += 2f, maryo.velocity.z);
                     resetDownPressedTime = false;
                 }
                 else
@@ -645,20 +638,20 @@ public class Maryo extends DynamicObject
                 if (keys.contains(Keys.LEFT))
                 {
                     // left is pressed
-                    position.x -= 0.02f;
+                    position.x -= 1.2f * delta;
                 }
                 else if (keys.contains(Keys.RIGHT))
                 {
                     // right is pressed
-                    position.x += 0.02f;
+                    position.x += 1.2f * delta;
                 }
                 if (keys.contains(Keys.UP))
                 {
-                    position.y += 0.03f;
+                    position.y += 1.8f * delta;
                 }
                 else if (keys.contains(Keys.DOWN))
                 {
-                    position.y -= 0.03f;
+                    position.y -= 1.8f * delta;
                 }
             }
             else
@@ -1554,8 +1547,6 @@ public class Maryo extends DynamicObject
 
             Sound sound = jumpSound;
             SoundManager.play(sound);
-
-            jumpClickTime = System.currentTimeMillis();
         }
     }
 

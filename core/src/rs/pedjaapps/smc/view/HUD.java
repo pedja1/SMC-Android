@@ -299,7 +299,7 @@ public class HUD
 			{
 				ttsFadeIn = true;
 			}
-			tts.setColor(1, 1, 1, ttsFadeIn ? (ttsAlpha += 0.02f) : (ttsAlpha -= 0.02f));
+			tts.setColor(1, 1, 1, ttsFadeIn ? (ttsAlpha += deltaTime) : (ttsAlpha -= deltaTime));
 			ttsGlyphLayout.setText(tts, ttsText);
 			tts.draw(batch, ttsText, C_W / 2 - ttsGlyphLayout.width / 2, C_H / 2 + ttsGlyphLayout.height / 2);
 			batch.end();
