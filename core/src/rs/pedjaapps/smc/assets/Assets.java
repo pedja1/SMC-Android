@@ -45,7 +45,6 @@ public class Assets
             if(Gdx.app.getType() == Application.ApplicationType.iOS || Gdx.app.getType() == Application.ApplicationType.Desktop || Gdx.app.getType() == Application.ApplicationType.WebGL)
             {
                 file = Gdx.files.internal("assets.zip").file();
-                System.out.println(file.getAbsolutePath());
             }
             else if(Gdx.app.getType() == Application.ApplicationType.Android)
             {

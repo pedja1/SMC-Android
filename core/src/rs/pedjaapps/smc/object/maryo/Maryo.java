@@ -45,24 +45,24 @@ public class Maryo extends DynamicObject
     }
     private static final int POWER_JUMP_DELTA = 1;
 
-    private static final float MAX_JUMP_SPEED = 9f;
-    private static final float POWER_MAX_JUMP_SPEED = 11f;
+    private static final float MAX_JUMP_SPEED = 10f;
+    private static final float POWER_MAX_JUMP_SPEED = 12f;
     private float mMaxJumpSpeed = MAX_JUMP_SPEED;
 
     private boolean jumped;
 
     private float downPressTime;
 
-    static Set<Keys> keys = new HashSet<>(Keys.values().length);
+    private static Set<Keys> keys = new HashSet<>(Keys.values().length);
 
     public enum MaryoState
     {
         small, big, fire, ice, ghost
     }
 
-    public static final float STAR_EFFECT_TIMEOUT = 15f;
-    public static final float GLIM_COLOR_START_ALPHA = 0f;
-    public static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
+    private static final float STAR_EFFECT_TIMEOUT = 15f;
+    private static final float GLIM_COLOR_START_ALPHA = 0f;
+    private static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
 
     //this could be all done dynamically, but this way we minimize allocation in game loop
     //omg, this is a lot of constants :D
@@ -117,20 +117,19 @@ public class Maryo extends DynamicObject
     private static final float RESIZE_ANIMATION_DURATION = 0.977f;
     private static final float RESIZE_ANIMATION_FRAME_DURATION = RESIZE_ANIMATION_DURATION / 8f;
 
-    protected static final float MAX_VEL = 4f;
+    private static final float MAX_VEL = 4f;
     private static final float GOD_MOD_TIMEOUT = 3000;//3 sec
 
     private static final float BULLET_COOLDOWN = 1f;//1 sec
 
-    WorldState worldState = WorldState.JUMPING;
+    private WorldState worldState = WorldState.JUMPING;
     private MaryoState maryoState = GameSave.save.playerState;
-    public boolean facingLeft = false;
-    public boolean longJump = false;
+    private boolean facingLeft = false;
 
     private boolean handleCollision = true;
-    DyingAnimation dyingAnim = new DyingAnimation();
+    private DyingAnimation dyingAnim = new DyingAnimation();
 
-    public Sound jumpSound = null;
+    private Sound jumpSound = null;
 
     public Rectangle debugRayRect = new Rectangle();
 
@@ -147,15 +146,15 @@ public class Maryo extends DynamicObject
     private MaryoState oldState;//used with resize animation
 
     //exit, enter
-    public float enterStartTime;
+    private float enterStartTime;
     public boolean exiting, entering;
     private LevelExit exit;
     private LevelEntry entry;
     private Vector3 exitEnterStartPosition = new Vector3();
     private static final float exitEnterVelocity = 1.3f;
     private int rotation = 0;
-    public ParticleEffect powerJumpEffect, starEffect;
-    public boolean powerJump;
+    private ParticleEffect powerJumpEffect, starEffect;
+    private boolean powerJump;
     private float bulletShotTime = BULLET_COOLDOWN;
     private boolean fire;
     private float fireAnimationStateTime;
@@ -170,9 +169,7 @@ public class Maryo extends DynamicObject
     private TextureRegion[] tMap = new TextureRegion[25];
     private Animation[] aMap = new Animation[12];
 
-    private GameObject pickedObject;
-	
-	private MovingPlatform attachedTo;
+    private MovingPlatform attachedTo;
 	private float distanceOnPlatform;
 	private Vector3 prevPos = new Vector3();
 
@@ -286,17 +283,7 @@ public class Maryo extends DynamicObject
     public void _render(SpriteBatch spriteBatch)
     {
         TextureRegion marioFrame;
-        if (exiting)
-        {
-            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
-
-            float originX = mDrawRect.width * 0.5f;
-            float originY = mDrawRect.height * 0.5f;
-            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, originX, originY, mDrawRect.width, mDrawRect.height, 1, 1, rotation);
-
-            return;
-        }
-        if (entering)
+        if (exiting || entering)
         {
             marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
 
@@ -624,7 +611,17 @@ public class Maryo extends DynamicObject
             {
                 if (!jumped && velocity.y < mMaxJumpSpeed)
                 {
-                    velocity.add(0, 6, 0);
+                    float jumpTime = 0.1f;
+                    float acceleration = mMaxJumpSpeed / (jumpTime / delta);
+                    if(velocity.y + acceleration > mMaxJumpSpeed)
+                    {
+                        velocity.y = mMaxJumpSpeed;
+                        jumped = true;
+                    }
+                    else
+                    {
+                        velocity.add(0, acceleration, 0);
+                    }
 
                     resetDownPressedTime = false;
                 }
