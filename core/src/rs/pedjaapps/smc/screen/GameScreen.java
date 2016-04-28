@@ -288,7 +288,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 cameraEditModeTranslate.y -= 0.1f;
             }
         }
-        sleep(30);
+        sleep(60);
     }
 
     public void showBoxText(Box box)
