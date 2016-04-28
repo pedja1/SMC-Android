@@ -60,7 +60,7 @@ public class Maryo extends DynamicObject
         small, big, fire, ice, ghost
     }
 
-    private static final float STAR_EFFECT_TIMEOUT = 15f;
+    public static float STAR_EFFECT_TIMEOUT = 15f;
     private static final float GLIM_COLOR_START_ALPHA = 0f;
     private static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
 
@@ -164,6 +164,7 @@ public class Maryo extends DynamicObject
     private float glimCounter;
     private boolean glimMode = true;
     private float starEffectTime;
+    public boolean canWalkOnAir = false;
 
     //textures
     private TextureRegion[] tMap = new TextureRegion[25];
@@ -1249,11 +1250,18 @@ public class Maryo extends DynamicObject
     @Override
     protected boolean handleDroppedBelowWorld()
     {
-        if (worldState != WorldState.DYING)
+        if (!canWalkOnAir)
         {
-            downgradeOrDie(true);
+            if (worldState != WorldState.DYING)
+            {
+                downgradeOrDie(true);
+            }
+            return true;
         }
-        return true;
+        else
+        {
+            return super.handleDroppedBelowWorld();
+        }
     }
 
     private void setJumpSound()

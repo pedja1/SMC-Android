@@ -24,6 +24,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.PerformanceCounter;
+import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public OrthographicCamera cam;
     private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
-    
+
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     /**
@@ -180,7 +181,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         music = game.assets.manager.get(loader.level.music.first());
         MusicManager.play(music);
-        if(debug)GLProfiler.enable();
+        if (debug) GLProfiler.enable();
         if (!resumed || forceCheckEnter)
         {
             world.maryo.checkLevelEnter();
@@ -195,6 +196,26 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (resumed)
         {
             cameraForceSnap = true;
+        }
+    }
+
+    private long diff, start = System.currentTimeMillis();
+
+    public void sleep(int fps)
+    {
+        if (fps > 0)
+        {
+            diff = System.currentTimeMillis() - start;
+            long targetDelay = 1000 / fps;
+            if (diff < targetDelay)
+            {
+                try
+                {
+                    Thread.sleep(targetDelay - diff);
+                }
+                catch (InterruptedException ignore) {}
+            }
+            start = System.currentTimeMillis();
         }
     }
 
@@ -244,7 +265,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
-        if(debug)GLProfiler.reset();
+        if (debug) GLProfiler.reset();
         stateTime += delta;
 
         //debug
@@ -267,6 +288,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 cameraEditModeTranslate.y -= 0.1f;
             }
         }
+        sleep(30);
     }
 
     public void showBoxText(Box box)
@@ -350,7 +372,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             cam.position.lerp(pos, 0.05f);
         }
         cam.update();
-        if(gameState != GAME_STATE.GAME_EDIT_MODE)keepCameraInBounds(cam);
+        if (gameState != GAME_STATE.GAME_EDIT_MODE) keepCameraInBounds(cam);
     }
 
     private void keepCameraInBounds(OrthographicCamera cam)
@@ -487,7 +509,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-   		world.level.background.resize(cam);
+        world.level.background.resize(cam);
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -620,7 +642,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-		world.level.background.onAssetsLoaded(cam, game.assets);
+        world.level.background.onAssetsLoaded(cam, game.assets);
     }
 
     // * InputProcessor methods ***************************//
@@ -741,9 +763,30 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         return true;
     }
 
+    private StringBuilder mGodModInputCheckBuilder = new StringBuilder();
+    private static final String GOD_MOD_TEXT = "god";
+
     @Override
     public boolean keyTyped(char character)
     {
+        System.out.println(character);
+        mGodModInputCheckBuilder.append(character);
+        if (mGodModInputCheckBuilder.length() == GOD_MOD_TEXT.length())
+        {
+            System.out.println("length >: " + mGodModInputCheckBuilder);
+            if (mGodModInputCheckBuilder.toString().equals(GOD_MOD_TEXT))
+            {
+                System.out.println("equal: " + mGodModInputCheckBuilder);
+                Maryo.STAR_EFFECT_TIMEOUT = Float.MAX_VALUE;
+                world.maryo.canWalkOnAir = true;
+                world.maryo.starPicked();
+            }
+            else
+            {
+                System.out.println("not equal: " + mGodModInputCheckBuilder);
+                mGodModInputCheckBuilder = new StringBuilder();
+            }
+        }
         return false;
     }
 

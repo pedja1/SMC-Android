@@ -255,7 +255,6 @@ public abstract class DynamicObject extends GameObject
 
     protected boolean handleDroppedBelowWorld()
     {
-        //TODO for now only prevent it from dropping below
         if (velocity.y < 0)
         {
             grounded = true;
@@ -288,7 +287,7 @@ public abstract class DynamicObject extends GameObject
                         }
                     }
                 }
-				if (velocity.y < 0) 
+				if (velocity.y < 0)
 				{
 					grounded = true;
 				}
