@@ -57,7 +57,7 @@ public class Maryo extends DynamicObject
 
     public enum MaryoState
     {
-        small, big, fire, ice, ghost
+        small, big, fire, ice
     }
 
     public static float STAR_EFFECT_TIMEOUT = 15f;
@@ -73,8 +73,6 @@ public class Maryo extends DynamicObject
     private static final int A_KEY_WALKING_FIRE = 4;
     private static final int A_KEY_THROW_FIRE = 5;
     private static final int A_KEY_CLIMB_FIRE = 6;
-    private static final int A_KEY_WALKING_GHOST = 7;
-    private static final int A_KEY_CLIMB_GHOST = 8;
     private static final int A_KEY_WALKING_ICE = 9;
     private static final int A_KEY_THROW_ICE = 10;
     private static final int A_KEY_CLIMB_ICE = 11;
@@ -96,12 +94,6 @@ public class Maryo extends DynamicObject
     private static final int T_KEY_FALL_RIGHT_FIRE = 12;
     private static final int T_KEY_DEAD_RIGHT_FIRE = 13;
     private static final int T_KEY_STAND_RIGHT_FIRE = 14;
-
-    private static final int T_KEY_DUCK_RIGHT_GHOST = 15;
-    private static final int T_KEY_JUMP_RIGHT_GHOST = 16;
-    private static final int T_KEY_FALL_RIGHT_GHOST = 17;
-    private static final int T_KEY_DEAD_RIGHT_GHOST = 18;
-    private static final int T_KEY_STAND_RIGHT_GHOST = 19;
 
     private static final int T_KEY_DUCK_RIGHT_ICE = 20;
     private static final int T_KEY_JUMP_RIGHT_ICE = 21;
@@ -194,7 +186,6 @@ public class Maryo extends DynamicObject
                 break;
             case big:
             case fire:
-            case ghost:
             case ice:
                 mDrawRect.height = 1.09f;
                 mDrawRect.width = 1.09f;
@@ -225,7 +216,7 @@ public class Maryo extends DynamicObject
 
     public void initAssets()
     {
-        MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ghost, MaryoState.ice};
+        MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ice};
         for (MaryoState ms : states)
         {
             loadTextures(ms);
@@ -462,8 +453,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_STAND_RIGHT_FIRE;
                     case ice:
                         return T_KEY_STAND_RIGHT_ICE;
-                    case ghost:
-                        return T_KEY_STAND_RIGHT_GHOST;
                 }
                 break;
             case jump_right:
@@ -477,8 +466,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_JUMP_RIGHT_FIRE;
                     case ice:
                         return T_KEY_JUMP_RIGHT_ICE;
-                    case ghost:
-                        return T_KEY_JUMP_RIGHT_GHOST;
                 }
                 break;
             case fall_right:
@@ -492,8 +479,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_FALL_RIGHT_FIRE;
                     case ice:
                         return T_KEY_FALL_RIGHT_ICE;
-                    case ghost:
-                        return T_KEY_FALL_RIGHT_GHOST;
                 }
                 break;
             case dead_right:
@@ -507,8 +492,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_DEAD_RIGHT_FIRE;
                     case ice:
                         return T_KEY_DEAD_RIGHT_ICE;
-                    case ghost:
-                        return T_KEY_DEAD_RIGHT_GHOST;
                 }
                 break;
             case duck_right:
@@ -522,8 +505,6 @@ public class Maryo extends DynamicObject
                         return T_KEY_DUCK_RIGHT_FIRE;
                     case ice:
                         return T_KEY_DUCK_RIGHT_ICE;
-                    case ghost:
-                        return T_KEY_DUCK_RIGHT_GHOST;
                 }
                 break;
         }
@@ -572,15 +553,6 @@ public class Maryo extends DynamicObject
                         return A_KEY_CLIMB_ICE;
                     case _throw:
                         return A_KEY_THROW_ICE;
-                }
-                break;
-            case ghost:
-                switch (akey)
-                {
-                    case walk:
-                        return A_KEY_WALKING_GHOST;
-                    case climb:
-                        return A_KEY_CLIMB_GHOST;
                 }
                 break;
         }
@@ -1153,8 +1125,6 @@ public class Maryo extends DynamicObject
                 return world.screen.game.assets.manager.get("data/sounds/item/fireplant.mp3");
             case ice:
                 return world.screen.game.assets.manager.get("data/sounds/item/mushroom_blue.mp3");
-            case ghost:
-                return world.screen.game.assets.manager.get("data/sounds/item/mushroom_ghost.mp3");
         }
         return null;
     }
@@ -1275,9 +1245,6 @@ public class Maryo extends DynamicObject
             case fire:
             case ice:
                 jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
-                break;
-            case ghost:
-                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_ghost.mp3");
                 break;
         }
     }
