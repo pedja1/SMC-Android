@@ -4684,7 +4684,6 @@
     <sprite >
         <property name="posx" value="6907" />
         <property name="posy" value="-686" />
-
         <property name="image" value="ground/green_2/trees/balloon_tree/trunk.png" />
         <property name="type" value="passive" />
     </sprite>

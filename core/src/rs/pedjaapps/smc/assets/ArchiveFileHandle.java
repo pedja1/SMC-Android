@@ -12,9 +12,8 @@ import java.util.zip.ZipFile;
 
 public class ArchiveFileHandle extends FileHandle
 {
-
-    final ZipFile archive;
-    final ZipEntry archiveEntry;
+    private final ZipFile archive;
+    private final ZipEntry archiveEntry;
 
     public ArchiveFileHandle(ZipFile archive, File file)
     {
@@ -27,7 +26,7 @@ public class ArchiveFileHandle extends FileHandle
     {
         super(fileName.replace('\\', '/'), Files.FileType.Classpath);
         this.archive = archive;
-        this.archiveEntry = archive.getEntry(fileName.replace('\\', '/'));
+        this.archiveEntry = archive.getEntry(file.getPath());
     }
 
     @Override
@@ -66,6 +65,8 @@ public class ArchiveFileHandle extends FileHandle
     {
         try
         {
+            if(archiveEntry == null)
+                throw new GdxRuntimeException("File not found in archive: " + file);
             return archive.getInputStream(archiveEntry);
         }
         catch (IOException e)

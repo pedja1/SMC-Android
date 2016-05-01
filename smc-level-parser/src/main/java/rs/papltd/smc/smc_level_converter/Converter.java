@@ -253,6 +253,13 @@ public class Converter
                 {
                     jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
                 }
+                if ("turtleboss".equals(enemy.type))
+                {
+                    jEnemy.put("max_downgrade_count", enemy.max_downgrade_count);
+                    jEnemy.put("max_hit_count", enemy.max_hit_count);
+                    jEnemy.put("level_ends_if_killed", enemy.level_ends_if_killed);
+                    jEnemy.put("shell_time", enemy.shell_time);
+                }
                 if ("flyon".equals(enemy.type))
                 {
                     jEnemy.put("max_distance", enemy.max_distance);

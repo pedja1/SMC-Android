@@ -12,9 +12,9 @@ public class Enemy
 {
     public String type, color, direction, image_dir, texture_atlas, texture_name, image;
     public float posx, posy, speed, width, height, rotationSpeed;
-    public float max_distance, fireResistance, iceResistance;
+    public float max_distance, fireResistance, iceResistance, shell_time;
     public Rectangle colRect = new Rectangle();
-    public int max_downgrade_count;
+    public int max_downgrade_count, max_hit_count, level_ends_if_killed;
 
     //gee
     public float waitTime, flyDistance;
@@ -64,13 +64,25 @@ public class Enemy
         {
             speed = Float.parseFloat(value);
         }
+        else if("shell_time".equals(name))
+        {
+            shell_time = Float.parseFloat(value);
+        }
         else if("max_distance".equals(name))
         {
             max_distance = Integer.parseInt(value);
         }
+        else if("level_ends_if_killed".equals(name))
+        {
+            level_ends_if_killed = Integer.parseInt(value);
+        }
         else if("max_downgrade_count".equals(name))
         {
             max_downgrade_count = Integer.parseInt(value);
+        }
+        else if("max_hit_count".equals(name))
+        {
+            max_hit_count = Integer.parseInt(value);
         }
         else if("image".equals(name))
         {

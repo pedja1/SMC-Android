@@ -30,7 +30,7 @@ public class Krush extends Enemy
     public static final int KP_BIG = 40;
     public static final float POS_Z = 0.09f;
 
-    boolean dying = false;
+    private boolean dying = false;
 
     public boolean isSmall;
 

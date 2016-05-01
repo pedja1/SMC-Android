@@ -2179,9 +2179,9 @@
         <property name="shake_time" value="12" />
         <property name="touch_move_time" value="0" />
         <property name="middle_img_count" value="0" />
-        <property name="image_top_left" value="blocks/brick/1_black.png" />
-        <property name="image_top_middle" value="blocks/brick/1_black.png" />
-        <property name="image_top_right" value="blocks/brick/1_black.png" />
+        <property name="image_top_left" value="data/blocks/brick/1_black.png" />
+        <property name="image_top_middle" value="data/blocks/brick/1_black.png" />
+        <property name="image_top_right" value="data/blocks/brick/1_black.png" />
     </moving_platform>
     <moving_platform >
         <property name="posx" value="1208" />
@@ -2195,8 +2195,8 @@
         <property name="shake_time" value="12" />
         <property name="touch_move_time" value="0" />
         <property name="middle_img_count" value="0" />
-        <property name="image_top_left" value="blocks/brick/1_black.png" />
-        <property name="image_top_middle" value="blocks/brick/1_black.png" />
-        <property name="image_top_right" value="blocks/brick/1_black.png" />
+        <property name="image_top_left" value="data/blocks/brick/1_black.png" />
+        <property name="image_top_middle" value="data/blocks/brick/1_black.png" />
+        <property name="image_top_right" value="data/blocks/brick/1_black.png" />
     </moving_platform>
 </level>

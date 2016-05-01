@@ -19,15 +19,29 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
- * Created by pedja on 18.5.14..
- */
+ * Copyright (c) 2016 "Predrag Čokulov,"
+ * pedjaapps [https://pedjaapps.net]
+ *
+ * This file is part of SMC-Android.
+ *
+ * SMC-Android is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 public class Furball extends Enemy
 {
     public static final float VELOCITY = 1.5f;
     public static final float VELOCITY_TURN = 0.75f;
     public static final float POS_Z = 0.09f;
     private boolean dying = false;
-    private boolean canBeHitFromShell = true;
 
     //only for boss
     private int downgradeCount;
@@ -73,7 +87,7 @@ public class Furball extends Enemy
             mKillPoints = 10;
             mFireResistant = 0;
             mIceResistance = .0f;
-            canBeHitFromShell = true;
+            mCanBeHitFromShell = 1;
         }
         else if(textureAtlas.contains("blue"))
         {
@@ -81,7 +95,7 @@ public class Furball extends Enemy
             mKillPoints = 50;
             mFireResistant = 0;
             mIceResistance = .9f;
-            canBeHitFromShell = true;
+            mCanBeHitFromShell = 1;
         }
         else if(textureAtlas.contains("boss"))
         {
@@ -89,7 +103,7 @@ public class Furball extends Enemy
             mKillPoints = 2500;
             mFireResistant = 1;
             mIceResistance = 1f;
-            canBeHitFromShell = false;
+            mCanBeHitFromShell = 0;
             tHit = atlas.findRegion("hit");
         }
     }
@@ -136,7 +150,6 @@ public class Furball extends Enemy
         if(dying)
         {
             //resize it by state time
-            //TODO ovako zavisi brzina animacije od fps-a. S obzirom da je fps zakucan na 60, ok je valjda
             mDrawRect.height -= 1.26f * deltaTime;
             mDrawRect.width -= 0.63f * deltaTime;
             if(mDrawRect.height < 0)

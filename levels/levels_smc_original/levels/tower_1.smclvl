@@ -2003,9 +2003,9 @@
         <property name="shake_time" value="16" />
         <property name="touch_move_time" value="0" />
         <property name="middle_img_count" value="4" />
-        <property name="image_top_left" value="game/box/white1_1.png" />
-        <property name="image_top_middle" value="game/box/white1_1.png" />
-        <property name="image_top_right" value="game/box/white1_1.png" />
+        <property name="image_top_left" value="data/game/box/white1_1.png" />
+        <property name="image_top_middle" value="data/game/box/white1_1.png" />
+        <property name="image_top_right" value="data/game/box/white1_1.png" />
     </moving_platform>
     <sprite >
         <property name="posx" value="2242" />

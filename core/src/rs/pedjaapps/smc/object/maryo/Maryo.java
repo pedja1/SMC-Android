@@ -151,7 +151,7 @@ public class Maryo extends DynamicObject
     private boolean fire;
     private float fireAnimationStateTime;
 
-    private boolean mInvincibleStar;
+    public boolean mInvincibleStar;
     private final Color glimColor = new Color(0.160784314f, 0.654901961f, 1f, GLIM_COLOR_START_ALPHA);
     private float glimCounter;
     private boolean glimMode = true;
@@ -891,11 +891,13 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
-				if(grounded && closestObject instanceof MovingPlatform)
+				if(grounded && closestObject instanceof MovingPlatform && ((MovingPlatform)closestObject).canAttachTo)
 				{
 					if(attachedTo != closestObject)
 					{
 						attachedTo = (MovingPlatform) closestObject;
+                        attachedTo.platformState = MovingPlatform.MOVING_PLATFORM_TOUCHED;
+                        attachedTo.touched = true;
 						distanceOnPlatform = position.x - attachedTo.position.x;
 					}
 				}
@@ -1356,7 +1358,8 @@ public class Maryo extends DynamicObject
                 {
                     nextLevelName = exit.levelName;
                 }
-                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+                //world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+                ((GameScreen)world.screen).endLevel(nextLevelName);
                 break;
             case LevelExit.LEVEL_EXIT_WARP:
                 if (exiting) return;

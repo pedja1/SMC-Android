@@ -17,7 +17,6 @@ public abstract class GameObject
     public Vector3 velocity = new Vector3();
     public Vector3 acceleration = new Vector3();
     protected World world;
-    public boolean isFront = false;// is sprite drawn after player, so that it appears like player walks behind it
     public float mRotationX, mRotationY, mRotationZ;//degrees
     
 	public enum WorldState
@@ -95,7 +94,6 @@ public abstract class GameObject
                 "\n\t velocity=" + velocity +
                 "\n\t acceleration=" + acceleration +
                 "\n\t world=" + world +
-                "\n\t isFront=" + isFront +
                 "\n\t mRotationX=" + mRotationX +
                 "\n\t mRotationY=" + mRotationY +
                 "\n\t mRotationZ=" + mRotationZ +

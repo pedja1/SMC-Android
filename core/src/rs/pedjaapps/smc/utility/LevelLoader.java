@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,19 +20,19 @@ import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.MovingPlatform;
-import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Level;
 import rs.pedjaapps.smc.object.LevelEntry;
 import rs.pedjaapps.smc.object.LevelExit;
+import rs.pedjaapps.smc.object.MovingPlatform;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.EnemyStopper;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.view.Background;
 
 /**
  * Created by pedja on 2/2/14.
@@ -238,7 +239,14 @@ public class LevelLoader
         sprite.type = sType;
 
         sprite.textureName = jSprite.getString("texture_name");
-        if (sprite.textureName == null || sprite.textureName.isEmpty())
+        sprite.textureAtlas = jSprite.optString("texture_atlas", null);
+
+        if(TextUtils.isEmpty(sprite.textureName) && TextUtils.isEmpty(sprite.textureAtlas))
+        {
+            throw new GdxRuntimeException("Both textureName and textureAtlas are null");
+        }
+
+        if (TextUtils.isEmpty(sprite.textureName))
         {
             throw new IllegalArgumentException("texture name is invalid: \"" + sprite.textureName + "\"");
         }
@@ -247,16 +255,12 @@ public class LevelLoader
         {
             assets.manager.load(sprite.textureName, Texture.class, assets.textureParameter);
         }
-        if (jSprite.has("is_front"))
-        {
-            sprite.isFront = jSprite.getBoolean("is_front");
-        }
 
-        sprite.textureAtlas = jSprite.optString("texture_atlas", null);
-        if(sprite.textureAtlas != null)
+        if(!TextUtils.isEmpty(sprite.textureAtlas))
         {
             assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
+
         sprite.mRotationX = jSprite.optInt("rotationX");
         sprite.mRotationY = jSprite.optInt("rotationY");
         sprite.mRotationZ = jSprite.optInt("rotationZ");
@@ -336,10 +340,10 @@ public class LevelLoader
         float height = (float) jMovingPlatform.getDouble("height");
         MovingPlatform platform = new MovingPlatform(world, new Vector2(width, height), position, null);
         platform.max_distance = jMovingPlatform.optInt("max_distance");
-        platform.speed = jMovingPlatform.optInt("speed");
-        platform.touch_time = jMovingPlatform.optInt("touch_time");
-        platform.shake_time = jMovingPlatform.optInt("shake_time");
-        platform.touch_move_time = jMovingPlatform.optInt("touch_move_time");
+        platform.speed = (float) jMovingPlatform.optDouble("speed");
+        platform.touch_time = (float) jMovingPlatform.optDouble("touch_time");
+        platform.shake_time = (float) jMovingPlatform.optDouble("shake_time");
+        platform.touch_move_time = (float) jMovingPlatform.optDouble("touch_move_time");
         platform.move_type = jMovingPlatform.optInt("move_type");
         platform.middle_img_count = jMovingPlatform.optInt("middle_img_count");
         platform.direction = jMovingPlatform.optString("direction");
@@ -347,7 +351,16 @@ public class LevelLoader
         platform.image_top_middle = jMovingPlatform.optString("image_top_middle");
         platform.image_top_right = jMovingPlatform.optString("image_top_right");
         platform.textureAtlas = jMovingPlatform.optString("texture_atlas");
-        assets.manager.load(platform.textureAtlas, TextureAtlas.class);
+        if(platform.textureAtlas != null && !platform.textureAtlas.trim().isEmpty())
+        {
+            assets.manager.load(platform.textureAtlas, TextureAtlas.class);
+        }
+        else
+        {
+            assets.manager.load(platform.image_top_left, Texture.class);
+            assets.manager.load(platform.image_top_middle, Texture.class);
+            assets.manager.load(platform.image_top_right, Texture.class);
+        }
 
         Sprite.Type sType = null;
         if (jMovingPlatform.has("massive_type"))
@@ -377,6 +390,36 @@ public class LevelLoader
             position.z = m_pos_z_front_passive_start;
         }
         platform.type = sType;
+
+        JSONObject jPath = jMovingPlatform.optJSONObject("path");
+        if(platform.move_type == MovingPlatform.MOVING_PLATFORM_TYPE_PATH && jPath == null)
+        {
+            throw new GdxRuntimeException("MovingPlatform type is 'path' but no path defined");
+        }
+        if(jPath != null)
+        {
+            MovingPlatform.Path path = new MovingPlatform.Path();
+            path.posx = (float) jPath.optDouble("posx");
+            path.posy = (float) jPath.optDouble("posy");
+            path.rewind = jPath.optInt("rewind");
+
+            JSONArray jSegments = jPath.optJSONArray("segments");
+            if(jSegments == null || jSegments.length() == 0)
+            {
+                throw new GdxRuntimeException("Path doesn't contain segments. Level: " + level.levelName);
+            }
+            for(int i = 0; i < jSegments.length(); i++)
+            {
+                JSONObject jSegment = jSegments.optJSONObject(i);
+                MovingPlatform.Path.Segment segment = new MovingPlatform.Path.Segment();
+                segment.start.x = (float) jSegment.optDouble("startx");
+                segment.start.y = (float) jSegment.optDouble("starty");
+                segment.end.x = (float) jSegment.optDouble("endx");
+                segment.end.y = (float) jSegment.optDouble("endy");
+                path.segments.add(segment);
+            }
+            platform.path = path;
+        }
 
         level.gameObjects.add(platform);
     }

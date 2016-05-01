@@ -23,7 +23,8 @@ public class MushroomPoison extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        world.maryo.downgradeOrDie(false);
+        if (!world.maryo.mInvincibleStar)
+            world.maryo.downgradeOrDie(false);
         world.trashObjects.add(this);
     }
 }

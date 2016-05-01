@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,7 +112,7 @@ public abstract class Enemy extends DynamicObject
         if(mKillPoints > 0)((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
     }
 
-    enum CLASS
+    private enum CLASS
     {
         eato, flyon, furball, turtle, gee, krush, rokko, spika, spikeball, thromp, turtleboss, _static("static");
 
@@ -133,7 +134,7 @@ public abstract class Enemy extends DynamicObject
                 if (cls.toString().equals(string))
                     return cls;
             }
-            return null;
+            throw new GdxRuntimeException("Unknown enemy class: '" + string + "'");
         }
 
 
@@ -148,8 +149,6 @@ public abstract class Enemy extends DynamicObject
     {
         stopper, player, enemy
     }
-
-    WorldState worldState = WorldState.IDLE;
 
     protected Enemy(World world, Vector2 size, Vector3 position)
     {

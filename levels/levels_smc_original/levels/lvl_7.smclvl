@@ -9629,7 +9629,7 @@
 		<Property name="touch_time" value="0" />
 		<Property name="shake_time" value="16" />
 		<Property name="touch_move_time" value="0" />
-		<Property name="middle_img_count" value="3" />
+		<Property name="middle_img_count" value="10" />
 		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
 		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
 		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />
@@ -9651,7 +9651,7 @@
 		<Property name="touch_time" value="64" />
 		<Property name="shake_time" value="12" />
 		<Property name="touch_move_time" value="0" />
-		<Property name="middle_img_count" value="0" />
+		<Property name="middle_img_count" value="2" />
 		<Property name="image_top_left" value="ground/green_1/slider/1/brown/left.png" />
 		<Property name="image_top_middle" value="ground/green_1/slider/1/brown/middle.png" />
 		<Property name="image_top_right" value="ground/green_1/slider/1/brown/right.png" />

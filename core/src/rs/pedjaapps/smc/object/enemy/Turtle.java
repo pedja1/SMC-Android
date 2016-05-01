@@ -17,21 +17,23 @@ import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
+ * Copyright pedja
  */
 public class Turtle extends Enemy
 {
-    public final float mVelocity;
-    public static final float VELOCITY_TURN = 0.75f;
-    public final float mVelocityShell;
-    public static final float POS_Z = 0.091f;
+    private static final float SHELL_TIMEOUT_SEC = 5;
+    private final float mVelocity;
+    private static final float VELOCITY_TURN = 0.75f;
+    private final float mVelocityShell;
+    static final float POS_Z = 0.091f;
 
-    private float mShellRotation;
+    private float mShellRotation, mShelledTime;
 
     public boolean isShell = false, isShellMoving = false;
     private Animation walkAnimation;
     private TextureRegion tTurn, tShell, tDead;
 
-    public Turtle(World world, Vector2 size, Vector3 position, String color)
+    Turtle(World world, Vector2 size, Vector3 position, String color)
     {
         super(world, size, position);
         if(!"green".equals(color))
@@ -53,7 +55,7 @@ public class Turtle extends Enemy
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
+        Array<TextureRegion> walkFrames = new Array<>();
 
         for(int i = 1; i < 9; i++)
         {
@@ -162,6 +164,21 @@ public class Turtle extends Enemy
             turn = false;
         }
 
+        /*if (isShell && !isShellMoving)
+        {
+            mShelledTime -= deltaTime;
+            if(mShelledTime <= 0)
+            {
+                isShell = false;
+                isShellMoving = false;
+
+                mDrawRect.height = mDrawRect.height / 0.60f;
+                mDrawRect.width = mDrawRect.width / 0.60f;
+                mColRect.height = mDrawRect.height;
+                mColRect.width = mDrawRect.width;
+            }
+        }*/
+
         if (!deadByBullet)
         {
             switch(direction)
@@ -227,10 +244,6 @@ public class Turtle extends Enemy
                 turn();
             }
 		}
-        else
-        {
-
-        }
         return false;
 	}
 
@@ -278,6 +291,7 @@ public class Turtle extends Enemy
             // if shell and moving make it stop
             if (!isShell)
             {
+                mShelledTime = SHELL_TIMEOUT_SEC;
                 isShell = true;
                 velocity.x = 0;
                 mDrawRect.height = mDrawRect.height * 0.60f;

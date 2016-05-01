@@ -133,6 +133,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private String objectDebugText;
     private PerformanceCounter performanceCounter = new PerformanceCounter("pc");
 
+    private static final float LEVEL_END_ANIMATION_DURATION = .5f;
+    private float levelEndAnimationStateTime;
+    private String mNextLevelName;
+
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
         this(game, fromMenu, levelName, null);
@@ -213,7 +217,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 {
                     Thread.sleep(targetDelay - diff);
                 }
-                catch (InterruptedException ignore) {}
+                catch (InterruptedException ignore)
+                {
+                }
             }
             start = System.currentTimeMillis();
         }
@@ -257,6 +263,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             handleGameOver(delta);
         }
 
+        if (gameState == GAME_STATE.GAME_LEVEL_END)
+        {
+            handleLevelEnded(delta);
+        }
+
         exitDialog.render(spriteBatch);
 
         //cleanup
@@ -289,6 +300,44 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         sleep(60);
+    }
+
+    public void endLevel(String nextLevelName)
+    {
+        mNextLevelName = nextLevelName;
+        levelEndAnimationStateTime = LEVEL_END_ANIMATION_DURATION;
+        setGameState(GAME_STATE.GAME_LEVEL_END);
+    }
+
+    private void handleLevelEnded(float delta)
+    {
+        if (levelEndAnimationStateTime <= 0)
+        {
+            game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
+            mNextLevelName = null;
+            return;
+        }
+        levelEndAnimationStateTime -= delta;
+
+        float percent = 1 - levelEndAnimationStateTime / LEVEL_END_ANIMATION_DURATION;
+
+        float camWidth = hud.cam.viewportWidth;
+        float camHeight = hud.cam.viewportHeight;
+
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        shapeRenderer.setProjectionMatrix(hud.cam.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        shapeRenderer.setColor(0, 0, 0, percent);
+        shapeRenderer.rect(0, 0, camWidth, camHeight);
+
+        shapeRenderer.end();
+
+        spriteBatch.setProjectionMatrix(cam.combined);
+        spriteBatch.begin();
+        spriteBatch.end();
     }
 
     public void showBoxText(Box box)
@@ -573,8 +622,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/sounds/player/jump_big_power.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/jump_small.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/jump_small_power.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_ghost.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/ghost_end.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/pickup_item.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/powerdown.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/run_stop.mp3", Sound.class);
@@ -608,7 +655,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         pointsParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        pointsParams.fontParameters.size = (int) HUD.C_H / 35;
+        pointsParams.fontParameters.size = 19;
+        pointsParams.fontParameters.magFilter = Texture.TextureFilter.Linear;
+        pointsParams.fontParameters.minFilter = Texture.TextureFilter.Linear;
         pointsParams.fontParameters.characters = "0123456789";
         game.assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
 
@@ -637,7 +686,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         debugGlyph = new GlyphLayout();
 
         for (GameObject go : loader.level.gameObjects)
+        {
             go.initAssets();
+        }
 
         BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
@@ -769,21 +820,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean keyTyped(char character)
     {
-        System.out.println(character);
         mGodModInputCheckBuilder.append(character);
         if (mGodModInputCheckBuilder.length() == GOD_MOD_TEXT.length())
         {
-            System.out.println("length >: " + mGodModInputCheckBuilder);
             if (mGodModInputCheckBuilder.toString().equals(GOD_MOD_TEXT))
             {
-                System.out.println("equal: " + mGodModInputCheckBuilder);
                 Maryo.STAR_EFFECT_TIMEOUT = Float.MAX_VALUE;
                 world.maryo.canWalkOnAir = true;
                 world.maryo.starPicked();
             }
             else
             {
-                System.out.println("not equal: " + mGodModInputCheckBuilder);
                 mGodModInputCheckBuilder = new StringBuilder();
             }
         }
@@ -1040,7 +1087,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         public KillPointsTextHandler(BitmapFont font)
         {
             this.font = font;
-            font.getData().setScale(0.01f);
+            font.getData().setScale(0.015f);
+            font.setUseIntegerPositions(false);
         }
 
         public void add(int points, float positionX, float positionY)

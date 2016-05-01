@@ -34,6 +34,7 @@ import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class Box extends Sprite
@@ -208,7 +209,7 @@ public class Box extends Sprite
         box.item = jBox.optInt("item", 0);
 
         box.textureName = jBox.optString("texture_name", null);
-        if(box.textureAtlas != null && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
+        if(!TextUtils.isEmpty(box.textureName) && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
         {
             world.screen.game.assets.manager.load(box.textureName, Texture.class, world.screen.game.assets.textureParameter);
         }
