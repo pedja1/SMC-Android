@@ -891,11 +891,11 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
-				if(grounded && closestObject instanceof MovingPlatform && ((MovingPlatform)closestObject).canAttachTo)
+				if(position.y - groundY < 0.1f && closestObject instanceof MovingPlatform && ((MovingPlatform)closestObject).canAttachTo)
 				{
 					if(attachedTo != closestObject)
 					{
-						attachedTo = (MovingPlatform) closestObject;
+ 					 	attachedTo = (MovingPlatform) closestObject;
                         attachedTo.platformState = MovingPlatform.MOVING_PLATFORM_TOUCHED;
                         attachedTo.touched = true;
 						distanceOnPlatform = position.x - attachedTo.position.x;

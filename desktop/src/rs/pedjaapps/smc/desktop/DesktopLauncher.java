@@ -3,15 +3,13 @@ package rs.pedjaapps.smc.desktop;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-import org.apache.log4j.BasicConfigurator;
-
 import rs.pedjaapps.smc.MaryoGame;
 
 public class DesktopLauncher
 {
     public static void main(String[] arg)
     {
-        BasicConfigurator.configure();
+        //BasicConfigurator.configure();
         /*LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = 1024;
         config.height = 576;

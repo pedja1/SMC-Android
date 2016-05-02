@@ -231,6 +231,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if(delta > 0.016666667f)
+            delta = 0.016666667f;
+
         //physics
         updateObjects(delta);
         //physics end
