@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,8 +9,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -21,7 +24,7 @@ public class Rokko extends Enemy
     public static final float POSITION_Z = 0.03f;
     public String direction;
     public float speed;
-    private boolean staying = true;
+    private boolean staying = true, dying;
     private float rotation;
     private boolean flipX;
     private float mMinDistanceFront, mMaxDistanceFront, mMaxDistanceSides;
@@ -29,20 +32,20 @@ public class Rokko extends Enemy
     private Texture texture;
     private TextureRegion region;
 
-    public Rokko(World world, Vector2 size, Vector3 position,  String direction)
+    public Rokko(World world, Vector2 size, Vector3 position, String direction)
     {
         super(world, size, position);
         this.speed = 3.5f;//speed;
         this.direction = direction;
-        if("left".equals(direction))
+        if ("left".equals(direction))
         {
             flipX = true;
         }
-        else if("down".equals(direction))
+        else if ("down".equals(direction))
         {
             rotation = 90f;
         }
-        else if("up".equals(direction))
+        else if ("up".equals(direction))
         {
             rotation = 270f;
         }
@@ -59,7 +62,7 @@ public class Rokko extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        if(region == null)
+        if (region == null)
         {
             region = new TextureRegion(texture);
         }
@@ -91,9 +94,20 @@ public class Rokko extends Enemy
         float originY = mDrawRect.height * 0.5f;
         spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), flipX, false);
 
-        if(!staying)
+        if (!staying)
         {
-            effect.setPosition(position.x, position.y);
+            if ("up".equals(direction) || "right".equals(direction))
+            {
+                effect.setPosition(position.x, position.y);
+            }
+            else if ("down".equals(direction))
+            {
+                effect.setPosition(position.x, position.y + mDrawRect.height);
+            }
+            else if ("left".equals(direction))
+            {
+                effect.setPosition(position.x + mDrawRect.width, position.y);
+            }
             effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
         }
     }
@@ -106,8 +120,19 @@ public class Rokko extends Enemy
 
     public void update(float deltaTime)
     {
-        if (deadByBullet)//TODO not like this
+        if (deadByBullet || dying)
         {
+            if (velocity.x != 0)
+            {
+                if ("right".equals(direction))
+                {
+                    rotation -= (20 * deltaTime);
+                }
+                else if ("left".equals(direction))
+                {
+                    rotation += (20 * deltaTime);
+                }
+            }
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
 
@@ -118,33 +143,34 @@ public class Rokko extends Enemy
             velocity.add(acceleration);
 
             checkCollisionWithBlocks(deltaTime, false, false);
+            effect.update(deltaTime);
             return;
         }
 
-        if(!staying)
+        if (!staying)
             effect.update(deltaTime);
 
         stateTime += deltaTime;
-        if(staying)
+        if (staying)
         {
-            if(checkMaryoInFront())
+            if (checkMaryoInFront())
             {
                 staying = false;
             }
         }
-        else if("up".equals(direction))
+        else if ("up".equals(direction))
         {
             velocity.y = speed;
         }
-        else if("down".equals(direction))
+        else if ("down".equals(direction))
         {
             velocity.y = -speed;
         }
-        else if("right".equals(direction))
+        else if ("right".equals(direction))
         {
             velocity.x = speed;
         }
-        else if("left".equals(direction))
+        else if ("left".equals(direction))
         {
             velocity.x = -speed;
         }
@@ -155,31 +181,31 @@ public class Rokko extends Enemy
     private boolean checkMaryoInFront()
     {
         Maryo maryo = world.maryo;
-        if(maryo == null)return false;
+        if (maryo == null) return false;
         Rectangle rect = World.RECT_POOL.obtain();
         float x = 0, y = 0, w = 0, h = 0;
-        if("up".equals(direction))
+        if ("up".equals(direction))
         {
             x = mColRect.x - (mMaxDistanceSides - mColRect.width) * 0.5f;
             y = mColRect.y + mColRect.height + mMinDistanceFront;
             w = mMaxDistanceSides;
             h = mMaxDistanceFront;
         }
-        else if("down".equals(direction))
+        else if ("down".equals(direction))
         {
             x = mColRect.x - (mMaxDistanceSides - mColRect.width) * 0.5f;
             y = mColRect.y - mMaxDistanceFront - mMaxDistanceFront;
             w = mMaxDistanceSides;
             h = mMaxDistanceFront;
         }
-        else if("left".equals(direction))
+        else if ("left".equals(direction))
         {
             x = mColRect.x - mMinDistanceFront - mMaxDistanceFront;
             y = mColRect.y - (mMaxDistanceSides - mColRect.height) * 0.5f;
             w = mMaxDistanceFront;
             h = mMaxDistanceSides;
         }
-        else if("right".equals(direction))
+        else if ("right".equals(direction))
         {
             x = mColRect.x + mColRect.width + mMaxDistanceSides;
             y = mColRect.y - (mMaxDistanceSides - mColRect.height) * 0.5f;
@@ -188,5 +214,28 @@ public class Rokko extends Enemy
         }
         rect.set(x, y, w, h);
         return maryo.mColRect.overlaps(rect);
+    }
+
+    @Override
+    public int hitByPlayer(Maryo maryo, boolean vertical)
+    {
+        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
+        {
+            if ("up".equals(direction))
+            {
+                rotation = 90f;
+            }
+            ((GameScreen) world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+            stateTime = 0;
+            handleCollision = false;
+            dying = true;
+            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/rokko/hit.mp3");
+            SoundManager.play(sound);
+            return HIT_RESOLUTION_ENEMY_DIED;
+        }
+        else
+        {
+            return HIT_RESOLUTION_PLAYER_DIED;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -192,6 +193,7 @@ public abstract class Enemy extends DynamicObject
                 break;
             case rokko:
                 enemy = new Rokko(world, size, position, jEnemy.optString("direction"));
+                world.screen.game.assets.manager.load("data/sounds/enemy/rokko/hit.mp3", Sound.class);
                 break;
             case _static:
                 enemy = new Static(world, size, position, jEnemy.optInt("rotation_speed"), jEnemy.optInt("fire_resistance"), jEnemy.optInt("ice_resistance"));
