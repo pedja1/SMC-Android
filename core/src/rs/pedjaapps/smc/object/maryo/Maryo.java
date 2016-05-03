@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +37,9 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.TextUtils;
+
+import static rs.pedjaapps.smc.object.LevelExit.LEVEL_EXIT_BEAM;
 
 public class Maryo extends DynamicObject
 {
@@ -43,6 +47,7 @@ public class Maryo extends DynamicObject
     {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }
+
     private static final int POWER_JUMP_DELTA = 1;
 
     private static final float MAX_JUMP_SPEED = 10f;
@@ -163,8 +168,8 @@ public class Maryo extends DynamicObject
     private Animation[] aMap = new Animation[12];
 
     private MovingPlatform attachedTo;
-	private float distanceOnPlatform;
-	private Vector3 prevPos = new Vector3();
+    private float distanceOnPlatform;
+    private Vector3 prevPos = new Vector3();
 
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -287,7 +292,7 @@ public class Maryo extends DynamicObject
         }
         if (resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
         {
-            if(newState == MaryoState.small)
+            if (newState == MaryoState.small)
             {
                 godMode = true;
                 godModeActivatedTime = System.currentTimeMillis();
@@ -382,7 +387,7 @@ public class Maryo extends DynamicObject
             marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
         }
 
-        if(mInvincibleStar)
+        if (mInvincibleStar)
         {
             starEffect.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
             starEffect.draw(spriteBatch);
@@ -562,9 +567,9 @@ public class Maryo extends DynamicObject
     @Override
     public void _update(float delta)
     {
-        if(((GameScreen)world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
+        if (((GameScreen) world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
         {
-            if(downPressTime > POWER_JUMP_DELTA)
+            if (downPressTime > POWER_JUMP_DELTA)
             {
                 mMaxJumpSpeed = POWER_MAX_JUMP_SPEED;
                 powerJump = true;
@@ -575,7 +580,7 @@ public class Maryo extends DynamicObject
                 powerJump = false;
             }
             grounded = position.y - groundY < 0.1f;
-            if(!grounded && getWorldState() != GameObject.WorldState.CLIMBING)
+            if (!grounded && getWorldState() != GameObject.WorldState.CLIMBING)
             {
                 setWorldState(Maryo.WorldState.JUMPING);
             }
@@ -586,7 +591,7 @@ public class Maryo extends DynamicObject
                 {
                     float jumpTime = 0.1f;
                     float acceleration = mMaxJumpSpeed / (jumpTime / delta);
-                    if(velocity.y + acceleration > mMaxJumpSpeed)
+                    if (velocity.y + acceleration > mMaxJumpSpeed)
                     {
                         velocity.y = mMaxJumpSpeed;
                         jumped = true;
@@ -603,7 +608,7 @@ public class Maryo extends DynamicObject
                     jumped = true;
                 }
             }
-            if(getWorldState() == GameObject.WorldState.CLIMBING)
+            if (getWorldState() == GameObject.WorldState.CLIMBING)
             {
                 if (keys.contains(Keys.LEFT))
                 {
@@ -665,7 +670,7 @@ public class Maryo extends DynamicObject
                     velocity.set(velocity.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */velocity.y, velocity.z);
                 }
             }
-            if(resetDownPressedTime)
+            if (resetDownPressedTime)
             {
                 downPressTime = 0;
                 powerJumpEffect.reset();
@@ -730,40 +735,7 @@ public class Maryo extends DynamicObject
                 exiting = false;
                 //((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
 
-                String nextLevelName;
-                if (exit.levelName == null)
-                {
-                    String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-                    nextLevelName = GameSave.getNextLevel(currentLevel);
-                }
-                else
-                {
-                    nextLevelName = exit.levelName;
-                }
-                GameScreen parent;
-                GameScreen newScreen;
-                boolean resume = false;
-                if (nextLevelName.contains("sub"))
-                {
-                    parent = (GameScreen) world.screen;
-                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
-                }
-                else if (((GameScreen) world.screen).parent != null && nextLevelName.equals(((GameScreen) world.screen).parent.levelName))
-                {
-                    newScreen = ((GameScreen) world.screen).parent;
-                    newScreen.forceCheckEnter = true;
-                    resume = true;
-                }
-                else
-                {
-                    if (((GameScreen) world.screen).parent != null)
-                    {
-                        ((GameScreen) world.screen).parent.dispose();
-                        ((GameScreen) world.screen).parent = null;
-                    }
-                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, null);
-                }
-                world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
+                doExit();
             }
             else
             {
@@ -780,9 +752,10 @@ public class Maryo extends DynamicObject
             }
             boolean isDone = false;
             float velDelta = exitEnterVelocity * delta;
+            float offset = 0.1f;
             if ("up".equals(entry.direction))
             {
-                if (position.y > entry.mColRect.y + entry.mColRect.height)
+                if (position.y - offset > entry.mColRect.y + entry.mColRect.height)
                 {
                     isDone = true;
                 }
@@ -793,7 +766,7 @@ public class Maryo extends DynamicObject
             }
             else if ("down".equals(entry.direction))
             {
-                if (position.y + mDrawRect.height < entry.mColRect.y)
+                if (position.y + mDrawRect.height + offset < entry.mColRect.y)
                 {
                     isDone = true;
                 }
@@ -804,7 +777,7 @@ public class Maryo extends DynamicObject
             }
             else if ("right".equals(entry.direction))
             {
-                if (position.x > entry.mColRect.x + entry.mColRect.width)
+                if (position.x + offset > entry.mColRect.x + entry.mColRect.width)
                 {
                     isDone = true;
                 }
@@ -816,7 +789,7 @@ public class Maryo extends DynamicObject
             }
             else if ("left".equals(entry.direction))
             {
-                if (position.x + mDrawRect.width < entry.mColRect.x)
+                if (position.x + mDrawRect.width + offset < entry.mColRect.x)
                 {
                     isDone = true;
                 }
@@ -879,7 +852,7 @@ public class Maryo extends DynamicObject
             else
             {
                 super._update(delta);
-                if(closestObject != null)
+                if (closestObject != null)
                 {
                     debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y - (closestObject.mDrawRect.y + closestObject.mDrawRect.height));
                 }
@@ -891,45 +864,45 @@ public class Maryo extends DynamicObject
                 {
                     position.y -= 0.1f;
                 }
-				if(position.y - groundY < 0.1f && closestObject instanceof MovingPlatform && ((MovingPlatform)closestObject).canAttachTo)
-				{
-					if(attachedTo != closestObject)
-					{
- 					 	attachedTo = (MovingPlatform) closestObject;
+                if (position.y - groundY < 0.1f && closestObject instanceof MovingPlatform && ((MovingPlatform) closestObject).canAttachTo)
+                {
+                    if (attachedTo != closestObject)
+                    {
+                        attachedTo = (MovingPlatform) closestObject;
                         attachedTo.platformState = MovingPlatform.MOVING_PLATFORM_TOUCHED;
                         attachedTo.touched = true;
-						distanceOnPlatform = position.x - attachedTo.position.x;
-					}
-				}
-				else
-				{
-					attachedTo = null;
-					distanceOnPlatform = 0;
+                        distanceOnPlatform = position.x - attachedTo.position.x;
+                    }
+                }
+                else
+                {
+                    attachedTo = null;
+                    distanceOnPlatform = 0;
                     prevPos.x = 0;
-				}
-				if(attachedTo != null)
-				{
-                    if(prevPos.x != 0)distanceOnPlatform += position.x - prevPos.x;
-					mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
+                }
+                if (attachedTo != null)
+                {
+                    if (prevPos.x != 0) distanceOnPlatform += position.x - prevPos.x;
+                    mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
                     if (velocity.y <= 0)
                     {
                         mColRect.y = position.y = attachedTo.position.y + attachedTo.mColRect.height;
                     }
                     updateBounds();
                     prevPos.set(position);
-				}
+                }
             }
         }
         if (powerJump)
         {
             powerJumpEffect.update(delta);
         }
-        if(mInvincibleStar)
+        if (mInvincibleStar)
         {
             starEffect.update(delta);
         }
         bulletShotTime += delta;
-        if(mInvincibleStar)
+        if (mInvincibleStar)
         {
             starEffectTime += delta;
             if (glimMode)
@@ -940,11 +913,79 @@ public class Maryo extends DynamicObject
             {
                 glimCounter -= (delta * 6f);
             }
-            if(starEffectTime >= STAR_EFFECT_TIMEOUT)
+            if (starEffectTime >= STAR_EFFECT_TIMEOUT)
             {
                 mInvincibleStar = false;
                 starEffectTime = 0;
                 MusicManager.stop(false);
+            }
+        }
+    }
+
+    private void doExit()
+    {
+        //just change level
+        String nextLevelName;
+        //next level in list
+        if (TextUtils.isEmpty(exit.levelName) && TextUtils.isEmpty(exit.entry))
+        {
+            String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
+            nextLevelName = GameSave.getNextLevel(currentLevel);
+
+            if (((GameScreen) world.screen).parent != null)
+            {
+                ((GameScreen) world.screen).parent.dispose();
+                ((GameScreen) world.screen).parent = null;
+            }
+            if (exit.type == LevelExit.LEVEL_EXIT_BEAM)
+            {
+                ((GameScreen) world.screen).endLevel(nextLevelName);
+            }
+            else
+            {
+                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+            }
+        }
+        //go to sublevel
+        else
+        {
+            //same level
+            if (TextUtils.isEmpty(exit.levelName))
+            {
+                LevelEntry entry = world.level.findEntryOrThrow(exit.entry);
+                enterLevel(entry);
+            }
+            else//another level
+            {
+                if (TextUtils.isEmpty(exit.entry))
+                {
+                    throw new GdxRuntimeException("Cannot go to sublevel, entry is null");
+                }
+                nextLevelName = exit.levelName;
+                GameScreen parent = ((GameScreen) world.screen).parent;
+
+                boolean resume = false;
+                GameScreen newScreen;
+                //we are exiting sublevel
+                if (parent != null && parent.levelName.equals(nextLevelName))
+                {
+                    newScreen = parent;
+                    newScreen.entryName = exit.entry;
+                    newScreen.forceCheckEnter = true;
+                    resume = true;
+                }
+                //new level or sublevel
+                else
+                {
+                    if (parent != null)
+                    {
+                        parent.dispose();
+                    }
+                    parent = (GameScreen) world.screen;
+                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
+                    newScreen.entryName = exit.entry;
+                }
+                world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
             }
         }
     }
@@ -965,9 +1006,9 @@ public class Maryo extends DynamicObject
             if (!godMode)
             {
                 boolean deadAnyway = isDeadByJumpingOnTopOfEnemy((Enemy) object);
-                if(mInvincibleStar)
+                if (mInvincibleStar)
                 {
-                    if(worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
+                    if (worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
                     {
                         ((Enemy) object).downgradeOrDie(this, true);
                         GameSave.save.points += ((Enemy) object).mKillPoints;
@@ -988,11 +1029,11 @@ public class Maryo extends DynamicObject
                 }
                 else
                 {
-                    if(object instanceof Turtle && ((Turtle)object).isShell && !((Turtle)object).isShellMoving)
+                    if (object instanceof Turtle && ((Turtle) object).isShell && !((Turtle) object).isShellMoving)
                     {
                         Turtle turtle = (Turtle) object;
                         turtle.isShellMoving = true;
-                        if(turtle.mColRect.x > mColRect.x)
+                        if (turtle.mColRect.x > mColRect.x)
                         {
                             turtle.setDirection(Direction.right);
                             turtle.mColRect.x = turtle.position.x = mColRect.x + mColRect.width + 0.1f;
@@ -1110,12 +1151,12 @@ public class Maryo extends DynamicObject
         //play new state sound
         Sound sound = upgradeSound(newState, downgrade);
         SoundManager.play(sound);
-		fire = false;
+        fire = false;
     }
 
     private Sound upgradeSound(MaryoState newState, boolean downgrade)
     {
-        if(downgrade)
+        if (downgrade)
         {
             //TODO
         }
@@ -1262,27 +1303,21 @@ public class Maryo extends DynamicObject
         setJumpSound();
     }
 
-    public void checkLevelEnter()
+    public void checkLevelEnter(String entry_)
     {
-        //check if maryo is overlapping level entry and if so call enterLevel
-        for (GameObject go : world.level.gameObjects)
+        LevelEntry entry = world.level.findEntry(entry_);
+        if (entry != null)
         {
-            if (go instanceof LevelEntry && mColRect.overlaps(go.mColRect) && ((LevelEntry) go).type == LevelExit.LEVEL_EXIT_WARP)
+            if (entry.type == LEVEL_EXIT_BEAM)
             {
-                LevelEntry entry = (LevelEntry) go;
-                if (entry.type == LevelExit.LEVEL_EXIT_BEAM)
-                {
-                    float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
-                    position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
-                    position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
-                    updateBounds();
-                    return;
-                }
-                else
-                {
-                    enterLevel((LevelEntry) go);
-                    return;
-                }
+                float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
+                position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
+                position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
+                updateBounds();
+            }
+            else
+            {
+                enterLevel(entry);
             }
         }
     }
@@ -1328,7 +1363,7 @@ public class Maryo extends DynamicObject
                 position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
             }
         }
-        else if (entry.type == LevelExit.LEVEL_EXIT_BEAM)
+        else if (entry.type == LEVEL_EXIT_BEAM)
         {
             float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
             position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
@@ -1346,20 +1381,11 @@ public class Maryo extends DynamicObject
     {
         switch (exit.type)
         {
-            case LevelExit.LEVEL_EXIT_BEAM:
-                //just change level
-                String nextLevelName;
-                if (exit.levelName == null)
-                {
-                    String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-                    nextLevelName = GameSave.getNextLevel(currentLevel);
-                }
-                else
-                {
-                    nextLevelName = exit.levelName;
-                }
-                //world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
-                ((GameScreen)world.screen).endLevel(nextLevelName);
+            case LEVEL_EXIT_BEAM:
+                if (exiting) return;
+                exiting = true;
+                this.exit = exit;
+                doExit();
                 break;
             case LevelExit.LEVEL_EXIT_WARP:
                 if (exiting) return;
@@ -1401,7 +1427,7 @@ public class Maryo extends DynamicObject
         if (maryoState == MaryoState.fire)
         {
             addFireball(0f);
-            if(mInvincibleStar)
+            if (mInvincibleStar)
             {
                 addFireball(Fireball.VELOCITY_Y * 0.5f);
             }
@@ -1410,7 +1436,7 @@ public class Maryo extends DynamicObject
         else if (maryoState == MaryoState.ice)
         {
             addIceball(0f);
-            if(mInvincibleStar)
+            if (mInvincibleStar)
             {
                 addIceball(Fireball.VELOCITY_Y * 0.5f);
             }
@@ -1468,40 +1494,40 @@ public class Maryo extends DynamicObject
         keys.add(Keys.UP);
         boolean climbing = false;
         Array<GameObject> vo = world.getVisibleObjects();
-        for(int i = 0, size = vo.size; i < size; i++)
+        for (int i = 0, size = vo.size; i < size; i++)
         {
             GameObject go = vo.get(i);
-            if(go instanceof LevelExit
+            if (go instanceof LevelExit
                     && go.mColRect.overlaps(mColRect)
-                    && (((LevelExit)go).type == LevelExit.LEVEL_EXIT_BEAM || (((LevelExit)go).type == LevelExit.LEVEL_EXIT_WARP && "up".equals(((LevelExit)go).direction))))
+                    && (((LevelExit) go).type == LEVEL_EXIT_BEAM || (((LevelExit) go).type == LevelExit.LEVEL_EXIT_WARP && "up".equals(((LevelExit) go).direction))))
             {
-                exitLevel((LevelExit)go);
+                exitLevel((LevelExit) go);
                 break;
             }
-            else if(getWorldState() != GameObject.WorldState.CLIMBING &&
-                    go instanceof Sprite && ((Sprite)go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
+            else if (getWorldState() != GameObject.WorldState.CLIMBING &&
+                    go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
             {
                 climbing = true;
                 break;
             }
         }
-        if(climbing)setWorldState(GameObject.WorldState.CLIMBING);
+        if (climbing) setWorldState(GameObject.WorldState.CLIMBING);
     }
 
     private void checkLeave(String dir)
     {
         Array<GameObject> vo = world.getVisibleObjects();
         //for(GameObject go : world.getVisibleObjects())
-        for(int i = 0, size = vo.size; i < size; i++)
+        for (int i = 0, size = vo.size; i < size; i++)
         {
             GameObject go = vo.get(i);
-            if(go instanceof LevelExit
+            if (go instanceof LevelExit
                     && go.mColRect.overlaps(mColRect)
-                    && (((LevelExit)go).type == LevelExit.LEVEL_EXIT_BEAM || (((LevelExit)go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit)go).direction))))
+                    && (((LevelExit) go).type == LEVEL_EXIT_BEAM || (((LevelExit) go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit) go).direction))))
             {
                 /*String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
                 world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));*/
-                exitLevel((LevelExit)go);
+                exitLevel((LevelExit) go);
                 return;
             }
         }
@@ -1515,7 +1541,7 @@ public class Maryo extends DynamicObject
 
     public void jumpPressed()
     {
-        if(grounded || getWorldState() == GameObject.WorldState.CLIMBING)
+        if (grounded || getWorldState() == GameObject.WorldState.CLIMBING)
         {
             setWorldState(GameObject.WorldState.JUMPING);
             keys.add(Keys.JUMP);

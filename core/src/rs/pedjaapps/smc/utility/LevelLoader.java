@@ -45,7 +45,7 @@ public class LevelLoader
 {
     public static final Pattern TXT_NAME_IN_ATLAS = Pattern.compile(".+\\.pack:.+");
     public Level level;
-    boolean levelParsed = false;
+    private boolean levelParsed = false;
 
     private enum ObjectClass
     {

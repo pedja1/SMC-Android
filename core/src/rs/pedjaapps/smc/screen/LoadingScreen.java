@@ -22,9 +22,9 @@ public class LoadingScreen extends AbstractScreen
 {
     private float percent;
 
-    BitmapFont font;
-    SpriteBatch batch;
-    OrthographicCamera cam;
+    private BitmapFont font;
+    private SpriteBatch batch;
+    private OrthographicCamera cam;
 
     private Sprite bgSprite;
 

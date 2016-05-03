@@ -124,6 +124,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     public KillPointsTextHandler killPointsTextHandler;
 
+    public String entryName;
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
     private float stateTime;
@@ -188,7 +189,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (debug) GLProfiler.enable();
         if (!resumed || forceCheckEnter)
         {
-            world.maryo.checkLevelEnter();
+            world.maryo.checkLevelEnter(entryName);
             forceCheckEnter = false;
         }
         Gdx.input.setCatchBackKey(true);

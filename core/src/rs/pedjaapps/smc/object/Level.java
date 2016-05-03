@@ -3,6 +3,8 @@ package rs.pedjaapps.smc.object;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.*;
 import java.util.*;
+
+import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.view.*;
 
 /**
@@ -35,5 +37,33 @@ public class Level
 		gameObjects = null;
 		background.dispose();
 		background = null;
+	}
+
+	public LevelEntry findEntry(String entry)
+	{
+		if(TextUtils.isEmpty(entry))
+			return null;
+		for(GameObject go : gameObjects)
+		{
+			if(go instanceof LevelEntry && entry.equals(((LevelEntry)go).name))
+			{
+				return (LevelEntry) go;
+			}
+		}
+		return null;
+	}
+
+	public LevelEntry findEntryOrThrow(String entry)
+	{
+		if(TextUtils.isEmpty(entry))
+			throw new GdxRuntimeException("Entry cannot be null");
+		for(GameObject go : gameObjects)
+		{
+			if(go instanceof LevelEntry && entry.equals(((LevelEntry)go).name))
+			{
+				return (LevelEntry) go;
+			}
+		}
+		throw new GdxRuntimeException(String.format("Entry '%s' not found in level '%s'", entry, levelName));
 	}
 }

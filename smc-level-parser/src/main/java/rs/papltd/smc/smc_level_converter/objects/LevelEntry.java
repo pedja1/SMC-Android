@@ -33,7 +33,7 @@ public class LevelEntry
         }
         else if("name".equals(name))
         {
-            name = value;
+            this.name = value;
         }
     }
 
