@@ -10,18 +10,19 @@ import rs.pedjaapps.smc.utility.*;
 
 public class Background
 {
-	public static final float WIDTH = Constants.CAMERA_WIDTH;
-	public static final float HEIGHT = Constants.CAMERA_HEIGHT;
+	private boolean cameraPositioned;
+	private static final float WIDTH = Constants.CAMERA_WIDTH;
+	private static final float HEIGHT = Constants.CAMERA_HEIGHT;
 	public Vector2 position, speed;
 	public Texture texture;
 	public String textureName;
 	public float width;
 	public float height;
-	public Vector3 oldGameCamPos = new Vector3();
+	private Vector3 oldGameCamPos = new Vector3();
 
 	public Color color1;
     public Color color2;
-	ShapeRenderer renderer = new ShapeRenderer();
+	private ShapeRenderer renderer = new ShapeRenderer();
 	public OrthographicCamera bgCam;
 
 	public Background(Vector2 position, Vector2 speed, String textureName)
@@ -97,9 +98,12 @@ public class Background
 	{
 		if(textureName != null)
 		{
+			if(cameraPositioned)
+				return;
 			texture = assets.manager.get(textureName);
 			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         	oldGameCamPos.set(gameCam.position);
+			cameraPositioned = true;
 		}
 	}
 

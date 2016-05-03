@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,17 +55,17 @@ public class Box extends Sprite
     public static final float SPINNING_TIME = 5;
 
     public static final float SIZE = 0.67f;
-    String goldColor, animationName, boxType;
+    private String goldColor, animationName, boxType;
     public String text;
-    boolean forceBestItem, invisible;
-    int usableCount, item;
+    private boolean forceBestItem, invisible;
+    private int usableCount, item;
 
     protected float stateTime;
 
-    TextureRegion txDisabled;
+    private TextureRegion txDisabled;
 
-    boolean hitByPlayer;
-    float originalPosY;
+    private boolean activated;
+    private float originalPosY;
 
     //item that pops out when box is hit by player
     //public Item itemObject;
@@ -72,6 +73,8 @@ public class Box extends Sprite
     private float spinningTime;
     private Animation animation;
     private Texture texture;
+
+    private ParticleEffect itemEffect;
 
     public Box(World world, Vector2 size, Vector3 position, Rectangle rectangle)
     {
@@ -114,10 +117,10 @@ public class Box extends Sprite
         }
         if ("power".equalsIgnoreCase(animationName))
         {
-            frames.add(atlas.findRegion("power-1"));
-            frames.add(atlas.findRegion("power-2"));
-            frames.add(atlas.findRegion("power-3"));
-            frames.add(atlas.findRegion("power-4"));
+            frames.add(atlas.findRegion("power", 1));
+            frames.add(atlas.findRegion("power", 2));
+            frames.add(atlas.findRegion("power", 3));
+            frames.add(atlas.findRegion("power", 4));
             animSpeed = 0.2f;
         }
         if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
@@ -131,6 +134,8 @@ public class Box extends Sprite
             txDisabled = atlas.findRegion("6");
             animSpeed = 0.08f;
         }
+        if(frames.size == 0)
+            throw new GdxRuntimeException("No frames in animation. boxType=" + boxType + " animationName=" + animationName);
         animation = new Animation(animSpeed, frames);
     }
 
@@ -140,6 +145,11 @@ public class Box extends Sprite
         txDisabled = null;
         texture = null;
         animation = null;
+        if(itemEffect != null)
+        {
+            itemEffect.dispose();
+            itemEffect = null;
+        }
     }
 
     @Override
@@ -148,6 +158,12 @@ public class Box extends Sprite
         if (invisible)
         {
             return;
+        }
+
+        if(itemEffect != null)
+        {
+            itemEffect.setPosition(position.x, position.y + mDrawRect.height);
+            itemEffect.draw(spriteBatch);
         }
 
         if (usableCount == 0)
@@ -274,6 +290,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
+                assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
                 assets.manager.load("data/sounds/item/fireplant.mp3", Sound.class);
                 assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
                 assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
@@ -287,6 +304,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
+                assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
                 assets.manager.load("data/game/items/star.png", Texture.class, assets.textureParameter);
             }
             else
@@ -298,6 +316,7 @@ public class Box extends Sprite
         {
             if(loadAssets)
             {
+                assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
                 assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
             }
             else
@@ -308,7 +327,7 @@ public class Box extends Sprite
         return null;
     }
 
-    public static Item createMushroom(Box box, boolean loadAssets, Assets assets)
+    private static Item createMushroom(Box box, boolean loadAssets, Assets assets)
     {
         if(loadAssets)
         {
@@ -330,6 +349,7 @@ public class Box extends Sprite
                     assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, assets.textureParameter);
                     break;
             }
+            assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
         }
         else
         {
@@ -358,7 +378,7 @@ public class Box extends Sprite
         return null;
     }
 
-    public static Item createCoin(Box box)
+    private static Item createCoin(Box box)
     {
         Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position));
         String ta = Coin.DEF_ATL;
@@ -370,7 +390,7 @@ public class Box extends Sprite
         return coin;
     }
 
-    public static Item createFireplant(Box box)
+    private static Item createFireplant(Box box)
     {
         Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
         fireplant.initAssets();
@@ -379,7 +399,7 @@ public class Box extends Sprite
         return fireplant;
     }
 
-    public static Item createMoon(Box box)
+    private static Item createMoon(Box box)
     {
         Moon moon = new Moon(box.world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(box.position));
         moon.initAssets();
@@ -388,7 +408,7 @@ public class Box extends Sprite
         return moon;
     }
 
-    public static Item createStar(Box box)
+    private static Item createStar(Box box)
     {
         Star star = new Star(box.world, new Vector2(Star.DEF_SIZE, Star.DEF_SIZE), new Vector3(box.position));
         star.initAssets();
@@ -397,27 +417,26 @@ public class Box extends Sprite
         return star;
     }
 
-
-    public void handleHitByPlayer()
+    public void activate()
     {
-        if (hitByPlayer) return;
+        if (activated) return;
 		if(invisible)invisible = false;
         Sound sound = null;
         if("text".equals(boxType))
         {
-            hitByPlayer = true;
+            activated = true;
             ((GameScreen)world.screen).showBoxText(this);
         }
         else if("spin".equals(boxType))
         {
             spinning = true;
-            hitByPlayer = true;
+            activated = true;
             type = Type.passive;
         }
         else if ((usableCount == -1 || usableCount > 0))//is disabled(no more items)
         {
             if (usableCount != -1) usableCount--;
-            hitByPlayer = true;
+            activated = true;
             velocity.y = 3f;
             Item item = addBoxItem(this, false, world.screen.game.assets);
             if (item != null)
@@ -439,7 +458,20 @@ public class Box extends Sprite
                 }
                 else if(item instanceof Mushroom)
                 {
+                    createItemEffect();
                     sound = world.screen.game.assets.manager.get("data/sounds/sprout_1.mp3");
+                }
+                else if(item instanceof Moon)
+                {
+                    createItemEffect();
+                }//TODO sound effects
+                else if(item instanceof Fireplant)
+                {
+                    createItemEffect();
+                }
+                else if(item instanceof Star)
+                {
+                    createItemEffect();
                 }
             }
         }
@@ -450,15 +482,26 @@ public class Box extends Sprite
         SoundManager.play(sound);
     }
 
+    private void createItemEffect()
+    {
+        itemEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/box_activated.p", ParticleEffect.class));
+        itemEffect.start();
+    }
+
     @Override
     public void _update(float delta)
     {
+        if(itemEffect != null)
+        {
+            itemEffect.update(delta);
+        }
+
         if(spinning)
         {
             spinningTime += delta;
         }
 
-        if (hitByPlayer)
+        if (activated)
         {
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
@@ -482,7 +525,7 @@ public class Box extends Sprite
 
             if (position.y <= originalPosY)
             {
-                hitByPlayer = false;
+                activated = false;
                 position.y = originalPosY;
                 mColRect.y = position.y;
                 updateBounds();

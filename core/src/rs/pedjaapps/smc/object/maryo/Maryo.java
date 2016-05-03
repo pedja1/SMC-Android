@@ -972,6 +972,13 @@ public class Maryo extends DynamicObject
                     newScreen = parent;
                     newScreen.entryName = exit.entry;
                     newScreen.forceCheckEnter = true;
+
+                    //update maryo state in new level
+                    newScreen.getWorld().maryo.setMarioState(maryoState);
+                    newScreen.getWorld().maryo.mInvincibleStar = mInvincibleStar;
+                    newScreen.getWorld().maryo.starEffectTime = starEffectTime;
+                    newScreen.getWorld().maryo.canWalkOnAir = canWalkOnAir;
+
                     resume = true;
                 }
                 //new level or sublevel
@@ -1068,7 +1075,7 @@ public class Maryo extends DynamicObject
         }
         else if (object instanceof Box && position.y + mColRect.height <= object.position.y)
         {
-            ((Box) object).handleHitByPlayer();
+            ((Box) object).activate();
         }
         return false;
     }

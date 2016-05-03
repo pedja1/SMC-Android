@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -242,6 +243,10 @@ public class Turtle extends Enemy
             else if(object instanceof Enemy && object != this && !isShell)
             {
                 turn();
+            }
+            else if(object instanceof Box && isShell && isShellMoving)
+            {
+                ((Box) object).activate();
             }
 		}
         return false;
