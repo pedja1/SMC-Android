@@ -322,12 +322,10 @@ public class LevelLoader
         Vector3 position = new Vector3((float) jExit.getDouble("posx"), (float) jExit.getDouble("posy"), 0);
         float width = (float) jExit.getDouble("width");
         float height = (float) jExit.getDouble("height");
-        LevelExit exit = new LevelExit(world, new Vector2(width, height), position);
+        LevelExit exit = new LevelExit(world, new Vector2(width, height), position, jExit.optInt("type"), jExit.optString("direction"));
         exit.cameraMotion = jExit.optInt("camera_motion");
-        exit.type = jExit.optInt("type");
         exit.levelName = jExit.optString("level_name", null);
         exit.entry = jExit.optString("entry");
-        exit.direction = jExit.optString("direction");
 
         level.gameObjects.add(exit);
     }

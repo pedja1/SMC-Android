@@ -13,14 +13,18 @@ public class LevelExit extends GameObject
 	public static final int LEVEL_EXIT_BEAM = 0;	// no animation ( f.e. a door or hole )
 	public static final int LEVEL_EXIT_WARP = 1;	// rotated player moves slowly into the destination direction
 
-    public int type, cameraMotion;
-    public String direction, levelName, entry;
+    public final int type;
+    public int cameraMotion;
+    public final String direction;
+    public String levelName, entry;
     private ParticleEffect effect;
 
-    public LevelExit(World world, Vector2 size, Vector3 position)
+    public LevelExit(World world, Vector2 size, Vector3 position, int type, String direction)
     {
         super(world, size, position);
-        if(type == LEVEL_EXIT_WARP)
+        this.type = type;
+        this.direction = direction;
+        if(showParticles())
         {
             world.screen.game.assets.manager.load("data/animation/particles/pipe_star.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
         }
@@ -29,7 +33,7 @@ public class LevelExit extends GameObject
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        if(type == LEVEL_EXIT_WARP)
+        if(showParticles())
         {
             effect.setPosition(position.x - mDrawRect.width / 2 - .1f, position.y);
             effect.draw(spriteBatch);
@@ -39,7 +43,7 @@ public class LevelExit extends GameObject
     @Override
     public void _update(float delta)
     {
-        if(type == LEVEL_EXIT_WARP)
+        if(showParticles())
         {
             effect.update(delta);
         }
@@ -48,7 +52,7 @@ public class LevelExit extends GameObject
     @Override
     public void initAssets()
     {
-        if(type == LEVEL_EXIT_WARP)
+        if(showParticles())
         {
             effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/pipe_star.p", ParticleEffect.class));
             effect.start();
@@ -58,10 +62,15 @@ public class LevelExit extends GameObject
     @Override
     public void dispose()
     {
-        if(type == LEVEL_EXIT_WARP)
+        if(showParticles())
         {
             effect.dispose();
             effect = null;
         }
+    }
+
+    private boolean showParticles()
+    {
+        return type == LEVEL_EXIT_WARP && "down".equals(direction);
     }
 }
