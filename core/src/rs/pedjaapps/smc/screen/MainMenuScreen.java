@@ -44,14 +44,15 @@ import rs.pedjaapps.smc.view.SettingsDialog;
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
     private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
-    Texture gameLogo;
-    TextureRegion play, musicOn, musicOff, soundOn, soundOff, settings;
-    Rectangle playR, musicR, soundR, settingsR;
-    OrthographicCamera drawCam, debugCam, hudCam;
-    SpriteBatch batch;
+    private Texture gameLogo;
+    private TextureRegion play, musicOn, musicOff, soundOn, soundOff, settings;
+    private Rectangle playR, musicR, soundR, settingsR;
+    private OrthographicCamera drawCam, debugCam, hudCam;
+    private SpriteBatch batch;
     public MaryoGame game;
-	Background background;
-    LevelLoader loader;
+	private Background background;
+	private Background backgroundColor;
+    private LevelLoader loader;
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
     private boolean playT = false, musicT = false, soundT = false, settingsT = false;
@@ -59,22 +60,22 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private static final String FPS_STRING = "FPS: ";
     private static final NATypeConverter<Integer> fpsCounter = new NATypeConverter<>();
 
-    int screenWidth = Gdx.graphics.getWidth();
-    int screenHeight = Gdx.graphics.getHeight();
-    Music music;
-    Sound audioOn;
-    World world;
+    private int screenWidth = Gdx.graphics.getWidth();
+    private int screenHeight = Gdx.graphics.getHeight();
+    private Music music;
+    private Sound audioOn;
+    private World world;
     private ParticleEffect cloudsPEffect;
 
 	private SelectionAdapter selectionAdapter;
 
 	public boolean isSelection;
 
-    ConfirmDialog exitDialog;
-    SettingsDialog settingsDialog;
+    private ConfirmDialog exitDialog;
+    private SettingsDialog settingsDialog;
 
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
-    TextureRegion marioFrame;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private TextureRegion marioFrame;
 
     public MainMenuScreen(MaryoGame game)
     {
@@ -103,7 +104,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         settingsDialog = new SettingsDialog(this, hudCam);
     }
 
-	public Array<SelectionAdapter.Level> loadSelectionItems()
+	private Array<SelectionAdapter.Level> loadSelectionItems()
 	{
 		Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
 		for (int i = 0; i < GameSave.LEVELS.size(); i++)
@@ -131,8 +132,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 		Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		backgroundColor.render(drawCam, batch);
 		background.render(drawCam, batch);
-		
+
         batch.setProjectionMatrix(drawCam.combined);
         batch.begin();
 
@@ -269,6 +271,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setInputProcessor(null);
         game.assets.dispose();
         background.dispose();
+        backgroundColor.dispose();
         batch.dispose();
         exitDialog.dispose();
         settingsDialog.dispose();
@@ -283,6 +286,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         game.assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, game.assets.textureParameter);
+        game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/clouds/default_1/"));
@@ -317,13 +321,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         settingsR = new Rectangle(screenWidth - (screenWidth / 18f) * 3.75f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png");
+        background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png", Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);
         background.width = Constants.MENU_CAMERA_WIDTH;//8.7f;
         background.height = Constants.MENU_CAMERA_HEIGHT;//4.5f;
- 
-        background.color1 = new Color(.117f, 0.705f, .05f, 0f);//color is 0-1 range where 1 = 255
-        background.color2 = new Color(0f, 0.392f, 0.039f, 0f);
-		background.onAssetsLoaded(drawCam, game.assets);
+        background.onAssetsLoaded(drawCam, game.assets);
+
+        backgroundColor = new Background(Background.BG_GR_VER);
+        backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is 0-1 range where 1 = 255
 
         gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);

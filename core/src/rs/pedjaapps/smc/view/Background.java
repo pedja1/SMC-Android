@@ -1,18 +1,27 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.glutils.*;
-import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.utility.*;
+import rs.pedjaapps.smc.utility.Constants;
 
 public class Background
 {
+	public static final int BG_NONE = 0;// nothing
+	public static final int BG_IMG_TOP = 3;// tiles only horizontal and is on the top
+	public static final int BG_IMG_BOTTOM = 1;// tiles only horizontal and is on the bottom
+	public static final int BG_IMG_ALL = 2;// tiles into all directions
+	public static final int BG_GR_VER = 103;// vertical gradient
+	public static final int BG_GR_HOR = 104;// horizontal gradient
+
 	private boolean cameraPositioned;
-	private static final float WIDTH = Constants.CAMERA_WIDTH;
-	private static final float HEIGHT = Constants.CAMERA_HEIGHT;
 	public Vector2 position, speed;
 	public Texture texture;
 	public String textureName;
@@ -20,21 +29,49 @@ public class Background
 	public float height;
 	private Vector3 oldGameCamPos = new Vector3();
 
-	public Color color1;
-    public Color color2;
-	private ShapeRenderer renderer = new ShapeRenderer();
+	private Color[] colors;
+	private ShapeRenderer renderer;
 	public OrthographicCamera bgCam;
 
-	public Background(Vector2 position, Vector2 speed, String textureName)
+	private float widthMul;
+	private float heightMul;
+	private int type;
+
+	public Background(int type)
+	{
+		this(null, null, null, 0, 0, 0, 0, type);
+	}
+
+	public Background(Vector2 position, Vector2 speed, String textureName, float width, float height, float levelWidth, float levelHeight, int type)
 	{
 		this.speed = speed;
 		this.position = position;
 		this.textureName = textureName;
-		width = WIDTH;
-		height = HEIGHT;
+		this.type = type;
+		this.width = width;
+		this.height = height;
 		bgCam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         bgCam.update();
+
+		widthMul = levelWidth / width;
+		heightMul = getVerticalWarp() == Texture.TextureWrap.Repeat ? levelHeight / height : 1;
+		if(isColor())
+		{
+			renderer = new ShapeRenderer();
+		}
+	}
+
+	public void setColors(Color color1, Color color2)
+	{
+		if(type == BG_GR_HOR)
+		{
+			colors = new Color[]{color2, color2, color1, color1};
+		}
+		else
+		{
+			colors = new Color[]{color2, color1, color1, color2};
+		}
 	}
 
 	public void resize(OrthographicCamera gameCam)
@@ -47,14 +84,17 @@ public class Background
 
 	public void render(OrthographicCamera gameCam, SpriteBatch spriteBatch)
 	{
-		renderer.setProjectionMatrix(gameCam.combined);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
-        renderer.rect(gameCam.position.x - Constants.CAMERA_WIDTH / 2, gameCam.position.y - Constants.CAMERA_HEIGHT / 2,
-					  Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, color2,
-					  color2, color1, color1);
-		renderer.end();
+		if (isColor())
+		{
+			renderer.setProjectionMatrix(gameCam.combined);
+			renderer.begin(ShapeRenderer.ShapeType.Filled);
+			renderer.rect(gameCam.position.x - Constants.CAMERA_WIDTH / 2, gameCam.position.y - Constants.CAMERA_HEIGHT / 2,
+                          Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT, colors[0],
+                          colors[1], colors[2], colors[3]);
+			renderer.end();
+		}
 
-		if (texture != null)
+		if (texture != null && isTexture())
 		{
 			bgCam.position.add((gameCam.position.x - oldGameCamPos.x) * speed.x, (gameCam.position.y - oldGameCamPos.y) * speed.y, 0);
 			if(bgCam.position.x < bgCam.viewportWidth * .5f)
@@ -71,24 +111,7 @@ public class Background
 			spriteBatch.setProjectionMatrix(bgCam.combined);
 			spriteBatch.begin();
 
-			spriteBatch.draw(texture, position.x, position.y, width, height);
-			if(position.x + width < bgCam.position.x + bgCam.viewportWidth * .5f)
-			{
-				spriteBatch.draw(texture, position.x + width, position.y, width, height);
-			}
-			if(position.x > bgCam.position.x - bgCam.viewportWidth * .5f)
-			{
-				spriteBatch.draw(texture, position.x - width, position.y, width, height);
-			}
-			
-			if(position.x + width < bgCam.position.x - bgCam.viewportWidth * .5f)
-			{
-				position.x = position.x + width;
-			}
-			if(position.x > bgCam.position.x + bgCam.viewportWidth * .5f)
-			{
-				position.x = position.x - width;
-			}
+			spriteBatch.draw(texture, position.x, position.y, width * widthMul, height * heightMul, 0, 0, MathUtils.ceil(texture.getWidth() * widthMul), MathUtils.ceil(texture.getHeight() * heightMul), false, false);
 
 			spriteBatch.end();
 		}
@@ -96,11 +119,12 @@ public class Background
 	
 	public void onAssetsLoaded(OrthographicCamera gameCam, Assets assets)
 	{
-		if(textureName != null)
+		if(textureName != null && isTexture())
 		{
 			if(cameraPositioned)
 				return;
 			texture = assets.manager.get(textureName);
+			texture.setWrap(getHorizontalWrap(), getVerticalWarp());
 			bgCam.position.set(gameCam.position.x, gameCam.position.y, 0);
         	oldGameCamPos.set(gameCam.position);
 			cameraPositioned = true;
@@ -109,10 +133,39 @@ public class Background
 
 	public void dispose()
 	{
-		renderer.dispose();
-		renderer = null;
-		if(texture != null)texture.dispose();
-		texture = null;
+		if (renderer != null)
+		{
+			renderer.dispose();
+			renderer = null;
+		}
+		if(texture != null)
+		{
+			texture.dispose();
+			texture = null;
+		}
 	}
 
+	private Texture.TextureWrap getHorizontalWrap()
+	{
+		if(type == BG_IMG_ALL || type == BG_IMG_BOTTOM || type == BG_IMG_TOP)
+			return Texture.TextureWrap.Repeat;
+		return Texture.TextureWrap.ClampToEdge;
+	}
+
+	private Texture.TextureWrap getVerticalWarp()
+	{
+		if(type == BG_IMG_ALL)
+			return Texture.TextureWrap.Repeat;
+		return Texture.TextureWrap.ClampToEdge;
+	}
+
+	private boolean isTexture()
+	{
+		return type == BG_IMG_ALL || type == BG_IMG_BOTTOM || type == BG_IMG_TOP;
+	}
+
+	private boolean isColor()
+	{
+		return type == BG_GR_VER || type == BG_GR_HOR;
+	}
 }

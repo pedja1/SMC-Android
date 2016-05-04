@@ -16,7 +16,7 @@ public class Level
     public float height;
     public List<GameObject> gameObjects;
     public Vector3 spanPosition;
-	public Background background;
+	public Array<Background> backgrounds;
     public Array<String> music;
 	public String levelName;
 
@@ -25,6 +25,7 @@ public class Level
 	public Level(String levelName)
 	{
 		this.gameObjects = new ArrayList<>(5000);//set initial capacity so that we avoid alloc during game loop
+		this.backgrounds = new Array<>(2);
 		this.levelName = levelName;
 	}
 
@@ -35,8 +36,11 @@ public class Level
 			go.dispose();
 		}
 		gameObjects = null;
-		background.dispose();
-		background = null;
+		for(Background background : backgrounds)
+		{
+			background.dispose();
+		}
+		backgrounds = null;
 	}
 
 	public LevelEntry findEntry(String entry)

@@ -44,6 +44,7 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
+import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
 
@@ -408,7 +409,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void drawBackground()
     {
-        world.level.background.render(cam, spriteBatch);
+        for(Background background : world.level.backgrounds)
+        {
+            background.render(cam, spriteBatch);
+        }
     }
 
     public void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
@@ -532,7 +536,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 + "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
                 + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
                 + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
-                + "\n" + "BG Camera: x=" + world.level.background.bgCam.position.x + ", y=" + world.level.background.bgCam.position.y
                 + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
                 + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
                 + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
@@ -562,7 +565,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-        world.level.background.resize(cam);
+        for(Background background : world.level.backgrounds)
+        {
+            background.resize(cam);
+        }
         exitDialog.resize();
         hud.resize(width, height);
     }
@@ -697,7 +703,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-        world.level.background.onAssetsLoaded(cam, game.assets);
+        for(Background background : world.level.backgrounds)
+        {
+            background.onAssetsLoaded(cam, game.assets);
+        }
     }
 
     // * InputProcessor methods ***************************//

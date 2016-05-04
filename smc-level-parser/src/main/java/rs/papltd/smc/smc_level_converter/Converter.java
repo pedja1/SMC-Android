@@ -163,33 +163,34 @@ public class Converter
         List<Path> pathList = new ArrayList<>();
         List<MovingPlatform> platforms = new ArrayList<>();
 
-        JSONObject background = new JSONObject();
+        JSONArray jBackgrounds = new JSONArray();
         for (Background bg : level.backgrounds)
         {
-            if (bg.type == 103)
+            JSONObject jBackground = new JSONObject();
+            jBackground.put("type", bg.type);
+            if (bg.type == 103 || bg.type == 104)
             {
-                background.put("r_1", bg.color1_red);
-                background.put("g_1", bg.color1_green);
-                background.put("b_1", bg.color1_blue);
-                background.put("r_2", bg.color2_red);
-                background.put("g_2", bg.color2_green);
-                background.put("b_2", bg.color2_blue);
+                jBackground.put("r_1", bg.color1_red);
+                jBackground.put("g_1", bg.color1_green);
+                jBackground.put("b_1", bg.color1_blue);
+                jBackground.put("r_2", bg.color2_red);
+                jBackground.put("g_2", bg.color2_green);
+                jBackground.put("b_2", bg.color2_blue);
             }
-            else if (bg.type == 1)
+            else if (bg.type == 1 || bg.type == 3)
             {
-                background.put("texture_name", bg.image);
-                background.put("speedx", bg.speedx);
-                background.put("speedy", bg.speedy);
-                background.put("width", bg.width);
-                background.put("height", bg.height);
-                background.put("posy", bg.posy);
-                background.put("posx", bg.posx);
-
+                jBackground.put("texture_name", bg.image);
+                jBackground.put("speedx", bg.speedx);
+                jBackground.put("speedy", bg.speedy);
+                jBackground.put("width", bg.width);
+                jBackground.put("height", bg.height);
+                jBackground.put("posy", bg.posy);
+                jBackground.put("posx", bg.posx);
             }
+            jBackgrounds.put(jBackground);
         }
 
-
-        jsonLevel.put("background", background);
+        jsonLevel.put("backgrounds", jBackgrounds);
 
         JSONArray objects = new JSONArray();
         for (Object obj : level.objects)
