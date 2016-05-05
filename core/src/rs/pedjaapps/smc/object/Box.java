@@ -392,7 +392,10 @@ public class Box extends Sprite
 
     private static Item createFireplant(Box box)
     {
-        Fireplant fireplant = new Fireplant(box.world, new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE), new Vector3(box.position));
+        Vector2 size = new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE);
+        Vector3 pos = new Vector3(box.position);
+        pos.x = box.position.x + box.mDrawRect.width * 0.5f - size.x * 0.5f;
+        Fireplant fireplant = new Fireplant(box.world, size, pos);
         fireplant.initAssets();
         fireplant.visible = false;
 
