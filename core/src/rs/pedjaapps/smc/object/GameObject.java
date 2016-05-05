@@ -1,18 +1,18 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.Rect;
 
 /**
  * Created by pedja on 18.5.14..
  */
 public abstract class GameObject
 {
-    public Rect mDrawRect = new Rect();//used for draw
-    public Rect mColRect = new Rect();//used for collision detection
+    public Rectangle mDrawRect = new Rectangle();//used for draw
+    public Rectangle mColRect = new Rectangle();//used for collision detection
 	public Vector3 position = new Vector3();
     public Vector3 velocity = new Vector3();
     public Vector3 acceleration = new Vector3();
@@ -61,8 +61,8 @@ public abstract class GameObject
 
     public GameObject(World world, Vector2 size, Vector3 position)
     {
-        this.mDrawRect = new Rect(position.x, position.y, size.x, size.y);
-        mColRect = new Rect(mDrawRect);
+        this.mDrawRect = new Rectangle(position.x, position.y, size.x, size.y);
+        mColRect = new Rectangle(mDrawRect);
 		this.position = position;
         this.world = world;
     }

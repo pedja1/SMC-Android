@@ -35,6 +35,7 @@ import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
+import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.TextUtils;
@@ -824,7 +825,17 @@ public class Maryo extends DynamicObject
         if (worldState == WorldState.DYING)
         {
             stateTime += delta;
-            if (dyingAnim.update(delta)) super._update(delta);
+            if (dyingAnim.update(delta))
+            {
+                acceleration.y = Constants.GRAVITY;
+                acceleration.scl(delta);
+
+                velocity.add(acceleration);
+
+                checkCollisionWithBlocks(delta, false, false);
+
+                stateTime += delta;
+            }
         }
         else if (resizingAnimation != null)
         {

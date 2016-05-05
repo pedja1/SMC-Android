@@ -22,6 +22,9 @@ public class Constants
     public static final float DRAW_WIDTH = 16f;
 
     public static final int GRAVITY = -20;
+
+    public static boolean PHYSICS_PP = PrefsManager.isPhysicsPP();
+
     static
     {
         initCamera();

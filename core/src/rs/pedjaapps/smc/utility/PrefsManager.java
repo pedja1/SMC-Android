@@ -14,7 +14,7 @@ public class PrefsManager
 
     public enum PrefsKey
     {
-        sound, music, sg, debug, sound_volume, music_volume, texture_quality
+        sound, music, sg, debug, sound_volume, music_volume, texture_quality, phisycs_post_processing
     }
 
     public static boolean isPlayMusic()
@@ -22,20 +22,31 @@ public class PrefsManager
         return prefs.getBoolean(PrefsKey.music.toString(), true);
     }
 
+    public static void setPlayMusic(boolean playMusic)
+    {
+        prefs.putBoolean(PrefsKey.music.toString(), playMusic);
+        flush();
+    }
+
     public static boolean isPlaySounds()
     {
         return prefs.getBoolean(PrefsKey.sound.toString(), true);
     }
 
-    public static void setPlayMusic(boolean playMusic)
-    {
-        prefs.putBoolean(PrefsKey.music.toString(), playMusic);
-		flush();
-    }
-
     public static void setPlaySounds(boolean playSounds)
     {
         prefs.putBoolean(PrefsKey.sound.toString(), playSounds);
+		flush();
+    }
+
+    public static boolean isPhysicsPP()
+    {
+        return prefs.getBoolean(PrefsKey.phisycs_post_processing.toString(), true);
+    }
+
+    public static void setPhysicsPP(boolean pp)
+    {
+        prefs.putBoolean(PrefsKey.phisycs_post_processing.toString(), pp);
 		flush();
     }
 	

@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
-import rs.pedjaapps.smc.Rect;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class Sprite extends GameObject
@@ -20,7 +19,7 @@ public class Sprite extends GameObject
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
     public Type type = null;
-    private Rect mOrigDrawRect;
+    private Rectangle mOrigDrawRect;
     private Texture txt = null;
     private TextureRegion region = null;
 
@@ -28,7 +27,7 @@ public class Sprite extends GameObject
     {
         super(world, size, position);
         this.position = position;
-        mOrigDrawRect = new Rect(mDrawRect);
+        mOrigDrawRect = new Rectangle(mDrawRect);
         if (colRect != null)
         {
             mColRect.x = mDrawRect.x + Math.abs(colRect.x);
@@ -207,7 +206,7 @@ public class Sprite extends GameObject
     /**
      * @param originX , originY, rotation point relative to self
      */
-    public void rotate2(Rect sourceRect, Rect destRect, float originX, float originY, float rotate)
+    public void rotate2(Rectangle sourceRect, Rectangle destRect, float originX, float originY, float rotate)
     {
         float x = sourceRect.x;
         float y = sourceRect.y;
@@ -235,7 +234,7 @@ public class Sprite extends GameObject
         destRect.set(polygon.getBoundingRectangle());
     }
 
-    public Vector2 rotate(Rect rect, float originX, float originY, float rotation)
+    public Vector2 rotate(Rectangle rect, float originX, float originY, float rotation)
     {
         /*
         degree = 90

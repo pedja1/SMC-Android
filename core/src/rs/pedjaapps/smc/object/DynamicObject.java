@@ -158,6 +158,80 @@ public abstract class DynamicObject extends GameObject
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
+
+        if((checkX || checkY) && Constants.PHYSICS_PP)
+        {
+            List<GameObject> surroundingObjects = world.level.gameObjects;
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+            {
+                GameObject object = surroundingObjects.get(i);
+                if (object != null && mColRect.overlaps(object.mColRect) && object instanceof Sprite
+                        && ((Sprite) object).type == Sprite.Type.massive)
+                {
+                    float diffLeft = (mColRect.x + mColRect.width) - object.mColRect.x;
+                    float diffRight = (object.mColRect.x + object.mColRect.width) - mColRect.x;
+                    float diffTop = (object.mColRect.y + object.mColRect.height) - mColRect.y;
+                    float diffBottom = (mColRect.y + mColRect.height) - object.mColRect.y;
+
+                    int smallestIdx = findSmallestDiffIndex(diffLeft, diffRight, diffTop, diffBottom);
+
+                    switch (smallestIdx)
+                    {
+                        case 0:
+                            position.x -= diffLeft;
+                            mColRect.x = position.x;
+                            break;
+                        case 1:
+                            position.x += diffRight;
+                            mColRect.x = position.x;
+                            break;
+                        case 2:
+                            position.y += diffTop;
+                            mColRect.y = position.y;
+                            break;
+                        case 3:
+                            position.y -= diffBottom;
+                            mColRect.y = position.y;
+                            break;
+                    }
+                    updateBounds();
+                    System.out.println("PP hit resolved");
+
+                    //example if player stuck on object on his right side below him
+                    //diffLeft: 0.019233704
+                    //diffRight: 1.040142
+                    //diffTop: 0.055658817
+                    //diffBottom: 1.3949661
+                }
+            }
+        }
+    }
+
+    private int findSmallestDiffIndex(float diffLeft, float diffRight, float diffTop, float diffBottom)
+    {
+        int index;
+        float smallest;
+        if(diffLeft < diffRight)
+        {
+            smallest = diffLeft;
+            index = 0;
+        }
+        else
+        {
+            smallest = diffRight;
+            index = 1;
+        }
+        if(smallest > diffTop)
+        {
+            smallest = diffTop;
+            index = 2;
+        }
+        if(smallest > diffBottom)
+        {
+            index = 3;
+        }
+        return index;
     }
 
     protected boolean checkY()
@@ -179,7 +253,7 @@ public abstract class DynamicObject extends GameObject
         {
             GameObject object = surroundingObjects.get(i);
             if (object == null) continue;
-            if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
+            if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, true);
                 if(tmp)
@@ -234,7 +308,7 @@ public abstract class DynamicObject extends GameObject
         {
             GameObject object = surroundingObjects.get(i);
             if (object == null) continue;
-            if (mColRect.overlaps(object.mColRect, this instanceof Maryo))
+            if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, false);
                 if(tmp)
