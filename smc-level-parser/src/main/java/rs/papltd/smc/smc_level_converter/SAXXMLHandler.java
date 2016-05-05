@@ -226,7 +226,7 @@ public class SAXXMLHandler extends DefaultHandler
                 tmpInformation = null;
                 break;
             case "settings":
-                tmpSettings.height = Math.abs(tmpSettings.height / 64f);
+                tmpSettings.height = Math.abs(tmpSettings.height - level.information.yOffset / 64f);
                 tmpSettings.width = tmpSettings.width / 64f;
                 tmpSettings.music = "data/music/" + tmpSettings.music;
                 level.settings = tmpSettings;

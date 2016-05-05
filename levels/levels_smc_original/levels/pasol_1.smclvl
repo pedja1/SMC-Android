@@ -4693,7 +4693,7 @@
 	</enemy>
 	<enemy>
 		<Property name="type" value="turtle" />
-		<Property name="posx" value="1562" />
+		<Property name="posx" value="1502" />
 		<Property name="posy" value="-1859" />
 		<Property name="color" value="red" />
 		<Property name="direction" value="right" />
