@@ -640,9 +640,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
 
         game.assets.manager.load("data/sounds/enemy/furball/die.mp3", Sound.class);
-        //Assets.manager.load("data/sounds/item/feather.wav", Sound.class);
-        //TODO this is missing somehow
-
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
         coinSize.fontParameters.size = 10;

@@ -35,7 +35,7 @@ public class Moon extends Item
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         animation = new Animation(2f, atlas.getRegions());
-        animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);//TODO how to set frame time to each frame
+        animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
 
     @Override

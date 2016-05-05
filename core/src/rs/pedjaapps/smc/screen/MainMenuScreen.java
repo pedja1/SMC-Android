@@ -291,7 +291,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
-        cloudsPEffect.start();//TODO load with loader
+        cloudsPEffect.start();
 
         game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
         exitDialog.loadAssets();
@@ -321,9 +321,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         settingsR = new Rectangle(screenWidth - (screenWidth / 18f) * 3.75f,
 							   (screenWidth / 18f) / 4, screenWidth / 18f, screenWidth / 18f);
 
-        background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png", Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);
-        background.width = Constants.MENU_CAMERA_WIDTH;//8.7f;
-        background.height = Constants.MENU_CAMERA_HEIGHT;//4.5f;
+        background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png", Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH * 2, Constants.MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);
         background.onAssetsLoaded(drawCam, game.assets);
 
         backgroundColor = new Background(Background.BG_GR_VER);

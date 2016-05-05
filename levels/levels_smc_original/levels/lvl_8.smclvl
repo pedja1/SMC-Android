@@ -2686,6 +2686,10 @@
 		<Property name="posy" value="203" />
 		<Property name="direction" value="right" />
 	</enemy>
+	<enemystopper>
+		<Property name="posx" value="500" />
+		<Property name="posy" value="281" />
+	</enemystopper>
 	<enemy>
 		<Property name="type" value="turtle" />
 		<Property name="posx" value="2711" />

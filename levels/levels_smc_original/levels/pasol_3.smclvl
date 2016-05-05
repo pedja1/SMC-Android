@@ -4281,13 +4281,13 @@
 	</enemy>
 	<enemy>
 		<Property name="type" value="krush" />
-		<Property name="posx" value="3178" />
+		<Property name="posx" value="3250" />
 		<Property name="posy" value="422" />
 		<Property name="direction" value="right" />
 	</enemy>
 	<enemy>
 		<Property name="type" value="krush" />
-		<Property name="posx" value="3254" />
+		<Property name="posx" value="3474" />
 		<Property name="posy" value="423" />
 		<Property name="direction" value="right" />
 	</enemy>
@@ -4410,13 +4410,13 @@
 	</enemy>
 	<enemy>
 		<Property name="type" value="krush" />
-		<Property name="posx" value="3029" />
+		<Property name="posx" value="3000" />
 		<Property name="posy" value="419" />
 		<Property name="direction" value="right" />
 	</enemy>
 	<enemy>
 		<Property name="type" value="krush" />
-		<Property name="posx" value="2955" />
+		<Property name="posx" value="2855" />
 		<Property name="posy" value="416" />
 		<Property name="direction" value="right" />
 	</enemy>
