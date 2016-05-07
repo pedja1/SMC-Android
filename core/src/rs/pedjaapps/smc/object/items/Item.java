@@ -4,8 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.items.mushroom.Mushroom;
 
 /**
  * Created by pedja on 24.5.14..
@@ -56,7 +59,7 @@ public abstract class Item extends DynamicObject
         position.z = 0.05f;
     }
 
-    public static Item initObject(World world, String objectClassString, Vector2 size, Vector3 position)
+    public static Item createObject(World world, Assets assets, int mushroomType, String objectClassString, Vector2 size, Vector3 position)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);
         Item object = null;
@@ -65,9 +68,27 @@ public abstract class Item extends DynamicObject
             case goldpiece:
                 object = new Coin(world, size, position);
                 break;
+            case moon:
+                Box.createMoon(assets);//load assets
+                object = Box.createMoon(world, position, false, assets, false);
+                break;
+            case jstar:
+                Box.createStar(assets);//load assets
+                object = Box.createStar(world, position, false, assets, false);
+                ((Star)object).moving = true;
+                break;
             case mushroom:
+                Box.createMushroom(assets, mushroomType);//load assets
+                object = Box.createMushroom(world, position, mushroomType, false, assets, false);
+                ((Mushroom)object).moving = true;
+                break;
+            case fireplant:
+                Box.createFireplant(assets);//load assets
+                object = Box.createFireplant(world, position);
                 break;
         }
+        if(object != null)
+            object.visible = true;
         return object;
     }
 

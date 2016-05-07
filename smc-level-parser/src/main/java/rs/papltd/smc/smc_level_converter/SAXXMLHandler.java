@@ -257,10 +257,10 @@ public class SAXXMLHandler extends DefaultHandler
         tmpPath.posy = convertY(tmpPath.posy, 0);
         for(Path.Segment segment : tmpPath.segments)
         {
-            segment.start.x = segment.start.x / 65f;
-            segment.start.y = convertY(segment.start.y, 0);
-            segment.end.x = segment.end.x / 65f;
-            segment.end.y = convertY(segment.end.y, 0);
+            segment.start.x = segment.start.x / 64f;
+            segment.start.y = -segment.start.y / 64f;
+            segment.end.x = segment.end.x / 64f;
+            segment.end.y = -segment.end.y / 64f;
         }
     }
 
@@ -980,6 +980,10 @@ public class SAXXMLHandler extends DefaultHandler
                 sprite.colRect.height = Float.parseFloat(data[4]) / 64f;
                 sprite.colRect.x = Float.parseFloat(data[1]) / 64f;
                 sprite.colRect.y = (origHeight / 64f) - (sprite.colRect.height + (Float.parseFloat(data[2]) / 64f));
+            }
+            else if("ground_type".equals(data[0]))
+            {
+                sprite.groundType = Sprite.Ground.idFromType(data[1]);
             }
         }
         /*if(sprite.rotationZ == 90 || sprite.rotationZ == 270)

@@ -17,7 +17,7 @@ public abstract class DynamicObject extends GameObject
 	
 	private static final float ACCELERATION     = 20f;
     protected static final float DEF_MAX_VEL = 4f;
-    protected static final float DEF_VEL_DUMP = .9f;
+    protected static final float DEF_VEL_DUMP = .8f;
 
 	public boolean grounded = false;
 

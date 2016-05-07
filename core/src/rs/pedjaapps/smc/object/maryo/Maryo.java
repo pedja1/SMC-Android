@@ -41,6 +41,7 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.TextUtils;
 
 import static rs.pedjaapps.smc.object.LevelExit.LEVEL_EXIT_BEAM;
+import static rs.pedjaapps.smc.object.Sprite.GROUND_ICE;
 
 public class Maryo extends DynamicObject
 {
@@ -172,6 +173,8 @@ public class Maryo extends DynamicObject
     private float distanceOnPlatform;
     private Vector3 prevPos = new Vector3();
 
+    private float velocityDumpOrig;
+
     public Maryo(World world, Vector3 position, Vector2 size)
     {
         super(world, size, position);
@@ -179,6 +182,7 @@ public class Maryo extends DynamicObject
 
         position.y = mColRect.y = mDrawRect.y += 0.5f;
         world.screen.game.assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+        velocityDumpOrig = velocityDump;
     }
 
     private void setupBoundingBox()
@@ -668,7 +672,7 @@ public class Maryo extends DynamicObject
                         setWorldState(Maryo.WorldState.IDLE);
                     }
                     //slowly decrease linear velocity on x axes
-                    velocity.set(velocity.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */velocity.y, velocity.z);
+                    //velocity.set(velocity.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */velocity.y, velocity.z);
                 }
             }
             if (resetDownPressedTime)
@@ -862,7 +866,24 @@ public class Maryo extends DynamicObject
             }
             else
             {
+                if(closestObject instanceof Sprite)
+                {
+                    float groundMod = 1.0f;
+
+                    // ground type
+                    switch (((Sprite) closestObject).groundType)
+                    {
+                        case GROUND_ICE:
+                        {
+                            groundMod = 1.220f;
+                            break;
+                        }
+                    }
+                    velocityDump = velocityDump * groundMod;
+                }
                 super._update(delta);
+                velocityDump = velocityDumpOrig;
+
                 if (closestObject != null)
                 {
                     debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y - (closestObject.mDrawRect.y + closestObject.mDrawRect.height));

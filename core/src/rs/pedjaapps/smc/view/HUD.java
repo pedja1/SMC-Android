@@ -593,6 +593,11 @@ public class HUD
 				x = point.x + boxWidth;
 				y = gameScreen.hud.cam.viewportHeight - 10 - h;
 			}
+			if(x + w > gameScreen.hud.cam.viewportWidth)
+			{
+				float boxWidth = Utility.gameWidthToGuiWidth(gameScreen, box.mDrawRect.width);
+				x = point.x - w - boxWidth;
+			}
 
 			World.VECTOR2_POOL.free(point);
 			text = box.text;

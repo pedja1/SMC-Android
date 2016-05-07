@@ -44,7 +44,7 @@ public class Converter
             for (File file : files)
             {
                 if (file.isDirectory()) continue;
-                System.out.println("Processing: " + file.getName());
+                System.out.print("Processing: " + file.getName());
                 XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
                 // create a SAXXMLHandler
                 SAXXMLHandler saxHandler = new SAXXMLHandler();
@@ -193,6 +193,8 @@ public class Converter
         jsonLevel.put("backgrounds", jBackgrounds);
 
         JSONArray objects = new JSONArray();
+        int dynCount = 0;
+        System.out.print(" Object Count: " + level.objects.size());
         for (Object obj : level.objects)
         {
             if (obj instanceof Player)
@@ -203,6 +205,7 @@ public class Converter
                 jPlayer.put("posy", player.posy);
                 jPlayer.put("obj_class", "player");
                 objects.put(jPlayer);
+                dynCount++;
             }
             else if (obj instanceof Sprite)
             {
@@ -212,6 +215,7 @@ public class Converter
                 jSprite.put("posy", sprite.posy);
                 jSprite.put("width", sprite.width);
                 jSprite.put("height", sprite.height);
+                jSprite.put("ground_type", sprite.groundType);
 
                 if (sprite.colRect != null)
                 {
@@ -236,6 +240,7 @@ public class Converter
             }
             else if (obj instanceof Enemy)
             {
+                dynCount++;
                 Enemy enemy = (Enemy) obj;
                 JSONObject jEnemy = new JSONObject();
                 jEnemy.put("posx", enemy.posx);
@@ -344,6 +349,7 @@ public class Converter
             }
             else if (obj instanceof Item)
             {
+                dynCount++;
                 Item item = (Item) obj;
                 JSONObject jItem = new JSONObject();
                 jItem.put("type", item.type);
@@ -401,6 +407,7 @@ public class Converter
             }
             else if (obj instanceof MovingPlatform)
             {
+                dynCount++;
                 platforms.add((MovingPlatform) obj);
             }
             else if (obj instanceof Path)
@@ -409,6 +416,7 @@ public class Converter
             }
             //TODO other objects
         }
+        System.out.println(" Dynamic Objects: " + dynCount);
 
         for(MovingPlatform platform : platforms)
         {

@@ -15,6 +15,13 @@ import rs.pedjaapps.smc.utility.Utility;
 
 public class Sprite extends GameObject
 {
+    public static final int GROUND_NORMAL = 0;
+    public static final int GROUND_EARTH = 1;
+    public static final int GROUND_ICE = 2;
+    public static final int GROUND_SAND = 3;
+    public static final int GROUND_STONE = 4;
+    public static final int GROUND_PLASTIC = 5;
+
     private boolean rotationAplied = false;
     public String textureAtlas;
     public String textureName;//name of texture from pack or png
@@ -22,6 +29,7 @@ public class Sprite extends GameObject
     private Rectangle mOrigDrawRect;
     private Texture txt = null;
     private TextureRegion region = null;
+    public int groundType = GROUND_NORMAL;
 
     public Sprite(World world, Vector2 size, Vector3 position, Rectangle colRect)
     {

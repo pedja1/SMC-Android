@@ -258,6 +258,7 @@ public class LevelLoader
         rectangle.height = (float) jSprite.optDouble("c_height", size.y);
         Sprite sprite = new Sprite(world, size, position, rectangle);
         sprite.type = sType;
+        sprite.groundType = jSprite.optInt("ground_type", Sprite.GROUND_NORMAL);
 
         sprite.textureName = jSprite.getString("texture_name");
         sprite.textureAtlas = jSprite.optString("texture_atlas", null);
@@ -447,7 +448,7 @@ public class LevelLoader
     {
         Vector3 position = new Vector3((float) jItem.getDouble("posx"), (float) jItem.getDouble("posy"), 0);
 
-        Item item = Item.initObject(world, jItem.getString("type"), new Vector2((float) jItem.getDouble("width"), (float) jItem.getDouble("height")), position);
+        Item item = Item.createObject(world, assets, jItem.optInt("mushroom_type"), jItem.getString("type"), new Vector2((float) jItem.getDouble("width"), (float) jItem.getDouble("height")), position);
         if (item == null) return;
         if (jItem.has("texture_atlas"))
         {

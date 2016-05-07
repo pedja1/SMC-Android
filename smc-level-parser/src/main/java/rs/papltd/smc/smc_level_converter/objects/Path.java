@@ -12,18 +12,39 @@ import java.util.List;
  */
 public class Path
 {
-    /**<Property name="posx" value="317" />
-     <Property name="posy" value="-865" />
-     <Property name="identifier" value="1" />
-     <Property name="rewind" value="0" />
-     <Property name="segment_0_x1" value="0" />
-     <Property name="segment_0_y1" value="0" />
-     <Property name="segment_0_x2" value="0" />
-     <Property name="segment_0_y2" value="700" />
-     <Property name="segment_1_x1" value="0" />
-     <Property name="segment_1_y1" value="700" />
-     <Property name="segment_1_x2" value="720" />
-     <Property name="segment_1_y2" value="700" />*/
+    /**<property name="posx" value="10546" />164,78125
+     <property name="posy" value="-1024" />16
+     <property name="identifier" value="1" />
+     <property name="rewind" value="0" />
+     <property name="segment_0_x1" value="0" />
+     <property name="segment_0_y1" value="0" />
+     <property name="segment_0_x2" value="0" />
+     <property name="segment_0_y2" value="350" />5,46875
+
+     <property name="segment_1_x1" value="0" />
+     <property name="segment_1_y1" value="350" />5,46875
+     <property name="segment_1_x2" value="680" />10,625
+     <property name="segment_1_y2" value="350" />5,46875
+
+     <property name="segment_2_x1" value="680" />10,625
+     <property name="segment_2_y1" value="350" />5,46875
+     <property name="segment_2_x2" value="680" />10,625
+     <property name="segment_2_y2" value="-150" />−2,34375
+
+     <property name="segment_3_x1" value="680" />10,625
+     <property name="segment_3_y1" value="-150" />−2,34375
+     <property name="segment_3_x2" value="880" />13,75
+     <property name="segment_3_y2" value="-149" />−2,328125
+
+     <property name="segment_4_x1" value="880" />13,75
+     <property name="segment_4_y1" value="-150" />−2,34375
+     <property name="segment_4_x2" value="880" />13,75
+     <property name="segment_4_y2" value="350" />5,46875
+
+     <property name="segment_5_x1" value="880" />13,75
+     <property name="segment_5_y1" value="350" />5,46875
+     <property name="segment_5_x2" value="980" />15,3125
+     <property name="segment_5_y2" value="350" />5,46875*/
     public float posx, posy;
     public int rewind;
     public String id;

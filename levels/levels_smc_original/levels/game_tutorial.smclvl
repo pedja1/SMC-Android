@@ -324,7 +324,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="               ---    Furball   ---&lt;br/&gt;&lt;br/&gt;The two walking creatures you see below can be hit by stomping on top of their head.&lt;br/&gt;&lt;br/&gt;He just walks forward in a straight line.&lt;br/&gt;" />
+        <property name="text" value="               ---    Furball   ---&lt;br/&gt;&lt;br/&gt;The two walking creatures you see below can be hit by stomping on top of their head.&lt;br/&gt;&lt;br/&gt;They just walk forward in a straight line.&lt;br/&gt;" />
     </box>
     <sprite >
         <property name="posx" value="1620" />
@@ -587,12 +587,6 @@
         <property name="type" value="massive" />
     </sprite>
     <sprite >
-        <property name="posx" value="3813" />
-        <property name="posy" value="-516" />
-        <property name="image" value="blocks/brick/1_red.png" />
-        <property name="type" value="massive" />
-    </sprite>
-    <sprite >
         <property name="posx" value="4071" />
         <property name="posy" value="-215" />
         <property name="image" value="blocks/brick/1_blue.png" />
@@ -680,7 +674,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="          ---    Climbable plant   ---&lt;br/&gt;&lt;br/&gt;There are a few objects which can be climbed by pressing up, down, right or left.&lt;br/&gt;&lt;br/&gt;You can climb faster by pressing a.&lt;br/&gt;" />
+        <property name="text" value="          ---    Climbable plant   ---&lt;br/&gt;&lt;br/&gt;There are a few objects which can be climbed by pressing up, down, right or left." />
     </box>
     <box >
         <property name="posx" value="3770" />
@@ -688,7 +682,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="           ---    Power Jump   ---&lt;br/&gt;&lt;br/&gt;Reach the pipe platform with a power jump.&lt;br/&gt;&lt;br/&gt;First you need to duck and wait for stars to appear on your shoes, then while still ducking jump.&lt;br/&gt;&lt;br/&gt;Default keyboard shortcuts :&lt;br/&gt;Down to duck, s to jump, and hold a to jump higher.&lt;br/&gt;" />
+        <property name="text" value="           ---    Power Jump   ---&lt;br/&gt;&lt;br/&gt;Reach the pipe platform with a power jump.&lt;br/&gt;&lt;br/&gt;First you need to duck and wait for stars to appear on your shoes, then while still ducking jump.&lt;br/&gt;&lt;br/&gt;" />
     </box>
     <sprite >
         <property name="posx" value="6995" />
@@ -702,20 +696,6 @@
         <property name="image" value="blocks/brick/1_red.png" />
         <property name="type" value="massive" />
     </sprite>
-    <item >
-        <property name="type" value="mushroom" />
-        <property name="mushroom_type" value="52" />
-        <property name="posx" value="5277" />
-        <property name="posy" value="-340" />
-    </item>
-    <box >
-        <property name="posx" value="5106" />
-        <property name="posy" value="-553" />
-        <property name="type" value="text" />
-        <property name="invisible" value="0" />
-        <property name="useable_count" value="-1" />
-        <property name="text" value="         ---    Ghost Mushroom   ---&lt;br/&gt;&lt;br/&gt;The grey transparent mushroom that is in the little alcove transforms you temporarily into a ghost.&lt;br/&gt;You see the hidden ghost blocks with it and enemies will not see you anymore.&lt;br/&gt;&lt;br/&gt;The ghost state runs out after a short while, so watch out not to fall from ghost blocks.&lt;br/&gt;" />
-    </box>
     <sprite >
         <property name="posx" value="5490" />
         <property name="posy" value="-43" />
@@ -3129,7 +3109,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="              ---   Army   ---&lt;br/&gt;&lt;br/&gt;If you jump on them once they move into their shell and you can take the shell and throw it against other enemies or blocks.&lt;br/&gt;&lt;br/&gt;Be careful because a moving shell can hit you too.&lt;br/&gt;If the shell stands still for a while he will move out of it.&lt;br/&gt;&lt;br/&gt;" />
+        <property name="text" value="              ---   Army   ---&lt;br/&gt;&lt;br/&gt;If you jump on them once they move into their shell and you can kick the shell against other enemies or blocks.&lt;br/&gt;&lt;br/&gt;Be careful because a moving shell can hit you too.&lt;br/&gt;" />
     </box>
     <sprite >
         <property name="posx" value="7038" />
@@ -3467,7 +3447,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="              ---   Rokko   ---&lt;br/&gt;&lt;br/&gt;The enemy that flies below here appears if Maryo comes close to them.&lt;br/&gt;&lt;br/&gt;You can hit it by jumping on the top. They are immune to fire and ice.&lt;br/&gt;&lt;br/&gt;If you have a star, you can ride them.&lt;br/&gt;" />
+        <property name="text" value="              ---   Rokko   ---&lt;br/&gt;&lt;br/&gt;The enemy that flies below here appears if Maryo comes close to them.&lt;br/&gt;&lt;br/&gt;You can hit it by jumping on the top. They are immune to fire and ice.&lt;br/&gt;&lt;br/&gt;" />
     </box>
     <sprite >
         <property name="posx" value="7167" />
@@ -4662,10 +4642,10 @@
     <moving_platform >
         <property name="posx" value="10199" />
         <property name="posy" value="-615" />
-        <property name="move_type" value="1" />
+        <property name="move_type" value="0" />
         <property name="massive_type" value="massive" />
-        <property name="direction" value="right" />
-        <property name="max_distance" value="250" />
+        <property name="direction" value="up" />
+        <property name="max_distance" value="400" />
         <property name="speed" value="2" />
         <property name="touch_time" value="0" />
         <property name="shake_time" value="16" />
@@ -5624,12 +5604,6 @@
         <property name="posy" value="-146" />
         <property name="image" value="signs/default_1/1_ending_left.png" />
         <property name="type" value="passive" />
-    </sprite>
-    <sprite >
-        <property name="posx" value="3770" />
-        <property name="posy" value="-516" />
-        <property name="image" value="blocks/brick/1_red.png" />
-        <property name="type" value="massive" />
     </sprite>
     <sprite >
         <property name="posx" value="2394" />

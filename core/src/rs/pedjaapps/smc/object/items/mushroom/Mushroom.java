@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -28,7 +27,7 @@ public abstract class Mushroom extends Item
     protected boolean grounded = false;
     protected int mPickPoints;
 
-    boolean moving;
+    public boolean moving;
 
     public enum Direction
     {

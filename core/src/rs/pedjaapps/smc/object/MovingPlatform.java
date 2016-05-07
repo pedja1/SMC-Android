@@ -273,9 +273,11 @@ public class MovingPlatform extends Sprite
                     {
                         Path.Segment segment = path.segments.get(path.currentSegmentIndex);
                         float targetX = path.posx + segment.end.x;
-                        float targetY = path.posy - segment.end.y;
+                        float targetY = path.posy + segment.end.y;
                         float distanceX = targetX - position.x;
                         float distanceY = targetY - position.y;
+                        float directionX = segment.end.x - path.posx;
+                        float directionY = segment.end.y - path.posy;
 
                         float distance = (float) Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 
@@ -290,7 +292,7 @@ public class MovingPlatform extends Sprite
                         velocity.y = distanceY / time;
 
                         boolean x = false, y = false;
-                        if(velocity.x > 0)
+                        if(directionX > 0)
                         {
                             if(distanceX >= 0)
                             {
@@ -304,18 +306,18 @@ public class MovingPlatform extends Sprite
                                 x = true;
                             }
                         }
-                        if(velocity.y > 0)
+                        if(directionY > 0)
                         {
-                            if(distanceY >= 0)
+                            if(distanceY <= 0)
                             {
                                 y = true;
                             }
                         }
                         else
                         {
-                            if(distanceY <= 0)
+                            if(distanceY >= 0)
                             {
-                                x = true;
+                                y = true;
                             }
                         }
                         if(x && y)
@@ -387,7 +389,7 @@ public class MovingPlatform extends Sprite
         }
 
 
-        if (velocity.x < 0)//moving left
+        /*if (velocity.x < 0)//moving left
         {
             if (world.maryo.mColRect.overlaps(mColRect) && world.maryo.mColRect.x + world.maryo.mColRect.width > mColRect.x)
             {
@@ -411,7 +413,7 @@ public class MovingPlatform extends Sprite
                 world.maryo.updateBounds();
             }
         }
-        else if (velocity.y > 0)//up
+        else **/if (velocity.y > 0)//up
         {
             if (world.maryo.mColRect.overlaps(mColRect) && world.maryo.mColRect.y < mColRect.x + mColRect.height)
             {

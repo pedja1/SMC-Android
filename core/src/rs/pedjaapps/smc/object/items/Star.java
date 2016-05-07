@@ -33,7 +33,7 @@ public class Star extends Item
     public static final float VELOCITY_Y = 10f;
     public static final float DEF_SIZE = 0.65625f;
 
-    boolean moving;
+    public boolean moving;
     public float velY = -1;
 
     private Direction direction = Direction.right;
