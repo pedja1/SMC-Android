@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -36,13 +37,26 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Spikeball extends Enemy
 {
-    public static final float VELOCITY_NORMAL = 0.75f;
-    public static final float VELOCITY_RUNNING = 1.5f;
-    public static final float VELOCITY_TURN = 0.75f;
+    public static final float VELOCITY_NORMAL = 0.83f;
+    public static final float VELOCITY_RUNNING = 2f;
     public static final float POS_Z = 0.09f;
+
+
+    public static final int STATE_STAYING = 0;
+    public static final int STATE_WALKING = 1;
+    public static final int STATE_RUNNING = 2;
+
+    private static final int MAX_STAY_TIME = 2;
+    private static final int MAX_WALK_TIME = 8;
+    private static final int MAX_RUN_TIME = 4;
 
     private Animation walkAnimation;
     private TextureRegion tTurn, tDead;
+
+    private int state;
+
+    private float stayCounter, walkCounter, runCounter;
+    private boolean stayDirectionSet;
 
     public Spikeball(World world, Vector2 size, Vector3 position)
     {
@@ -51,13 +65,16 @@ public class Spikeball extends Enemy
         mFireResistant = 1;
         mIceResistance = 1f;
         mCanBeHitFromShell = 0;
+        position.z = POS_Z;
+        state = STATE_WALKING;
+        walkCounter = MathUtils.random(0, 2.6f);
     }
 
     @Override
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
+        Array<TextureRegion> walkFrames = new Array<>();
 
         for (int i = 1; i < 9; i++)
         {
@@ -82,10 +99,17 @@ public class Spikeball extends Enemy
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-        TextureRegion frame = turn ? tTurn : walkAnimation.getKeyFrame(stateTime, true);
-        frame.flip(direction == Direction.left, false);
-        Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
-        frame.flip(direction == Direction.left, false);
+        if (!stayDirectionSet && state == STATE_STAYING)
+        {
+            Utility.draw(spriteBatch, tTurn, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+        }
+        else
+        {
+            TextureRegion frame = turn ? tTurn : walkAnimation.getKeyFrame(stateTime, true);
+            frame.flip(direction == Direction.left, false);
+            Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            frame.flip(direction == Direction.left, false);
+        }
     }
 
     @Override
@@ -116,15 +140,55 @@ public class Spikeball extends Enemy
             turn = false;
         }
 
+        float currentVelocity;
+        if (state == STATE_STAYING)
+        {
+            currentVelocity = 0;
+            stayCounter += deltaTime;
+            if (stayCounter >= 1.3f && stayDirectionSet)
+            {
+                stayDirectionSet = true;
+                boolean rand = MathUtils.randomBoolean();
+                setDirection(rand ? Direction.left : Direction.right);
+            }
+            if (stayCounter >= MAX_STAY_TIME)
+            {
+                state = STATE_RUNNING;
+                stayCounter = 0;
+                stayDirectionSet = false;
+            }
+        }
+        else if (state == STATE_WALKING)
+        {
+            currentVelocity = VELOCITY_NORMAL;
+            walkCounter += deltaTime;
+            if (walkCounter >= MAX_WALK_TIME)
+            {
+                state = STATE_STAYING;
+                walkCounter = 0;
+            }
+        }
+        else //if(state == STATE_RUNNING)
+        {
+            currentVelocity = VELOCITY_RUNNING;
+            runCounter += deltaTime;
+            if (runCounter >= MAX_RUN_TIME)
+            {
+                state = STATE_WALKING;
+                walkCounter = MathUtils.random(0, 2.6f);
+                runCounter = 0;
+            }
+        }
+
         if (!deadByBullet)
         {
             switch (direction)
             {
                 case right:
-                    velocity.set(velocity.x = -(turn ? VELOCITY_TURN : VELOCITY_RUNNING), velocity.y, velocity.z);
+                    velocity.x = -(turn ? currentVelocity * 0.5f : currentVelocity);
                     break;
                 case left:
-                    velocity.set(velocity.x = +(turn ? VELOCITY_TURN : VELOCITY_NORMAL), velocity.y, velocity.z);
+                    velocity.x = +(turn ? currentVelocity * 0.5f : currentVelocity);
                     break;
             }
         }

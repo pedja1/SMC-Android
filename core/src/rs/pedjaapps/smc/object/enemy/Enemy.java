@@ -198,6 +198,9 @@ public abstract class Enemy extends DynamicObject
             case _static:
                 enemy = new Static(world, size, position, jEnemy.optInt("rotation_speed"), jEnemy.optInt("fire_resistance"), jEnemy.optInt("ice_resistance"));
                 break;
+            case spikeball:
+                enemy = new Spikeball(world, size, position);
+                break;
         }
         return enemy;
     }
