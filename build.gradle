@@ -6,9 +6,10 @@ buildscript {
         //maven { url 'https://github.com/steffenschaefer/gwt-gradle-plugin/raw/maven-repo/' }
     }
     dependencies {
-        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath 'com.android.tools.build:gradle:1.5.0'
+            classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'org.robovm:robovm-gradle-plugin:1.14.0'
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
     }
 }
 
