@@ -196,7 +196,6 @@ public abstract class DynamicObject extends GameObject
                             break;
                     }
                     updateBounds();
-                    System.out.println("PP hit resolved");
 
                     //example if player stuck on object on his right side below him
                     //diffLeft: 0.019233704

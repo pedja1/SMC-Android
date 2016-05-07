@@ -855,6 +855,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchDown(x, invertY(y));
             return true;
         }
+        if(hud.boxTextPopup.showing)
+        {
+            if(hud.boxTextPopup.onTouchDown(x, invertY(y), pointer, button))
+                return true;
+        }
         if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
         if (gameState == GAME_STATE.GAME_OVER) goTouched = true;
         if (pointer < 5)
@@ -942,6 +947,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchUp(x, invertY(y));
             return true;
         }
+        if(hud.boxTextPopup.showing)
+        {
+            if(hud.boxTextPopup.onTouchUp(x, invertY(y), pointer, button))
+                return true;
+        }
         TouchInfo ti = touches.get(pointer);
         if (ti != null)
         {
@@ -1028,6 +1038,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             exitDialog.touchDragged(x, invertY(y));
             return true;
+        }
+        if(hud.boxTextPopup.showing)
+        {
+            if(hud.boxTextPopup.onTouchDragged(x, invertY(y), pointer))
+                return true;
         }
         return false;
     }

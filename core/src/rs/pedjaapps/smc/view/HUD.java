@@ -15,13 +15,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.HashSet;
 
-import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -33,6 +34,8 @@ import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.Utility;
+
+import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD
 {
@@ -373,8 +376,8 @@ public class HUD
                 batch.draw(GameSave.save.item.texture, x, y, w, h);
             }
 
-			boxTextPopup.render(batch);
 			batch.end();
+			boxTextPopup.render(batch, cam);
 		}
 		if(PrefsManager.isDebug())drawDebug();
 	}
@@ -412,8 +415,8 @@ public class HUD
 
     private void drawPauseOverlay()
 	{
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		Gdx.gl.glEnable(GL20.GL_BLEND);
+		gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glEnable(GL20.GL_BLEND);
 
 		shapeRenderer.setProjectionMatrix(cam.combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -548,9 +551,13 @@ public class HUD
 		BitmapFont font;
 		GlyphLayout glyphLayout;
 		float x, y, w, h;
+		public float scrollY, touchDownY;
 		public boolean showing;
 		TextureRegion back;
 		String text;
+
+		Rectangle scissors;
+		Rectangle clipBounds;
 
 		public BoxTextPopup(BitmapFont font, Assets assets)
 		{
@@ -558,18 +565,31 @@ public class HUD
 			glyphLayout = new GlyphLayout();
 			TextureAtlas atlas = assets.manager.get("data/hud/SMCLook512.pack");
 			back = atlas.findRegion("ClientBrush");
+			scissors = new Rectangle();
+			clipBounds = new Rectangle();
 		}
 
-		public void render(SpriteBatch batch)
+		public void render(SpriteBatch batch, OrthographicCamera camera)
 		{
 			if(!showing)return;
+
+			batch.setProjectionMatrix(camera.combined);
+			batch.begin();
+
+			ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
+			ScissorStack.pushScissors(scissors);
+
 			batch.draw(back, x, y, w, h);
 			glyphLayout.setText(font, text, Color.WHITE, w - 20, Align.left, true);
-			font.draw(batch, glyphLayout, x + 10, y + h - 10);
+			font.draw(batch, glyphLayout, x + 10, y + h - 10 - scrollY);
+
+			batch.end();
+			ScissorStack.popScissors();
 		}
 
 		public void show(Box box, GameScreen gameScreen)
 		{
+			scrollY = 0;
 			showing = true;
 
 			Vector2 point = World.VECTOR2_POOL.obtain();
@@ -598,6 +618,7 @@ public class HUD
 				float boxWidth = Utility.gameWidthToGuiWidth(gameScreen, box.mDrawRect.width);
 				x = point.x - w - boxWidth;
 			}
+			clipBounds.set(x, y, w, h);
 
 			World.VECTOR2_POOL.free(point);
 			text = box.text;
@@ -613,6 +634,44 @@ public class HUD
 			font.dispose();
 			font = null;
 			back = null;
+		}
+
+		public boolean onTouchDown(int x, float y, int pointer, int button)
+		{
+			if(clipBounds.contains(x, y))
+			{
+				touchDownY = scrollY + y;
+				return true;
+			}
+			return false;
+		}
+
+		public boolean onTouchUp(int x, float y, int pointer, int button)
+		{
+			touchDownY = 0;
+			return false;
+		}
+
+		public boolean onTouchDragged(int x, float y, int pointer)
+		{
+			if(touchDownY > 0 || clipBounds.contains(x, y))
+			{
+				float newScrollY = touchDownY - y;
+				if(newScrollY > 0)
+				{
+					newScrollY = 0;
+					touchDownY = y;
+				}
+
+				if(h - glyphLayout.height > newScrollY)
+				{
+					newScrollY = h - glyphLayout.height;
+				}
+
+				scrollY = newScrollY;
+				return true;
+			}
+			return false;
 		}
 	}
 
