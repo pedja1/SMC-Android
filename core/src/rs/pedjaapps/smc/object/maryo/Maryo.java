@@ -1049,8 +1049,15 @@ public class Maryo extends DynamicObject
                 {
                     if (worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
                     {
-                        ((Enemy) object).downgradeOrDie(this, true);
-                        GameSave.save.points += ((Enemy) object).mKillPoints;
+                        if(((Enemy)object).canBeKilledByStar())
+                        {
+                            ((Enemy) object).downgradeOrDie(this, true);
+                            GameSave.save.points += ((Enemy) object).mKillPoints;
+                        }
+                        else
+                        {
+                            hitEnemy((Enemy) object, vertical);
+                        }
                     }
                     else
                     {
@@ -1087,20 +1094,7 @@ public class Maryo extends DynamicObject
                     }
                     else
                     {
-                        int resolution = ((Enemy) object).hitByPlayer(this, vertical);
-                        if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
-                        {
-                            velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                            GameSave.save.points += ((Enemy) object).mKillPoints;
-                        }
-                        else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
-                        {
-                            downgradeOrDie(false);
-                        }
-                        else
-                        {
-                            velocity.y = 5f * Gdx.graphics.getDeltaTime();
-                        }
+                        hitEnemy((Enemy) object, vertical);
                     }
                 }
             }
@@ -1110,6 +1104,24 @@ public class Maryo extends DynamicObject
             ((Box) object).activate();
         }
         return false;
+    }
+
+    private void hitEnemy(Enemy enemy, boolean vertical)
+    {
+        int resolution = enemy.hitByPlayer(this, vertical);
+        if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
+        {
+            velocity.y = 5f * Gdx.graphics.getDeltaTime();
+            GameSave.save.points += enemy.mKillPoints;
+        }
+        else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
+        {
+            downgradeOrDie(false);
+        }
+        else
+        {
+            velocity.y = 5f * Gdx.graphics.getDeltaTime();
+        }
     }
 
     private boolean isDeadByJumpingOnTopOfEnemy(Enemy enemy)

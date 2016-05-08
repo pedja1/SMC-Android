@@ -341,4 +341,9 @@ public abstract class Enemy extends DynamicObject
     {
         return false;
     }
+
+    public boolean canBeKilledByStar()
+    {
+        return true;
+    }
 }
