@@ -67,11 +67,18 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdL
     @Override
     public void showInterestitialAd()
     {
-        if(mInterstitialAd.isLoaded())
+        runOnUiThread(new Runnable()
         {
-            mInterstitialAd.show();
-            requestNewInterstitial();
-        }
+            @Override
+            public void run()
+            {
+                if(mInterstitialAd.isLoaded())
+                {
+                    mInterstitialAd.show();
+                    requestNewInterstitial();
+                }
+            }
+        });
     }
 
     private void requestNewInterstitial()

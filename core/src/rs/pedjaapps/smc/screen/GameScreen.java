@@ -320,6 +320,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
             mNextLevelName = null;
+            game.showAd();
             return;
         }
         levelEndAnimationStateTime -= delta;

@@ -88,6 +88,12 @@ public class MaryoGame extends Game
 		return Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
 	}
 
+	public void showAd()
+	{
+		if(adLoader != null)
+			adLoader.showInterestitialAd();
+	}
+
 	public interface AdLoader
 	{
 		void showInterestitialAd();
