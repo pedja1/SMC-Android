@@ -27,6 +27,6 @@ public class DesktopLauncher
         config.setWindowedMode(1024, 576);
         config.setResizable(false);
         config.useVsync(false);
-        new Lwjgl3Application(new MaryoGame(), config);
+        new Lwjgl3Application(new MaryoGame(null), config);
     }
 }

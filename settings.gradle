@@ -1,4 +1,2 @@
-include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser', 'tools', 'TAGenerator', ':test_math'
-include 'texture_resizer'
-include 'geometry'
+include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser'
 

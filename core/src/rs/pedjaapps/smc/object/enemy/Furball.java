@@ -146,8 +146,6 @@ public class Furball extends Enemy
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
 
-            System.out.println(rotation);
-
             spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
 
             frame.flip(direction == Direction.left, false);

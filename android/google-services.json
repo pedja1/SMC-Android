@@ -1,0 +1,65 @@
+{
+  "project_info": {
+    "project_number": "279833983699",
+    "project_id": "api-project-279833983699"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279833983699:android:8ae423eae5566196",
+        "android_client_info": {
+          "package_name": "rs.pedjaapps.smc.android"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWeDspbz7yVRGm-lnT42Ni6oHaz29RCWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2,
+          "test_banner_ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
+          "test_interstitial_ad_unit_id": "ca-app-pub-3940256099942544/1033173712"
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279833983699:android:b2190279fff4a822",
+        "android_client_info": {
+          "package_name": "rs.pedjaapps.smc.android.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWeDspbz7yVRGm-lnT42Ni6oHaz29RCWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2,
+          "test_banner_ad_unit_id": "ca-app-pub-3940256099942544/6300978111",
+          "test_interstitial_ad_unit_id": "ca-app-pub-3940256099942544/1033173712"
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

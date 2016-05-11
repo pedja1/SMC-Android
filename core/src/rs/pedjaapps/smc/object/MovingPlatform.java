@@ -355,6 +355,7 @@ public class MovingPlatform extends Sprite
             if(shake_time <= 0)
             {
                 platformState = MOVING_PLATFORM_FALL;
+                type = Type.passive;
                 canAttachTo = false;
             }
         }

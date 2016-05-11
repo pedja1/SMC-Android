@@ -9,14 +9,10 @@ buildscript {
             classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'org.robovm:robovm-gradle-plugin:1.14.0'
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
     }
 }
 
 allprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
-
     version = '1.0'
     ext {
         appName = 'SMC-Android'
@@ -31,104 +27,4 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
     }
-}
-
-project(":desktop") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
-        //compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        //compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        //compile 'org.slf4j:slf4j-log4j12:1.7.12'
-    }
-}
-
-project(":android") {
-    apply plugin: "android"
-
-    configurations { natives }
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
-        natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
-        //compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        //natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi"
-        //natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-armeabi-v7a"
-        //natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-armeabi-v7a"
-        natives "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86"
-        //compile 'org.slf4j:slf4j-android:1.7.12'
-        //compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
-    }
-}
-
-project(":ios") {
-    apply plugin: "java"
-    apply plugin: "robovm"
-
-    configurations { natives }
-
-    dependencies {
-        compile project(":core")
-        compile "org.robovm:robovm-rt:${roboVMVersion}"
-        compile "org.robovm:robovm-cocoatouch:${roboVMVersion}"
-        compile "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
-        //natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-ios"
-    }
-}
-
-project(":html") {
-    apply plugin: "gwt"
-    apply plugin: "war"
-
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        //compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion:sources"
-        //compile "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
-    }
-}
-
-project(":core") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        //compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "org.json:json:20090211"
-        //compile "com.brsanthu:google-analytics-java:1.1.2"
-    }
-}
-
-project(":TAGenerator") {
-    apply plugin: "java"
-    apply plugin: 'idea'
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    }
-}
-
-tasks.eclipse.doLast {
-    delete ".project"
 }

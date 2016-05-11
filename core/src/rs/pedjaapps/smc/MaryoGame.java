@@ -20,14 +20,17 @@ public class MaryoGame extends Game
 {
 	public Assets assets;
 	private String androidAssetsZipFilePath;
+	private AdLoader adLoader;
 
-	public MaryoGame(String androidAssetsZipFilePath)
+	public MaryoGame(String androidAssetsZipFilePath, AdLoader adLoader)
 	{
 		this.androidAssetsZipFilePath = androidAssetsZipFilePath;
+		this.adLoader = adLoader;
 	}
 
-	public MaryoGame()
+	public MaryoGame(AdLoader adLoader)
 	{
+		this.adLoader = adLoader;
 	}
 
 	@Override
@@ -83,5 +86,10 @@ public class MaryoGame extends Game
 	public static boolean showOnScreenControls()
 	{
 		return Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
+	}
+
+	public interface AdLoader
+	{
+		void showInterestitialAd();
 	}
 }
