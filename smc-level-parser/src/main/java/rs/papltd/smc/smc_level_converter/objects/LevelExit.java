@@ -2,6 +2,8 @@ package rs.papltd.smc.smc_level_converter.objects;
 
 import org.xml.sax.Attributes;
 
+import java.io.File;
+
 /**
  * Created by pedja on 22.6.14..
  */
@@ -38,6 +40,11 @@ public class LevelExit
         else if("level_name".equals(name))
         {
             level_name = value;
+            File file;
+            if(!(file = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels", level_name + ".smclvl")).exists())
+            {
+                throw new IllegalArgumentException("Sublevel '" + file + "' doesnt exist");
+            }
         }
         else if("entry".equals(name))
         {

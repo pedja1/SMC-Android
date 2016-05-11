@@ -39,8 +39,8 @@ public class GameSave
 
 	public static Save read()
 	{
-		//read from prefs and deserialize to save
-		return Save.readFromString(PrefsManager.getSaveGame());
+		read from prefs and deserialize to save
+		//return Save.readFromString(PrefsManager.getSaveGame());
 	}
 	
 	public static void save()
