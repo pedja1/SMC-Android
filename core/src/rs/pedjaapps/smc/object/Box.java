@@ -54,7 +54,7 @@ public class Box extends Sprite
     public static final float POSITION_Z = 0.055f;
     public static final float SPINNING_TIME = 5;
 
-    public static final float SIZE = 0.67f;
+    public static final float SIZE = 0.671875f;
     private String goldColor, animationName, boxType;
     public String text;
     private boolean forceBestItem, invisible;
