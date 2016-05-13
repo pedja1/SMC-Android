@@ -40,7 +40,7 @@ public class Fireball extends DynamicObject
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        trail.setPosition(mColRect.x, mColRect.y + mColRect.height * 0.5f);
+        trail.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
         trail.draw(spriteBatch);
         if (!destroyed)
         {
@@ -166,7 +166,7 @@ public class Fireball extends DynamicObject
 
             animation = new Animation(0.05f, regions);
         }
-        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_emitter.p", ParticleEffect.class));
+        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class));
         explosion = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
     }
 

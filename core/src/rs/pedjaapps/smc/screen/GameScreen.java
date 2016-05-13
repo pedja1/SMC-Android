@@ -615,7 +615,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
         game.assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
-        game.assets.manager.load("data/animation/particles/fireball_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, game.assets.particleEffectParameter);
         game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
         game.assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
         game.assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
