@@ -44,6 +44,9 @@
         <property name="posy" value="-256" />
         <property name="direction" value="right" />
     </player>
+    <particle_effect >
+        <property name="effect" value="data/animation/particles/snow.p" />
+    </particle_effect>
     <particle_emitter >
         <property name="image" value="animation/particles/ice_1.png" />
         <property name="pos_z" value="0.12" />
