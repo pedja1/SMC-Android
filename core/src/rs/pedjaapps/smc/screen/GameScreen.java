@@ -186,6 +186,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void show()
     {
         music = game.assets.manager.get(loader.level.music.first());
+        music.setLooping(true);
         MusicManager.play(music);
         if (debug) GLProfiler.enable();
         if (!resumed || forceCheckEnter)

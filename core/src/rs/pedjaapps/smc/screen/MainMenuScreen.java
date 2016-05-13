@@ -123,6 +123,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(this);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
+        music.setLooping(true);
         MusicManager.play(music);
     }
 
