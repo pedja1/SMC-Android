@@ -15,6 +15,9 @@
 		<Property name="cam_limit_h" value="-350" />
 		<Property name="cam_fixed_hor_vel" value="0" />
 	</settings>
+    <particle_effect >
+        <property name="effect" value="data/animation/particles/snow.p" />
+    </particle_effect>
 	<background>
 		<Property name="type" value="103" />
 		<Property name="bg_color_1_red" value="50" />
