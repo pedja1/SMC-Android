@@ -38,7 +38,6 @@ public class MovingPlatform extends Sprite
     public static final int MOVING_PLATFORM_TYPE_LINE = 0;//left, right, up, down
     public static final int MOVING_PLATFORM_TYPE_CIRCLE = 1;//circle
     public static final int MOVING_PLATFORM_TYPE_PATH = 2;
-    public static final int MOVING_PLATFORM_TYPE_PATH_BACKWARDS = 3;
 
     public static final int MOVING_PLATFORM_STAY = 0;
     public static final int MOVING_PLATFORM_TOUCHED = 1;
@@ -294,28 +293,28 @@ public class MovingPlatform extends Sprite
                         boolean x = false, y = false;
                         if(directionX > 0)
                         {
-                            if(distanceX >= 0)
+                            if(position.x <= targetX)
                             {
                                 x = true;
                             }
                         }
                         else
                         {
-                            if(distanceX <= 0)
+                            if(position.x >= targetX)
                             {
                                 x = true;
                             }
                         }
                         if(directionY > 0)
                         {
-                            if(distanceY <= 0)
+                            if(position.y >= targetY)
                             {
                                 y = true;
                             }
                         }
                         else
                         {
-                            if(distanceY >= 0)
+                            if(position.y <= targetY)
                             {
                                 y = true;
                             }
