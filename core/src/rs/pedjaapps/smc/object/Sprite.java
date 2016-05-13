@@ -139,8 +139,6 @@ public class Sprite extends GameObject
 
     private float getOriginY()
     {
-        //TODO for some reason this is the only way that rotation works as expected
-        //TODO need to take a deeper investigation into original code to determine how rotation should actually work
         float originY = 0;
         if (mDrawRect.width == mDrawRect.height)
         {

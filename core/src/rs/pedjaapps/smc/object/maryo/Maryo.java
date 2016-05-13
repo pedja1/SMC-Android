@@ -1536,8 +1536,6 @@ public class Maryo extends DynamicObject
     {
         keys.add(Keys.RIGHT);
         checkLeave("right");
-        //TODO this is called only when key is pressed, not continuously
-        //TODO if player holds the key and walks to the exit, he will have to press it again to exit
     }
 
     public void upPressed()

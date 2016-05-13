@@ -92,7 +92,6 @@ public class SelectionAdapter
 		txItemBg = hud.findRegion("empty_square_button");
 		txLock = mainMenuScreen.game.assets.manager.get("data/hud/lock.png");
 
-		//TODO load this fonts with asset manager
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(mainMenuScreen.game.assets.resolver.resolve("data/fonts/GROBOLD.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 90;
