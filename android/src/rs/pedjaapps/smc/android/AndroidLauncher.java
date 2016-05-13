@@ -6,11 +6,13 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.io.File;
 
+import io.fabric.sdk.android.Fabric;
 import rs.pedjaapps.smc.MaryoGame;
 
 /**
@@ -23,6 +25,7 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdL
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Fabric.with(this, new Crashlytics());
         super.onCreate(savedInstanceState);
 
         mInterstitialAd = new InterstitialAd(this);
