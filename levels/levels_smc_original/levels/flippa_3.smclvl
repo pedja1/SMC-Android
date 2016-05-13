@@ -35,6 +35,9 @@
 		<Property name="const_velx" value="0" />
 		<Property name="const_vely" value="0" />
 	</background>
+    <particle_effect >
+        <property name="effect" value="data/animation/particles/rain.p" />
+    </particle_effect>
 	<global_effect>
 		<Property name="type" value="1" />
 		<Property name="image" value="animation/particles/rain.png" />

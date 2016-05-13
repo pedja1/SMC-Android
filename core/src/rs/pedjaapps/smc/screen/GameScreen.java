@@ -43,6 +43,7 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
+import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
@@ -60,7 +61,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     /**
      * Textures *
      */
-    private ParticleEffect leafEffect;
+    private ParticleEffect globalEffect;
 
     private SpriteBatch spriteBatch;
     private boolean debug = PrefsManager.isDebug();
@@ -169,8 +170,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         spriteBatch = new SpriteBatch();
 
-        loadTextures();
-
         for (int i = 0; i < 5; i++) //handle max 4 touches
         {
             touches.put(i, new TouchInfo());
@@ -247,14 +246,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.begin();
         drawObjects();
         killPointsTextHandler.render(spriteBatch, delta);
+
+        if(globalEffect != null)
+        {
+            globalEffect.setPosition(cam.position.x - Constants.CAMERA_WIDTH * 0.5f, cam.position.y + 0.5f * Constants.CAMERA_HEIGHT);
+            globalEffect.draw(spriteBatch);
+
+            if (gameState == GAME_STATE.GAME_RUNNING) globalEffect.update(delta);
+        }
+
         spriteBatch.end();
 
-        spriteBatch.setProjectionMatrix(pCamera.combined);
-        spriteBatch.begin();
-        leafEffect.draw(spriteBatch);
-
-        if (gameState == GAME_STATE.GAME_RUNNING) leafEffect.update(delta);
-        spriteBatch.end();
 
         spriteBatch.setProjectionMatrix(guiCam.combined);
         spriteBatch.begin();
@@ -604,6 +606,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.dispose();
         world.dispose();
         GA.sendLevelEnded(levelName, stateTime);
+        if (globalEffect != null)
+        {
+            globalEffect.dispose();
+        }
     }
 
     @Override
@@ -672,14 +678,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     }
 
-    private void loadTextures()
-    {
-        leafEffect = new ParticleEffect();
-        leafEffect.load(game.assets.resolver.resolve("data/animation/particles/leaf_emitter.p"), game.assets.resolver.resolve("data/animation/particles"));
-        leafEffect.setPosition(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT);
-        leafEffect.start();
-    }
-
     @Override
     public void onAssetsLoaded()
     {
@@ -705,6 +703,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         for(Background background : world.level.backgrounds)
         {
             background.onAssetsLoaded(cam, game.assets);
+        }
+
+        if(!TextUtils.isEmpty(world.level.particleEffect))
+        {
+            globalEffect = new ParticleEffect(game.assets.manager.get(world.level.particleEffect, ParticleEffect.class));
+            globalEffect.start();
         }
     }
 

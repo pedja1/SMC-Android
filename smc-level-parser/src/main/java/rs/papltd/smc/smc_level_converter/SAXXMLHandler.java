@@ -23,6 +23,7 @@ import rs.papltd.smc.smc_level_converter.objects.Item;
 import rs.papltd.smc.smc_level_converter.objects.LevelEntry;
 import rs.papltd.smc.smc_level_converter.objects.LevelExit;
 import rs.papltd.smc.smc_level_converter.objects.MovingPlatform;
+import rs.papltd.smc.smc_level_converter.objects.ParticleEffect;
 import rs.papltd.smc.smc_level_converter.objects.Path;
 import rs.papltd.smc.smc_level_converter.objects.Player;
 import rs.papltd.smc.smc_level_converter.objects.Settings;
@@ -48,6 +49,7 @@ public class SAXXMLHandler extends DefaultHandler
     private MovingPlatform tmpPlatform;
     private Information tmpInformation;
     private Path tmpPath;
+    private ParticleEffect tmpParticleEffect;
 
     public SAXXMLHandler()
     {
@@ -61,6 +63,9 @@ public class SAXXMLHandler extends DefaultHandler
         {
             case "background":
                 tmpBackground = new Background();
+                break;
+            case "particle_effect":
+                tmpParticleEffect = new ParticleEffect();
                 break;
             case "information":
                 tmpInformation = new Information();
@@ -170,6 +175,10 @@ public class SAXXMLHandler extends DefaultHandler
         {
             tmpPath.setFromAttributes(attributes);
         }
+        else if (tmpParticleEffect != null)
+        {
+            tmpParticleEffect.setFromAttributes(attributes);
+        }
         else
         {
             //throw new IllegalArgumentException("All objects are null");
@@ -185,6 +194,10 @@ public class SAXXMLHandler extends DefaultHandler
                 fixBackground(tmpBackground);
                 level.backgrounds.add(tmpBackground);
                 tmpBackground = null;
+                break;
+            case "particle_effect":
+                level.particleEffect = (tmpParticleEffect);
+                tmpParticleEffect = null;
                 break;
             case "box":
                 fixBox(tmpBox);

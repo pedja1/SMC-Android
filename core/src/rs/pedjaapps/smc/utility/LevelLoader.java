@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -78,6 +79,7 @@ public class LevelLoader
         {
             jLevel = new JSONObject(Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_EXT).readString());
             parseInfo(jLevel, world.screen.game.assets);
+            parseParticleEffect(jLevel, world.screen.game.assets);
             parseBg(jLevel, world.screen.game.assets);
             parseGameObjects(world, jLevel, world.screen.game.assets);
         }
@@ -87,6 +89,20 @@ public class LevelLoader
             throw new RuntimeException("Unable to load level! " + e.getMessage());
         }
         levelParsed = true;
+    }
+
+    private void parseParticleEffect(JSONObject jLevel, Assets assets)
+    {
+        JSONObject jParticleEffect = jLevel.optJSONObject("particle_effect");
+        if(jParticleEffect != null)
+        {
+            String effect = jParticleEffect.optString("effect");
+            if(!TextUtils.isEmpty(effect))
+            {
+                assets.manager.load(effect, ParticleEffect.class, assets.particleEffectParameter);
+                level.particleEffect = effect;
+            }
+        }
     }
 
     private void parseGameObjects(World world, JSONObject level, Assets assets) throws JSONException

@@ -86,6 +86,13 @@ public class Converter
         //TODO put sounds
         jsonLevel.put("info", info);
 
+        if(level.particleEffect != null)
+        {
+            JSONObject jParticleEffect = new JSONObject();
+            jParticleEffect.put("effect", level.particleEffect.effect);
+            jsonLevel.put("particle_effect", jParticleEffect);
+        }
+
         List<Path> pathList = new ArrayList<>();
         List<MovingPlatform> platforms = new ArrayList<>();
 

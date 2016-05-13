@@ -5,6 +5,7 @@ import java.util.List;
 
 import rs.papltd.smc.smc_level_converter.objects.Background;
 import rs.papltd.smc.smc_level_converter.objects.Information;
+import rs.papltd.smc.smc_level_converter.objects.ParticleEffect;
 import rs.papltd.smc.smc_level_converter.objects.Settings;
 
 /**
@@ -15,6 +16,7 @@ public class Level
     public Settings settings;
     public Information information;
     public List<Background> backgrounds;
+    public ParticleEffect particleEffect;
     //public List<Box> boxes;
     //public List<Enemy> enemies;
     //public List<EnemyStopper> enemyStoppers;

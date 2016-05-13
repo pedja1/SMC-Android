@@ -19,6 +19,7 @@ public class Level
 	public Array<Background> backgrounds;
     public Array<String> music;
 	public String levelName;
+	public String particleEffect;
 
 	public static final String LEVEL_EXT = ".smclvl";
 

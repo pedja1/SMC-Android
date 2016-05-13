@@ -44,6 +44,9 @@
         <property name="posy" value="-260" />
         <property name="direction" value="right" />
     </player>
+    <particle_effect >
+        <property name="effect" value="data/animation/particles/leaf_emitter.p" />
+    </particle_effect>
     <particle_emitter >
         <property name="image" value="animation/particles/leaf_brown.png" />
         <property name="pos_z" value="0.12" />
