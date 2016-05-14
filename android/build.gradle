@@ -23,9 +23,10 @@ android {
     buildToolsVersion '23.0.3'
     compileSdkVersion 23
     defaultConfig {
+        applicationId "rs.pedjaapps.smc.android"
         versionCode 20160517
         versionName "0.7 alpha"
-        minSdkVersion 10
+        minSdkVersion 15
         targetSdkVersion 23
     }
     sourceSets {

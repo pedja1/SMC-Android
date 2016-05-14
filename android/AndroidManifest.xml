@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="rs.pedjaapps.smc.android" 
-	android:versionCode="1"
-	android:versionName="1.0">
-	
-	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="23" />
+    package="rs.pedjaapps.smc.android">
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 		
     <application
