@@ -245,6 +245,7 @@ public abstract class DynamicObject extends GameObject
 
         mColRect.y += velocity.y;
 
+        boolean found = false;
         List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, size = surroundingObjects.size(); i < size; i++)
@@ -274,9 +275,12 @@ public abstract class DynamicObject extends GameObject
                     distance = tmpDistance;
                     tmpGroundY = object.mColRect.y + object.mColRect.height;
                     closestObject = object;
+                    found = true;
                 }
             }
         }
+        if(!found)
+            closestObject = null;
         groundY = tmpGroundY;
         World.RECT_POOL.free(rect);
         if (mColRect.y < 0)

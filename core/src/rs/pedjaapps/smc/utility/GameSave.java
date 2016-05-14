@@ -72,17 +72,23 @@ public class GameSave
             {
                 if(i + 1 < LEVELS.size())
                 {
-                    String nextLevel = LEVELS.get(i + 1);
-                    save.unlockedLevels.add(nextLevel);
-                    save();
-                    return nextLevel;
+					return LEVELS.get(i + 1);
                 }
                 return null;
             }
         }
         return null;
     }
-	
+
+	public static void unlockLevel(String levelName)
+	{
+		if(!save.unlockedLevels.contains(levelName))
+		{
+			save.unlockedLevels.add(levelName);
+			save();
+		}
+	}
+
 	public static class Save
 	{
 		//persistent

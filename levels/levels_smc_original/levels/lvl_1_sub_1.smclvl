@@ -1087,7 +1087,7 @@
 		<Property name="name" value="main" />
 	</level_entry>
 	<levelexit>
-		<Property name="posx" value="253" />
+		<Property name="posx" value="230" />
 		<Property name="posy" value="-689" />
 		<Property name="type" value="1" />
 		<Property name="camera_motion" value="2" />

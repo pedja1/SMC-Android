@@ -23,7 +23,7 @@ android {
     buildToolsVersion '23.0.3'
     compileSdkVersion 23
     defaultConfig {
-        versionCode 20160516
+        versionCode 20160517
         versionName "0.7 alpha"
         minSdkVersion 10
         targetSdkVersion 23

@@ -28,22 +28,21 @@ public class SelectionAdapter
     public static final float CAM_WIDTH = 1280;
     public static float CAM_HEIGHT;
 
-	MainMenuScreen mainMenuScreen;
+	private MainMenuScreen mainMenuScreen;
 
-    OrthographicCamera cam;
-	SpriteBatch batch;
-	ShapeRenderer shapeRenderer;
+    private OrthographicCamera cam;
+	private SpriteBatch batch;
+	private ShapeRenderer shapeRenderer;
 
-	Array<Level> items;
+	private Array<Level> items;
 	int page = 0;
 
-	Texture txNextEnabled, txNextDisabled,
+	private Texture txNextEnabled, txNextDisabled,
 	txPrevEnabled, txPrevDisabled, txLock;
-	TextureRegion txItemBg;
-    BitmapFont font96, font32;
-	GlyphLayout font96Glyph, font32Glyph;
+	private TextureRegion txItemBg;
+    private BitmapFont font96, font32;
+	private GlyphLayout font96Glyph, font32Glyph;
 
-    private float selectionWidth;
 	private float selectionHeight;
     private float cellSize;
 	private float cellPadding = 10;
@@ -51,8 +50,8 @@ public class SelectionAdapter
 	private float selectionY;
 	private float lockSize;
 
-	Rectangle backBounds;
-	boolean backPressed;
+	private Rectangle backBounds;
+	private boolean backPressed;
 
     private Level touchDownLevel;
 
@@ -77,7 +76,7 @@ public class SelectionAdapter
 
 		selectionY = CAM_HEIGHT * 0.1f;
 		selectionHeight = selectionY + CAM_HEIGHT * 0.55f;
-		selectionWidth = selectionHeight * 1.6f;//1.6 is aspect of grid 8x5
+		float selectionWidth = selectionHeight * 1.6f;
 		selectionX = CAM_WIDTH / 2 - selectionWidth / 2;
 
 		cellSize = selectionHeight / 5 - cellPadding / 2;// padding of 5 on every side
@@ -188,24 +187,6 @@ public class SelectionAdapter
 		//batch.setShader(null);
 
 		batch.end();
-
-		//debug
-		if (mainMenuScreen.debug)
-		{
-			shapeRenderer.setProjectionMatrix(cam.combined);
-			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-			shapeRenderer.setColor(0, 1, 0, 1);
-			shapeRenderer.rect(backBounds.x, backBounds.y, backBounds.width, backBounds.height);
-
-			for (Level level : items)
-			{
-				shapeRenderer.rect(level.bounds.x, level.bounds.y, level.bounds.width, level.bounds.height);
-			}
-
-			shapeRenderer.end();
-		}
-		//debug end
 	}
 
 	public void touchUp(float x, float y)

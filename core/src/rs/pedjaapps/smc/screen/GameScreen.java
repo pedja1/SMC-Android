@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
@@ -48,6 +47,8 @@ import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
+
+import static rs.pedjaapps.smc.utility.GameSave.save;
 
 public class GameScreen extends AbstractScreen implements InputProcessor
 {
@@ -133,8 +134,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
-    private String objectDebugText;
-    private PerformanceCounter performanceCounter = new PerformanceCounter("pc");
 
     private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private float levelEndAnimationStateTime;
@@ -184,6 +183,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void show()
     {
+        GameSave.unlockLevel(levelName);
         music = game.assets.manager.get(loader.level.music.first());
         music.setLooping(true);
         MusicManager.play(music);
@@ -284,7 +284,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
-        if (debug) GLProfiler.reset();
         stateTime += delta;
 
         //debug
@@ -308,6 +307,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         sleep(60);
+        if (debug) GLProfiler.reset();
     }
 
     public void endLevel(String nextLevelName)
@@ -357,7 +357,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void handleGameOver(float delta)
     {
-        if (GameSave.save.lifes < 0)
+        if (save.lifes < 0)
         {
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -400,7 +400,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (goAlpha >= 1)
         {
-            if (GameSave.save.lifes < 0)
+            if (save.lifes < 0)
             {
                 game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
             }
@@ -522,7 +522,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             if (gameObject.mDrawRect.contains(point))
             {
-                objectDebugText = gameObject.toString();
+                String objectDebugText = gameObject.toString();
                 float tWidth = width * 0.4f;
                 debugGlyph.setText(debugObjectFont, objectDebugText, Color.BLACK, tWidth, Align.left, true);
                 float height = debugGlyph.height;
@@ -538,6 +538,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         return "Level: width=" + world.level.width + ", height=" + world.level.height
                 + "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
+                + "\n" + "LevelName: " + levelName
                 + "\n" + "Player Vel: x=" + world.maryo.velocity.x + ", y=" + world.maryo.velocity.y
                 + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
                 + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
@@ -610,6 +611,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             globalEffect.dispose();
         }
+        if (debug) GLProfiler.disable();
     }
 
     @Override

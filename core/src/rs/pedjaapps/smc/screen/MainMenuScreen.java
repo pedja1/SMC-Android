@@ -25,7 +25,6 @@ import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -43,7 +42,6 @@ import rs.pedjaapps.smc.view.SettingsDialog;
  */
 public class MainMenuScreen extends AbstractScreen implements InputProcessor
 {
-    private static final String MARIO_TEXTURE_REGION_KEY = GameObject.TKey.stand_right + ":" + Maryo.MaryoState.small;
     private Texture gameLogo;
     private TextureRegion play, musicOn, musicOff, soundOn, soundOff, settings;
     private Rectangle playR, musicR, soundR, settingsR;
@@ -56,7 +54,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
     private BitmapFont debugFont;
     private GlyphLayout debugGlyph;
     private boolean playT = false, musicT = false, soundT = false, settingsT = false;
-	public boolean debug = PrefsManager.isDebug();
     private static final String FPS_STRING = "FPS: ";
     private static final NATypeConverter<Integer> fpsCounter = new NATypeConverter<>();
 
@@ -177,19 +174,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
 			batch.end();
 		}
 
-        if (debug)
-        {
-            batch.setProjectionMatrix(debugCam.combined);
-            batch.begin();
-            debugFont.draw(batch, FPS_STRING, 50f, 670f);
-            debugGlyph.setText(debugFont, FPS_STRING);
-            debugFont.draw(batch, fpsCounter.toString(Gdx.graphics.getFramesPerSecond()), debugGlyph.width + 60f, 670f);
-            batch.end();
-        }
-
         exitDialog.render(batch);
         settingsDialog.render(batch);
-        if (debug)drawDebug();
     }
 
     private void drawObjects(float deltaTime)
@@ -203,34 +189,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
             gameObject._render(batch);
         }
     }
-
-    private void drawDebug()
-    {
-        // render blocks
-        shapeRenderer.setProjectionMatrix(drawCam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for(int i = 0; i < loader.level.gameObjects.size(); i++)
-        //for (GameObject go : world.getVisibleObjects())
-        {
-            GameObject go = loader.level.gameObjects.get(i);
-            Rectangle body = go.mColRect;
-            Rectangle bounds = go.mDrawRect;
-            shapeRenderer.setColor(0, 1, 0, 1);
-            shapeRenderer.rect(body.x, body.y, body.width, body.height);
-            /*if(go instanceof rs.pedjaapps.smc.object.Sprite)
-            {
-                shapeRenderer.setColor(1, 0, 0, 1);
-                shapeRenderer.polygon(((rs.pedjaapps.smc.object.Sprite)go).polygon.getTransformedVertices());
-            }
-            else
-            {*/
-                //shapeRenderer.setColor(1, 0, 0, 1);
-                //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-            /*}*/
-        }
-        shapeRenderer.end();
-    }
-
 
     @Override
     public void resize(int width, int height)
@@ -365,11 +323,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         {
             if(exitDialog.visible)exitDialog.hide();
             else exitDialog.show();
-        }
-        else if(keycode == Input.Keys.D)
-        {
-            debug = !debug;
-            PrefsManager.setDebug(debug);
         }
         return true;
     }

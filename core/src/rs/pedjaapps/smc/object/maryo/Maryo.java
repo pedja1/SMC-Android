@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -888,6 +887,10 @@ public class Maryo extends DynamicObject
                 {
                     debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y - (closestObject.mDrawRect.y + closestObject.mDrawRect.height));
                 }
+                else
+                {
+                    debugRayRect.set(position.x, 0, mColRect.width, position.y);
+                }
 
                 if (closestObject != null
                         && closestObject instanceof Sprite
@@ -989,10 +992,10 @@ public class Maryo extends DynamicObject
             }
             else//another level
             {
-                if (TextUtils.isEmpty(exit.entry))
+                /*if (TextUtils.isEmpty(exit.entry))
                 {
                     throw new GdxRuntimeException("Cannot go to sublevel, entry is null");
-                }
+                }*/
                 nextLevelName = exit.levelName;
                 GameScreen parent = ((GameScreen) world.screen).parent;
 

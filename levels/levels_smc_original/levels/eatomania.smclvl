@@ -2481,7 +2481,7 @@
 		<Property name="posx" value="3413" />
 		<Property name="posy" value="-614" />
 		<Property name="image" value="ground/green_1/hedges/wild_medium.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<sprite>
 		<Property name="posx" value="2661" />
