@@ -240,7 +240,7 @@ public class Turtle extends Enemy
             {
                 ((Enemy)object).downgradeOrDie(this, false);
             }
-            else if(object instanceof Enemy && object != this && !isShell)
+            else if(object instanceof Enemy && object != this && !isShell && !(object instanceof Flyon))
             {
                 turn();
             }

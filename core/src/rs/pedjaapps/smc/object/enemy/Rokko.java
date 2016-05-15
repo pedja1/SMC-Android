@@ -41,11 +41,11 @@ public class Rokko extends Enemy
         {
             flipX = true;
         }
-        else if ("down".equals(direction))
+        else if ("up".equals(direction))
         {
             rotation = 90f;
         }
-        else if ("up".equals(direction))
+        else if ("down".equals(direction))
         {
             rotation = 270f;
         }

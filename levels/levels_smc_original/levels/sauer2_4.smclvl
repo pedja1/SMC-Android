@@ -834,7 +834,7 @@
 	</enemy>
 	<enemy>
 		<Property name="type" value="spikeball" />
-		<Property name="posx" value="4121" />
+		<Property name="posx" value="4271" />
 		<Property name="posy" value="426" />
 		<Property name="color" value="grey" />
 		<Property name="direction" value="right" />
@@ -2647,13 +2647,6 @@
 		<Property name="posx" value="7228" />
 		<Property name="posy" value="404" />
 	</enemystopper>
-	<enemy>
-		<Property name="type" value="turtle" />
-		<Property name="posx" value="3838" />
-		<Property name="posy" value="145" />
-		<Property name="color" value="green" />
-		<Property name="direction" value="right" />
-	</enemy>
 	<sprite>
 		<Property name="posx" value="8227" />
 		<Property name="posy" value="538" />

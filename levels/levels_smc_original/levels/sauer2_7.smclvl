@@ -1165,7 +1165,7 @@
 	</sprite>
 	<enemy>
 		<Property name="type" value="turtle" />
-		<Property name="posx" value="102" />
+		<Property name="posx" value="80" />
 		<Property name="posy" value="-855" />
 		<Property name="color" value="green" />
 		<Property name="direction" value="left" />

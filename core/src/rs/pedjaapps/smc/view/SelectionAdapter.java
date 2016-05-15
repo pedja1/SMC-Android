@@ -59,7 +59,7 @@ public class SelectionAdapter
 	{
 		private Rectangle bounds = new Rectangle();
 		public boolean isUnlocked, isTouched;
-		public String levelId;
+		public String levelId, levelNumber;
 	}
 
 	public SelectionAdapter(Array<Level> items, MainMenuScreen mainMenuScreen)
@@ -158,8 +158,12 @@ public class SelectionAdapter
 			{
 				font32.setColor(.7f, .7f, .7f, 1);
 			}
-			font32Glyph.setText(font32, offset + 1 + "");
-			font32.draw(batch, offset + 1 + "", x + cellSize * .5f - font32Glyph.width * .5f, y + cellSize * .5f + font32Glyph.height * .5f);
+			if(level.levelNumber == null)
+			{
+				level.levelNumber = String.valueOf(offset);
+			}
+			font32Glyph.setText(font32, level.levelNumber);
+			font32.draw(batch, level.levelNumber, x + cellSize * .5f - font32Glyph.width * .5f, y + cellSize * .5f + font32Glyph.height * .5f);
 			font32.setColor(Color.WHITE);
 
 			if (!level.isUnlocked)

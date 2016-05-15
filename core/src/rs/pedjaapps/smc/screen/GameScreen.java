@@ -321,6 +321,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (levelEndAnimationStateTime <= 0)
         {
+            if("game_tutorial".equals(levelName))
+            {
+                GameSave.reset();
+            }
             game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
             mNextLevelName = null;
             game.showAd();
@@ -1117,7 +1121,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         private BitmapFont font;
         NAHudText<Integer> text = new NAHudText<>(null, null);
 
-        public KillPointsTextHandler(BitmapFont font)
+        KillPointsTextHandler(BitmapFont font)
         {
             this.font = font;
             font.getData().setScale(0.015f);
@@ -1160,7 +1164,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             private float positionX, positionY, origPosY;
             private float alpha = 1;
 
-            public KillPoint(int points, float positionX, float positionY)
+            KillPoint(int points, float positionX, float positionY)
             {
                 this.points = points;
                 this.positionX = positionX;
@@ -1182,7 +1186,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 font.draw(spriteBatch, text.toString(points), positionX, positionY);
             }
 
-            public void reset(float posX, float posY, int points)
+            void reset(float posX, float posY, int points)
             {
                 recycled = false;
                 positionX = posX;

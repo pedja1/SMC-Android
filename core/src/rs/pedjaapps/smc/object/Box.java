@@ -121,7 +121,7 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("power", 2));
             frames.add(atlas.findRegion("power", 3));
             frames.add(atlas.findRegion("power", 4));
-            animSpeed = 0.2f;
+            animSpeed = 0.1f;
         }
         if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
         {
@@ -445,6 +445,7 @@ public class Box extends Sprite
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
             assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
+            assets.manager.load("data/sounds/item/moon.mp3", Sound.class);
         }
         else
         {

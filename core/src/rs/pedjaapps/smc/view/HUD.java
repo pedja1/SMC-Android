@@ -39,45 +39,45 @@ import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD
 {
-	World world;
+	private World world;
 	
-	TextureRegion pause, play, fire, jump, up, down, right,
+	private TextureRegion pause, play, fire, jump, up, down, right,
 		left, soundOn, soundOff, musicOn, musicOff, fireP, jumpP, upP,
 		downP, leftP, rightP;
     public Rectangle pauseR, playR, fireR, jumpR, upR, downR, rightR,
 		leftR, soundR, musicR, fireRT, jumpRT;
-	Texture itemBox, maryoL, goldM;
-	Rectangle itemBoxR, maryoLR;
+	private Texture itemBox, maryoL, goldM;
+	private Rectangle itemBoxR, maryoLR;
     public Array<Vector2> leftPolygon = new Array<Vector2>(5);
     public Array<Vector2> rightPolygon = new Array<Vector2>(5);
     public Array<Vector2> upPolygon = new Array<Vector2>(5);
     public Array<Vector2> downPolygon = new Array<Vector2>(5);
 
 	public OrthographicCamera cam;
-	SpriteBatch batch;
+	private SpriteBatch batch;
 
-	ShapeRenderer shapeRenderer = new ShapeRenderer();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	public BitmapFont font, tts, pauseFont;
-	GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
+	private BitmapFont font, tts, pauseFont;
+	private GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
 
-	public static float C_W = Gdx.graphics.getWidth();
-	public static float C_H = Gdx.graphics.getHeight();
+	private static float C_W = Gdx.graphics.getWidth();
+	private static float C_H = Gdx.graphics.getHeight();
 
 	public enum Key
 	{
 		none, pause, fire, jump, left, right, up, down, play, sound, music
 	}
 
-	public HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
+	private HashSet<Key> pressedKeys = new HashSet<>(Key.values().length);
 	
-	float stateTime;
+	private float stateTime;
 	public boolean updateTimer = true;
 	
 	private static final String ttsText = "TOUCH ANYWHERE TO START";
 	private static final String pauseText = "PAUSE";
-	boolean ttsFadeIn;
-	float ttsAlpha = 1;
+	private boolean ttsFadeIn;
+	private float ttsAlpha = 1;
 	private int points;
 	private String pointsText;
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();

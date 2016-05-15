@@ -149,7 +149,7 @@ public class Krush extends Enemy
             if(((object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive
                     && object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
                     || object instanceof EnemyStopper
-                    || (object instanceof Enemy && this != object)))
+                    || (object instanceof Enemy && this != object && !(object instanceof Flyon))))
             {
                 //CollisionManager.resolve_objects(this, object, true);
                 handleCollision(Enemy.ContactType.stopper);

@@ -482,7 +482,7 @@
 	</enemystopper>
 	<enemy>
 		<Property name="type" value="turtle" />
-		<Property name="posx" value="1195" />
+		<Property name="posx" value="1105" />
 		<Property name="posy" value="187" />
 		<Property name="color" value="green" />
 		<Property name="direction" value="right" />

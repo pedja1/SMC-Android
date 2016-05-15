@@ -55,7 +55,7 @@ public class Maryo extends DynamicObject
     private static final float POWER_MAX_JUMP_SPEED = 12f;
     private float mMaxJumpSpeed = MAX_JUMP_SPEED;
 
-    private boolean jumped;
+    public boolean jumped;
 
     private float downPressTime;
 
@@ -1173,13 +1173,13 @@ public class Maryo extends DynamicObject
         else
         {
             SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
-            upgrade(MaryoState.small, false, null, true);
+            upgrade(MaryoState.small, null, true);
         }
     }
 
     /*
     * Level up*/
-    public void upgrade(MaryoState newState, boolean tempUpdate, Item item, boolean downgrade)
+    public void upgrade(MaryoState newState, Item item, boolean downgrade)
     {
         //cant upgrade from ice/fire to big
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
@@ -1289,6 +1289,7 @@ public class Maryo extends DynamicObject
             position.x = diedPosition.x;
             if (mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
             {
+                GameSave.save.playerState = MaryoState.small;
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
                 world.trashObjects.add(Maryo.this);
                 return false;

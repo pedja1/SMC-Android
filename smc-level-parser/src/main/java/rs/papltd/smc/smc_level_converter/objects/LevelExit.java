@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class LevelExit
 {
-    public float posx, posy, width = 10, height = 20;
+    public float posx, posy, width = 20, height = 20;
     public int type, camera_motion;
     public String level_name, entry, direction;
 
@@ -19,7 +19,7 @@ public class LevelExit
         String value = attributes.getValue("value");
         if("posx".equals(name))
         {
-            posx = Float.parseFloat(value);
+            posx = Float.parseFloat(value) - 10;
         }
         else if("posy".equals(name))
         {
