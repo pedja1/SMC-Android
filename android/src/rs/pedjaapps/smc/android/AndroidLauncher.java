@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -31,6 +32,20 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdL
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-6294976772687752/6322846426");
         requestNewInterstitial();
+        mInterstitialAd.setAdListener(new AdListener()
+        {
+            @Override
+            public void onAdClosed()
+            {
+                requestNewInterstitial();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode)
+            {
+                requestNewInterstitial();
+            }
+        });
 
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useAccelerometer = false;
@@ -78,7 +93,6 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdL
                 if(mInterstitialAd.isLoaded())
                 {
                     mInterstitialAd.show();
-                    requestNewInterstitial();
                 }
             }
         });
