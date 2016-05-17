@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.maryo;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -27,7 +29,7 @@ public class Fireball extends DynamicObject
     public static final float VELOCITY_Y = 5f;
     public Direction direction = Direction.right;
     public float velY = -1;
-    ParticleEffect trail, explosion;
+    private ParticleEffect trail, explosion;
     private boolean destroyed;
     private Animation animation;
 
@@ -139,9 +141,11 @@ public class Fireball extends DynamicObject
         {
 
             if(((Enemy) object).mFireResistant != 1)
-                ((Enemy) object).downgradeOrDie(this, false);
+                ((Enemy) object).downgradeOrDie(this, false, false);
             else
             {
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_repelled.mp3");
+                SoundManager.play(sound);
                 //repelled sound
             }
             destroy();
@@ -193,6 +197,8 @@ public class Fireball extends DynamicObject
         explosion.reset();
         explosion.getEmitters().get(0).getAngle().setHighMin(velocity.x > 0 ? 270 : -90);
         explosion.getEmitters().get(0).getAngle().setHighMax(velocity.x > 0 ? 90 : 90);
+        Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_explosion.mp3");
+        SoundManager.play(sound);
     }
 
     public void reset()

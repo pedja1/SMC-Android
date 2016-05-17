@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.Collections;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -87,7 +89,7 @@ public abstract class Enemy extends DynamicObject
     {
         if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
-            downgradeOrDie(maryo, false);
+            downgradeOrDie(maryo, false, false);
             return HIT_RESOLUTION_ENEMY_DIED;
         }
         else
@@ -96,7 +98,7 @@ public abstract class Enemy extends DynamicObject
         }
     }
 
-    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
+    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill, boolean isStarKill)
     {
         if (forceBulletKill || killedBy.isBullet())
         {
@@ -104,6 +106,7 @@ public abstract class Enemy extends DynamicObject
             handleCollision = false;
             position.z = 1;
             Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+            playDeadSound(isStarKill);
         }
         else
         {
@@ -111,6 +114,11 @@ public abstract class Enemy extends DynamicObject
             world.trashObjects.add(this);
         }
         if(mKillPoints > 0)((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+    }
+
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/furball/die.mp3";
     }
 
     private enum CLASS
@@ -154,6 +162,19 @@ public abstract class Enemy extends DynamicObject
     protected Enemy(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
+        world.screen.game.assets.manager.load(getDeadSound(), Sound.class);
+        world.screen.game.assets.manager.load("data/sounds/item/ice_kill.mp3", Sound.class);
+    }
+
+    protected void playDeadSound(boolean starKill)
+    {
+        AssetManager manager = world.screen.game.assets.manager;
+        String soundKey = starKill ? "data/sounds/item/star_kill.mp3" : frozen ? "data/sounds/item/ice_kill.mp3" : getDeadSound();
+        if(manager.isLoaded(soundKey))
+        {
+            Sound sound = manager.get(soundKey);
+            SoundManager.play(sound);
+        }
     }
 
     public static Enemy initEnemy(World world, JSONObject jEnemy) throws JSONException

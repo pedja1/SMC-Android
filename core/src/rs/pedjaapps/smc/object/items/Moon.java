@@ -42,7 +42,7 @@ public class Moon extends Item
     public void updateItem(float delta)
     {
         super.updateItem(delta);
-        if(popFromBox)
+        if (popFromBox)
         {
             // scale velocity to frame units
             velocity.scl(delta);
@@ -55,7 +55,7 @@ public class Moon extends Item
             // un-scale velocity (not in frame time)
             velocity.scl(1 / delta);
 
-            if(position.y >= popTargetPosY)
+            if (position.y >= popTargetPosY)
             {
                 popFromBox = false;
                 isInBox = false;
@@ -76,7 +76,7 @@ public class Moon extends Item
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        if(!visible)return;
+        if (!visible) return;
         TextureRegion frame = animation.getKeyFrame(stateTime, true);
         Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
     }
@@ -84,7 +84,7 @@ public class Moon extends Item
     @Override
     public void hitPlayer()
     {
-        if(isInBox)return;
+        if (isInBox) return;
         playerHit = true;
         world.trashObjects.add(this);
         GameSave.save.lifes += 3;
@@ -92,7 +92,7 @@ public class Moon extends Item
 
         Sound sound = world.screen.game.assets.manager.get("data/sounds/item/moon.mp3");
         SoundManager.play(sound);
-                ((GameScreen) world.screen).killPointsTextHandler.add(4000, position.x, position.y + mDrawRect.height);
+        ((GameScreen) world.screen).killPointsTextHandler.add(4000, position.x, position.y + mDrawRect.height);
     }
 
     @Override

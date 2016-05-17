@@ -1,5 +1,7 @@
 package rs.pedjaapps.smc.object.enemy;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -50,6 +53,8 @@ public class Turtle extends Enemy
             mVelocityShell = 7.1f;
         }
         setupBoundingBox();
+        world.screen.game.assets.manager.load("data/sounds/enemy/turtle/shell/hit.mp3", Sound.class);
+        world.screen.game.assets.manager.load("data/sounds/enemy/turtle/hit.mp3", Sound.class);
     }
 
     @Override
@@ -238,7 +243,7 @@ public class Turtle extends Enemy
 			}
             else if(object instanceof Enemy && object != this && isShell && isShellMoving && ((Enemy)object).handleCollision)
             {
-                ((Enemy)object).downgradeOrDie(this, false);
+                ((Enemy)object).downgradeOrDie(this, false, false);
             }
             else if(object instanceof Enemy && object != this && !isShell && !(object instanceof Flyon))
             {
@@ -314,7 +319,20 @@ public class Turtle extends Enemy
         }
         else
         {
-
+            String soundFile;
+            if(isShell)
+            {
+                soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
+            }
+            else
+            {
+                soundFile = "data/sounds/enemy/turtle/hit.mp3";
+            }
+            AssetManager assetManager = world.screen.game.assets.manager;
+            if(assetManager.isLoaded(soundFile))
+            {
+                SoundManager.play(assetManager.get(soundFile, Sound.class));
+            }
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
@@ -323,5 +341,11 @@ public class Turtle extends Enemy
     protected TextureRegion getDeadTextureRegion()
     {
         return tDead;
+    }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/stomp_4.mp3";
     }
 }

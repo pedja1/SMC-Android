@@ -301,10 +301,10 @@ public class Maryo extends DynamicObject
                 godMode = true;
                 godModeActivatedTime = System.currentTimeMillis();
 
-                if (GameSave.save.item != null)
+                if (GameSave.getItem() != null)
                 {
                     //drop item
-                    Item item = GameSave.save.item;
+                    Item item = GameSave.getItem();
                     OrthographicCamera cam = ((GameScreen) world.screen).cam;
 
                     item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
@@ -315,7 +315,7 @@ public class Maryo extends DynamicObject
                     world.level.gameObjects.add(item);
                     item.drop();
 
-                    GameSave.save.item = null;
+                    GameSave.setItem(world.screen, null);
                 }
             }
             else
@@ -865,7 +865,7 @@ public class Maryo extends DynamicObject
             }
             else
             {
-                if(closestObject instanceof Sprite)
+                if (closestObject instanceof Sprite)
                 {
                     float groundMod = 1.0f;
 
@@ -1052,9 +1052,9 @@ public class Maryo extends DynamicObject
                 {
                     if (worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
                     {
-                        if(((Enemy)object).canBeKilledByStar())
+                        if (((Enemy) object).canBeKilledByStar())
                         {
-                            ((Enemy) object).downgradeOrDie(this, true);
+                            ((Enemy) object).downgradeOrDie(this, true, true);
                             GameSave.save.points += ((Enemy) object).mKillPoints;
                         }
                         else
@@ -1069,7 +1069,7 @@ public class Maryo extends DynamicObject
                 }
                 else if (((Enemy) object).frozen)
                 {
-                    ((Enemy) object).downgradeOrDie(this, true);
+                    ((Enemy) object).downgradeOrDie(this, true, false);
                     GameSave.save.points += ((Enemy) object).mKillPoints;
                 }
                 else if (deadAnyway)
@@ -1185,7 +1185,7 @@ public class Maryo extends DynamicObject
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
-            GameSave.save.item = item;
+            GameSave.setItem(world.screen, item);
             return;
         }
         else if (maryoState == newState)
@@ -1210,10 +1210,6 @@ public class Maryo extends DynamicObject
 
     private Sound upgradeSound(MaryoState newState, boolean downgrade)
     {
-        if (downgrade)
-        {
-            //TODO
-        }
         switch (newState)
         {
             case big:
@@ -1337,12 +1333,26 @@ public class Maryo extends DynamicObject
         switch (maryoState)
         {
             case small:
-                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small.mp3");
+                if (powerJump)
+                {
+                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small_power.mp3");
+                }
+                else
+                {
+                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small.mp3");
+                }
                 break;
             case big:
             case fire:
             case ice:
-                jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
+                if (powerJump)
+                {
+                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big_power.mp3");
+                }
+                else
+                {
+                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
+                }
                 break;
         }
     }
@@ -1379,6 +1389,8 @@ public class Maryo extends DynamicObject
 
     public void enterLevel(LevelEntry entry)
     {
+        Sound sound = world.screen.game.assets.manager.get("data/sounds/enter_pipe.mp3");
+        SoundManager.play(sound);
         ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
         entering = true;
         this.entry = entry;
@@ -1444,6 +1456,8 @@ public class Maryo extends DynamicObject
                 break;
             case LevelExit.LEVEL_EXIT_WARP:
                 if (exiting) return;
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/leave_pipe.mp3");
+                SoundManager.play(sound);
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
                 exiting = true;
                 this.exit = exit;
@@ -1479,6 +1493,7 @@ public class Maryo extends DynamicObject
 
     private void doFire()
     {
+        Sound sound = null;
         if (maryoState == MaryoState.fire)
         {
             addFireball(0f);
@@ -1487,6 +1502,7 @@ public class Maryo extends DynamicObject
                 addFireball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
+            sound = world.screen.game.assets.manager.get("data/sounds/item/fireball.mp3");
         }
         else if (maryoState == MaryoState.ice)
         {
@@ -1496,7 +1512,10 @@ public class Maryo extends DynamicObject
                 addIceball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
+            sound = world.screen.game.assets.manager.get("data/sounds/item/iceball.mp3");
         }
+
+        SoundManager.play(sound);
     }
 
     private void addIceball(float velY)
@@ -1599,6 +1618,7 @@ public class Maryo extends DynamicObject
             setWorldState(GameObject.WorldState.JUMPING);
             keys.add(Keys.JUMP);
 
+            setJumpSound();
             Sound sound = jumpSound;
             SoundManager.play(sound);
         }

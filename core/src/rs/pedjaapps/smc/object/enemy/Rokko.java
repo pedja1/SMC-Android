@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -229,13 +227,18 @@ public class Rokko extends Enemy
             stateTime = 0;
             handleCollision = false;
             dying = true;
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/rokko/hit.mp3");
-            SoundManager.play(sound);
+            playDeadSound(maryo.mInvincibleStar);
             return HIT_RESOLUTION_ENEMY_DIED;
         }
         else
         {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
+    }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/rokko/hit.mp3";
     }
 }

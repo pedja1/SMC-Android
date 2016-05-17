@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.object.enemy;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -201,8 +199,7 @@ public class Krush extends Enemy
                 stateTime = 0;
                 handleCollision = false;
                 dying = true;
-                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
-                SoundManager.play(sound);
+                playDeadSound(maryo.mInvincibleStar);
                 return HIT_RESOLUTION_ENEMY_DIED;
             }
             else
@@ -224,9 +221,15 @@ public class Krush extends Enemy
     }
 
     @Override
-    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill)
+    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill, boolean isStarKill)
     {
         mKillPoints = isSmall ? KP_SMALL : KP_BIG;
-        super.downgradeOrDie(killedBy, forceBulletKill);
+        super.downgradeOrDie(killedBy, forceBulletKill, isStarKill);
+    }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/krush/die.mp3";
     }
 }

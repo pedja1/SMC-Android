@@ -71,6 +71,8 @@ public class Furball extends Enemy
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
         state = STATE_WALKING;
+        world.screen.game.assets.manager.load("data/sounds/enemy/boss/furball/hit_failed.mp3", Sound.class);
+        world.screen.game.assets.manager.load("data/sounds/enemy/boss/furball/hit.mp3", Sound.class);
     }
 
     @Override
@@ -318,9 +320,15 @@ public class Furball extends Enemy
         if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             if (state == STATE_STAYING || state == STATE_RUNNING)
+            {
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/boss/furball/hit_failed.mp3");
+                SoundManager.play(sound);
                 return HIT_RESOLUTION_CUSTOM;
+            }
             if (downgradeCount < maxDowngradeCount)
             {
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/boss/furball/hit.mp3");
+                SoundManager.play(sound);
                 downgradeCount++;
                 state = STATE_STAYING;
                 return HIT_RESOLUTION_CUSTOM;

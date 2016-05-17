@@ -119,7 +119,7 @@ public class Static extends Enemy
         if(object instanceof Enemy && ((Enemy)object).handleCollision)
         {
             GameSave.save.points += ((Enemy)object).mKillPoints;
-            ((Enemy)object).downgradeOrDie(this, true);
+            ((Enemy)object).downgradeOrDie(this, true, false);
         }
         return true;
     }

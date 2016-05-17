@@ -63,7 +63,7 @@ public class PrefsManager
 
 	public static float getSoundVolume()
     {
-        return prefs.getFloat(PrefsKey.sound_volume.toString(), 0.5f);
+        return prefs.getFloat(PrefsKey.sound_volume.toString(), 0.6f);
     }
 
     public static void setSoundVolume(float volume)
@@ -74,7 +74,7 @@ public class PrefsManager
 
 	public static float getMusicVolume()
     {
-        return prefs.getFloat(PrefsKey.music_volume.toString(), 0.5f);
+        return prefs.getFloat(PrefsKey.music_volume.toString(), 0.4f);
     }
 
     public static void setMusicVolume(float volume)

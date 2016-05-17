@@ -1,5 +1,8 @@
 package rs.pedjaapps.smc.utility;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,8 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
+import rs.pedjaapps.smc.screen.AbstractScreen;
 
 public class GameSave
 {
@@ -35,6 +40,8 @@ public class GameSave
 		save.lifes = 3;
 		save.playerState = Maryo.MaryoState.small;
 		save.item = null;
+		save.coins = 0;
+		save.points = 0;
 	}
 
 	public static Save read()
@@ -57,8 +64,8 @@ public class GameSave
 
     public static boolean isUnlocked(String levelName)
     {
-        //return save.unlockedLevels.contains(levelName);
-        return true;
+        return save.unlockedLevels.contains(levelName);
+        //return true;
     }
 
     /**
@@ -89,18 +96,52 @@ public class GameSave
 		}
 	}
 
+	public static void addCoins(AbstractScreen screen, int coins)
+	{
+		save.coins += coins;
+		if(save.coins >= 100)
+		{
+			save.coins -= 100;
+			save.lifes++;
+			AssetManager manager = screen.game.assets.manager;
+			if(manager.isLoaded("data/sounds/item/live_up_2.mp3"))
+			{
+				SoundManager.play(manager.get("data/sounds/item/live_up_2.mp3", Sound.class));
+			}
+		}
+	}
+
+	public static int getCoins()
+	{
+		return save.coins;
+	}
+
+	public static void setItem(AbstractScreen screen, Item item)
+	{
+		save.item = item;
+		if(save.item != null)
+		{
+			Sound sound = screen.game.assets.manager.get("data/sounds/itembox_set.mp3");
+			SoundManager.play(sound);
+		}
+	}
+
+	public static Item getItem()
+	{
+		return save.item;
+	}
+
 	public static class Save
 	{
 		//persistent
 		Set<String> unlockedLevels;
-		public int coins;
+		private int coins;
 		public int points;
 		
 		//in memory only
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
-		public Item item;
-		
+		private Item item;
 		
 		//copy constructor, only persistent objects are copied
 		public Save(Save save)
@@ -132,8 +173,8 @@ public class GameSave
                 String[] unlockedLevels = uLevls.split(",");
                 Collections.addAll(save.unlockedLevels, unlockedLevels);
             }
-			save.points = Utility.parseInt(map.get("points"), 0);
-			save.coins = Utility.parseInt(map.get("coins"), 0);
+			//save.points = Utility.parseInt(map.get("points"), 0);
+			//save.coins = Utility.parseInt(map.get("coins"), 0);
 			return save;
 		}
 
@@ -148,8 +189,8 @@ public class GameSave
             {
                 builder.append(level).append(",");
             }
-			builder.append("\n").append("points=").append(save.points);
-			builder.append("\n").append("coins=").append(save.coins);
+			//builder.append("\n").append("points=").append(save.points);
+			//builder.append("\n").append("coins=").append(save.coins);
 			
 			return Utility.base64Encode(builder.toString());
 		}

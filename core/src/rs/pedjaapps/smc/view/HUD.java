@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -192,6 +193,8 @@ public class HUD
 	
 	public void loadAssets()
 	{
+		world.screen.game.assets.manager.load("data/sounds/item/live_up_2.mp3", Sound.class);
+
 		world.screen.game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
 		world.screen.game.assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
 		world.screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
@@ -328,7 +331,7 @@ public class HUD
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
-            if(GameSave.save.item != null)
+            if(GameSave.getItem() != null)
                 batch.setColor(Color.RED);
 			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
             batch.setColor(Color.WHITE);
@@ -348,7 +351,7 @@ public class HUD
 			float goldX = pointsX + fontGlyphLayout.width + goldHeight;
 			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
 			
-			String coins =  this.coins.toString(GameSave.save.coins);
+			String coins =  this.coins.toString(GameSave.getCoins());
 			font.setColor(1, 1, 1, 1);
 			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
 			
@@ -367,13 +370,13 @@ public class HUD
 			font.draw(batch, lives, lifesX, pointsY);
 
             //draw item if any
-            if(GameSave.save.item != null)
+            if(GameSave.getItem() != null)
             {
                 float w = itemBoxR.width * 0.5f;
                 float h = itemBoxR.height * 0.5f;
                 float x = itemBoxR.x + itemBoxR.width * 0.5f - w * 0.5f;
                 float y = itemBoxR.y + itemBoxR.height * 0.5f - h * 0.5f;
-                batch.draw(GameSave.save.item.texture, x, y, w, h);
+                batch.draw(GameSave.getItem().texture, x, y, w, h);
             }
 
 			batch.end();

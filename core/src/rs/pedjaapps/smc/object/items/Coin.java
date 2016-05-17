@@ -30,7 +30,7 @@ public class Coin extends Item
     /**
      * Coin will move out of the screen when collected
      */
-    boolean scrollOut;
+    private boolean scrollOut;
 
 
     public Coin(World world, Vector2 size, Vector3 position)
@@ -149,14 +149,15 @@ public class Coin extends Item
         Sound sound;
         if (textureAtlas.contains("yellow"))
         {
+            GameSave.addCoins(world.screen, 1);
             sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_1.mp3");
         }
         else
         {
+            GameSave.addCoins(world.screen, 5);
             sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
         }
         SoundManager.play(sound);
-        GameSave.save.coins++;
         GameSave.save.points += points;
 
         collect();
@@ -170,6 +171,14 @@ public class Coin extends Item
         popFromBox = true;
         velocity.y = 4f;
         originalPosY = position.y;
+        if (textureAtlas.contains("yellow"))
+        {
+            GameSave.addCoins(world.screen, 1);
+        }
+        else
+        {
+            GameSave.addCoins(world.screen, 5);
+        }
         GameSave.save.points += points;
     }
 

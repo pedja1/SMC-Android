@@ -1,8 +1,10 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.GameSave;
 
@@ -26,8 +28,8 @@ public class MushroomLive1 extends Mushroom
     {
         playerHit = true;
         GameSave.save.lifes += 1;
-        //Sound sound = Assets.manager.get("data/sounds/item/live_up.ogg");
-        //if(sound != null && Assets.playSounds)sound.play();
+        Sound sound = world.screen.game.assets.manager.get("data/sounds/item/live_up.ogg");
+        SoundManager.play(sound);
         world.trashObjects.add(this);
         GameSave.save.points += mPickPoints;
     }

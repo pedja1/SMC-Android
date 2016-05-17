@@ -62,6 +62,12 @@ public class Eato extends Enemy
     }
 
     @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/eato/die.mp3";
+    }
+
+    @Override
     protected TextureRegion getDeadTextureRegion()
     {
         return animation.getKeyFrames()[0];

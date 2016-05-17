@@ -158,7 +158,7 @@ public class Spika extends Enemy
         super.handleCollision(object, vertical);
         if(object instanceof Enemy && object != this && ((Enemy)object).handleCollision && (velocity.x > 0.5f || velocity.x < 0.5f))
         {
-            ((Enemy)object).downgradeOrDie(this, false);
+            ((Enemy)object).downgradeOrDie(this, false, false);
         }
         return false;
 	}

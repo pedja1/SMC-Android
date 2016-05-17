@@ -280,4 +280,10 @@ public class Flyon extends Enemy
         }
         return maryo.mColRect.overlaps(rect);
     }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/flyon/die.mp3";
+    }
 }

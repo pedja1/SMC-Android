@@ -360,4 +360,10 @@ public class Gee extends Enemy
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/gee/die.mp3";
+    }
 }

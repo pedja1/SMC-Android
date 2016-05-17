@@ -83,6 +83,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         this.gameState = gameState;
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING || gameState == GAME_STATE.NO_UPDATE);
+        if(gameState == GAME_STATE.GAME_OVER)
+        {
+            music = game.assets.manager.get("data/music/game/lost_1.mp3");
+            MusicManager.play(music);
+        }
     }
 
     public GAME_STATE getGameState()
@@ -650,10 +655,22 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/sounds/player/powerdown.mp3", Sound.class);
         game.assets.manager.load("data/sounds/player/run_stop.mp3", Sound.class);
         game.assets.manager.load("data/sounds/wall_hit.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/item/fireball.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/item/iceball.mp3", Sound.class);
 
         game.assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/item/star_kill.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/itembox_set.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/leave_pipe.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/enter_pipe.mp3", Sound.class);
 
         game.assets.manager.load("data/sounds/enemy/furball/die.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/item/fireball_repelled.mp3", Sound.class);
+
+        game.assets.manager.load("data/sounds/item/iceball_explosion.mp3", Sound.class);
+        game.assets.manager.load("data/sounds/item/fireball_explosion.mp3", Sound.class);
+
+        game.assets.manager.load("data/music/game/lost_1.mp3", Music.class);
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
         coinSize.fontParameters.size = 10;

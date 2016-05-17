@@ -260,4 +260,10 @@ public class Thromp extends Enemy
         }
         return maryo.mColRect.overlaps(rect);
     }
+
+    @Override
+    protected String getDeadSound()
+    {
+        return "data/sounds/enemy/thromp/die.mp3";
+    }
 }
