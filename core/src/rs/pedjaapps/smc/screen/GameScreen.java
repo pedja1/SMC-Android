@@ -284,9 +284,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         exitDialog.render(spriteBatch);
 
         //cleanup
-        for (int i = 0, size = world.trashObjects.size; i < size; i++)
+        for (int i = 0; i < world.trashObjects.size; i++)
         {
-            world.level.gameObjects.remove(world.trashObjects.get(i));
+             world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
         stateTime += delta;
@@ -418,6 +418,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
             }
         }
+    }
+
+    public void won()
+    {
+        music = game.assets.manager.get("data/music/game/courseclear.mp3");
+        music.setOnCompletionListener(new Music.OnCompletionListener()
+        {
+            @Override
+            public void onCompletion(Music music)
+            {
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+            }
+        });
+        MusicManager.play(music);
     }
 
     private void drawBackground()
@@ -671,6 +685,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/sounds/item/fireball_explosion.mp3", Sound.class);
 
         game.assets.manager.load("data/music/game/lost_1.mp3", Music.class);
+        game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
 
         /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
         coinSize.fontParameters.size = 10;

@@ -339,6 +339,10 @@ public class Furball extends Enemy
             dying = true;
             Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
             SoundManager.play(sound);
+            if(type == Type.boss)
+            {
+                ((GameScreen)world.screen).won();
+            }
             return HIT_RESOLUTION_ENEMY_DIED;
         }
         else

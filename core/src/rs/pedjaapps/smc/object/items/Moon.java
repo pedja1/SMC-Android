@@ -82,6 +82,13 @@ public class Moon extends Item
     }
 
     @Override
+    protected boolean handleDroppedBelowWorld()
+    {
+        world.trashObjects.add(this);
+        return false;
+    }
+
+    @Override
     public void hitPlayer()
     {
         if (isInBox) return;

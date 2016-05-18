@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,9 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 import rs.pedjaapps.smc.audio.SoundManager;
+import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
+import rs.pedjaapps.smc.screen.GameScreen;
 
 public class GameSave
 {
@@ -129,6 +132,25 @@ public class GameSave
 	public static Item getItem()
 	{
 		return save.item;
+	}
+
+	public static void dropItem(World world)
+	{
+		if(save.item == null)
+			return;
+		//drop item
+		Item item = save.item;
+		OrthographicCamera cam = ((GameScreen) world.screen).cam;
+
+		item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
+		item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
+
+		item.updateBounds();
+
+		world.level.gameObjects.add(item);
+		item.drop();
+
+		save.item = null;
 	}
 
 	public static class Save
