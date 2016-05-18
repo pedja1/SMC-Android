@@ -24,8 +24,8 @@ android {
     compileSdkVersion 23
     defaultConfig {
         applicationId "rs.pedjaapps.smc.android"
-        versionCode 20160518
-        versionName "0.8 alpha"
+        versionCode 20160519
+        versionName "1.0 beta"
         minSdkVersion 15
         targetSdkVersion 23
     }
