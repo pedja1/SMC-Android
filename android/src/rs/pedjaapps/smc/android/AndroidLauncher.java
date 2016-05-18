@@ -7,6 +7,9 @@ import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LevelEndEvent;
+import com.crashlytics.android.answers.LevelStartEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -19,7 +22,7 @@ import rs.pedjaapps.smc.MaryoGame;
 /**
  * Created by pedja on 2/27/14.
  */
-public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdLoader
+public class AndroidLauncher extends AndroidApplication implements MaryoGame.Event
 {
     private InterstitialAd mInterstitialAd;
 
@@ -96,6 +99,21 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.AdL
                 }
             }
         });
+    }
+
+    @Override
+    public void levelStart(String levelName)
+    {
+        Answers.getInstance().logLevelStart(new LevelStartEvent()
+                .putLevelName(levelName));
+    }
+
+    @Override
+    public void levelEnd(String levelName, boolean success)
+    {
+        Answers.getInstance().logLevelEnd(new LevelEndEvent()
+                .putLevelName(levelName)
+                .putSuccess(success));
     }
 
     private void requestNewInterstitial()

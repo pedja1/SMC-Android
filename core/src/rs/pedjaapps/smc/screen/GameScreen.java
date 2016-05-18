@@ -208,6 +208,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             cameraForceSnap = true;
         }
+        game.levelStart(levelName);
     }
 
     private long diff, start = System.currentTimeMillis();
@@ -330,6 +331,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 GameSave.reset();
             }
+            world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
             game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
             mNextLevelName = null;
             game.showAd();
@@ -417,6 +419,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             {
                 game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
             }
+            game.levelEnd(levelName, false);
         }
     }
 

@@ -20,17 +20,17 @@ public class MaryoGame extends Game
 {
 	public Assets assets;
 	private String androidAssetsZipFilePath;
-	private AdLoader adLoader;
+	private Event event;
 
-	public MaryoGame(String androidAssetsZipFilePath, AdLoader adLoader)
+	public MaryoGame(String androidAssetsZipFilePath, Event event)
 	{
 		this.androidAssetsZipFilePath = androidAssetsZipFilePath;
-		this.adLoader = adLoader;
+		this.event = event;
 	}
 
-	public MaryoGame(AdLoader adLoader)
+	public MaryoGame(Event event)
 	{
-		this.adLoader = adLoader;
+		this.event = event;
 	}
 
 	@Override
@@ -90,12 +90,26 @@ public class MaryoGame extends Game
 
 	public void showAd()
 	{
-		if(adLoader != null)
-			adLoader.showInterestitialAd();
+		if(event != null)
+			event.showInterestitialAd();
 	}
 
-	public interface AdLoader
+	public void levelStart(String levelName)
+	{
+		if(event != null)
+			event.levelStart(levelName);
+	}
+
+	public void levelEnd(String levelName, boolean success)
+	{
+		if(event != null)
+			event.levelEnd(levelName, success);
+	}
+
+	public interface Event
 	{
 		void showInterestitialAd();
+		void levelStart(String levelName);
+		void levelEnd(String levelName, boolean success);
 	}
 }

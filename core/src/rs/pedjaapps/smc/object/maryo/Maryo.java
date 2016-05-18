@@ -962,6 +962,7 @@ public class Maryo extends DynamicObject
             }
             else
             {
+                world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
                 world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
             }
         }
@@ -1011,6 +1012,7 @@ public class Maryo extends DynamicObject
                     newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
                     newScreen.entryName = exit.entry;
                 }
+                world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
                 world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
             }
         }
