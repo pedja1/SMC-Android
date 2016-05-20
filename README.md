@@ -7,9 +7,8 @@ This is an Android port of PC platformer game [Secret Maryo Chronicles](https://
 
 No code is used from original game, only graphic/audio assets and levels
 
-This is still a work i progress.
-If you want to test alpha release, you can opt-in here:
-[Secret Maryo Chronicles - Alpha Testing](https://play.google.com/apps/testing/rs.pedjaapps.smc.android)
+Download Here - Android
+[Secret Maryo Chronicles - Google Play](https://play.google.com/store/apps/details?id=rs.pedjaapps.smc.android)
 
 ## SCREENSHOTS
 ![smc screenshot 1](https://raw.githubusercontent.com/pedja1/SMC-Android/master/_market/Screenshot_2015-09-21-18-52-17.jpg)  

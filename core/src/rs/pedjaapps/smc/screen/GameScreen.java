@@ -606,9 +606,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
-        long now = System.currentTimeMillis();
         loader.parseLevel(world);
-        System.out.println(System.currentTimeMillis() - now);
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
