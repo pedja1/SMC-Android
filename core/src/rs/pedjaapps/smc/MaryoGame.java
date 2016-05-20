@@ -7,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -40,7 +39,6 @@ public class MaryoGame extends Game
 		Shader.init();
 		GameSave.init();
 		setScreen(new SplashScreen(this));
-		GA.sendGameStarted();
 	}
 
 	@Override
@@ -63,8 +61,6 @@ public class MaryoGame extends Game
     {
         super.dispose();
         assets.dispose();
-		GA.sendGameEnded();
-		GA.dispose();
 		GameSave.dispose();
 		assets = null;
 		Shader.dispose();

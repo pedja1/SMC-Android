@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
@@ -33,7 +32,6 @@ import java.util.List;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
-import rs.pedjaapps.smc.ga.GA;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -115,12 +113,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private float goAlpha = 0.0f;
     private boolean goTouched = false;
 
-    public void setSize(int w, int h)
-    {
-        this.width = w;
-        this.height = h;
-    }
-
     public boolean isDebug()
     {
         return debug;
@@ -138,7 +130,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public String entryName;
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
-    private float stateTime;
 
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
@@ -146,8 +137,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
-
-    private PerformanceCounter performanceCounter = new PerformanceCounter("performanceCounter");
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -207,34 +196,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.input.setInputProcessor(this);
         if (!resumed)
         {
-            GA.sendLevelStarted(levelName);
+            game.levelStart(levelName);
         }
         if (resumed)
         {
             cameraForceSnap = true;
-        }
-        game.levelStart(levelName);
-    }
-
-    private long diff, start = System.currentTimeMillis();
-
-    public void sleep(int fps)
-    {
-        if (fps > 0)
-        {
-            diff = System.currentTimeMillis() - start;
-            long targetDelay = 1000 / fps;
-            if (diff < targetDelay)
-            {
-                try
-                {
-                    Thread.sleep(targetDelay - diff);
-                }
-                catch (InterruptedException ignore)
-                {
-                }
-            }
-            start = System.currentTimeMillis();
         }
     }
 
@@ -243,9 +209,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        //if(delta > 0.016666667f)
-          //  delta = 0.016666667f;
 
         //physics
         updateObjects(delta);
@@ -278,7 +241,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (gameState == GAME_STATE.GAME_OVER)
         {
-            handleGameOver(delta);
+            handleGameOver();
         }
 
         if (gameState == GAME_STATE.GAME_LEVEL_END)
@@ -294,29 +257,27 @@ public class GameScreen extends AbstractScreen implements InputProcessor
              world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
-        stateTime += delta;
 
         //debug
         if (gameState == GAME_STATE.GAME_EDIT_MODE)
         {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
-                cameraEditModeTranslate.x += 0.1f;
+                cameraEditModeTranslate.x += 0.2f;
             }
             else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             {
-                cameraEditModeTranslate.x -= 0.1f;
+                cameraEditModeTranslate.x -= 0.2f;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP))
             {
-                cameraEditModeTranslate.y += 0.1f;
+                cameraEditModeTranslate.y += 0.2f;
             }
             else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
             {
-                cameraEditModeTranslate.y -= 0.1f;
+                cameraEditModeTranslate.y -= 0.2f;
             }
         }
-        //sleep(60);
         if (debug) GLProfiler.reset();
     }
 
@@ -370,7 +331,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.boxTextPopup.show(box, this);
     }
 
-    private void handleGameOver(float delta)
+    private void handleGameOver()
     {
         if (save.lifes < 0)
         {
@@ -449,7 +410,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
     }
 
-    public void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
+    private void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
     {
         if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting))
             return;
@@ -635,7 +596,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.dispose();
         exitDialog.dispose();
         world.dispose();
-        GA.sendLevelEnded(levelName, stateTime);
         if (globalEffect != null)
         {
             globalEffect.dispose();
@@ -694,11 +654,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         game.assets.manager.load("data/music/game/lost_1.mp3", Music.class);
         game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
-
-        /*FreetypeFontLoader.FreeTypeFontLoaderParameter coinSize = Constants.defaultFontParams;
-        coinSize.fontParameters.size = 10;
-        coinSize.fontParameters.characters = "0123456789";
-        Assets.manager.load("coin.ttf", BitmapFont.class, coinSize);*/
 
         FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         debugFontParams.fontFileName = "data/fonts/MyriadPro-Regular.otf";
@@ -1149,9 +1104,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private class TouchInfo
     {
-        public float touchX = 0;
-        public float touchY = 0;
-        public boolean touched = false;
         HUD.Key clickArea = HUD.Key.none;
     }
 
