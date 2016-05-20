@@ -19,12 +19,13 @@ public class Thromp extends Enemy
 {
     public static final float POSITION_Z = 0.093f;
     public String direction;
-    public float maxDistance;
-    public float speed;
+    private float maxDistance;
+    private float speed;
     private Vector3 mOriginPosition;
     private boolean forward = true, staying = true;
     private float rotation;
     private TextureRegion tDefault, tActive;
+    private Rectangle tmpRect = new Rectangle();
 
     public Thromp(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
     {
@@ -241,24 +242,23 @@ public class Thromp extends Enemy
     {
         Maryo maryo = world.maryo;
         if(maryo == null)return false;
-        Rectangle rect = World.RECT_POOL.obtain();
         if("up".equals(direction))
         {
-            rect.set(mColRect.x, mColRect.y + mColRect.height, mColRect.width, maxDistance + mColRect.height);
+            tmpRect.set(mColRect.x, mColRect.y + mColRect.height, mColRect.width, maxDistance + mColRect.height);
         }
         else if("down".equals(direction))
         {
-            rect.set(mColRect.x, mColRect.y - maxDistance, mColRect.width, maxDistance);
+            tmpRect.set(mColRect.x, mColRect.y - maxDistance, mColRect.width, maxDistance);
         }
         else if("left".equals(direction))
         {
-            rect.set(mColRect.x - maxDistance, mColRect.y, maxDistance, mColRect.height);
+            tmpRect.set(mColRect.x - maxDistance, mColRect.y, maxDistance, mColRect.height);
         }
         else if("right".equals(direction))
         {
-            rect.set(mColRect.x + mColRect.width, mColRect.y, maxDistance, mColRect.height);
+            tmpRect.set(mColRect.x + mColRect.width, mColRect.y, maxDistance, mColRect.height);
         }
-        return maryo.mColRect.overlaps(rect);
+        return maryo.mColRect.overlaps(tmpRect);
     }
 
     @Override

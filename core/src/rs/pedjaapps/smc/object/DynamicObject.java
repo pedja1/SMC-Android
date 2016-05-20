@@ -164,10 +164,6 @@ public abstract class DynamicObject extends GameObject
             }
         }
 
-		/*if(this instanceof Maryo && Math.abs(velocity.x) > 0.09f)
-		{
-			System.out.println("physics warning - vel.x: " + velocity.x + ", delta: " + delta);
-		}*/
         // update position
         position.add(velocity);
         mColRect.x = position.x;
@@ -255,8 +251,7 @@ public abstract class DynamicObject extends GameObject
     {
         boolean collides = false;
         // the same thing but on the vertical Y axis
-        Rectangle rect = World.RECT_POOL.obtain();
-        rect.set(mColRect.x, 0, mColRect.width, mColRect.y);
+        tmpRect.set(mColRect.x, 0, mColRect.width, mColRect.y);
         float tmpGroundY = 0;
         float distance = mColRect.y;
         float oldY = mColRect.y;
@@ -264,7 +259,7 @@ public abstract class DynamicObject extends GameObject
         mColRect.y += velocity.y;
 
         boolean found = false;
-        //List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+
         //noinspection ForLoopReplaceableByForEach
         for (int i = 0, size = tmpObjects.size; i < size; i++)
         //for (GameObject object : surroundingObjects)
@@ -280,7 +275,7 @@ public abstract class DynamicObject extends GameObject
             //checkGround
             if (object instanceof Sprite
                     && (((Sprite) object).type == Sprite.Type.massive || ((Sprite) object).type == Sprite.Type.halfmassive)
-                    && rect.overlaps(object.mColRect))
+                    && tmpRect.overlaps(object.mColRect))
             {
                 if (((Sprite) object).type == Sprite.Type.halfmassive && oldY < object.mColRect.y + object.mColRect.height)
                 {
@@ -299,7 +294,6 @@ public abstract class DynamicObject extends GameObject
         if(!found)
             closestObject = null;
         groundY = tmpGroundY;
-        World.RECT_POOL.free(rect);
         if (mColRect.y < 0)
         {
             boolean tmp = handleDroppedBelowWorld();

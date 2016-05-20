@@ -19,13 +19,14 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Spika extends Enemy
 {
-    public static final float POS_Z = 0.09f;
-    public static final float ACCELERATION = 2;
+    private static final float POS_Z = 0.09f;
+    private static final float ACCELERATION = 2;
 
-    public float mSpeed;
+    private float mSpeed;
     private float mRotation, mDetectionSize;
     private Texture texture;
     private TextureRegion region;
+    private Rectangle tmpRect = new Rectangle();
 
     public Spika(World world, Vector2 size, Vector3 position, String color)
     {
@@ -209,9 +210,8 @@ public class Spika extends Enemy
     {
         Maryo maryo = world.maryo;
         if(maryo == null)return false;
-        Rectangle rect = World.RECT_POOL.obtain();
-        rect.set(mColRect.x - mDetectionSize, mColRect.y, mDetectionSize * 2 + mColRect.width, mColRect.height);
-        return maryo.mColRect.overlaps(rect);
+        tmpRect.set(mColRect.x - mDetectionSize, mColRect.y, mDetectionSize * 2 + mColRect.width, mColRect.height);
+        return maryo.mColRect.overlaps(tmpRect);
     }
 
 }

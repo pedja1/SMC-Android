@@ -37,14 +37,14 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Spikeball extends Enemy
 {
-    public static final float VELOCITY_NORMAL = 0.83f;
-    public static final float VELOCITY_RUNNING = 2f;
-    public static final float POS_Z = 0.09f;
+    private static final float VELOCITY_NORMAL = 0.83f;
+    private static final float VELOCITY_RUNNING = 2f;
+    private static final float POS_Z = 0.09f;
 
 
-    public static final int STATE_STAYING = 0;
-    public static final int STATE_WALKING = 1;
-    public static final int STATE_RUNNING = 2;
+    private static final int STATE_STAYING = 0;
+    private static final int STATE_WALKING = 1;
+    private static final int STATE_RUNNING = 2;
 
     private static final int MAX_STAY_TIME = 2;
     private static final int MAX_WALK_TIME = 8;

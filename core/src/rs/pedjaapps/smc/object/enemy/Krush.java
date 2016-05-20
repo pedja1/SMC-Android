@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -22,15 +21,15 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public class Krush extends Enemy
 {
-    public static final float VELOCITY_SMALL = 2.75f;
-    public static final float VELOCITY_BIG = 1.5f;
-    public static final int KP_SMALL = 20;
-    public static final int KP_BIG = 40;
-    public static final float POS_Z = 0.09f;
+    private static final float VELOCITY_SMALL = 2.75f;
+    private static final float VELOCITY_BIG = 1.5f;
+    private static final int KP_SMALL = 20;
+    private static final int KP_BIG = 40;
+    private static final float POS_Z = 0.09f;
 
     private boolean dying = false;
 
-    public boolean isSmall;
+    private boolean isSmall;
 
     private Animation aBig, aSmall;
     private TextureRegion tDead;
@@ -107,8 +106,8 @@ public class Krush extends Enemy
         if(dying)
         {
             //resize it by state time
-            mDrawRect.height -= Gdx.graphics.getFramesPerSecond() * 0.00035;
-            mDrawRect.width -= Gdx.graphics.getFramesPerSecond() * 0.000175;
+            mDrawRect.height -= 1.26f * deltaTime;
+            mDrawRect.width -= 0.63f * deltaTime;
             if(mDrawRect.height < 0)world.trashObjects.add(this);
             return;
         }

@@ -21,7 +21,7 @@ public class Rokko extends Enemy
 {
     public static final float POSITION_Z = 0.03f;
     public String direction;
-    public float speed;
+    private float speed;
     private boolean staying = true, dying;
     private float rotation;
     private boolean flipX;
@@ -29,6 +29,7 @@ public class Rokko extends Enemy
     private ParticleEffect effect;
     private Texture texture;
     private TextureRegion region;
+    private Rectangle tmpRect = new Rectangle();
 
     public Rokko(World world, Vector2 size, Vector3 position, String direction)
     {
@@ -181,7 +182,6 @@ public class Rokko extends Enemy
     {
         Maryo maryo = world.maryo;
         if (maryo == null) return false;
-        Rectangle rect = World.RECT_POOL.obtain();
         float x = 0, y = 0, w = 0, h = 0;
         if ("up".equals(direction))
         {
@@ -211,8 +211,8 @@ public class Rokko extends Enemy
             w = mMaxDistanceFront;
             h = mMaxDistanceSides;
         }
-        rect.set(x, y, w, h);
-        return maryo.mColRect.overlaps(rect);
+        tmpRect.set(x, y, w, h);
+        return maryo.mColRect.overlaps(tmpRect);
     }
 
     @Override

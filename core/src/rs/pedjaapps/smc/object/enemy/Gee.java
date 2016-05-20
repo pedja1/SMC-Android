@@ -125,7 +125,6 @@ public class Gee extends Enemy
     @Override
     public void render(SpriteBatch spriteBatch)
     {
-
         if(!dying)
         {
             effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);

@@ -20,11 +20,11 @@ import rs.pedjaapps.smc.utility.Utility;
  */
 public abstract class Mushroom extends Item
 {
-    public static final float VELOCITY = 1.5f;
-    public static final float VELOCITY_POP = 1.6f;
+    private static final float VELOCITY = 1.5f;
+    private static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.546875f;
 
-    protected boolean grounded = false;
+    private boolean grounded = false;
     protected int mPickPoints;
 
     public boolean moving;

@@ -69,12 +69,10 @@ public class Turtle extends Enemy
             walkFrames.add(region);
         }
 
-
         walkAnimation = new Animation(0.07f, walkFrames);
         tTurn = atlas.findRegion("turn");
         tShell = atlas.findRegion("shell");
         tDead = atlas.findRegion("walk", 1);
-
     }
 
     @Override
