@@ -59,6 +59,7 @@ public class Eato extends Enemy
         {
             mRotationZ = 180f;
         }
+        ppEnabled = false;
     }
 
     @Override

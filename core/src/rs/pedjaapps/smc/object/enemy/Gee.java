@@ -77,6 +77,7 @@ public class Gee extends Enemy
         }
         world.screen.game.assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
         world.screen.game.assets.manager.load("data/sounds/enemy/gee/die.mp3", Sound.class);
+        ppEnabled = false;
     }
 
     @Override

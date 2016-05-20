@@ -127,6 +127,7 @@ public class Converter
 
         JSONArray objects = new JSONArray();
         int dynCount = 0;
+        int colCount = 0;
         System.out.print(" Object Count: " + level.objects.size());
         for (Object obj : level.objects)
         {
@@ -139,6 +140,7 @@ public class Converter
                 jPlayer.put("obj_class", "player");
                 objects.put(jPlayer);
                 dynCount++;
+                colCount++;
             }
             else if (obj instanceof Sprite)
             {
@@ -170,6 +172,10 @@ public class Converter
                 jSprite.put("obj_class", "sprite");
                 jSprite.put("massive_type", sprite.type);
                 objects.put(jSprite);
+                if("massive".equals(sprite.type) || "halfmassive".equals(sprite.type) || "climbable".equals(sprite.type))
+                {
+                    colCount++;
+                }
             }
             else if (obj instanceof Enemy)
             {
@@ -242,6 +248,7 @@ public class Converter
                     jEnemy.put("col_height", enemy.colRect.height);
                 }*/
                 objects.put(jEnemy);
+                colCount++;
             }
             else if (obj instanceof Box)
             {
@@ -268,6 +275,7 @@ public class Converter
                     jBox.put("col_height", box.colRect.height);
                 }*/
                 objects.put(jBox);
+                colCount++;
             }
             else if (obj instanceof EnemyStopper)
             {
@@ -279,6 +287,7 @@ public class Converter
                 jStopper.put("height", stopper.height);
                 jStopper.put("obj_class", "enemy_stopper");
                 objects.put(jStopper);
+                colCount++;
             }
             else if (obj instanceof Item)
             {
@@ -303,6 +312,7 @@ public class Converter
                     jItem.put("col_height", item.colRect.height);
                 }*/
                 objects.put(jItem);
+                colCount++;
             }
             else if (obj instanceof LevelEntry)
             {
@@ -319,6 +329,7 @@ public class Converter
                 jEntry.put("direction", entry.direction);
                 jEntry.put("obj_class", "level_entry");
                 objects.put(jEntry);
+                colCount++;
             }
             else if (obj instanceof LevelExit)
             {
@@ -337,11 +348,13 @@ public class Converter
                 jExit.put("direction", exit.direction);
                 jExit.put("obj_class", "level_exit");
                 objects.put(jExit);
+                colCount++;
             }
             else if (obj instanceof MovingPlatform)
             {
                 dynCount++;
                 platforms.add((MovingPlatform) obj);
+                colCount++;
             }
             else if (obj instanceof Path)
             {
@@ -349,7 +362,8 @@ public class Converter
             }
             //TODO other objects
         }
-        System.out.println(" Dynamic Objects: " + dynCount);
+        System.out.print(" Dynamic Objects: " + dynCount);
+        System.out.println(" Colidable Objects: " + colCount);
 
         for(MovingPlatform platform : platforms)
         {

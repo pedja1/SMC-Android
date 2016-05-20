@@ -31,6 +31,7 @@ import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
+import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -363,7 +364,7 @@ public class HUD
 			font.draw(batch, time, timeX, pointsY);
 			
 			//lives
-			String lives = this.lives.toString(Math.max(GameSave.save.lifes, 0));
+			String lives = this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0));
 			fontGlyphLayout.setText(font, lives);
 			float lifesX = maryoLR.x - fontGlyphLayout.width;
 			font.setColor(0, 1, 0, 1);

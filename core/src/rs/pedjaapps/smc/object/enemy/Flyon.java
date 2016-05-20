@@ -51,6 +51,7 @@ public class Flyon extends Enemy
         mKillPoints = 100;
         mDrawRect.y = mColRect.y = position.y = position.y - .1f;
         mOriginPosition = new Vector3(position);
+        ppEnabled = false;
     }
 
     @Override

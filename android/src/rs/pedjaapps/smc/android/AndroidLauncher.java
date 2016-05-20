@@ -93,7 +93,7 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
             @Override
             public void run()
             {
-                if(mInterstitialAd.isLoaded())
+                if (mInterstitialAd.isLoaded())
                 {
                     mInterstitialAd.show();
                 }

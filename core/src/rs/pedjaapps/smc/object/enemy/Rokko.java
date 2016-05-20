@@ -55,6 +55,7 @@ public class Rokko extends Enemy
         mFireResistant = 1;
         mIceResistance = 1;
         world.screen.game.assets.manager.load("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+        ppEnabled = false;
     }
 
     @Override

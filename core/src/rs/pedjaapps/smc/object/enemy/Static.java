@@ -30,6 +30,7 @@ public class Static extends Enemy
         mFireResistant = fireResistance;
         mIceResistance = iceResistance;
         position.z = POS_Z;
+        ppEnabled = false;
     }
 
     @Override

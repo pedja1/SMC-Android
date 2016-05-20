@@ -36,6 +36,7 @@ import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.TextUtils;
 
 import static rs.pedjaapps.smc.object.LevelExit.LEVEL_EXIT_BEAM;
@@ -383,7 +384,7 @@ public class Maryo extends DynamicObject
 
             if (glimMode)
             {
-                glimColor.a = Math.max(glimCounter, 0);
+                glimColor.a = MyMathUtils.max(glimCounter, 0);
                 if (glimCounter > GLIM_COLOR_MAX_ALPHA)
                 {
                     glimMode = false;
@@ -392,7 +393,7 @@ public class Maryo extends DynamicObject
             }
             else
             {
-                glimColor.a = Math.max(glimCounter, 0);
+                glimColor.a = MyMathUtils.max(glimCounter, 0);
                 if (glimCounter < GLIM_COLOR_START_ALPHA)
                 {
                     glimMode = true;

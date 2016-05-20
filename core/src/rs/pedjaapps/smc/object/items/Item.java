@@ -57,6 +57,7 @@ public abstract class Item extends DynamicObject
     {
         super(world, size, position);
         position.z = 0.05f;
+        ppEnabled = false;
     }
 
     public static Item createObject(World world, Assets assets, int mushroomType, String objectClassString, Vector2 size, Vector3 position)

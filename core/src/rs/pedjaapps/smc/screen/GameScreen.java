@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.PerformanceCounter;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.TextUtils;
@@ -78,6 +80,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private float width, height;
 
     public String levelName;
+    private Rectangle maryoBWO = new Rectangle();
 
     public void setGameState(GAME_STATE gameState)
     {
@@ -143,6 +146,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
+
+    private PerformanceCounter performanceCounter = new PerformanceCounter("performanceCounter");
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
@@ -239,8 +244,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if(delta > 0.016666667f)
-            delta = 0.016666667f;
+        //if(delta > 0.016666667f)
+          //  delta = 0.016666667f;
 
         //physics
         updateObjects(delta);
@@ -262,7 +267,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         }
 
         spriteBatch.end();
-
 
         spriteBatch.setProjectionMatrix(guiCam.combined);
         spriteBatch.begin();
@@ -312,7 +316,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 cameraEditModeTranslate.y -= 0.1f;
             }
         }
-        sleep(60);
+        //sleep(60);
         if (debug) GLProfiler.reset();
     }
 
@@ -473,8 +477,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         camMax.sub(camMin); //bring to center
 
         //keep camera within borders
-        camX = Math.min(camMax.x, Math.max(camX, camMin.x));
-        camY = Math.min(camMax.y, Math.max(camY, camMin.y));
+        camX = MyMathUtils.min(camMax.x, MyMathUtils.max(camX, camMin.x));
+        camY = MyMathUtils.min(camMax.y, MyMathUtils.max(camY, camMin.y));
 
         cam.position.set(camX, camY, cam.position.z);
         cam.update();
@@ -482,7 +486,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void updateObjects(float delta)
     {
-        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
+        world.createMaryoRectWithOffset(maryoBWO, 8);
         for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
         {
             GameObject go = world.level.gameObjects.get(i);
@@ -494,7 +498,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 }
             }
         }
-        World.RECT_POOL.free(maryoBWO);
     }
 
     private void drawObjects()
@@ -521,7 +524,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         Maryo maryo = world.maryo;
         Rectangle body = maryo.mColRect;
         Rectangle bounds = maryo.mDrawRect;
-        Rectangle maryoBWO = world.createMaryoRectWithOffset(cam, 8);
+        world.createMaryoRectWithOffset(maryoBWO, 8);
         shapeRenderer.setColor(0, 1, 0, 1);
         shapeRenderer.rect(body.x, body.y, body.width, body.height);
         shapeRenderer.setColor(1, 0, 0, 1);
@@ -643,7 +646,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void loadAssets()
     {
+        long now = System.currentTimeMillis();
         loader.parseLevel(world);
+        System.out.println(System.currentTimeMillis() - now);
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);

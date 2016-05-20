@@ -1,8 +1,10 @@
 package rs.pedjaapps.smc.object;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
@@ -25,6 +27,8 @@ public abstract class DynamicObject extends GameObject
 
     protected float groundY;
 
+    protected boolean ppEnabled = true;
+
     public enum Direction
     {
         right, left
@@ -32,6 +36,8 @@ public abstract class DynamicObject extends GameObject
 
     protected float velocityDump = DEF_VEL_DUMP;
     protected GameObject closestObject = null;
+    protected Array<GameObject> tmpObjects = new Array<>();
+    protected Rectangle tmpRect = new Rectangle();
 	
 	public DynamicObject(World world, Vector2 size, Vector3 position)
     {
@@ -96,6 +102,18 @@ public abstract class DynamicObject extends GameObject
     /** Collision checking **/
     protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
     {
+        tmpObjects.clear();
+        List<GameObject> surroundingObjects = world.level.gameObjects;
+        tmpRect.set(mColRect.x - 1, mColRect.y - 1, mColRect.width + 2, mColRect.height + 2);
+        //noinspection ForLoopReplaceableByForEach
+        for(int i = 0, size = surroundingObjects.size(); i < size; i++)
+        {
+            GameObject go = surroundingObjects.get(i);
+            if(tmpRect.overlaps(go.mColRect))
+            {
+                tmpObjects.add(go);
+            }
+        }
         // scale velocity to frame units 
         velocity.scl(delta);
 
@@ -159,13 +177,13 @@ public abstract class DynamicObject extends GameObject
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
 
-        if((checkX || checkY) && Constants.PHYSICS_PP)
+        if((checkX || checkY) && Constants.PHYSICS_PP && ppEnabled)
         {
-            List<GameObject> surroundingObjects = world.level.gameObjects;
+            //List<GameObject> surroundingObjects = world.level.gameObjects;
             //noinspection ForLoopReplaceableByForEach
-            for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+            for (int i = 0, size = tmpObjects.size; i < size; i++)
             {
-                GameObject object = surroundingObjects.get(i);
+                GameObject object = tmpObjects.get(i);
                 if (object != null && mColRect.overlaps(object.mColRect) && object instanceof Sprite
                         && ((Sprite) object).type == Sprite.Type.massive)
                 {
@@ -246,13 +264,12 @@ public abstract class DynamicObject extends GameObject
         mColRect.y += velocity.y;
 
         boolean found = false;
-        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+        //List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+        for (int i = 0, size = tmpObjects.size; i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
+            GameObject object = tmpObjects.get(i);
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, true);
@@ -303,14 +320,13 @@ public abstract class DynamicObject extends GameObject
         // simulate maryos's movement on the X
         mColRect.x += velocity.x;
 
-        List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
+        //List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = surroundingObjects.size(); i < size; i++)
+        for (int i = 0, size = tmpObjects.size; i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = surroundingObjects.get(i);
-            if (object == null) continue;
+            GameObject object = tmpObjects.get(i);
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, false);
