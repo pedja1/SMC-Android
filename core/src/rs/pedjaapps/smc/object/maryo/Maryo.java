@@ -331,7 +331,7 @@ public class Maryo extends DynamicObject
                 setupBoundingBox();
             }
         }
-        else if (fire)
+        else if (fire && (maryoState == MaryoState.fire || maryoState == MaryoState.ice))
         {
             Animation animation = aMap[aIndex(maryoState, AKey._throw)];
             marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
