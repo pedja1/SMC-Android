@@ -184,6 +184,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         GameSave.unlockLevel(levelName);
         music = game.assets.manager.get(loader.level.music.first());
+        if(!resumed)
+            music.setPosition(0);
         music.setLooping(true);
         MusicManager.play(music);
         if (debug) GLProfiler.enable();
