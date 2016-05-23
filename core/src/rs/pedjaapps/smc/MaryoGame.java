@@ -18,14 +18,7 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 public class MaryoGame extends Game
 {
 	public Assets assets;
-	private String androidAssetsZipFilePath;
 	private Event event;
-
-	public MaryoGame(String androidAssetsZipFilePath, Event event)
-	{
-		this.androidAssetsZipFilePath = androidAssetsZipFilePath;
-		this.event = event;
-	}
 
 	public MaryoGame(Event event)
 	{
@@ -35,7 +28,7 @@ public class MaryoGame extends Game
 	@Override
 	public void create()
 	{
-		assets = new Assets(androidAssetsZipFilePath);
+		assets = new Assets();
 		Shader.init();
 		GameSave.init();
 		setScreen(new SplashScreen(this));
@@ -75,7 +68,7 @@ public class MaryoGame extends Game
 	{
 		assets.dispose();
 		assets = null;
-		assets = new Assets(androidAssetsZipFilePath);
+		assets = new Assets();
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 

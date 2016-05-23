@@ -1,7 +1,5 @@
 package rs.pedjaapps.smc.android;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -13,8 +11,6 @@ import com.crashlytics.android.answers.LevelStartEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-
-import java.io.File;
 
 import io.fabric.sdk.android.Fabric;
 import rs.pedjaapps.smc.MaryoGame;
@@ -59,24 +55,8 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
         config.useGLSurfaceView20API18 = true;
         //config.useGL20 = true;
 
-        String dir = "/Android/obb/" + getPackageName();
-        String obbName = "main." + getVersionCode() + "." + getPackageName() + ".obb";
-        String androidZipPath = new File(dir, obbName).getAbsolutePath();
-        MaryoGame game = new MaryoGame(androidZipPath, this);
+        MaryoGame game = new MaryoGame(this);
         initialize(game, config);
-    }
-
-    private int getVersionCode()
-    {
-        try
-        {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            return pInfo.versionCode;
-        }
-        catch (PackageManager.NameNotFoundException e)
-        {
-            throw new IllegalStateException("huston we have a problem");
-        }
     }
 
     @Override

@@ -4,23 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 
-import java.util.zip.ZipFile;
-
 import rs.pedjaapps.smc.utility.PrefsManager;
 
-public class ArchiveFileHandleResolver implements FileHandleResolver
+public class MaryoFileHandleResolver implements FileHandleResolver
 {
     private static final int[] ASSETS_RESOLUTIONS = new int[]{1080, 768, 540};
 
     public static int DEFAULT_TEXTURE_QUALITY = -1;
 
     private int resolution;
-    private final ZipFile archive;
 
-    public ArchiveFileHandleResolver(ZipFile archive)
+    MaryoFileHandleResolver()
     {
-        this.archive = archive;
-
         int prefResolution = PrefsManager.getTextureQuality();
 
         if(prefResolution >= 0 && prefResolution < ASSETS_RESOLUTIONS.length)
@@ -54,13 +49,13 @@ public class ArchiveFileHandleResolver implements FileHandleResolver
     public FileHandle resolve(String fileName)
     {
         fileName = getFileNameForResolution(fileName);
-        return new ArchiveFileHandle(archive, fileName);
+        return Gdx.files.internal(fileName);
     }
 
     private String getFileNameForResolution(String fileName)
     {
         String newFileName = fileName.replaceFirst("data", "data_" + resolution);
-        FileHandle handle = new ArchiveFileHandle(archive, newFileName);
+        FileHandle handle = Gdx.files.internal(newFileName);
         if(handle.exists())
         {
             return newFileName;
