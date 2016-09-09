@@ -5,8 +5,10 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.esotericsoftware.kryonet.Client;
 
 import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.kryo.KryoClassRegistar;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -20,9 +22,16 @@ public class MaryoGame extends Game
 	public Assets assets;
 	private Event event;
 
+	private Client mConnection;
+
 	public MaryoGame(Event event)
 	{
 		this.event = event;
+
+		mConnection = new Client();
+		KryoClassRegistar.registerClasses(mConnection.getKryo());
+		mConnection.start();
+		//mConnection.connect(5000, "localhost", 50591, 50592);
 	}
 
 	@Override

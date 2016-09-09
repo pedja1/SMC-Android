@@ -31,11 +31,14 @@ public class LoadingScreen extends AbstractScreen
     private AbstractScreen screenToLoadAfter;
 	private boolean resume = false;
 
-    public LoadingScreen(AbstractScreen screenToLoadAfter, boolean resume)
+    private boolean connectToServer;
+
+    public LoadingScreen(AbstractScreen screenToLoadAfter, boolean resume, boolean connectToServer)
     {
         super(screenToLoadAfter.game);
         this.screenToLoadAfter = screenToLoadAfter;
 		this.resume = resume;
+        this.connectToServer = connectToServer;
     }
 
     @Override
@@ -52,7 +55,15 @@ public class LoadingScreen extends AbstractScreen
         fontParams.size = (int) camHeight / 20;
         fontParams.magFilter = Texture.TextureFilter.Linear;
         fontParams.minFilter = Texture.TextureFilter.Linear;
-        fontParams.characters = "Loading,pleswt.0123456789";
+        if(connectToServer)
+        {
+            fontParams.characters = "Conectigplasw.";
+            Gdx.graphics.setContinuousRendering(false);
+        }
+        else
+        {
+            fontParams.characters = "Loading,pleswt.0123456789";
+        }
         font = generator.generateFont(fontParams);
         font.setColor(new Color(1, 1, 1, 0.75f));
 
@@ -98,7 +109,14 @@ public class LoadingScreen extends AbstractScreen
         batch.begin();
         bgSprite.draw(batch);
 
-        font.draw(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
+        if(connectToServer)
+        {
+            font.draw(batch, "Connecting, please wait...", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
+        }
+        else
+        {
+            font.draw(batch, "Loading, please wait... " + (int) (percent * 100) + "%", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
+        }
 
         batch.end();
         //async loading is just for show, since loading takes less than a second event for largest levels

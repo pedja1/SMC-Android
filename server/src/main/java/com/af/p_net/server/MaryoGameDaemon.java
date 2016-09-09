@@ -8,13 +8,14 @@ import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 
-import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.FileHandler;
@@ -22,13 +23,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import javax.xml.ws.Response;
-
-import rs.pedjaapps.smc.kryo.Disconnected;
+import rs.pedjaapps.smc.kryo.CancelMatchmaking;
+import rs.pedjaapps.smc.kryo.Data;
+import rs.pedjaapps.smc.kryo.OpponentLeft;
 import rs.pedjaapps.smc.kryo.KryoClassRegistar;
-import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.utility.TextUtils;
+import rs.pedjaapps.smc.kryo.MatchmakingFailed;
+import rs.pedjaapps.smc.kryo.MatchmakingSuccess;
+import rs.pedjaapps.smc.kryo.ServerFull;
+import rs.pedjaapps.smc.utility.RandomString;
 
 
 /**
@@ -38,7 +40,10 @@ import rs.pedjaapps.smc.utility.TextUtils;
  */
 public class MaryoGameDaemon extends Listener implements Daemon
 {
-    private static final Disconnected DISCONNECTED = new Disconnected();
+    private static final OpponentLeft OPPONENT_LEFT = new OpponentLeft();
+    private static final MatchmakingFailed MATCH_MAKING_FAILED = new MatchmakingFailed();
+    private static final MatchmakingSuccess MATCH_MAKING_SUCCESS = new MatchmakingSuccess();
+    private static final ServerFull SERVER_FULL = new ServerFull();
     private final static Logger LOGGER = Logger.getLogger(MaryoGameDaemon.class.getName());
     private Server mKryoServer;
 
@@ -49,13 +54,22 @@ public class MaryoGameDaemon extends Listener implements Daemon
     private BlockingQueue<WorkRequest> mWorkQueue;
     private List<WorkerThread> mWorkers;
 
+    private final ExecutorService executorService;
+
+    private int mMaxAllowedConnections;
+
+    private RandomString mRandomString;
+
     public MaryoGameDaemon()
     {
         rooms = new HashMap<>();
         lobby = new ArrayList<>();
         connectionCount = new AtomicInteger();
         mWorkQueue = new LinkedBlockingQueue<>();
-        mWorkers = new ArrayList<>(ConfigManager.getInstance().getInt("workers_count",  Runtime.getRuntime().availableProcessors()));
+        mWorkers = new ArrayList<>(ConfigManager.getInstance().getInt("workers_count", Runtime.getRuntime().availableProcessors()));
+        executorService = Executors.newCachedThreadPool();
+        mMaxAllowedConnections = ConfigManager.getInstance().getInt("max_allowed_connections", 100);
+        mRandomString = new RandomString(32);
     }
 
     @Override
@@ -70,7 +84,7 @@ public class MaryoGameDaemon extends Listener implements Daemon
         KryoClassRegistar.registerClasses(mKryoServer.getKryo());
         mKryoServer.addListener(this);
 
-        int workersCount = ConfigManager.getInstance().getInt("workers_count",  Runtime.getRuntime().availableProcessors())
+        int workersCount = ConfigManager.getInstance().getInt("workers_count", Runtime.getRuntime().availableProcessors());
         for (int i = 0; i < workersCount; i++)
         {
             WorkerThread worker = new WorkerThread();
@@ -92,9 +106,16 @@ public class MaryoGameDaemon extends Listener implements Daemon
     @Override
     public void connected(Connection connection)
     {
+        if (connectionCount.get() >= mMaxAllowedConnections)
+        {
+            connection.sendTCP(SERVER_FULL);
+            connection.close();
+            return;
+        }
         LOGGER.info("Client connected:" + connection);
         synchronized (lobby)
         {
+            connection.setArbitraryData(new ConnectionData());
             lobby.add(connection);
         }
         connectionCount.incrementAndGet();
@@ -104,7 +125,14 @@ public class MaryoGameDaemon extends Listener implements Daemon
     @Override
     public void received(Connection connection, Object o)
     {
-        mWorkQueue.add(new WorkRequest(connection, WorkRequest.Type.send_position, o));
+        if(o instanceof Data)
+        {
+            mWorkQueue.add(new WorkRequest(connection, WorkRequest.Type.send_position, o));
+        }
+        else if(o instanceof CancelMatchmaking)
+        {
+            getConnectionData(connection).inMatchmaking = false;
+        }
     }
 
     @Override
@@ -127,6 +155,7 @@ public class MaryoGameDaemon extends Listener implements Daemon
             worker.quit();
         }
         mWorkers.clear();
+        executorService.shutdown();
     }
 
     @Override
@@ -182,20 +211,20 @@ public class MaryoGameDaemon extends Listener implements Daemon
                                 Room room = rooms.get(id);
                                 Connection player1 = room.player1;
                                 Connection player2 = room.player2;
-                                if(player1 != workRequest.connection && player2 != workRequest.connection)
+                                if (player1 != workRequest.connection && player2 != workRequest.connection)
                                     continue;
 
                                 synchronized (lobby)
                                 {
-                                    if(player1 == workRequest.connection)
+                                    if (player1 == workRequest.connection)
                                     {
                                         lobby.add(player2);
-                                        player2.sendTCP(DISCONNECTED);
+                                        player2.sendTCP(OPPONENT_LEFT);
                                     }
                                     else
                                     {
                                         lobby.add(player1);
-                                        player1.sendTCP(DISCONNECTED);
+                                        player1.sendTCP(OPPONENT_LEFT);
                                     }
                                 }
                                 break;
@@ -206,14 +235,14 @@ public class MaryoGameDaemon extends Listener implements Daemon
                     case send_position:
                     {
                         //noinspection SuspiciousMethodCalls
-                        Room room = rooms.get(workRequest.connection.getArbitraryData());
-                        if(room == null || room.player1 == null || room.player2 == null)
+                        Room room = rooms.get(getConnectionData(workRequest.connection).roomId);
+                        if (room == null || room.player1 == null || room.player2 == null)
                         {
-                            workRequest.connection.sendTCP(DISCONNECTED);
+                            workRequest.connection.sendTCP(OPPONENT_LEFT);
                         }
                         else
                         {
-                            if(room.player1 == workRequest.connection)
+                            if (room.player1 == workRequest.connection)
                             {
                                 room.player2.sendUDP(workRequest.o);
                             }
@@ -226,10 +255,91 @@ public class MaryoGameDaemon extends Listener implements Daemon
                     }
                     case find_match:
                     {
-                        while (lobby.isEmpty())
+                        if(getConnectionData(workRequest.connection).inMatchmaking)
+                            break;
+                        Runnable runnable = new Runnable()
                         {
-                            Thread.sleep(3000);
-                        }
+                            @Override
+                            public void run()
+                            {
+                                while (lobby.size() <= 1)//we are also in the
+                                {
+                                    if(!workRequest.connection.isConnected() || !getConnectionData(workRequest.connection).inMatchmaking)
+                                    {
+                                        return;
+                                    }
+                                    try
+                                    {
+                                        Thread.sleep(3000);
+                                    }
+                                    catch (InterruptedException e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if(!workRequest.connection.isConnected() || !getConnectionData(workRequest.connection).inMatchmaking)
+                                {
+                                    return;
+                                }
+                                Connection player2 = null;
+                                synchronized (lobby)
+                                {
+                                    //if somehow we are still empty, just quit matchmaking
+                                    if (lobby.size() <= 1)
+                                    {
+                                        workRequest.connection.sendTCP(MATCH_MAKING_FAILED);
+                                    }
+                                    else
+                                    {
+                                        for (Connection connection : lobby)
+                                        {
+                                            if (connection != workRequest.connection)
+                                            {
+                                                player2 = connection;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (player2 == null)
+                                {
+                                    workRequest.connection.sendTCP(MATCH_MAKING_FAILED);
+                                }
+                                else
+                                {
+                                    Room selectedRoom = null;
+                                    synchronized (rooms)
+                                    {
+                                        for (Room room : rooms.values())
+                                        {
+                                            if (room.isAvailable())
+                                            {
+                                                selectedRoom = room;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (selectedRoom == null)
+                                    {
+                                        String id = mRandomString.nextString();
+                                        selectedRoom = new Room(id, workRequest.connection, player2);
+                                        synchronized (rooms)
+                                        {
+                                            rooms.put(id, selectedRoom);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        selectedRoom.setPlayer1(workRequest.connection);
+                                        selectedRoom.setPlayer2(player2);
+                                    }
+                                    selectedRoom.player1.sendTCP(MATCH_MAKING_SUCCESS);
+                                    selectedRoom.player2.sendTCP(MATCH_MAKING_SUCCESS);
+                                }
+                            }
+                        };
+                        executorService.execute(runnable);
                         break;
                     }
                 }
@@ -242,6 +352,11 @@ public class MaryoGameDaemon extends Listener implements Daemon
             mQuit = false;
             interrupt();
         }
+    }
+
+    private ConnectionData getConnectionData(Connection connection)
+    {
+        return (ConnectionData) connection.getArbitraryData();
     }
 
     private static class WorkRequest
@@ -273,7 +388,7 @@ public class MaryoGameDaemon extends Listener implements Daemon
     private static class Room
     {
         final String id;
-        Connection player1, player2;
+        private Connection player1, player2;
 
         Room(String id, Connection player1, Connection player2)
         {
@@ -283,5 +398,38 @@ public class MaryoGameDaemon extends Listener implements Daemon
             player1.setArbitraryData(id);
             player2.setArbitraryData(id);
         }
+
+        public Connection getPlayer1()
+        {
+            return player1;
+        }
+
+        public void setPlayer1(Connection player1)
+        {
+            this.player1 = player1;
+            player1.setArbitraryData(id);
+        }
+
+        public Connection getPlayer2()
+        {
+            return player2;
+        }
+
+        public void setPlayer2(Connection player2)
+        {
+            this.player2 = player2;
+            player2.setArbitraryData(id);
+        }
+
+        boolean isAvailable()
+        {
+            return player1 == null && player2 == null;
+        }
+    }
+
+    private static class ConnectionData
+    {
+        String roomId;
+        boolean inMatchmaking;
     }
 }

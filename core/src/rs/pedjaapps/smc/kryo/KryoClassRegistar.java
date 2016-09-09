@@ -17,6 +17,10 @@ public class KryoClassRegistar
         kryo.register(GameObject.WorldState.class);
         kryo.register(Maryo.MaryoState.class);
         kryo.register(Data.class);
-        kryo.register(Disconnected.class);
+        kryo.register(OpponentLeft.class);
+        kryo.register(CancelMatchmaking.class);
+        kryo.register(MatchmakingSuccess.class);
+        kryo.register(MatchmakingFailed.class);
+        kryo.register(ServerFull.class);
     }
 }
