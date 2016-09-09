@@ -11,4 +11,5 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     compile "org.json:json:20090211"
     //compile "com.brsanthu:google-analytics-java:1.1.2"
+    compile 'com.skynetsoftware:kryonet:3.0.0'
 }
