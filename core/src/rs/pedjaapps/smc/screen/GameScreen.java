@@ -256,6 +256,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     if (player2 != null)
                     {
                         Data data = (Data) object;
+                        Maryo.MaryoState oldMaryoState = player2.getMarioState();
                         player2.setMarioState(data.maryoState);
                         player2.setWorldState(data.worldState);
                         player2.position.set(data.posX, data.posY, player2.position.z);
@@ -263,6 +264,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                         player2.mColRect.x = player2.position.x;
                         player2.mColRect.y = player2.position.y;
                         player2.updateBounds();
+                        if(oldMaryoState != player2.getMarioState())
+                        {
+                            player2.setupBoundingBox();
+                        }
                         //System.out.println("player: " + player2.position.x);
                         //System.out.println("from server: " + data.posX);
                     }
@@ -780,6 +785,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         mpMatchmakingView.loadAssets();
 
+        FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        ttsTextParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
+        ttsTextParams.fontParameters.size = 12;
+        ttsTextParams.fontParameters.characters = "Player12";
+        world.screen.game.assets.manager.load("maryo_player_name.ttf", BitmapFont.class, ttsTextParams);
     }
 
     @Override
