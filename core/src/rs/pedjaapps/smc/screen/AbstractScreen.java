@@ -33,7 +33,7 @@ public abstract class AbstractScreen implements Screen
 
     public void exitToMenu()
     {
-        game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+        game.setScreen(new LoadingScreen(new MainMenuScreen(game), false, false));
     }
 
     public void quit()

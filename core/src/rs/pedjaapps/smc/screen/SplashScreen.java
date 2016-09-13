@@ -92,7 +92,7 @@ public class SplashScreen implements Screen
         }
         else
         {
-            marioGame.setScreen(new LoadingScreen(new MainMenuScreen(marioGame), false));
+            marioGame.setScreen(new LoadingScreen(new MainMenuScreen(marioGame), false, true));
         }
 
         batch.end();

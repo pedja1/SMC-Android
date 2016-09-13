@@ -22,5 +22,6 @@ public class KryoClassRegistar
         kryo.register(MatchmakingSuccess.class);
         kryo.register(MatchmakingFailed.class);
         kryo.register(ServerFull.class);
+        kryo.register(FindOpponent.class);
     }
 }

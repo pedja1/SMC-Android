@@ -1,0 +1,146 @@
+
+spinner.png
+size: 256,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+apngframe01
+  rotate: false
+  xy: 1, 397
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe02
+  rotate: false
+  xy: 1, 331
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe03
+  rotate: false
+  xy: 65, 397
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe04
+  rotate: false
+  xy: 1, 265
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe05
+  rotate: false
+  xy: 65, 331
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe06
+  rotate: false
+  xy: 129, 397
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe07
+  rotate: false
+  xy: 193, 397
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe08
+  rotate: false
+  xy: 1, 199
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe09
+  rotate: false
+  xy: 65, 265
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe10
+  rotate: false
+  xy: 129, 331
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe11
+  rotate: false
+  xy: 193, 331
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe12
+  rotate: false
+  xy: 1, 133
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe13
+  rotate: false
+  xy: 65, 199
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe14
+  rotate: false
+  xy: 129, 265
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe15
+  rotate: false
+  xy: 193, 265
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe16
+  rotate: false
+  xy: 1, 67
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe17
+  rotate: false
+  xy: 65, 133
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe18
+  rotate: false
+  xy: 129, 199
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe19
+  rotate: false
+  xy: 193, 199
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1
+apngframe20
+  rotate: false
+  xy: 1, 1
+  size: 62, 64
+  orig: 62, 64
+  offset: 0, 0
+  index: -1

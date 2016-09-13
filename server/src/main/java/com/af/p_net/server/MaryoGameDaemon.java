@@ -25,6 +25,7 @@ import java.util.logging.SimpleFormatter;
 
 import rs.pedjaapps.smc.kryo.CancelMatchmaking;
 import rs.pedjaapps.smc.kryo.Data;
+import rs.pedjaapps.smc.kryo.FindOpponent;
 import rs.pedjaapps.smc.kryo.OpponentLeft;
 import rs.pedjaapps.smc.kryo.KryoClassRegistar;
 import rs.pedjaapps.smc.kryo.MatchmakingFailed;
@@ -132,6 +133,10 @@ public class MaryoGameDaemon extends Listener implements Daemon
         else if(o instanceof CancelMatchmaking)
         {
             getConnectionData(connection).inMatchmaking = false;
+        }
+        else if(o instanceof FindOpponent)
+        {
+            mWorkQueue.add(new WorkRequest(connection, WorkRequest.Type.find_match, o));
         }
     }
 
@@ -257,12 +262,13 @@ public class MaryoGameDaemon extends Listener implements Daemon
                     {
                         if(getConnectionData(workRequest.connection).inMatchmaking)
                             break;
+                        getConnectionData(workRequest.connection).inMatchmaking = true;
                         Runnable runnable = new Runnable()
                         {
                             @Override
                             public void run()
                             {
-                                while (lobby.size() <= 1)//we are also in the
+                                while (findMatchingConnection(workRequest.connection) == null)//we are also in the
                                 {
                                     if(!workRequest.connection.isConnected() || !getConnectionData(workRequest.connection).inMatchmaking)
                                     {
@@ -281,24 +287,13 @@ public class MaryoGameDaemon extends Listener implements Daemon
                                 {
                                     return;
                                 }
-                                Connection player2 = null;
+                                Connection player2;
                                 synchronized (lobby)
                                 {
                                     //if somehow we are still empty, just quit matchmaking
-                                    if (lobby.size() <= 1)
+                                    if ((player2 = findMatchingConnection(workRequest.connection)) == null)
                                     {
                                         workRequest.connection.sendTCP(MATCH_MAKING_FAILED);
-                                    }
-                                    else
-                                    {
-                                        for (Connection connection : lobby)
-                                        {
-                                            if (connection != workRequest.connection)
-                                            {
-                                                player2 = connection;
-                                                break;
-                                            }
-                                        }
                                     }
                                 }
                                 if (player2 == null)
@@ -336,7 +331,26 @@ public class MaryoGameDaemon extends Listener implements Daemon
                                     }
                                     selectedRoom.player1.sendTCP(MATCH_MAKING_SUCCESS);
                                     selectedRoom.player2.sendTCP(MATCH_MAKING_SUCCESS);
+                                    getConnectionData(selectedRoom.player1).inMatchmaking = false;
+                                    getConnectionData(selectedRoom.player2).inMatchmaking = false;
                                 }
+                            }
+
+                            private Connection findMatchingConnection(Connection connection)
+                            {
+                                Connection player2 = null;
+                                synchronized (lobby)
+                                {
+                                    for(Connection con : lobby)
+                                    {
+                                        if(con != connection && getConnectionData(con).inMatchmaking)
+                                        {
+                                            player2 = con;
+                                            break;
+                                        }
+                                    }
+                                }
+                                return player2;
                             }
                         };
                         executorService.execute(runnable);
@@ -395,8 +409,8 @@ public class MaryoGameDaemon extends Listener implements Daemon
             this.id = id;
             this.player1 = player1;
             this.player2 = player2;
-            player1.setArbitraryData(id);
-            player2.setArbitraryData(id);
+            ((ConnectionData)player1.getArbitraryData()).roomId = id;
+            ((ConnectionData)player2.getArbitraryData()).roomId = id;
         }
 
         public Connection getPlayer1()
@@ -407,7 +421,7 @@ public class MaryoGameDaemon extends Listener implements Daemon
         public void setPlayer1(Connection player1)
         {
             this.player1 = player1;
-            player1.setArbitraryData(id);
+            ((ConnectionData)player1.getArbitraryData()).roomId = id;
         }
 
         public Connection getPlayer2()
@@ -418,7 +432,7 @@ public class MaryoGameDaemon extends Listener implements Daemon
         public void setPlayer2(Connection player2)
         {
             this.player2 = player2;
-            player2.setArbitraryData(id);
+            ((ConnectionData)player2.getArbitraryData()).roomId = id;
         }
 
         boolean isAvailable()

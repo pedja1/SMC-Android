@@ -207,7 +207,7 @@ public class SelectionAdapter
 		}
         if(touchDownLevel != null && touchDownLevel.bounds.contains(x, y))
         {
-            mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true, touchDownLevel.levelId), false));
+            mainMenuScreen.game.setScreen(new LoadingScreen(new GameScreen(mainMenuScreen.game, true, touchDownLevel.levelId), false, false));
             touchDownLevel.isTouched = false;
             touchDownLevel = null;
         }

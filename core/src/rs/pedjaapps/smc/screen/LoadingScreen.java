@@ -11,9 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.Align;
+import com.esotericsoftware.kryonet.Connection;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.PrefsManager;
+import rs.pedjaapps.smc.view.ConfirmDialog;
 
 /**
  * @author Mats Svensson
@@ -29,16 +32,43 @@ public class LoadingScreen extends AbstractScreen
     private Sprite bgSprite;
 
     private AbstractScreen screenToLoadAfter;
-	private boolean resume = false;
+    private boolean resume = false;
 
     private boolean connectToServer;
+
+    private boolean connected, connectionFailed;
+
+    private ConfirmDialog confirmDialog;
+
+    MaryoGame.ConnectionListener mConnectionListener;
+
+    OrthographicCamera dialogCam;
 
     public LoadingScreen(AbstractScreen screenToLoadAfter, boolean resume, boolean connectToServer)
     {
         super(screenToLoadAfter.game);
         this.screenToLoadAfter = screenToLoadAfter;
-		this.resume = resume;
+        this.resume = resume;
         this.connectToServer = connectToServer;
+        if (connectToServer)
+        {
+            mConnectionListener = new MaryoGame.ConnectionListener()
+            {
+                @Override
+                public void connected(Connection connection)
+                {
+                    connected = true;
+                }
+
+                @Override
+                public void connectionFailed()
+                {
+                    connectionFailed = true;
+                }
+            };
+            game.addConnectionListener(mConnectionListener);
+            game.connectToServer();
+        }
     }
 
     @Override
@@ -47,18 +77,21 @@ public class LoadingScreen extends AbstractScreen
         int width = Gdx.graphics.getWidth();
         int height = Gdx.graphics.getHeight();
         float camWidth = 800;
-        float camHeight = height/(width/camWidth);
+        float camHeight = height / (width / camWidth);
         cam = new OrthographicCamera(camWidth, camHeight);
+
+        dialogCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        dialogCam.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+        dialogCam.update();
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(game.assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParams.size = (int) camHeight / 20;
         fontParams.magFilter = Texture.TextureFilter.Linear;
         fontParams.minFilter = Texture.TextureFilter.Linear;
-        if(connectToServer)
+        if (connectToServer)
         {
             fontParams.characters = "Conectigplasw.";
-            Gdx.graphics.setContinuousRendering(false);
         }
         else
         {
@@ -75,9 +108,12 @@ public class LoadingScreen extends AbstractScreen
 
         bgSprite = new Sprite(bgTexture);
         bgSprite.setSize(camWidth, bgSprite.getHeight() / (bgSprite.getWidth() / camWidth));
-        bgSprite.setOrigin(bgSprite.getWidth()/2, bgSprite.getHeight()/2);
-        bgSprite.setPosition(-bgSprite.getWidth()/2, -camHeight/2);
+        bgSprite.setOrigin(bgSprite.getWidth() / 2, bgSprite.getHeight() / 2);
+        bgSprite.setPosition(-bgSprite.getWidth() / 2, -camHeight / 2);
         screenToLoadAfter.loadAssets();
+
+        confirmDialog = new ConfirmDialog(this, dialogCam);
+        loadAssets();//confirm dialog
     }
 
     @Override
@@ -92,16 +128,26 @@ public class LoadingScreen extends AbstractScreen
         // Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (game.assets.manager.update())
+        if (!confirmDialog.visible && game.assets.manager.update() && (!connectToServer || ((connected || connectionFailed))))
         {
-            // Load some, will return true if done loading
-            /*if(!resume)*/screenToLoadAfter.onAssetsLoaded();
-            if(screenToLoadAfter instanceof GameScreen)
+            onAssetsLoaded();//for confirm dialog
+            if (connectionFailed)
             {
-                ((GameScreen)screenToLoadAfter).resumed = resume;
+                confirmDialog.show();
             }
-            game.setScreen(screenToLoadAfter);
+            else
+            {
+                // Load some, will return true if done loading
+            /*if(!resume)*/
+                screenToLoadAfter.onAssetsLoaded();
+                if (screenToLoadAfter instanceof GameScreen)
+                {
+                    ((GameScreen) screenToLoadAfter).resumed = resume;
+                }
+                game.setScreen(screenToLoadAfter);
+            }
         }
+
         // Interpolate the percentage to make it more smooth
         percent = Interpolation.linear.apply(percent, game.assets.manager.getProgress(), 0.1f);
 
@@ -109,7 +155,7 @@ public class LoadingScreen extends AbstractScreen
         batch.begin();
         bgSprite.draw(batch);
 
-        if(connectToServer)
+        if (connectToServer)
         {
             font.draw(batch, "Connecting, please wait...", -cam.viewportWidth / 2 + (0.07f * cam.viewportWidth), -cam.viewportHeight / 2 + (0.08f * cam.viewportHeight), 0, Align.left, true);
         }
@@ -119,9 +165,13 @@ public class LoadingScreen extends AbstractScreen
         }
 
         batch.end();
+
+        batch.setProjectionMatrix(dialogCam.combined);
+        confirmDialog.render(batch);
+
         //async loading is just for show, since loading takes less than a second event for largest levels
         //if debug mode just load it all at once
-        if(PrefsManager.isDebug())
+        if (PrefsManager.isDebug())
             game.assets.manager.finishLoading();
     }
 
@@ -136,13 +186,13 @@ public class LoadingScreen extends AbstractScreen
     @Override
     public void loadAssets()
     {
-        //do nothing
+        confirmDialog.loadAssets();
     }
 
     @Override
     public void onAssetsLoaded()
     {
-        //do nothing
+        confirmDialog.initAssets();
     }
 
     @Override
@@ -153,5 +203,6 @@ public class LoadingScreen extends AbstractScreen
         bgSprite.getTexture().dispose();
         //empty.getTexture().dispose();
         //full.getTexture().dispose();
+        if(mConnectionListener != null)game.removeConnectionListener(mConnectionListener);
     }
 }

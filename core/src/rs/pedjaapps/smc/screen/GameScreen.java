@@ -24,6 +24,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.esotericsoftware.kryonet.Connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,8 @@ import java.util.List;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
+import rs.pedjaapps.smc.kryo.Data;
+import rs.pedjaapps.smc.kryo.MatchmakingSuccess;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -47,6 +50,7 @@ import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
+import rs.pedjaapps.smc.view.MPMatchmakingView;
 
 import static rs.pedjaapps.smc.utility.GameSave.save;
 
@@ -84,7 +88,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         this.gameState = gameState;
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING || gameState == GAME_STATE.NO_UPDATE);
-        if(gameState == GAME_STATE.GAME_OVER)
+        if (gameState == GAME_STATE.GAME_OVER)
         {
             music = game.assets.manager.get("data/music/game/lost_1.mp3");
             MusicManager.play(music);
@@ -138,12 +142,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
 
+    private MPMatchmakingView mpMatchmakingView;
+
+    private MaryoGame.ConnectionListener mConnectionListener;
+
+    private Maryo player2;
+
+    private boolean mSendLocationThreadRunning = false;
+
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
     {
         this(game, fromMenu, levelName, null);
     }
 
-    public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent)
+    public GameScreen(final MaryoGame game, boolean fromMenu, String levelName, GameScreen parent)
     {
         super(game);
         this.parent = parent;
@@ -177,6 +189,89 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         if (fromMenu) GameSave.startLevelFresh();
 
         exitDialog = new ConfirmDialog(this, guiCam);
+
+        mpMatchmakingView = new MPMatchmakingView(this);
+
+        mConnectionListener = new MaryoGame.ConnectionListener()
+        {
+            @Override
+            public void connectionFailed()
+            {
+                System.out.println("connection_failed");
+            }
+
+            @Override
+            public void disconnected(Connection connection)
+            {
+                System.out.println("disconnected");
+            }
+
+            @Override
+            public void connected(Connection connection)
+            {
+                System.out.println("connected");
+            }
+
+            @Override
+            public void received(Connection connection, Object object)
+            {
+                if (object instanceof MatchmakingSuccess)
+                {
+                    System.out.println("success");
+                    Gdx.app.postRunnable(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            mpMatchmakingView.hide();
+                            setGameState(GAME_STATE.GAME_RUNNING);
+                        }
+                    });
+                    mSendLocationThreadRunning = true;
+                    Thread thread = new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            while (mSendLocationThreadRunning)
+                            {
+                                try
+                                {
+                                    Thread.sleep(60);
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                if (world.maryo == null)
+                                    continue;
+                                game.sendLocation(world.maryo);
+                            }
+                        }
+                    });
+                    thread.start();
+                }
+                else if (object instanceof Data)
+                {
+                    if (player2 != null)
+                    {
+                        Data data = (Data) object;
+                        player2.setMarioState(data.maryoState);
+                        player2.setWorldState(data.worldState);
+                        player2.position.set(data.posX, data.posY, player2.position.z);
+                        player2.facingLeft = data.facingLeft;
+                        player2.mColRect.x = player2.position.x;
+                        player2.mColRect.y = player2.position.y;
+                        player2.updateBounds();
+                        //System.out.println("player: " + player2.position.x);
+                        //System.out.println("from server: " + data.posX);
+                    }
+                }
+            }
+        };
+        game.addConnectionListener(mConnectionListener);
+        game.findOpponent();
+        mpMatchmakingView.show();
     }
 
     @Override
@@ -184,7 +279,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         GameSave.unlockLevel(levelName);
         music = game.assets.manager.get(loader.level.music.first());
-        if(!resumed)
+        if (!resumed)
             music.setPosition(0);
         music.setLooping(true);
         MusicManager.play(music);
@@ -223,7 +318,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         drawObjects();
         killPointsTextHandler.render(spriteBatch, delta);
 
-        if(globalEffect != null)
+        if (globalEffect != null)
         {
             globalEffect.setPosition(cam.position.x - Constants.CAMERA_WIDTH * 0.5f, cam.position.y + 0.5f * Constants.CAMERA_HEIGHT);
             globalEffect.draw(spriteBatch);
@@ -256,7 +351,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         //cleanup
         for (int i = 0; i < world.trashObjects.size; i++)
         {
-             world.level.gameObjects.remove(world.trashObjects.get(i));
+            world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
 
@@ -281,6 +376,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         if (debug) GLProfiler.reset();
+        mpMatchmakingView.render(spriteBatch, delta);
     }
 
     public void endLevel(String nextLevelName)
@@ -294,12 +390,12 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     {
         if (levelEndAnimationStateTime <= 0)
         {
-            if("game_tutorial".equals(levelName))
+            if ("game_tutorial".equals(levelName))
             {
                 GameSave.reset();
             }
             world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
-            game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
+            game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false, false));
             mNextLevelName = null;
             game.showAd();
             return;
@@ -380,11 +476,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             if (save.lifes < 0)
             {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false, false));
             }
             else
             {
-                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
+                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false, false));
             }
             game.levelEnd(levelName, false);
         }
@@ -398,7 +494,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             @Override
             public void onCompletion(Music music)
             {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false, false));
             }
         });
         MusicManager.play(music);
@@ -406,7 +502,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
     private void drawBackground()
     {
-        for(Background background : world.level.backgrounds)
+        for (Background background : world.level.backgrounds)
         {
             background.render(cam, spriteBatch);
         }
@@ -562,7 +658,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-        for(Background background : world.level.backgrounds)
+        for (Background background : world.level.backgrounds)
         {
             background.resize(cam);
         }
@@ -603,12 +699,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             globalEffect.dispose();
         }
         if (debug) GLProfiler.disable();
+        if (mConnectionListener != null)
+            game.removeConnectionListener(mConnectionListener);
     }
 
     @Override
     public void loadAssets()
     {
         loader.parseLevel(world);
+        world.level = loader.level;
+        player2 = new Maryo(world, new Vector3(world.maryo.position), new Vector2(world.maryo.mDrawRect.width, world.maryo.mDrawRect.height), true);
+        world.level.gameObjects.add(player2);
         for (Maryo.MaryoState ms : Maryo.MaryoState.values())
         {
             game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
@@ -677,6 +778,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         pointsParams.fontParameters.characters = "0123456789";
         game.assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
 
+        mpMatchmakingView.loadAssets();
+
     }
 
     @Override
@@ -701,16 +804,17 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-        for(Background background : world.level.backgrounds)
+        for (Background background : world.level.backgrounds)
         {
             background.onAssetsLoaded(cam, game.assets);
         }
 
-        if(!TextUtils.isEmpty(world.level.particleEffect))
+        if (!TextUtils.isEmpty(world.level.particleEffect))
         {
             globalEffect = new ParticleEffect(game.assets.manager.get(world.level.particleEffect, ParticleEffect.class));
             globalEffect.start();
         }
+        mpMatchmakingView.onAssetsLoaded();
     }
 
     // * InputProcessor methods ***************************//
@@ -862,9 +966,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchDown(x, invertY(y));
             return true;
         }
-        if(hud.boxTextPopup.showing)
+        if (hud.boxTextPopup.showing)
         {
-            if(hud.boxTextPopup.onTouchDown(x, invertY(y), pointer, button))
+            if (hud.boxTextPopup.onTouchDown(x, invertY(y), pointer, button))
                 return true;
         }
         if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
@@ -954,9 +1058,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchUp(x, invertY(y));
             return true;
         }
-        if(hud.boxTextPopup.showing)
+        if (hud.boxTextPopup.showing)
         {
-            if(hud.boxTextPopup.onTouchUp(x, invertY(y), pointer, button))
+            if (hud.boxTextPopup.onTouchUp(x, invertY(y), pointer, button))
                 return true;
         }
         TouchInfo ti = touches.get(pointer);
@@ -1046,9 +1150,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             exitDialog.touchDragged(x, invertY(y));
             return true;
         }
-        if(hud.boxTextPopup.showing)
+        if (hud.boxTextPopup.showing)
         {
-            if(hud.boxTextPopup.onTouchDragged(x, invertY(y), pointer))
+            if (hud.boxTextPopup.onTouchDragged(x, invertY(y), pointer))
                 return true;
         }
         return false;

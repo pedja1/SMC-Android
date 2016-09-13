@@ -59,7 +59,7 @@ public class Maryo extends DynamicObject
 
     private float downPressTime;
 
-    private static Set<Keys> keys = new HashSet<>(Keys.values().length);
+    private Set<Keys> keys = new HashSet<>(Keys.values().length);
 
     public enum MaryoState
     {
@@ -122,7 +122,7 @@ public class Maryo extends DynamicObject
 
     private WorldState worldState = WorldState.JUMPING;
     private MaryoState maryoState = GameSave.save.playerState;
-    private boolean facingLeft = false;
+    public boolean facingLeft = false;
 
     private boolean handleCollision = true;
     private DyingAnimation dyingAnim = new DyingAnimation();
@@ -174,7 +174,15 @@ public class Maryo extends DynamicObject
 
     private float velocityDumpOrig;
 
+    public final boolean isReflection;//is reflection of other player (multiplayer)
+
+
     public Maryo(World world, Vector3 position, Vector2 size)
+    {
+        this(world, position, size, false);
+    }
+
+    public Maryo(World world, Vector3 position, Vector2 size, boolean isReflection)
     {
         super(world, size, position);
         setupBoundingBox();
@@ -182,6 +190,9 @@ public class Maryo extends DynamicObject
         position.y = mColRect.y = mDrawRect.y += 0.5f;
         world.screen.game.assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
         velocityDumpOrig = velocityDump;
+        this.isReflection = isReflection;
+        if(isReflection)
+            handleCollision = false;
     }
 
     private void setupBoundingBox()
@@ -405,7 +416,7 @@ public class Maryo extends DynamicObject
 
         marioFrame.flip(facingLeft, false);
         //if god mode, make player half-transparent
-        if (godMode)
+        if (godMode || isReflection)
         {
             Color color = spriteBatch.getColor();
             float oldA = color.a;
@@ -556,6 +567,8 @@ public class Maryo extends DynamicObject
     @Override
     public void _update(float delta)
     {
+        if(isReflection)
+            return;
         if (((GameScreen) world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
         {
             if (downPressTime > POWER_JUMP_DELTA)
@@ -964,7 +977,7 @@ public class Maryo extends DynamicObject
             else
             {
                 world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
-                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
+                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false, facingLeft));
             }
         }
         //go to sublevel
@@ -1014,7 +1027,7 @@ public class Maryo extends DynamicObject
                     newScreen.entryName = exit.entry;
                 }
                 world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
-                world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
+                world.screen.game.setScreen(new LoadingScreen(newScreen, resume, facingLeft));
             }
         }
     }
@@ -1163,7 +1176,8 @@ public class Maryo extends DynamicObject
         }
         else
         {
-            SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
+            if(!isReflection)
+                SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
             upgrade(MaryoState.small, null, true);
         }
     }
@@ -1194,8 +1208,11 @@ public class Maryo extends DynamicObject
         ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
 
         //play new state sound
-        Sound sound = upgradeSound(newState, downgrade);
-        SoundManager.play(sound);
+        if(!isReflection)
+        {
+            Sound sound = upgradeSound(newState, downgrade);
+            SoundManager.play(sound);
+        }
         fire = false;
     }
 
@@ -1264,8 +1281,11 @@ public class Maryo extends DynamicObject
             diedTime = stateTime;
             handleCollision = false;
             diedPosition = new Vector3(position);
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
-            SoundManager.play(sound);
+            if(!isReflection)
+            {
+                Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
+                SoundManager.play(sound);
+            }
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSave.save.lifes--;
         }
@@ -1321,6 +1341,8 @@ public class Maryo extends DynamicObject
 
     private void setJumpSound()
     {
+        if(isReflection)
+            return;
         switch (maryoState)
         {
             case small:
@@ -1380,6 +1402,8 @@ public class Maryo extends DynamicObject
 
     public void enterLevel(LevelEntry entry)
     {
+        if(isReflection)
+            return;
         Sound sound = world.screen.game.assets.manager.get("data/sounds/enter_pipe.mp3");
         SoundManager.play(sound);
         ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
@@ -1437,6 +1461,8 @@ public class Maryo extends DynamicObject
 
     public void exitLevel(LevelExit exit)
     {
+        if(isReflection)
+            return;
         switch (exit.type)
         {
             case LEVEL_EXIT_BEAM:
@@ -1484,6 +1510,8 @@ public class Maryo extends DynamicObject
 
     private void doFire()
     {
+        if(isReflection)
+            return;
         Sound sound = null;
         if (maryoState == MaryoState.fire)
         {
@@ -1609,6 +1637,8 @@ public class Maryo extends DynamicObject
             setWorldState(GameObject.WorldState.JUMPING);
             keys.add(Keys.JUMP);
 
+            if(isReflection)
+                return;
             setJumpSound();
             Sound sound = jumpSound;
             SoundManager.play(sound);

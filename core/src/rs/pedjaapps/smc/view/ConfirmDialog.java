@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.shader.Shader;
 
@@ -24,28 +25,27 @@ import rs.pedjaapps.smc.shader.Shader;
  */
 public class ConfirmDialog
 {
-    OrthographicCamera cam;
+    private OrthographicCamera cam;
 
-    AbstractScreen screen;
+    private AbstractScreen screen;
 
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public boolean visible = false;
 
-    Texture back;
+    private Texture back;
 
-    Button buttonNo, buttonYes;
+    private Button buttonNo, buttonYes;
 
-    float dialogX, dialogY;
-    float dialogWidth, dialogHeight;
+    private float dialogX, dialogY;
+    private float dialogWidth, dialogHeight;
 
-    BitmapFont font;
-    GlyphLayout fontGlyph;
+    private BitmapFont font;
 
-    String title = "Quit?";
-    String text;
+    private String title;
+    private String text;
 
-    Rectangle titleR, textR, contentRect;
+    private Rectangle titleR, textR, contentRect;
 
     public ConfirmDialog(AbstractScreen screen, OrthographicCamera cam)
     {
@@ -54,9 +54,12 @@ public class ConfirmDialog
 
         setupDialogBounds();
 
-        text = (screen instanceof GameScreen)
+        text = (screen instanceof GameScreen)//FIXME WTF is this, make texts/title/buttons dynamic
                 ? "Are you sure you want to quit?\nAll unsaved progress will be lost."
+                : (screen instanceof LoadingScreen)
+                ? "Failed to connect to server!\nRetry?"
                 : "Do you really want to leave?";
+        title = (screen instanceof LoadingScreen) ? "Connection failed!" : "Quit?";
     }
 
     private void setupDialogBounds()
@@ -78,13 +81,13 @@ public class ConfirmDialog
     {
         screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 
-		screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class, screen.game.assets.textureParameter);
+        screen.game.assets.manager.load("data/hud/dialog_background.png", Texture.class, screen.game.assets.textureParameter);
         FreetypeFontLoader.FreeTypeFontLoaderParameter params = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         params.fontFileName = "data/fonts/GROBOLD.ttf";//Constants.DEFAULT_FONT_FILE_NAME;
         params.fontParameters.magFilter = Texture.TextureFilter.Linear;
         params.fontParameters.minFilter = Texture.TextureFilter.Linear;
         params.fontParameters.size = (int) (cam.viewportHeight / 23);
-        params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQ";
+        params.fontParameters.characters = "YesNoOESAryuwantqi?lvdpgb.DQFac!RfC";
         params.fontParameters.borderWidth = 2f;
         screen.game.assets.manager.load("confirm_dialog.ttf", BitmapFont.class, params);
     }
@@ -93,12 +96,12 @@ public class ConfirmDialog
     {
         TextureAtlas atlas = screen.game.assets.manager.get("data/hud/hud.pack");
         back = screen.game.assets.manager.get("data/hud/dialog_background.png");
-        
-		TextureRegion btnCancel = atlas.findRegion("cancel");
-		TextureRegion btnAccept = atlas.findRegion("accept");
-		
-		font = screen.game.assets.manager.get("confirm_dialog.ttf");
-        fontGlyph = new GlyphLayout();
+
+        TextureRegion btnCancel = atlas.findRegion("cancel");
+        TextureRegion btnAccept = atlas.findRegion("accept");
+
+        font = screen.game.assets.manager.get("confirm_dialog.ttf");
+        GlyphLayout fontGlyph = new GlyphLayout();
 
         buttonNo = new Button();
         buttonNo.rect.width = dialogWidth * .15f;
@@ -130,7 +133,8 @@ public class ConfirmDialog
     public void show()
     {
         visible = true;
-        if(screen instanceof GameScreen)((GameScreen)screen).setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
+        if (screen instanceof GameScreen)
+            ((GameScreen) screen).setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
     }
 
     public void hide()
@@ -140,7 +144,7 @@ public class ConfirmDialog
 
     public void render(SpriteBatch batch)
     {
-        if(visible)
+        if (visible)
         {
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -178,7 +182,7 @@ public class ConfirmDialog
     {
     }
 
-    public static class Button
+    static class Button
     {
         Rectangle rect = new Rectangle();
         TextureRegion texture;
@@ -187,30 +191,30 @@ public class ConfirmDialog
 
         public void render(SpriteBatch batch)
         {
-            if(pressed)batch.setShader(Shader.GLOW_SHADER);
+            if (pressed) batch.setShader(Shader.GLOW_SHADER);
             batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
             batch.setShader(null);
         }
 
-        public Button(Button button)
+        Button(Button button)
         {
             rect = new Rectangle(button.rect);
             texture = button.texture;
         }
 
-        public Button()
+        Button()
         {
-            
+
         }
     }
 
     public void touchDown(float x, float y)
     {
-        if(buttonNo.rect.contains(x, y))
+        if (buttonNo.rect.contains(x, y))
         {
             buttonNo.pressed = true;
         }
-        else if(buttonYes.rect.contains(x, y))
+        else if (buttonYes.rect.contains(x, y))
         {
             buttonYes.pressed = true;
         }
@@ -218,14 +222,14 @@ public class ConfirmDialog
 
     public void touchUp(float x, float y)
     {
-        if(buttonNo.rect.contains(x, y))
+        if (buttonNo.rect.contains(x, y))
         {
             visible = false;
         }
-        else if(buttonYes.rect.contains(x, y))
+        else if (buttonYes.rect.contains(x, y))
         {
-            if(screen instanceof GameScreen) screen.exitToMenu();
-            else if(screen instanceof MainMenuScreen) screen.quit();
+            if (screen instanceof GameScreen) screen.exitToMenu();
+            else if (screen instanceof MainMenuScreen) screen.quit();
         }
     }
 
