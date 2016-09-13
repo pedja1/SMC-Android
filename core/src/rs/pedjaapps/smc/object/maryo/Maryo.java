@@ -568,7 +568,10 @@ public class Maryo extends DynamicObject
     public void _update(float delta)
     {
         if(isReflection)
+        {
+            stateTime += delta;
             return;
+        }
         if (((GameScreen) world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
         {
             if (downPressTime > POWER_JUMP_DELTA)
