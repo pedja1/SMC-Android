@@ -50,7 +50,7 @@ public class Spikeball extends Enemy
     private static final int MAX_WALK_TIME = 8;
     private static final int MAX_RUN_TIME = 4;
 
-    private Animation walkAnimation;
+    private Animation<TextureRegion> walkAnimation;
     private TextureRegion tTurn, tDead;
 
     private int state;
@@ -82,7 +82,7 @@ public class Spikeball extends Enemy
             walkFrames.add(region);
         }
 
-        walkAnimation = new Animation(0.07f, walkFrames);
+        walkAnimation = new Animation<>(0.07f, walkFrames);
 
         tTurn = atlas.findRegion("turn");
         tDead = atlas.findRegion("turn");

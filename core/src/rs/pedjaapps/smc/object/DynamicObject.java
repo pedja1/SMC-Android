@@ -103,7 +103,7 @@ public abstract class DynamicObject extends GameObject
     protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
     {
         tmpObjects.clear();
-        List<GameObject> surroundingObjects = world.level.gameObjects;
+        List<GameObject> surroundingObjects = world.level.collidables;
         tmpRect.set(mColRect.x - 1, mColRect.y - 1, mColRect.width + 2, mColRect.height + 2);
         //noinspection ForLoopReplaceableByForEach
         for(int i = 0, size = surroundingObjects.size(); i < size; i++)

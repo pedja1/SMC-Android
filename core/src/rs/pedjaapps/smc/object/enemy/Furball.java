@@ -57,7 +57,7 @@ public class Furball extends Enemy
 
     private Type type = Type.brown;
 
-    private Animation walkAnimation;
+    private Animation<TextureRegion> walkAnimation;
     private TextureRegion tTurn, tDead, tHit;
 
     private float velocityX;
@@ -87,7 +87,7 @@ public class Furball extends Enemy
             walkFrames.add(region);
         }
 
-        walkAnimation = new Animation(0.07f, walkFrames);
+        walkAnimation = new Animation<>(0.07f, walkFrames);
 
         tTurn = atlas.findRegion("turn");
         tDead = atlas.findRegion("dead");

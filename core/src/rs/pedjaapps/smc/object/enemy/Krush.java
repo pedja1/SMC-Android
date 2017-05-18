@@ -31,7 +31,7 @@ public class Krush extends Enemy
 
     private boolean isSmall;
 
-    private Animation aBig, aSmall;
+    private Animation<TextureRegion> aBig, aSmall;
     private TextureRegion tDead;
 
     public Krush(World world, Vector2 size, Vector3 position)
@@ -59,8 +59,8 @@ public class Krush extends Enemy
         smallFrames.add(atlas.findRegion("small", 3));
         smallFrames.add(atlas.findRegion("small", 4));
 
-        aSmall = new Animation(0.07f, smallFrames);
-        aBig = new Animation(0.12f, bigFrames);
+        aSmall = new Animation<>(0.07f, smallFrames);
+        aBig = new Animation<>(0.12f, bigFrames);
 
         tDead = atlas.findRegion("small", 1);
     }
@@ -86,7 +86,8 @@ public class Krush extends Enemy
         }
         else
         {
-            frame = aSmall.getKeyFrames()[0];
+            Object[] regions = aSmall.getKeyFrames();
+            frame = (TextureRegion) regions[0];
             frame.flip(direction == Direction.left, false);
             spriteBatch.draw(frame, mDrawRect.x , mDrawRect.y , mDrawRect.width, mDrawRect.height);
             frame.flip(direction == Direction.left, false);

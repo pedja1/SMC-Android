@@ -36,7 +36,7 @@ public class Gee extends Enemy
     private ParticleEffect effect, deadEffect;
     private boolean canStartParticle;
     private boolean dying;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
     {
@@ -83,7 +83,8 @@ public class Gee extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return animation.getKeyFrames()[4];
+        Object[] regions = animation.getKeyFrames();
+        return (TextureRegion) regions[4];
     }
 
     @Override
@@ -92,7 +93,7 @@ public class Gee extends Enemy
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
         frames.add(frames.removeIndex(1));
-        animation = new Animation(0.14f, frames);
+        animation = new Animation<TextureRegion>(0.14f, frames);
         if("vertical".equals(direction))
         {
             effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));

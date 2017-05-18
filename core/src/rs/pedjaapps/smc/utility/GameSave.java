@@ -148,6 +148,7 @@ public class GameSave
 		item.updateBounds();
 
 		world.level.gameObjects.add(item);
+		world.level.collidables.add(item);
 		item.drop();
 
 		save.item = null;

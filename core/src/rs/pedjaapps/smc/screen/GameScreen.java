@@ -237,7 +237,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                             {
                                 try
                                 {
-                                    Thread.sleep(60);
+                                    Thread.sleep(30);
                                 }
                                 catch (InterruptedException e)
                                 {
@@ -352,6 +352,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         for (int i = 0; i < world.trashObjects.size; i++)
         {
             world.level.gameObjects.remove(world.trashObjects.get(i));
+            world.level.collidables.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
 
@@ -376,7 +377,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
         }
         if (debug) GLProfiler.reset();
-        mpMatchmakingView.render(spriteBatch, delta);
+        //mpMatchmakingView.render(spriteBatch, delta);
     }
 
     public void endLevel(String nextLevelName)
@@ -546,9 +547,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     private void updateObjects(float delta)
     {
         world.createMaryoRectWithOffset(maryoBWO, 8);
-        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
+        for (int i = 0, size = world.level.collidables.size(); i < size; i++)
         {
-            GameObject go = world.level.gameObjects.get(i);
+            GameObject go = world.level.collidables.get(i);
             if (maryoBWO.overlaps(go.mColRect))
             {
                 if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
@@ -572,12 +573,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         for (int i = 0; i < world.getVisibleObjects().size; i++)
         {
             GameObject go = world.getVisibleObjects().get(i);
-            Rectangle colRect = go.mColRect;
             Rectangle drawRect = go.mDrawRect;
+            shapeRenderer.setColor(1, 0, 0, 1);
+            //shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
+        }
+        for (int i = 0; i < world.level.collidables.size(); i++)
+        {
+            GameObject go = world.level.collidables.get(i);
+            Rectangle colRect = go.mColRect;
             shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.rect(colRect.x, colRect.y, colRect.width, colRect.height);
-            shapeRenderer.setColor(1, 0, 0, 1);
-            shapeRenderer.rect(drawRect.x, drawRect.y, drawRect.width, drawRect.height);
         }
         // render maryo
         Maryo maryo = world.maryo;

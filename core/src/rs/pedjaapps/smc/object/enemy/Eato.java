@@ -19,7 +19,7 @@ public class Eato extends Enemy
 {
     public static final float POSITION_Z = 0.087f;
     private String direction;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Eato(World world, Vector2 size, Vector3 position, String direction)
     {
@@ -71,7 +71,8 @@ public class Eato extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return animation.getKeyFrames()[0];
+        Object[] regions = animation.getKeyFrames();
+        return (TextureRegion) regions[0];
     }
 
     @Override
@@ -84,7 +85,7 @@ public class Eato extends Enemy
         		frames.add(atlas.findRegion(TKey.three.toString()));
         frames.add(atlas.findRegion(TKey.two.toString()));
 
-        animation = new Animation(0.18f, frames);
+        animation = new Animation<TextureRegion>(0.18f, frames);
     }
 
     @Override

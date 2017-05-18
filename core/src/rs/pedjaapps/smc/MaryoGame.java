@@ -124,7 +124,7 @@ public class MaryoGame extends Game implements Runnable
 	{
 		try
 		{
-			mServerConnection.connect(5000, "localhost", 50591, 50592);
+			mServerConnection.connect(5000, "pedjaapps.net", 50591, 50592);
 		}
 		catch (IOException e)
 		{

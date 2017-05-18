@@ -71,7 +71,7 @@ public class Box extends Sprite
     //public Item itemObject;
     private boolean spinning;
     private float spinningTime;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
     private Texture texture;
 
     private ParticleEffect itemEffect;
@@ -136,7 +136,7 @@ public class Box extends Sprite
         }
         if(frames.size == 0)
             throw new GdxRuntimeException("No frames in animation. boxType=" + boxType + " animationName=" + animationName);
-        animation = new Animation(animSpeed, frames);
+        animation = new Animation<>(animSpeed, frames);
     }
 
     @Override
@@ -512,6 +512,7 @@ public class Box extends Sprite
             {
                 item.isInBox = true;
                 world.level.gameObjects.add(item);
+                world.level.collidables.add(item);
                 Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
                 item.popOutFromBox(position.y + mDrawRect.height);
                 if (item instanceof Coin)

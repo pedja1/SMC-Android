@@ -21,7 +21,7 @@ public class Moon extends Item
 {
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.65625f;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Moon(World world, Vector2 size, Vector3 position)
     {
@@ -34,7 +34,7 @@ public class Moon extends Item
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        animation = new Animation(2f, atlas.getRegions());
+        animation = new Animation<TextureRegion>(2f, atlas.getRegions());
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
 

@@ -15,22 +15,22 @@
 # Date:     25/04/2013
 
 NAME="smc_daemon"
-DESC="p-net_daemon service"
+DESC="smc_daemon service"
 
 # The path to Jsvc
 EXEC="/usr/bin/jsvc"
 
 # The path to the folder containing smc_daemon.jar
-FILE_PATH="/usr/local/$NAME"
+FILE_PATH="/home/pedja/$NAME"
 
 # The path to the folder containing the java runtime
-JAVA_HOME="/usr/lib/jvm/default-java"
+JAVA_HOME="/usr/lib/jvm/java-8-oracle"
 
 # Our classpath including our jar file and the Apache Commons Daemon library
-CLASS_PATH="$FILE_PATH/smc_daemon.jar:$FILE_PATH/lib/commons-daemon-1.0.15.jar"
+CLASS_PATH="$FILE_PATH/smc_daemon.jar"
 
 # The fully qualified name of the class to execute
-CLASS="com.af.p_net.server.PNETDaemon"
+CLASS="com.af.p_net.server.MaryoGameDaemon"
 
 # Any command line arguments to be passed to the our Java Daemon implementations init() method 
 ARGS=""

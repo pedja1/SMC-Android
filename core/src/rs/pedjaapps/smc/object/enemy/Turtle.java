@@ -34,7 +34,7 @@ public class Turtle extends Enemy
     private float mShellRotation, mShelledTime;
 
     public boolean isShell = false, isShellMoving = false;
-    private Animation walkAnimation;
+    private Animation<TextureRegion> walkAnimation;
     private TextureRegion tTurn, tShell, tDead;
 
     Turtle(World world, Vector2 size, Vector3 position, String color)
@@ -69,7 +69,7 @@ public class Turtle extends Enemy
             walkFrames.add(region);
         }
 
-        walkAnimation = new Animation(0.07f, walkFrames);
+        walkAnimation = new Animation<>(0.07f, walkFrames);
         tTurn = atlas.findRegion("turn");
         tShell = atlas.findRegion("shell");
         tDead = atlas.findRegion("walk", 1);

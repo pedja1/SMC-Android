@@ -16,8 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import rs.pedjaapps.smc.assets.Assets;
@@ -82,6 +84,7 @@ public class LevelLoader
             parseParticleEffect(jLevel, world.screen.game.assets);
             parseBg(jLevel, world.screen.game.assets);
             parseGameObjects(world, jLevel, world.screen.game.assets);
+            generateCollidables(world);
         }
         catch (JSONException e)
         {
@@ -89,6 +92,94 @@ public class LevelLoader
             throw new RuntimeException("Unable to load level! " + e.getMessage());
         }
         levelParsed = true;
+    }
+
+    private void generateCollidables(World world)
+    {
+        List<Sprite> collidableSprites = new ArrayList<>(level.gameObjects.size());
+
+        for(GameObject go : level.gameObjects)
+        {
+            if(go instanceof Sprite && !(go instanceof Box) && !(go instanceof MovingPlatform))
+            {
+                Sprite sprite = (Sprite) go;
+                if(sprite.type != Sprite.Type.passive && sprite.type != Sprite.Type.front_passive)
+                {
+                    collidableSprites.add((Sprite) go);
+                }
+            }
+            else
+            {
+                level.collidables.add(go);
+            }
+        }
+
+        int index = 0;
+
+        outer: while(index < collidableSprites.size())
+        {
+            Sprite currentSprite = collidableSprites.get(index);
+
+            for(Sprite sprite : collidableSprites)
+            {
+                //if its the same objects skip
+                if(currentSprite == sprite)
+                {
+                    continue;
+                }
+                //we are only looking for perfect collision, two rectangles that can be merged to bigger one
+                if((currentSprite.mColRect.width != sprite.mColRect.width || currentSprite.mColRect.x != sprite.mColRect.x)
+                        && (currentSprite.mColRect.height != sprite.mColRect.height || currentSprite.mColRect.y != sprite.mColRect.y))
+                {
+                    continue;
+                }
+                //only merge same type, eg two massive, cant merge massive and halfmassive
+                if(currentSprite.type != sprite.type)
+                {
+                    continue;
+                }
+                if(currentSprite.groundType != sprite.groundType)
+                {
+                    continue;
+                }
+
+                if(!collides(currentSprite.mColRect, sprite.mColRect))
+                    continue;
+
+                Sprite firstX = currentSprite.mColRect.x < sprite.mColRect.x ? currentSprite : sprite;
+                Sprite secondX = currentSprite.mColRect.x > sprite.mColRect.x ? currentSprite : sprite;
+
+                Sprite firstY = currentSprite.mColRect.y < sprite.mColRect.y ? currentSprite : sprite;
+                Sprite secondY = currentSprite.mColRect.y > sprite.mColRect.y ? currentSprite : sprite;
+
+                Sprite newSprite = new Sprite(world, new Vector2(), new Vector3(), null);
+                newSprite.mColRect.x = firstX.mColRect.x;
+                newSprite.mColRect.y = firstY.mColRect.y;
+                newSprite.mColRect.width = (secondX.mColRect.x + secondX.mColRect.width) - firstX.mColRect.x;
+                newSprite.mColRect.height = (secondY.mColRect.y + secondY.mColRect.height) - firstY.mColRect.y;
+                newSprite.type = currentSprite.type;
+                newSprite.groundType = currentSprite.groundType;
+
+                //TODO keep other important properties
+
+                collidableSprites.add(index, newSprite);
+                collidableSprites.remove(currentSprite);
+                collidableSprites.remove(sprite);
+
+                index = 0;
+                continue outer;
+            }
+            index++;
+        }
+        level.collidables.addAll(collidableSprites);
+
+        System.out.println("gameObjects count: " + level.gameObjects.size());
+        System.out.println("collidables count: " + level.collidables.size());
+    }
+
+    private boolean collides(Rectangle r1, Rectangle r2)
+    {
+        return r1.x <= r2.x + r2.width && r1.x + r1.width >= r2.x && r1.y <= r2.y + r2.height && r1.y + r1.height >= r2.y;
     }
 
     private void parseParticleEffect(JSONObject jLevel, Assets assets)

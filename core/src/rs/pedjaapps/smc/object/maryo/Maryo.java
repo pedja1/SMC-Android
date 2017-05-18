@@ -138,7 +138,7 @@ public class Maryo extends DynamicObject
     private boolean godMode = false;
     private long godModeActivatedTime;
 
-    private Animation resizingAnimation;
+    private Animation<TextureRegion> resizingAnimation;
     private float resizeAnimStartTime;
     private MaryoState newState;//used with resize animation
     private MaryoState oldState;//used with resize animation
@@ -265,19 +265,19 @@ public class Maryo extends DynamicObject
         walkFrames[1] = atlas.findRegion("walk_right", 1);
         walkFrames[2] = atlas.findRegion("walk_right", 2);
         walkFrames[3] = walkFrames[1];
-        aMap[aIndex(state, AKey.walk)] = new Animation(RUNNING_FRAME_DURATION, walkFrames);
+        aMap[aIndex(state, AKey.walk)] = new Animation<>(RUNNING_FRAME_DURATION, walkFrames);
 
         TextureRegion[] climbFrames = new TextureRegion[2];
         climbFrames[0] = atlas.findRegion(TKey.climb_left + "");
         climbFrames[1] = atlas.findRegion(TKey.climb_right + "");
-        aMap[aIndex(state, AKey.climb)] = new Animation(CLIMB_FRAME_DURATION, climbFrames);
+        aMap[aIndex(state, AKey.climb)] = new Animation<>(CLIMB_FRAME_DURATION, climbFrames);
 
         if (state == MaryoState.ice || state == MaryoState.fire)
         {
             TextureRegion[] throwFrames = new TextureRegion[2];
             throwFrames[0] = atlas.findRegion("throw_right", 1);
             throwFrames[1] = atlas.findRegion("throw_right", 2);
-            aMap[aIndex(state, AKey._throw)] = new Animation(THROW_FRAME_DURATION, throwFrames);
+            aMap[aIndex(state, AKey._throw)] = new Animation<>(THROW_FRAME_DURATION, throwFrames);
         }
 
         tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(TKey.jump_right.toString());
@@ -330,7 +330,8 @@ public class Maryo extends DynamicObject
         if (resizingAnimation != null)
         {
             int index = resizingAnimation.getKeyFrameIndex(stateTime);
-            marioFrame = resizingAnimation.getKeyFrames()[index];
+            Object[] regions = resizingAnimation.getKeyFrames();
+            marioFrame = (TextureRegion) regions[index];
             if (index == 0)
             {
                 maryoState = oldState;
@@ -345,7 +346,7 @@ public class Maryo extends DynamicObject
         else if (fire && (maryoState == MaryoState.fire || maryoState == MaryoState.ice))
         {
             Animation animation = aMap[aIndex(maryoState, AKey._throw)];
-            marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
+            marioFrame = (TextureRegion) animation.getKeyFrame(fireAnimationStateTime, false);
             if (animation.isAnimationFinished(fireAnimationStateTime))
             {
                 fire = false;
@@ -355,7 +356,7 @@ public class Maryo extends DynamicObject
         }
         else if (worldState.equals(WorldState.WALKING))
         {
-            marioFrame = aMap[aIndex(maryoState, AKey.walk)].getKeyFrame(stateTime, true);
+            marioFrame = (TextureRegion) aMap[aIndex(maryoState, AKey.walk)].getKeyFrame(stateTime, true);
         }
         else if (worldState == WorldState.DUCKING)
         {
@@ -378,9 +379,9 @@ public class Maryo extends DynamicObject
         }
         else if (worldState == WorldState.CLIMBING)
         {
-            TextureRegion[] frames = aMap[aIndex(maryoState, AKey.climb)].getKeyFrames();
+            Object[] frames = aMap[aIndex(maryoState, AKey.climb)].getKeyFrames();
             float distance = position.y - exitEnterStartPosition.y;
-            marioFrame = frames[Math.floor(distance / 0.3f) % 2 == 0 ? 0 : 1];
+            marioFrame = (TextureRegion) frames[Math.floor(distance / 0.3f) % 2 == 0 ? 0 : 1];
         }
         else
         {
@@ -1200,7 +1201,7 @@ public class Maryo extends DynamicObject
         this.newState = newState;
         oldState = maryoState;
         Array<TextureRegion> frames = generateResizeAnimationFrames(maryoState, newState);
-        resizingAnimation = new Animation(RESIZE_ANIMATION_FRAME_DURATION, frames);
+        resizingAnimation = new Animation<>(RESIZE_ANIMATION_FRAME_DURATION, frames);
         resizingAnimation.setPlayMode(Animation.PlayMode.LOOP);
         resizeAnimStartTime = stateTime;
         godMode = true;
@@ -1235,8 +1236,8 @@ public class Maryo extends DynamicObject
         Array<TextureRegion> regions = new Array<>();
         if (worldState.equals(WorldState.WALKING))
         {
-            regions.add(aMap[aIndex(stateFrom, AKey.walk)].getKeyFrame(stateTime, true));
-            regions.add(aMap[aIndex(stateTo, AKey.walk)].getKeyFrame(stateTime, true));
+            regions.add((TextureRegion) aMap[aIndex(stateFrom, AKey.walk)].getKeyFrame(stateTime, true));
+            regions.add((TextureRegion) aMap[aIndex(stateTo, AKey.walk)].getKeyFrame(stateTime, true));
         }
         else if (worldState == WorldState.DUCKING)
         {
@@ -1547,6 +1548,7 @@ public class Maryo extends DynamicObject
         iceball.direction = facingLeft ? Direction.left : Direction.right;
         iceball.velocity.y = velY;
         world.level.gameObjects.add(iceball);
+        world.level.collidables.add(iceball);
         Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
     }
 
@@ -1560,6 +1562,7 @@ public class Maryo extends DynamicObject
         fireball.direction = facingLeft ? Direction.left : Direction.right;
         fireball.velocity.y = velY;
         world.level.gameObjects.add(fireball);
+        world.level.collidables.add(fireball);
         Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
     }
 

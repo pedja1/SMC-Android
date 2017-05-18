@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import rs.pedjaapps.smc.screen.AbstractScreen;
@@ -24,7 +25,7 @@ public class MPMatchmakingView
     private static final Color BACKGROUND_COLOR = new Color(0, 0, 0, 0.7f);
 
     private AbstractScreen mScreen;
-    private Animation mAnimation;
+    private Animation<TextureRegion> mAnimation;
     private OrthographicCamera mCamera;
 
     private float stateTime;
@@ -54,7 +55,7 @@ public class MPMatchmakingView
         if(mAnimation == null)
         {
             TextureAtlas ta = mScreen.game.assets.manager.get("data/animation/spinner.atlas");
-            mAnimation = new Animation(0.05f, ta.getRegions(), Animation.PlayMode.LOOP);
+            mAnimation = new Animation<TextureRegion>(0.05f, ta.getRegions(), Animation.PlayMode.LOOP);
         }
     }
 

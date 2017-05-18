@@ -25,7 +25,7 @@ public class Coin extends Item
     public static final float DEF_SIZE = 0.59375f;
     public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
     public int points = 5;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     /**
      * Coin will move out of the screen when collected
@@ -56,7 +56,7 @@ public class Coin extends Item
             frames.add(atlas.findRegion(i + ""));
         }
 
-        animation = new Animation(0.10f, frames);
+        animation = new Animation<TextureRegion>(0.10f, frames);
 
         if (textureAtlas.contains("yellow"))
         {

@@ -15,6 +15,7 @@ public class Level
     public float width;
     public float height;
     public List<GameObject> gameObjects;
+    public List<GameObject> collidables;
     public Vector3 spanPosition;
 	public Array<Background> backgrounds;
     public Array<String> music;
@@ -26,6 +27,7 @@ public class Level
 	public Level(String levelName)
 	{
 		this.gameObjects = new ArrayList<>(5000);//set initial capacity so that we avoid alloc during game loop
+		this.collidables = new ArrayList<>(5000);
 		this.backgrounds = new Array<>(2);
 		this.levelName = levelName;
 	}
@@ -37,6 +39,11 @@ public class Level
 			go.dispose();
 		}
 		gameObjects = null;
+		for(GameObject go : collidables)
+		{
+			go.dispose();
+		}
+		collidables = null;
 		for(Background background : backgrounds)
 		{
 			background.dispose();
