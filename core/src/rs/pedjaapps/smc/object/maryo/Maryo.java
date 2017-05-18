@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -176,6 +178,8 @@ public class Maryo extends DynamicObject
 
     public final boolean isReflection;//is reflection of other player (multiplayer)
 
+    private BitmapFont playerNameFont;
+    private GlyphLayout playerNameGlyph;
 
     public Maryo(World world, Vector3 position, Vector2 size)
     {
@@ -192,10 +196,12 @@ public class Maryo extends DynamicObject
         velocityDumpOrig = velocityDump;
         this.isReflection = isReflection;
         if(isReflection)
+        {
             handleCollision = false;
+        }
     }
 
-    private void setupBoundingBox()
+    public void setupBoundingBox()
     {
         float centerX = position.x + mColRect.width / 2;
         switch (maryoState)
@@ -245,6 +251,13 @@ public class Maryo extends DynamicObject
         powerJumpEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
         starEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
+        if(isReflection)
+        {
+            playerNameFont = world.screen.game.assets.manager.get("maryo_player_name.ttf");
+            playerNameFont.getData().setScale(0.015f);
+            playerNameFont.setUseIntegerPositions(false);
+            playerNameGlyph = new GlyphLayout();
+        }
     }
 
     @Override
@@ -442,6 +455,15 @@ public class Maryo extends DynamicObject
         }
         spriteBatch.setShader(null);
         spriteBatch.setColor(Color.WHITE);
+
+        if(isReflection)
+        {
+            playerNameGlyph.setText(playerNameFont, "Player 2");
+            float centerX = mDrawRect.x + mDrawRect.width * 0.5f;
+            float pX = centerX - playerNameGlyph.width * 0.5f;
+            float pY = mDrawRect.y + mDrawRect.height + playerNameGlyph.height * 2;
+            playerNameFont.draw(spriteBatch, playerNameGlyph, pX, pY);
+        }
     }
 
     private int tIndex(MaryoState state, TKey tkey)
@@ -569,7 +591,10 @@ public class Maryo extends DynamicObject
     public void _update(float delta)
     {
         if(isReflection)
+        {
+            stateTime += delta;
             return;
+        }
         if (((GameScreen) world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
         {
             if (downPressTime > POWER_JUMP_DELTA)
