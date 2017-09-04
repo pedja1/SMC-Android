@@ -4,44 +4,33 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.LevelEndEvent;
-import com.crashlytics.android.answers.LevelStartEvent;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
-import io.fabric.sdk.android.Fabric;
 import rs.pedjaapps.smc.MaryoGame;
 
 /**
  * Created by pedja on 2/27/14.
  */
-public class AndroidLauncher extends AndroidApplication implements MaryoGame.Event
-{
+public class AndroidLauncher extends AndroidApplication implements MaryoGame.Event {
     private InterstitialAd mInterstitialAd;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        Fabric.with(this, new Crashlytics());
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-6294976772687752/6322846426");
         requestNewInterstitial();
-        mInterstitialAd.setAdListener(new AdListener()
-        {
+        mInterstitialAd.setAdListener(new AdListener() {
             @Override
-            public void onAdClosed()
-            {
+            public void onAdClosed() {
                 requestNewInterstitial();
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode)
-            {
+            public void onAdFailedToLoad(int errorCode) {
                 requestNewInterstitial();
             }
         });
@@ -60,21 +49,16 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
     }
 
     @Override
-    public void showInterestitialAd()
-    {
-        runOnUiThread(new Runnable()
-        {
+    public void showInterestitialAd() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
-                if (mInterstitialAd.isLoaded())
-                {
+            public void run() {
+                if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                 }
             }
@@ -82,22 +66,14 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
     }
 
     @Override
-    public void levelStart(String levelName)
-    {
-        Answers.getInstance().logLevelStart(new LevelStartEvent()
-                .putLevelName(levelName));
+    public void levelStart(String levelName) {
     }
 
     @Override
-    public void levelEnd(String levelName, boolean success)
-    {
-        Answers.getInstance().logLevelEnd(new LevelEndEvent()
-                .putLevelName(levelName)
-                .putSuccess(success));
+    public void levelEnd(String levelName, boolean success) {
     }
 
-    private void requestNewInterstitial()
-    {
+    private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
                 .build();
