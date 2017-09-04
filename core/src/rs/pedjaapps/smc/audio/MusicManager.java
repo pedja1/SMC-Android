@@ -36,7 +36,6 @@ public class MusicManager
             if (main != null)
             {
                 main.stop();
-                main.dispose();
                 main = null;
             }
             main = music;
@@ -52,7 +51,6 @@ public class MusicManager
             if(temporary != null)
             {
                 temporary.stop();
-                temporary.dispose();
             }
             temporary = music;
             temporary.setVolume(volume);
@@ -78,7 +76,6 @@ public class MusicManager
             if(main != null)
             {
                 main.stop();
-                main.dispose();
                 main = null;
             }
         }
@@ -87,7 +84,6 @@ public class MusicManager
             if(temporary != null)
             {
                 temporary.stop();
-                temporary.dispose();
                 temporary = null;
                 if(main != null)
                 {
