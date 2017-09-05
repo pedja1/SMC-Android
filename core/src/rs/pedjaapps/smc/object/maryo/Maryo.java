@@ -1032,8 +1032,6 @@ public class Maryo extends DynamicObject
         }
         else if (object instanceof Enemy && ((Enemy) object).handleCollision)
         {
-            if (!godMode)
-            {
                 boolean deadAnyway = isDeadByJumpingOnTopOfEnemy((Enemy) object);
                 if (mInvincibleStar)
                 {
@@ -1061,7 +1059,8 @@ public class Maryo extends DynamicObject
                 }
                 else if (deadAnyway)
                 {
-                    downgradeOrDie(false);
+                    if (!godMode)
+                        downgradeOrDie(false);
                 }
                 else
                 {
@@ -1086,7 +1085,7 @@ public class Maryo extends DynamicObject
                     {
                         hitEnemy((Enemy) object, vertical);
                     }
-                }
+
             }
         }
         else if (object instanceof Box && position.y + mColRect.height <= object.position.y)
@@ -1106,7 +1105,8 @@ public class Maryo extends DynamicObject
         }
         else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
         {
-            downgradeOrDie(false);
+            if (!godMode)
+                downgradeOrDie(false);
         }
         else
         {
