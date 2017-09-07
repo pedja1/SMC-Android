@@ -1,0 +1,180 @@
+
+smcskin.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+background
+  rotate: false
+  xy: 1, 1515
+  size: 665, 103
+  split: 63, 54, 34, 34
+  pad: 0, 0, 0, 0
+  orig: 665, 103
+  offset: 0, 0
+  index: -1
+background2
+  rotate: false
+  xy: 1, 389
+  size: 339, 96
+  split: 37, 36, 32, 42
+  pad: 0, 0, 0, 0
+  orig: 339, 96
+  offset: 0, 0
+  index: -1
+background2_disabled
+  rotate: false
+  xy: 1233, 1932
+  size: 339, 96
+  split: 37, 36, 32, 42
+  pad: 0, 0, 0, 0
+  orig: 339, 96
+  offset: 0, 0
+  index: -1
+checkbox
+  rotate: false
+  xy: 342, 415
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+checkbox_disabled
+  rotate: false
+  xy: 1491, 1860
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+checkbox_on
+  rotate: false
+  xy: 1574, 1958
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+checkbox_on_disabled
+  rotate: false
+  xy: 259, 317
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+checkbox_togge
+  rotate: false
+  xy: 131, 59
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+checkbox_togge_disabled
+  rotate: false
+  xy: 1363, 1602
+  size: 77, 70
+  orig: 77, 70
+  offset: 0, 0
+  index: -1
+disabled_small_square_button
+  rotate: false
+  xy: 421, 421
+  size: 64, 64
+  split: 25, 25, 23, 24
+  pad: 0, 0, 0, 0
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+disabled_square_button
+  rotate: false
+  xy: 1, 1
+  size: 128, 128
+  split: 50, 51, 47, 49
+  pad: 0, 0, 0, 0
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+empty_square_button
+  rotate: false
+  xy: 515, 1385
+  size: 128, 128
+  split: 50, 51, 47, 49
+  pad: 0, 0, 0, 0
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+grobold25
+  rotate: false
+  xy: 1233, 1674
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+grobold25bl
+  rotate: false
+  xy: 1, 131
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+grobold25br
+  rotate: false
+  xy: 1, 487
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+grobold50
+  rotate: false
+  xy: 719, 1516
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+grobold60bl
+  rotate: false
+  xy: 1, 1001
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+selected_small_square_button
+  rotate: false
+  xy: 1653, 1964
+  size: 64, 64
+  split: 25, 25, 23, 24
+  pad: 0, 0, 0, 0
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+selected_square_button
+  rotate: false
+  xy: 1233, 1544
+  size: 128, 128
+  split: 50, 51, 47, 49
+  pad: 0, 0, 0, 0
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+small_empty_square_button
+  rotate: false
+  xy: 515, 1192
+  size: 64, 64
+  split: 25, 25, 23, 24
+  pad: 0, 0, 0, 0
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+touchpad
+  rotate: false
+  xy: 515, 1258
+  size: 125, 125
+  orig: 125, 125
+  offset: 0, 0
+  index: -1
+window
+  rotate: false
+  xy: 1, 1620
+  size: 716, 408
+  split: 112, 101, 113, 101
+  pad: 1, 0, 1, 0
+  orig: 716, 408
+  offset: 0, 0
+  index: -1
