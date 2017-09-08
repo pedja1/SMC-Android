@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -47,7 +48,7 @@ public class LoadingScreen extends AbstractScreen
         float camHeight = height/(width/camWidth);
         cam = new OrthographicCamera(camWidth, camHeight);
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(game.assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParams = new FreeTypeFontGenerator.FreeTypeFontParameter();
         fontParams.size = (int) camHeight / 20;
         fontParams.magFilter = Texture.TextureFilter.Linear;
@@ -59,7 +60,7 @@ public class LoadingScreen extends AbstractScreen
         generator.dispose();
 
         batch = new SpriteBatch();
-        Texture bgTexture = new Texture(game.assets.resolver.resolve("data/loading/loading_bg.jpg"));
+        Texture bgTexture = new Texture(Gdx.files.internal("data/loading/loading_bg.jpg"));
         bgTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         bgSprite = new Sprite(bgTexture);

@@ -158,7 +158,7 @@ public class SettingsDialog
     {
         visible = true;
 
-        int tq = PrefsManager.getTextureQuality();
+        int tq = 0;
         low.selected = tq == 0;
         medium.selected = tq == 1;
         high.selected = tq == 2;
@@ -252,7 +252,6 @@ public class SettingsDialog
         else if(buttonYes.rect.contains(x, y))
         {
             int tq = low.selected ? 0 : (medium.selected ? 1 : 2);
-            PrefsManager.setTextureQuality(tq);
             screen.game.restart();
         }
         else if(low.rect.contains(x, y))

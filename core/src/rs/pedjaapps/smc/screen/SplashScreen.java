@@ -44,13 +44,13 @@ public class SplashScreen implements Screen
         batch = new SpriteBatch();
 
 
-        Texture libgdxSplashTexture = new Texture(marioGame.assets.resolver.resolve("data/game/logo/libgdx.jpg"));
+        Texture libgdxSplashTexture = new Texture(Gdx.files.internal("data/game/logo/libgdx.jpg"));
         libgdxSplashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        Texture gameSplashTexture = new Texture(marioGame.assets.resolver.resolve("data/game/logo/smc_big_1.png"));
+        Texture gameSplashTexture = new Texture(Gdx.files.internal("data/game/logo/smc_big_1.png"));
         gameSplashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        Texture afLogoTexture = new Texture(marioGame.assets.resolver.resolve("data/game/logo/af_logo.png"));
+        Texture afLogoTexture = new Texture(Gdx.files.internal("data/game/logo/af_logo.png"));
         afLogoTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         libgdxSplashSprite = new Sprite( new TextureRegion(libgdxSplashTexture));

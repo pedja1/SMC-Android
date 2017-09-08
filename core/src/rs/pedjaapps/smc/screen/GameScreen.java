@@ -594,6 +594,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void dispose()
     {
         music.stop();
+        hud.dispose();
         Gdx.input.setInputProcessor(null);
         game.assets.dispose();
         exitDialog.dispose();

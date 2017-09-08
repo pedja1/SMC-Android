@@ -248,7 +248,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(game.assets.resolver.resolve("data/animation/particles/clouds_emitter.p"), game.assets.resolver.resolve("data/clouds/default_1/"));
+        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();
 

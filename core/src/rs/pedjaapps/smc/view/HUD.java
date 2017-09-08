@@ -16,9 +16,12 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.HashSet;
 
@@ -57,6 +60,7 @@ public class HUD
 
 	public OrthographicCamera cam;
 	private SpriteBatch batch;
+	private Stage stage;
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -94,6 +98,7 @@ public class HUD
 		cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
 		cam.update();
 		batch = new SpriteBatch();
+		stage = new Stage(new ScreenViewport());
         setBounds();
 	}
 
@@ -189,6 +194,7 @@ public class HUD
         cam = new OrthographicCamera(C_W, C_H);
         cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
         cam.update();
+		stage.getViewport().update(width, height, true);
         setBounds();
     }
 	
@@ -266,7 +272,7 @@ public class HUD
 		maryoL.setFilter(filter, filter);
 		goldM.setFilter(filter, filter);
 		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(world.screen.game.assets.resolver.resolve(Constants.DEFAULT_FONT_FILE_NAME));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int) C_H / 25;
         parameter.characters = "0123456789TimePontsx:";
@@ -278,7 +284,7 @@ public class HUD
 		fontGlyphLayout = new GlyphLayout();
 		
 		generator.dispose();
-		
+
 		tts = world.screen.game.assets.manager.get("touch_to_start.ttf");
 		tts.setColor(1, 1, 1, 1);
 		ttsGlyphLayout = new GlyphLayout(font, ttsText);
@@ -317,6 +323,9 @@ public class HUD
 		}
 		else
 		{
+			stage.act(deltaTime);
+			stage.draw();
+
 			if(updateTimer)stateTime += deltaTime;
 			batch.setProjectionMatrix(cam.combined);
 			batch.begin();
@@ -550,6 +559,10 @@ public class HUD
         pressedKeys.remove(Key.music);
     }
 
+	public void dispose() {
+		stage.dispose();
+	}
+
 	public static class BoxTextPopup
 	{
 		BitmapFont font;
@@ -678,5 +691,4 @@ public class HUD
 			return false;
 		}
 	}
-
 }
