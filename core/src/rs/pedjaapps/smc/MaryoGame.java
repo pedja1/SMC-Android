@@ -17,6 +17,9 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
 {
+	public static final int NATIVE_WIDTH = 1024;
+	public static final int NATIVE_HEIGHT = 576;
+
 	public Assets assets;
 	private Event event;
 
@@ -74,7 +77,7 @@ public class MaryoGame extends Game
 
 	public static boolean showOnScreenControls()
 	{
-		return Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
+		return true; //Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
 	}
 
 	public void showAd()

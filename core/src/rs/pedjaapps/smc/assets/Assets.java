@@ -20,6 +20,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
  * Created by pedja on 2/15/14.
  */
 public class Assets {
+    public static final String ASSET_HUDSKIN = "data/hud/smcskin.json";
+
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
     public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
@@ -45,7 +47,7 @@ public class Assets {
 
     public void dispose() {
         //do not clear. This is just annoying because it needs to be loaded again
-        //TODO: große Klopper müssen wieder weggemacht werden
+        //TODO: große Klopper müssen wieder weggemacht werden (Background, Musik)
         //manager.clear();
     }
 

@@ -1,6 +1,6 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	fontawesome: {
+	fa45: {
 		file: fontawesome.fnt
 	}
 	grobold25: {
@@ -198,14 +198,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		disabled: disabled_small_square_button
 	}
 	fa45: {
-		font: fontawesome
+		font: fa45
 		fontColor: fontyellow
-		overFontColor: white
 		disabledFontColor: disabled
-		up: empty_square_button
-		down: down_square_button
-		over: selected_square_button
-		disabled: disabled_square_button
+		up: small_empty_square_button
+		down: down_small_square_button
+		over: selected_small_square_button
+		disabled: disabled_small_square_button
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {

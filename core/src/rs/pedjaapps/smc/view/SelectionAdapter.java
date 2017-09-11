@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
@@ -21,7 +23,7 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.shader.Shader;
 
-public class SelectionAdapter
+public class SelectionAdapter extends Dialog
 {
 	public static final float ITEMS_ROW_CNT = 3;
 	public static final float ITEMS_COL_CNT = 5;
@@ -62,8 +64,10 @@ public class SelectionAdapter
 		public String levelId, levelNumber;
 	}
 
-	public SelectionAdapter(Array<Level> items, MainMenuScreen mainMenuScreen)
+	public SelectionAdapter(Array<Level> items, MainMenuScreen mainMenuScreen, Skin skin)
 	{
+		super("", skin);
+
 		this.items = items;
 		this.mainMenuScreen = mainMenuScreen;
         CAM_HEIGHT = CAM_WIDTH / ((float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight());
