@@ -239,6 +239,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: window
 		titleFont: grobold40br
+		stageBackground: stagebackground
 	}
 	small: {
 		background: background2

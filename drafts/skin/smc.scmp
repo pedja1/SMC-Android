@@ -363,6 +363,19 @@ atlasData: {
 			tintName: null
 			name: window
 		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/stagebackground.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: stagebackground
+		}
 	]
 }
 jsonData: {
@@ -2995,7 +3008,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: stageBackground
 						optional: true
-						value: null
+						value: stagebackground
 					}
 				}
 				deletable: false
