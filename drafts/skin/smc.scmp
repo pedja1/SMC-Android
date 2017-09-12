@@ -325,19 +325,6 @@ atlasData: {
 			name: touchpad
 		}
 		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/window.9.png
-			bgColor: {
-				r: 1
-				g: 1
-				b: 1
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: window
-		}
-		{
 			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/progressbar.9.png
 			bgColor: {
 				r: 1
@@ -362,6 +349,19 @@ atlasData: {
 			tint: null
 			tintName: null
 			name: fontawesome
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/window.9.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: window
 		}
 	]
 }

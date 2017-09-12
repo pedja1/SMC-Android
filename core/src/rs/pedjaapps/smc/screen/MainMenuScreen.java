@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -50,7 +49,6 @@ import rs.pedjaapps.smc.view.SelectionAdapter;
  */
 public class MainMenuScreen extends AbstractScreen implements InputProcessor {
     public MaryoGame game;
-    public boolean isSelection;
     private Texture gameLogo;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
@@ -79,7 +77,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         drawCam = new OrthographicCamera();
         viewPort = new FitViewport(Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT);
         viewPort.setCamera(drawCam);
-        drawCam.position.set(Constants.MENU_CAMERA_WIDTH / 2 + (Constants.MENU_DRAW_WIDTH - Constants.MENU_CAMERA_WIDTH) / 2, Constants.MENU_CAMERA_HEIGHT / 2, 0);
+        drawCam.position.set(Constants.MENU_CAMERA_WIDTH / 2 + (Constants.MENU_DRAW_WIDTH - Constants
+                .MENU_CAMERA_WIDTH) / 2, Constants.MENU_CAMERA_HEIGHT / 2, 0);
         drawCam.update();
 
         hudCam = new OrthographicCamera(screenWidth, screenHeight);
@@ -120,7 +119,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        delta = Math.min(delta, 1/30f);
+        delta = Math.min(delta, 1 / 30f);
         Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -141,13 +140,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
         batch.end();
 
-        if (isSelection) {
-            selectionAdapter.render(delta);
-        } else {
-            stage.getViewport().apply();
-            stage.act(delta);
-            stage.draw();
-        }
+        stage.getViewport().apply();
+        stage.act(delta);
+        stage.draw();
 
         exitDialog.render(batch);
 
@@ -208,7 +203,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal("data/clouds/default_1/"));
+        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal
+                ("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();
 
@@ -230,6 +226,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is
         // 0-1 range where 1 = 255
 
+        //TODO in HUD
         gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
@@ -248,13 +245,12 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
         Skin skin = game.assets.manager.get(Assets.ASSET_HUDSKIN, Skin.class);
         selectionAdapter = new SelectionAdapter(loadSelectionItems(), this, skin);
-        selectionAdapter.initAssets();
 
         TextButton play = new TextButton("Play", skin);
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isSelection = true;
+                selectionAdapter.show(stage);
             }
         });
         TextButton sound = new TextButton(getSoundStateIcon(), skin, "fa45");
@@ -284,7 +280,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
             public boolean keyDown(InputEvent event, int keycode) {
                 switch (keycode) {
                     case Input.Keys.ENTER:
-                        isSelection = true;
+                        selectionAdapter.show(stage);
                         return true;
                     case Input.Keys.BACK:
                     case Input.Keys.ESCAPE:
@@ -339,10 +335,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
             return true;
         }
 
-        if (isSelection) {
-            selectionAdapter.touchDown(x, y);
-        }
-
         return false;
     }
 
@@ -356,9 +348,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
             return true;
         }
 
-        if (isSelection) {
-            selectionAdapter.touchUp(x, y);
-        }
         return false;
     }
 
@@ -372,9 +361,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
             return true;
         }
 
-        if (isSelection) {
-            selectionAdapter.touchDragged(x, y);
-        }
         return false;
     }
 
