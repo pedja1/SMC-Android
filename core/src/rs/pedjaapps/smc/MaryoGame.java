@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,7 +9,6 @@ import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
-import rs.pedjaapps.smc.screen.SplashScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -34,15 +32,14 @@ public class MaryoGame extends Game
 		assets = new Assets();
 		Shader.init();
 		GameSave.init();
-		setScreen(new SplashScreen(this));
+		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 
 	@Override
 	public void resume()
 	{
-		Screen currentScreen = getScreen();
-		if(currentScreen instanceof SplashScreen)return;
 		Texture.setAssetManager(assets.manager);
+		Screen currentScreen = getScreen();
 		setScreen(new LoadingScreen((AbstractScreen)currentScreen, true));
 	}
 

@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -49,7 +50,6 @@ import rs.pedjaapps.smc.view.SelectionAdapter;
  */
 public class MainMenuScreen extends AbstractScreen implements InputProcessor {
     public MaryoGame game;
-    private Texture gameLogo;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
     private Background background;
@@ -133,8 +133,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         cloudsPEffect.draw(batch, delta);
 
         drawObjects(delta);
-
-        Utility.draw(batch, gameLogo, 2f, 5f, 2f);
 
         batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
 
@@ -226,9 +224,13 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is
         // 0-1 range where 1 = 255
 
-        //TODO in HUD
-        gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
+        Texture gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Image imGameLogo = new Image(gameLogo);
+        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
+        imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10f, Align.top);
+        stage.addActor(imGameLogo);
+
         //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
         //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         world.level = loader.level;
@@ -253,6 +255,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
                 selectionAdapter.show(stage);
             }
         });
+        //TODO wird verschieden breit. Breite setzen oder Fixfont einstellen
         TextButton sound = new TextButton(getSoundStateIcon(), skin, "fa45");
         sound.addListener(new ChangeListener() {
             @Override
@@ -295,7 +298,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         });
 
         stage.addActor(play);
-        play.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        play.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - 50, Align.center);
         stage.addActor(sound);
         sound.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
 

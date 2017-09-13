@@ -32,7 +32,6 @@ public class SelectionAdapter extends Dialog {
         for (Level level : items) {
             if (col == 0)
                 mainTable.row();
-            Gdx.app.log("", level.levelId);
             col++;
             offset++;
 
