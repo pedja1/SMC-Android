@@ -546,6 +546,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void resize(int width, int height)
     {
+        super.resize(width, height);
         this.width = width;
         this.height = height;
 
@@ -582,19 +583,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public void pause()
     {
+        super.pause();
         gameState = GAME_STATE.GAME_PAUSED;
         music.stop();
     }
 
     @Override
-    public void resume()
-    {
-
+    public void resume() {
+        MusicManager.play(music);
     }
 
     @Override
     public void dispose()
     {
+        super.dispose();
         music.stop();
         hud.dispose();
         Gdx.input.setInputProcessor(null);

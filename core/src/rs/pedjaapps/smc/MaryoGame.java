@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.AbstractScreen;
@@ -32,20 +33,13 @@ public class MaryoGame extends Game
 		assets = new Assets();
 		Shader.init();
 		GameSave.init();
+        assets.manager.load(Assets.ASSET_HUDSKIN, Skin.class);
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 
 	@Override
-	public void resume()
-	{
-		Texture.setAssetManager(assets.manager);
-		Screen currentScreen = getScreen();
-		setScreen(new LoadingScreen((AbstractScreen)currentScreen, true));
-	}
-
-	@Override
-	public void pause()
-	{
+	public void pause()	{
+		super.pause();
 		PrefsManager.flush();
 	}
 
@@ -63,14 +57,6 @@ public class MaryoGame extends Game
     {
         Gdx.app.exit();
     }
-
-	public void restart()
-	{
-		assets.dispose();
-		assets = null;
-		assets = new Assets();
-		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
-	}
 
 	public static boolean showOnScreenControls()
 	{

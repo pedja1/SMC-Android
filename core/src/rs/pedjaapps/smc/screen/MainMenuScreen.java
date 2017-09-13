@@ -19,7 +19,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -40,7 +39,6 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
-import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.SelectionAdapter;
@@ -62,7 +60,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
     private Sound audioOn;
     private World world;
     private ParticleEffect cloudsPEffect;
-    private Stage stage;
     private SelectionAdapter selectionAdapter;
     private ConfirmDialog exitDialog;
     private Viewport viewPort;
@@ -92,9 +89,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         world = new World(this);
 
         exitDialog = new ConfirmDialog(this, hudCam);
-
-
-        stage = new Stage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
     }
 
     private Array<SelectionAdapter.Level> loadSelectionItems() {
@@ -159,27 +153,31 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public void resize(int width, int height) {
+        super.resize(width, height);
         viewPort.update(width, height);
-        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void hide() {
+        super.hide();
         music.stop();
     }
 
     @Override
     public void pause() {
-        music.stop();
+        super.pause();
+        music.pause();
     }
 
     @Override
     public void resume() {
+        super.resume();
         MusicManager.play(music);
     }
 
     @Override
     public void dispose() {
+        super.dispose();
         Gdx.input.setInputProcessor(null);
         game.assets.dispose();
         background.dispose();
@@ -187,13 +185,11 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         batch.dispose();
         exitDialog.dispose();
         music.stop();
-        stage.dispose();
     }
 
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
-        game.assets.manager.load(Assets.ASSET_HUDSKIN, Skin.class);
         game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
         game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
