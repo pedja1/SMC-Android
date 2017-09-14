@@ -173,8 +173,29 @@ com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
-		background: progressbar
-		knobBefore: small_empty_square_button
+		background: progressbar_9
+		knob: progressbar_knob
+		knobBefore: progressbarbef
+	}
+	default-vertical: {
+		background: progressbar_9
+		knob: progressbar_knobv
+		knobBefore: progressbarbef
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: window
+		hScrollKnob: slider
+		vScrollKnob: slider
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: progressbar_9
+		knob: slider
+		disabledKnob: slider_disabled
+		knobBefore: progressbarbef
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
