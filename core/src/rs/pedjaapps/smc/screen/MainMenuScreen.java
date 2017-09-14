@@ -165,8 +165,8 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public void pause() {
-        super.pause();
         music.pause();
+        super.pause();
     }
 
     @Override
@@ -193,7 +193,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
         game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
-        game.assets.manager.load("data/game/logo/smc_big_1.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
         cloudsPEffect = new ParticleEffect();
@@ -220,15 +219,10 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is
         // 0-1 range where 1 = 255
 
-        Texture gameLogo = game.assets.manager.get("data/game/logo/smc_big_1.png");
-        gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image imGameLogo = new Image(gameLogo);
-        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
+        Image imGameLogo = createLogoImage(game);
         imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10f, Align.top);
         stage.addActor(imGameLogo);
 
-        //gdxLogo = Assets.manager.get("/game/logo/libgdx.png");
-        //gdxLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         world.level = loader.level;
 
         TextureAtlas atlas = game.assets.manager.get("data/maryo/small.pack");
@@ -241,7 +235,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         for (GameObject go : loader.level.gameObjects)
             go.initAssets();
 
-        Skin skin = game.assets.manager.get(Assets.ASSET_HUDSKIN, Skin.class);
+        Skin skin = game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
         selectionAdapter = new SelectionAdapter(loadSelectionItems(), this, skin);
 
         TextButton play = new TextButton("Play", skin);
@@ -298,6 +292,14 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         stage.addActor(sound);
         sound.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
 
+    }
+
+    public static Image createLogoImage(MaryoGame game) {
+        Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
+        //gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Image imGameLogo = new Image(gameLogo);
+        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
+        return imGameLogo;
     }
 
     private String getSoundStateIcon() {

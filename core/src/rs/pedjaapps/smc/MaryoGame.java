@@ -2,12 +2,9 @@ package rs.pedjaapps.smc;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.shader.Shader;
@@ -33,7 +30,7 @@ public class MaryoGame extends Game
 		assets = new Assets();
 		Shader.init();
 		GameSave.init();
-        assets.manager.load(Assets.ASSET_HUDSKIN, Skin.class);
+        assets.manager.load(Assets.SKIN_HUD, Skin.class);
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 

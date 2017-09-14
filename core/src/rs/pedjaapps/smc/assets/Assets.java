@@ -20,7 +20,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
  * Created by pedja on 2/15/14.
  */
 public class Assets {
-    public static final String ASSET_HUDSKIN = "data/hud/smcskin.json";
+    public static final String SKIN_HUD = "data/hud/smcskin.json";
+    public static final String LOGO_GAME = "data/game/logo/smc_big_1.png";
+    public static final String LOGO_LOADING = "data/game/logo/loading.png";
 
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
