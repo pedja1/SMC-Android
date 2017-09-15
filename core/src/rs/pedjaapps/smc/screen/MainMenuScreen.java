@@ -299,7 +299,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
     public static Image createLogoImage(MaryoGame game) {
         Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
-        //gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Image imGameLogo = new Image(gameLogo);
         imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
         return imGameLogo;

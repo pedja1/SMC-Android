@@ -54,7 +54,10 @@ public class LoadingScreen extends AbstractScreen {
         loading.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
         stage.addActor(loading);
 
-        Image imLoadingLogo = new Image(game.assets.manager.get(Assets.LOGO_LOADING, Texture.class));
+        Texture txtLoadingLogo = game.assets.manager.get(Assets.LOGO_LOADING, Texture.class);
+        txtLoadingLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Image imLoadingLogo = new Image(txtLoadingLogo);
+        imLoadingLogo.setSize(imLoadingLogo.getWidth() * .33f, imLoadingLogo.getHeight() * .33f);
         imLoadingLogo.setPosition(stage.getWidth() / 2, loading.getY() + loading.getHeight() + (imGameLogo.getY() -
                 loading.getY() - loading.getHeight()) / 2, Align.center);
         stage.addActor(imLoadingLogo);
