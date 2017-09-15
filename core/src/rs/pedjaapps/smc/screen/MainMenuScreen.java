@@ -114,6 +114,9 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
     @Override
     public void render(float delta) {
         delta = Math.min(delta, 1 / 30f);
+        if (delta <= 0)
+            return;
+
         Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
