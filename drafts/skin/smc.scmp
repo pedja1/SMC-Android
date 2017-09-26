@@ -338,19 +338,6 @@ atlasData: {
 			name: fontawesome
 		}
 		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/window.9.png
-			bgColor: {
-				r: 1
-				g: 1
-				b: 1
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: window
-		}
-		{
 			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/stagebackground.png
 			bgColor: {
 				r: 1
@@ -440,6 +427,19 @@ atlasData: {
 			tint: null
 			tintName: null
 			name: slider_disabled
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/window.9.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: window
 		}
 	]
 }
@@ -2040,7 +2040,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: window
+						value: null
 					}
 					corner: {
 						class: com.ray3k.skincomposer.data.StyleProperty
