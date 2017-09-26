@@ -46,7 +46,7 @@ import rs.pedjaapps.smc.view.SelectionAdapter;
 /**
  * Created by pedja on 2/17/14.
  */
-public class MainMenuScreen extends AbstractScreen implements InputProcessor {
+public class MainMenuScreen extends AbstractScreen {
     public MaryoGame game;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
@@ -61,7 +61,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
     private World world;
     private ParticleEffect cloudsPEffect;
     private SelectionAdapter selectionAdapter;
-    private ConfirmDialog exitDialog;
     private Viewport viewPort;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -87,8 +86,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
         world = new World(this);
-
-        exitDialog = new ConfirmDialog(this, hudCam);
     }
 
     private Array<SelectionAdapter.Level> loadSelectionItems() {
@@ -104,7 +101,7 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public void show() {
-        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setCatchBackKey(false);
         Gdx.input.setInputProcessor(stage);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
         music.setLooping(true);
@@ -138,9 +135,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
-
-        exitDialog.render(batch);
-
     }
 
     private void drawObjects(float deltaTime) {
@@ -186,7 +180,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         background.dispose();
         backgroundColor.dispose();
         batch.dispose();
-        exitDialog.dispose();
         music.stop();
     }
 
@@ -205,8 +198,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         cloudsPEffect.start();
 
         game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
-        exitDialog.loadAssets();
-
     }
 
     @Override
@@ -232,8 +223,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
         marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
 
         audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
-
-        exitDialog.initAssets();
 
         for (GameObject go : loader.level.gameObjects)
             go.initAssets();
@@ -278,11 +267,6 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
                     case Input.Keys.ENTER:
                         selectionAdapter.show(stage);
                         return true;
-                    case Input.Keys.BACK:
-                    case Input.Keys.ESCAPE:
-                        if (exitDialog.visible) exitDialog.hide();
-                        else exitDialog.show();
-                        return true;
                     default:
                         return false;
                 }
@@ -312,69 +296,5 @@ public class MainMenuScreen extends AbstractScreen implements InputProcessor {
             return FontAwesome.SETTINGS_SPEAKER_ON;
         else
             return FontAwesome.SETTINGS_SPEAKER_OFF;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        float x = screenX;//screenX / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = screenHeight - screenY;
-
-        if (exitDialog.visible) {
-            exitDialog.touchDown(x, y);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = screenHeight - screenY;
-
-        if (exitDialog.visible) {
-            exitDialog.touchUp(x, y);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        float x = screenX;// / (screenWidth / Constants.CAMERA_WIDTH);
-        float y = screenHeight - screenY;
-
-        if (exitDialog.visible) {
-            exitDialog.touchDragged(x, y);
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
     }
 }
