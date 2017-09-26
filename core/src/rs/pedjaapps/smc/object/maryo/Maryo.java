@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.object.maryo;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -1080,6 +1081,10 @@ public class Maryo extends DynamicObject
                             turtle.mColRect.x = turtle.position.x = mColRect.x - turtle.mColRect.width - 0.1f;
                             turtle.updateBounds();
                         }
+                        String soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
+                        AssetManager assetManager = world.screen.game.assets.manager;
+                        if (assetManager.isLoaded(soundFile))
+                            SoundManager.play(assetManager.get(soundFile, Sound.class));
                     }
                     else
                     {

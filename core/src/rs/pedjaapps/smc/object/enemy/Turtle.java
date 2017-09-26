@@ -54,7 +54,6 @@ public class Turtle extends Enemy
         }
         setupBoundingBox();
         world.screen.game.assets.manager.load("data/sounds/enemy/turtle/shell/hit.mp3", Sound.class);
-        world.screen.game.assets.manager.load("data/sounds/enemy/turtle/hit.mp3", Sound.class);
     }
 
     @Override
@@ -317,20 +316,6 @@ public class Turtle extends Enemy
         }
         else
         {
-            String soundFile;
-            if(isShell)
-            {
-                soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
-            }
-            else
-            {
-                soundFile = "data/sounds/enemy/turtle/hit.mp3";
-            }
-            AssetManager assetManager = world.screen.game.assets.manager;
-            if(assetManager.isLoaded(soundFile))
-            {
-                SoundManager.play(assetManager.get(soundFile, Sound.class));
-            }
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
