@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -40,7 +39,6 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.view.Background;
-import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.SelectionAdapter;
 
 /**
@@ -196,14 +194,10 @@ public class MainMenuScreen extends AbstractScreen {
                 ("data/clouds/default_1/"));
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();
-
-        game.assets.manager.load("data/hud/lock.png", Texture.class, game.assets.textureParameter);
     }
 
     @Override
     public void onAssetsLoaded() {
-        TextureAtlas hud = game.assets.manager.get("data/hud/hud.pack");
-
         background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png",
                 Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH * 2, Constants
                 .MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);

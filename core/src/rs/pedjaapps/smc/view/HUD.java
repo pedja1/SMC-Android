@@ -1,44 +1,36 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.HashSet;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
-import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
-import rs.pedjaapps.smc.utility.Utility;
 
 import static com.badlogic.gdx.Gdx.gl;
 
@@ -58,17 +50,12 @@ public class HUD
     public Array<Vector2> upPolygon = new Array<Vector2>(5);
     public Array<Vector2> downPolygon = new Array<Vector2>(5);
 
-	public OrthographicCamera cam;
 	private SpriteBatch batch;
-	private Stage stage;
+	public Stage stage;
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	private BitmapFont font, tts, pauseFont;
-	private GlyphLayout ttsGlyphLayout, fontGlyphLayout, pauseGlyph;
-
-	private static float C_W = Gdx.graphics.getWidth();
-	private static float C_H = Gdx.graphics.getHeight();
+	private Label scoreLabel;
 
 	public enum Key
 	{
@@ -79,123 +66,111 @@ public class HUD
 	
 	private float stateTime;
 	public boolean updateTimer = true;
-	
-	private static final String ttsText = "TOUCH ANYWHERE TO START";
-	private static final String pauseText = "PAUSE";
-	private boolean ttsFadeIn;
-	private float ttsAlpha = 1;
+
 	private int points;
 	private String pointsText;
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
-	public BoxTextPopup boxTextPopup;
-
+	private Label ttsLabel;
+	private Label pauseLabel;
+	private Image imItemBox;
 	public HUD(World world)
 	{
 		this.world = world;
-		cam = new OrthographicCamera(C_W, C_H);
-		cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
-		cam.update();
 		batch = new SpriteBatch();
-		stage = new Stage(new ScreenViewport());
-        setBounds();
+		stage = new Stage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
+		setBounds();
 	}
 
-    private void setBounds()
-    {
-        float width = C_H / 10f;
-        float height = width;
-        float x = C_W - width * 1.5f;
-        float y = C_H - height * 1.5f;
-        pauseR = new Rectangle(x, y, width, height);
+	private void setBounds()
+	{
+		float width = MaryoGame.NATIVE_HEIGHT / 10f;
+		float height = width;
+		float x = MaryoGame.NATIVE_WIDTH - width * 1.5f;
+		float y = MaryoGame.NATIVE_HEIGHT - height * 1.5f;
+		pauseR = new Rectangle(x, y, width, height);
 
-        width = C_H / 7f;
-        height = width;
-        x = C_W - width * 1.5f;
-        y = C_H - height * 5f;
-        fireR = new Rectangle(x, y, width, height);
+		width = MaryoGame.NATIVE_HEIGHT / 7f;
+		height = width;
+		x = MaryoGame.NATIVE_WIDTH - width * 1.5f;
+		y = MaryoGame.NATIVE_HEIGHT - height * 5f;
+		fireR = new Rectangle(x, y, width, height);
 		float bX = x - width * .25f;
 		float bY = y - height * .25f;
 		float bW = width + width *.5f;
 		float bH = height + height * 0.5f;
 		fireRT = new Rectangle(bX, bY, bW, bH);
-		
-        x = bX - width * 1.25f;
-        y = bY - height;
+
+		x = bX - width * 1.25f;
+		y = bY - height;
 		bY = bY + bH * .25f;
-        jumpR = new Rectangle(x, y, width, height);
+		jumpR = new Rectangle(x, y, width, height);
 		jumpRT = new Rectangle(bX - bW, bY - bH, bW, bH);
-		
-        x = width / 2f;
-        y = height * 1.5f;
-        width = width * 1.24f;
-        leftR = new Rectangle(x, y, width, height);
-        leftPolygon.clear();
-        leftPolygon.add(new Vector2(x, y + height));
-        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
-        leftPolygon.add(new Vector2(x + width, y + height / 2));
-        leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y));
-        leftPolygon.add(new Vector2(x, y));
 
-        x = x + width + width / 4f;
-        rightR = new Rectangle(x, y, width, height);
-        rightPolygon.clear();
-        rightPolygon.add(new Vector2(x, y + height / 2));
-        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
-        rightPolygon.add(new Vector2(x + width, y + height));
-        rightPolygon.add(new Vector2(x + width, y));
-        rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));
+		x = width / 2f;
+		y = height * 1.5f;
+		width = width * 1.24f;
+		leftR = new Rectangle(x, y, width, height);
+		leftPolygon.clear();
+		leftPolygon.add(new Vector2(x, y + height));
+		leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y + height));
+		leftPolygon.add(new Vector2(x + width, y + height / 2));
+		leftPolygon.add(new Vector2(x + width - x / 100 * 23.25f, y));
+		leftPolygon.add(new Vector2(x, y));
 
-        width = C_H / 7f;
-        height = width * 1.24f;
-        x = x - width / 2f - width / 8f;
-        y = y + height / 2f;
-        upR = new Rectangle(x, y, width, height);
-        upPolygon.clear();
-        upPolygon.add(new Vector2(x, y + height));
-        upPolygon.add(new Vector2(x + width, y + height));
-        upPolygon.add(new Vector2(x + width, y + y / 100 * 23.25f));
-        upPolygon.add(new Vector2(x + width / 2, y));
-        upPolygon.add(new Vector2(x, y + y / 100 * 23.25f));
+		x = x + width + width / 4f;
+		rightR = new Rectangle(x, y, width, height);
+		rightPolygon.clear();
+		rightPolygon.add(new Vector2(x, y + height / 2));
+		rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y + height));//x / 100 * 23.25%
+		rightPolygon.add(new Vector2(x + width, y + height));
+		rightPolygon.add(new Vector2(x + width, y));
+		rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));
 
-        y = y - height - height / 4f;
-        downR = new Rectangle(x, y, width, height);
-        downPolygon.clear();
-        downPolygon.add(new Vector2(x + width / 2, y + width));
-        downPolygon.add(new Vector2(x + width, y + height - y / 100 * 23.25f));
-        downPolygon.add(new Vector2(x + width, y));
-        downPolygon.add(new Vector2(x, y));
-        downPolygon.add(new Vector2(x, y + height - y / 100 * 23.25f));
+		width = MaryoGame.NATIVE_WIDTH / 7f;
+		height = width * 1.24f;
+		x = x - width / 2f - width / 8f;
+		y = y + height / 2f;
+		upR = new Rectangle(x, y, width, height);
+		upPolygon.clear();
+		upPolygon.add(new Vector2(x, y + height));
+		upPolygon.add(new Vector2(x + width, y + height));
+		upPolygon.add(new Vector2(x + width, y + y / 100 * 23.25f));
+		upPolygon.add(new Vector2(x + width / 2, y));
+		upPolygon.add(new Vector2(x, y + y / 100 * 23.25f));
 
-		width = C_H / 10f;
+		y = y - height - height / 4f;
+		downR = new Rectangle(x, y, width, height);
+		downPolygon.clear();
+		downPolygon.add(new Vector2(x + width / 2, y + width));
+		downPolygon.add(new Vector2(x + width, y + height - y / 100 * 23.25f));
+		downPolygon.add(new Vector2(x + width, y));
+		downPolygon.add(new Vector2(x, y));
+		downPolygon.add(new Vector2(x, y + height - y / 100 * 23.25f));
+
+		width = MaryoGame.NATIVE_HEIGHT / 10f;
 		height = width;
-		x = C_W / 2 - width / 2;
+		x = MaryoGame.NATIVE_WIDTH / 2 - width / 2;
 		y = height * 2.1f + height;
 		soundR = new Rectangle(x, y, width, height);
-		
+
 		x = x * 1.20f;
 		musicR = new Rectangle(x, y, width, height);
-		
+
 		x = soundR.x * 0.80f;
 		playR = new Rectangle(x, y, width, height);
-		
-		float ibSize = C_W / 14;
-		itemBoxR = new Rectangle(C_W / 2 - ibSize, C_H - ibSize - ibSize / 5, ibSize, ibSize);
-		
+
+		float ibSize = MaryoGame.NATIVE_WIDTH / 14;
+		itemBoxR = new Rectangle(MaryoGame.NATIVE_WIDTH / 2 - ibSize, MaryoGame.NATIVE_HEIGHT - ibSize - ibSize / 5, ibSize, ibSize);
+
 		float maryoLSize = itemBoxR.height / 2.5f;
 		maryoLR = new Rectangle(pauseR.x - maryoLSize * 3, itemBoxR.y + itemBoxR.height - maryoLSize - maryoLSize / 2, maryoLSize * 2, maryoLSize);
-    }
+	}
 
     public void resize(int width, int height)
     {
-        C_W = Gdx.graphics.getWidth();
-        C_H = Gdx.graphics.getHeight();
-        cam = new OrthographicCamera(C_W, C_H);
-        cam.position.set(new Vector2(C_W / 2, C_H / 2), 0);
-        cam.update();
 		stage.getViewport().update(width, height, true);
-        setBounds();
     }
 	
 	public void loadAssets()
@@ -203,32 +178,11 @@ public class HUD
 		world.screen.game.assets.manager.load("data/sounds/item/live_up_2.mp3", Sound.class);
 
 		world.screen.game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
-		world.screen.game.assets.manager.load("data/hud/SMCLook512.pack", TextureAtlas.class);
 		world.screen.game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
 		world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets.textureParameter);
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets.textureParameter);
         world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets.textureParameter);
 		world.screen.game.assets.manager.load("data/game/game_over.png", Texture.class, world.screen.game.assets.textureParameter);
-		
-		FreetypeFontLoader.FreeTypeFontLoaderParameter ttsTextParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        ttsTextParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        ttsTextParams.fontParameters.size = (int) C_H / 15;
-        ttsTextParams.fontParameters.characters = "TOUCHANYWERS";
-		ttsTextParams.fontParameters.borderWidth = 2f;
-		world.screen.game.assets.manager.load("touch_to_start.ttf", BitmapFont.class, ttsTextParams);
-
-		FreetypeFontLoader.FreeTypeFontLoaderParameter boxPD = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-		boxPD.fontFileName = "data/fonts/MyriadPro-Regular.otf";
-		boxPD.fontParameters.size = (int) HUD.C_H / 30;
-		boxPD.fontParameters.borderWidth = 2f;
-		world.screen.game.assets.manager.load("btf.ttf", BitmapFont.class, boxPD);
-
-		FreetypeFontLoader.FreeTypeFontLoaderParameter pauseParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-		pauseParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-		pauseParams.fontParameters.size = (int) C_H / 4;
-		pauseParams.fontParameters.characters = "PAUSE";
-		pauseParams.fontParameters.borderWidth = 2f;
-		world.screen.game.assets.manager.load("pause.ttf", BitmapFont.class, pauseParams);
 	}
 
     public void initAssets()
@@ -271,63 +225,47 @@ public class HUD
 		itemBox.setFilter(filter, filter);
 		maryoL.setFilter(filter, filter);
 		goldM.setFilter(filter, filter);
-		
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Constants.DEFAULT_FONT_FILE_NAME));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = (int) C_H / 25;
-        parameter.characters = "0123456789TimePontsx:";
-        parameter.magFilter = Texture.TextureFilter.Linear;
-        parameter.minFilter = Texture.TextureFilter.Linear;
-		parameter.borderWidth = 2f;
-        font = generator.generateFont(parameter);
-		font.setColor(1, 1, 1, 1);//white
-		fontGlyphLayout = new GlyphLayout();
-		
-		generator.dispose();
 
-		tts = world.screen.game.assets.manager.get("touch_to_start.ttf");
-		tts.setColor(1, 1, 1, 1);
-		ttsGlyphLayout = new GlyphLayout(font, ttsText);
-		BitmapFont btf = world.screen.game.assets.manager.get("btf.ttf");
-		btf.setColor(1, 1, 1, 1);
-		boxTextPopup = new BoxTextPopup(btf, world.screen.game.assets);
+		Skin skin = world.screen.game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
 
-		pauseFont = world.screen.game.assets.manager.get("pause.ttf");
-		pauseFont.setColor(1, 1, 1, 1);
-		pauseGlyph = new GlyphLayout(pauseFont, pauseText);
+		ttsLabel = new Label("TOUCH ANYWHERE TO START", skin, Assets.LABEL_BORDER60);
+		ttsLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+		ttsLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
+		stage.addActor(ttsLabel);
+
+		pauseLabel = new Label("PAUSE", skin, Assets.LABEL_BORDER60);
+		pauseLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+		pauseLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
+		stage.addActor(pauseLabel);
+
+		scoreLabel = new Label("", skin, Assets.LABEL_BORDER25);
+		scoreLabel.setPosition(0, stage.getHeight(), Align.topLeft);
+		stage.addActor(scoreLabel);
+
+		imItemBox = new Image(itemBox);
+		imItemBox.setPosition(stage.getWidth() / 2, 0, Align.top);
+		stage.addActor(imItemBox);
+
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
 	{
-		if (gameState == GameScreen.GAME_STATE.GAME_READY)
-		{
-			batch.setProjectionMatrix(cam.combined);
-			batch.begin();
-			if(ttsAlpha >= 1)
-			{
-				ttsAlpha = 1;
-				ttsFadeIn = false;
-			}
-			else if(ttsAlpha <= 0.3f)
-			{
-				ttsFadeIn = true;
-			}
-			tts.setColor(1, 1, 1, ttsFadeIn ? (ttsAlpha += deltaTime) : (ttsAlpha -= deltaTime));
-			ttsGlyphLayout.setText(tts, ttsText);
-			tts.draw(batch, ttsText, C_W / 2 - ttsGlyphLayout.width / 2, C_H / 2 + ttsGlyphLayout.height / 2);
-			batch.end();
-		}
-		else if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
+		ttsLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
+		pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+
+		boolean isInGame = !(gameState == GameScreen.GAME_STATE.GAME_READY
+				|| gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+		scoreLabel.setVisible(isInGame);
+		imItemBox.setVisible(isInGame);
+
+		if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
 		{
 			drawPauseOverlay();
 		}
 		else
 		{
-			stage.act(deltaTime);
-			stage.draw();
-
 			if(updateTimer)stateTime += deltaTime;
-			batch.setProjectionMatrix(cam.combined);
+			batch.setProjectionMatrix(stage.getCamera().combined);
 			batch.begin();
 			if(pressedKeys.contains(Key.pause))batch.setShader(Shader.GLOW_SHADER);
 			batch.draw(pause, pauseR.x, pauseR.y, pauseR.width, pauseR.height);
@@ -341,69 +279,44 @@ public class HUD
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
-            if(GameSave.getItem() != null)
-                batch.setColor(Color.RED);
-			batch.draw(itemBox, itemBoxR.x, itemBoxR.y, itemBoxR.width, itemBoxR.height);
-            batch.setColor(Color.WHITE);
 
-			batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
+			//batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
 			
 			// points
 			pointsText = formatPointsString(GameSave.save.points);
-			fontGlyphLayout.setText(font, pointsText);
-			float pointsX = C_W * 0.03f;
-			float pointsY = fontGlyphLayout.height / 2 + maryoLR.y + maryoLR.height / 2;
-			font.setColor(1, 1, 1, 1);
-			font.draw(batch, pointsText, pointsX, pointsY);
-			
+			scoreLabel.setText(pointsText);
+
 			//coins
-			float goldHeight = fontGlyphLayout.height * 1.1f;
-			float goldX = pointsX + fontGlyphLayout.width + goldHeight;
-			batch.draw(goldM, goldX, pointsY - fontGlyphLayout.height, goldHeight * 2, goldHeight);
-			
 			String coins =  this.coins.toString(GameSave.getCoins());
-			font.setColor(1, 1, 1, 1);
-			font.draw(batch, coins, goldX + goldHeight * 2, pointsY);
-			
+
 			//time
 			time.update(stateTime);
-			fontGlyphLayout.setText(font, time);
-			float timeX = (itemBoxR.x + itemBoxR.width) + (maryoLR.x - (itemBoxR.x + itemBoxR.width)) / 2 - fontGlyphLayout.width / 2;
-			font.setColor(1, 1, 1, 1);
-			font.draw(batch, time, timeX, pointsY);
-			
+			//fontGlyphLayout.setText(font, time);
+
 			//lives
 			String lives = this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0));
-			fontGlyphLayout.setText(font, lives);
-			float lifesX = maryoLR.x - fontGlyphLayout.width;
-			font.setColor(0, 1, 0, 1);
-			font.draw(batch, lives, lifesX, pointsY);
 
             //draw item if any
             if(GameSave.getItem() != null)
             {
-                float w = itemBoxR.width * 0.5f;
-                float h = itemBoxR.height * 0.5f;
-                float x = itemBoxR.x + itemBoxR.width * 0.5f - w * 0.5f;
-                float y = itemBoxR.y + itemBoxR.height * 0.5f - h * 0.5f;
+                float w = imItemBox.getWidth() * 0.5f;
+                float h = imItemBox.getHeight() * 0.5f;
+                float x = imItemBox.getX();
+                float y = imItemBox.getY();
                 batch.draw(GameSave.getItem().texture, x, y, w, h);
             }
 
 			batch.end();
-			boxTextPopup.render(batch, cam);
 		}
 		if(PrefsManager.isDebug())drawDebug();
+
+		stage.getViewport().apply();
+		stage.act(deltaTime);
+		stage.draw();
 	}
 	
 	private void drawDebug()
 	{
-		shapeRenderer.setProjectionMatrix(cam.combined);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		shapeRenderer.setColor(1, 0, 0, 1f);
-		shapeRenderer.rect(fireRT.x, fireRT.y, fireRT.width, fireRT.height);
-		shapeRenderer.rect(jumpRT.x, jumpRT.y, jumpRT.width, jumpRT.height);
-		
-		shapeRenderer.end();
 	}
 
     private String formatPointsString(int points)
@@ -431,17 +344,14 @@ public class HUD
 		gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glEnable(GL20.GL_BLEND);
 
-		shapeRenderer.setProjectionMatrix(cam.combined);
+		shapeRenderer.setProjectionMatrix(stage.getCamera().combined);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 		shapeRenderer.setColor(0, 0, 0, 0.5f);
-		shapeRenderer.rect(0, 0, C_W, C_H);
+		shapeRenderer.rect(0, 0, MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT);
 		shapeRenderer.end();
 
-		batch.setProjectionMatrix(cam.combined);
+		batch.setProjectionMatrix(stage.getCamera().combined);
 		batch.begin();
-
-		//pause
-		pauseFont.draw(batch, pauseGlyph, C_W * .5f - pauseGlyph.width * .5f, C_H * .8f);
 
 		if(pressedKeys.contains(Key.play))batch.setShader(Shader.GLOW_SHADER);
 		batch.draw(play, playR.x, playR.y, playR.width, playR.height);
@@ -563,132 +473,4 @@ public class HUD
 		stage.dispose();
 	}
 
-	public static class BoxTextPopup
-	{
-		BitmapFont font;
-		GlyphLayout glyphLayout;
-		float x, y, w, h;
-		public float scrollY, touchDownY;
-		public boolean showing;
-		TextureRegion back;
-		String text;
-
-		Rectangle scissors;
-		Rectangle clipBounds;
-
-		public BoxTextPopup(BitmapFont font, Assets assets)
-		{
-			this.font = font;
-			glyphLayout = new GlyphLayout();
-			TextureAtlas atlas = assets.manager.get("data/hud/SMCLook512.pack");
-			back = atlas.findRegion("ClientBrush");
-			scissors = new Rectangle();
-			clipBounds = new Rectangle();
-		}
-
-		public void render(SpriteBatch batch, OrthographicCamera camera)
-		{
-			if(!showing)return;
-
-			batch.setProjectionMatrix(camera.combined);
-			batch.begin();
-
-			ScissorStack.calculateScissors(camera, batch.getTransformMatrix(), clipBounds, scissors);
-			ScissorStack.pushScissors(scissors);
-
-			batch.draw(back, x, y, w, h);
-			glyphLayout.setText(font, text, Color.WHITE, w - 20, Align.left, true);
-			font.draw(batch, glyphLayout, x + 10, y + h - 10 - scrollY);
-
-			batch.end();
-			ScissorStack.popScissors();
-		}
-
-		public void show(Box box, GameScreen gameScreen)
-		{
-			scrollY = 0;
-			showing = true;
-
-			Vector2 point = World.VECTOR2_POOL.obtain();
-			Utility.gamePositionToGuiPosition(box.mDrawRect.x + box.mDrawRect.width / 2,
-					box.mDrawRect.y + box.mDrawRect.height * 1.1f, gameScreen, point);
-
-			//set initial x, y, w, h
-			w = gameScreen.hud.cam.viewportWidth * 0.33f;
-			h = w / 1.6f;//16x10
-			x = point.x - w / 2;
-			y = point.y;
-
-			if(x < 0)
-			{
-				x = 10;
-			}
-			if(y + h > gameScreen.hud.cam.viewportHeight)
-			{
-				//since by default popup is above box, and we don't want to cover box, we must first move it on x
-				float boxWidth = Utility.gameWidthToGuiWidth(gameScreen, box.mDrawRect.width);
-				x = point.x + boxWidth;
-				y = gameScreen.hud.cam.viewportHeight - 10 - h;
-			}
-			if(x + w > gameScreen.hud.cam.viewportWidth)
-			{
-				float boxWidth = Utility.gameWidthToGuiWidth(gameScreen, box.mDrawRect.width);
-				x = point.x - w - boxWidth;
-			}
-			clipBounds.set(x, y, w, h);
-
-			World.VECTOR2_POOL.free(point);
-			text = box.text;
-		}
-
-		public void hide()
-		{
-			showing = false;
-		}
-
-		public void dispose()
-		{
-			font.dispose();
-			font = null;
-			back = null;
-		}
-
-		public boolean onTouchDown(int x, float y, int pointer, int button)
-		{
-			if(clipBounds.contains(x, y))
-			{
-				touchDownY = scrollY + y;
-				return true;
-			}
-			return false;
-		}
-
-		public boolean onTouchUp(int x, float y, int pointer, int button)
-		{
-			touchDownY = 0;
-			return false;
-		}
-
-		public boolean onTouchDragged(int x, float y, int pointer)
-		{
-			if(touchDownY > 0 || clipBounds.contains(x, y))
-			{
-				float newScrollY = touchDownY - y;
-				if(newScrollY > 0)
-				{
-					newScrollY = 0;
-					touchDownY = y;
-				}
-
-				if(h - glyphLayout.height > newScrollY)
-				{
-					newScrollY = h - glyphLayout.height;
-				}
-
-				scrollY = newScrollY;
-				return true;
-			}
-			return false;
-		}
-	}
 }

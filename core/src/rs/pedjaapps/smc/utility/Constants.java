@@ -9,9 +9,6 @@ import rs.pedjaapps.smc.MaryoGame;
  */
 public class Constants
 {
-    public static final String DEFAULT_FONT_FILE_NAME = "data/fonts/GROBOLD.ttf";
-
-
     public static float CAMERA_WIDTH/* = 10f*/;
     public static float MENU_CAMERA_WIDTH/* = 10f*/;
 

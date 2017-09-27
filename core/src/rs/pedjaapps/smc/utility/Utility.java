@@ -111,40 +111,6 @@ public class Utility
 		return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 	}
 	
-	public static void scaleObjectToGuiCam(GameObject gameObject, GameScreen gameScreen)
-	{
-		OrthographicCamera cam = gameScreen.cam;
-		OrthographicCamera guiCam = gameScreen.hud.cam;
-		float widthMul = guiCam.viewportWidth / cam.viewportWidth;
-		float heightMul = guiCam.viewportHeight / cam.viewportHeight;
-		
-		float objGuiX = (gameObject.position.x - (cam.position.x - cam.viewportWidth / 2)) * widthMul;
-		float objGuiY = (gameObject.position.y - (cam.position.y - cam.viewportHeight / 2)) * heightMul;
-		
-		gameObject.mColRect.y = gameObject.mDrawRect.y = gameObject.position.y = objGuiY;
-		gameObject.mColRect.x = gameObject.mDrawRect.x = gameObject.position.x = objGuiX;
-		
-		gameObject.mColRect.width = gameObject.mDrawRect.width = gameObject.mDrawRect.width * widthMul;
-		gameObject.mColRect.height = gameObject.mDrawRect.height = gameObject.mDrawRect.height * heightMul;
-	}
-
-    public static void gamePositionToGuiPosition(float positionX, float positionY, GameScreen gameScreen, Vector2 point)
-    {
-        OrthographicCamera cam = gameScreen.cam;
-        OrthographicCamera guiCam = gameScreen.hud.cam;
-
-        float camViewX = cam.position.x/*this is center*/ - cam.viewportWidth * 0.5f;
-        float camViewY = cam.position.y/*this is center*/ - cam.viewportHeight * 0.5f;
-        positionX = positionX - camViewX;
-        positionY = positionY - camViewY;
-        float widthMul = guiCam.viewportWidth / cam.viewportWidth;
-        float heightMul = guiCam.viewportHeight / cam.viewportHeight;
-        point.x = positionX * widthMul;
-        point.y = positionY * heightMul;
-    }
-
-
-
     public static void guiPositionToGamePosition(float positionX, float positionY, GameScreen gameScreen, Vector2 point)
     {
         OrthographicCamera cam = gameScreen.cam;
@@ -157,24 +123,5 @@ public class Utility
         point.x = camViewX + positionX / widthMul;
         point.y = camViewY + positionY / heightMul;
     }
-
-    public static float gameWidthToGuiWidth(GameScreen gameScreen, float width)
-    {
-        OrthographicCamera cam = gameScreen.cam;
-        OrthographicCamera guiCam = gameScreen.hud.cam;
-        float widthMul = guiCam.viewportWidth / cam.viewportWidth;
-
-        return width * widthMul;
-    }
-
-    public static float gameHeightToGuiHeight(GameScreen gameScreen, float height)
-    {
-        OrthographicCamera cam = gameScreen.cam;
-        OrthographicCamera guiCam = gameScreen.hud.cam;
-        float heightMul = guiCam.viewportHeight / cam.viewportHeight;
-
-        return height * heightMul;
-    }
-
 
 }

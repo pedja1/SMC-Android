@@ -14,14 +14,13 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 
@@ -30,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
@@ -45,7 +45,6 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
-import rs.pedjaapps.smc.view.ConfirmDialog;
 import rs.pedjaapps.smc.view.HUD;
 
 import static rs.pedjaapps.smc.utility.GameSave.save;
@@ -123,8 +122,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         this.debug = debug;
     }
 
-    private ConfirmDialog exitDialog;
-
     public KillPointsTextHandler killPointsTextHandler;
 
     public String entryName;
@@ -175,8 +172,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         loader = new LevelLoader(levelName);
         //Gdx.graphics.setContinuousRendering(false);
         if (fromMenu) GameSave.startLevelFresh();
-
-        exitDialog = new ConfirmDialog(this, guiCam);
     }
 
     @Override
@@ -255,8 +250,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             handleLevelEnded(delta);
         }
 
-        exitDialog.render(spriteBatch);
-
         //cleanup
         for (int i = 0; i < world.trashObjects.size; i++)
         {
@@ -312,13 +305,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         float percent = 1 - levelEndAnimationStateTime / LEVEL_END_ANIMATION_DURATION;
 
-        float camWidth = hud.cam.viewportWidth;
-        float camHeight = hud.cam.viewportHeight;
+        float camWidth = hud.stage.getWidth();
+        float camHeight = hud.stage.getHeight();
 
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
-        shapeRenderer.setProjectionMatrix(hud.cam.combined);
+        shapeRenderer.setProjectionMatrix(hud.stage.getCamera().combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
         shapeRenderer.setColor(0, 0, 0, percent);
@@ -334,7 +327,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     public void showBoxText(Box box)
     {
         setGameState(GAME_STATE.NO_UPDATE);
-        hud.boxTextPopup.show(box, this);
+        //TODO hud.boxTextPopup.show(box, this);
     }
 
     private void handleGameOver()
@@ -571,7 +564,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             background.resize(cam);
         }
-        exitDialog.resize();
         hud.resize(width, height);
     }
 
@@ -603,7 +595,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.dispose();
         Gdx.input.setInputProcessor(null);
         game.assets.dispose();
-        exitDialog.dispose();
         world.dispose();
         if (globalEffect != null)
         {
@@ -662,28 +653,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         game.assets.manager.load("data/music/game/lost_1.mp3", Music.class);
         game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
 
-        FreetypeFontLoader.FreeTypeFontLoaderParameter debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        debugFontParams.fontFileName = "data/fonts/MyriadPro-Regular.otf";
-        debugFontParams.fontParameters.size = (int) (height / 25f);
-        debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        game.assets.manager.load("debug.ttf", BitmapFont.class, debugFontParams);
-
-        debugFontParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        debugFontParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        debugFontParams.fontParameters.size = (int) (height / 40f);
-        debugFontParams.fontParameters.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
-        game.assets.manager.load("debug_object.ttf", BitmapFont.class, debugFontParams);
-
-        exitDialog.loadAssets();
-
-        FreetypeFontLoader.FreeTypeFontLoaderParameter pointsParams = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
-        pointsParams.fontFileName = Constants.DEFAULT_FONT_FILE_NAME;
-        pointsParams.fontParameters.size = 19;
-        pointsParams.fontParameters.magFilter = Texture.TextureFilter.Linear;
-        pointsParams.fontParameters.minFilter = Texture.TextureFilter.Linear;
-        pointsParams.fontParameters.characters = "0123456789";
-        game.assets.manager.load("kill-points.ttf", BitmapFont.class, pointsParams);
-
     }
 
     @Override
@@ -692,12 +661,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         hud.initAssets();
         world.level = loader.level;
         audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
-        exitDialog.initAssets();
 
-        debugFont = game.assets.manager.get("debug.ttf");
+        debugFont = new BitmapFont();
         debugFont.setColor(1, 0, 0, 1);
 
-        debugObjectFont = game.assets.manager.get("debug_object.ttf");
+        debugObjectFont = new BitmapFont();
         debugGlyph = new GlyphLayout();
 
         for (GameObject go : loader.level.gameObjects)
@@ -705,7 +673,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             go.initAssets();
         }
 
-        BitmapFont pointsFont = game.assets.manager.get("kill-points.ttf");
+        BitmapFont pointsFont = game.assets.manager.get(Assets.SKIN_HUD, Skin.class).getFont(Assets.FONT_SIMPLE25);
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
         for(Background background : world.level.backgrounds)
@@ -819,8 +787,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         {
             if (gameState == GAME_STATE.GAME_PAUSED)
             {
-                if (exitDialog.visible) exitDialog.hide();
-                else exitDialog.show();
+                exitToMenu();
             }
             else
             {
@@ -832,7 +799,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         if (keycode == Input.Keys.ENTER)
         {
-            hud.boxTextPopup.hide();
+            //hud.boxTextPopup.hide();
             setGameState(GAME_STATE.GAME_RUNNING);
         }
         return true;
@@ -864,16 +831,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDown(int x, int y, int pointer, int button)
     {
-        if (exitDialog.visible)
-        {
-            exitDialog.touchDown(x, invertY(y));
-            return true;
-        }
-        if(hud.boxTextPopup.showing)
-        {
-            if(hud.boxTextPopup.onTouchDown(x, invertY(y), pointer, button))
-                return true;
-        }
         if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
         if (gameState == GAME_STATE.GAME_OVER) goTouched = true;
         if (pointer < 5)
@@ -940,10 +897,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
             World.VECTOR2_POOL.free(vect);
         }
-        if (hud.boxTextPopup.showing)
+        //if (hud.boxTextPopup.showing)
         {
-            hud.boxTextPopup.hide();
-            setGameState(GAME_STATE.GAME_RUNNING);
+        //    hud.boxTextPopup.hide();
+        //    setGameState(GAME_STATE.GAME_RUNNING);
         }
         return true;
     }
@@ -956,16 +913,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchUp(int x, int y, int pointer, int button)
     {
-        if (exitDialog.visible)
-        {
-            exitDialog.touchUp(x, invertY(y));
-            return true;
-        }
-        if(hud.boxTextPopup.showing)
-        {
-            if(hud.boxTextPopup.onTouchUp(x, invertY(y), pointer, button))
-                return true;
-        }
         TouchInfo ti = touches.get(pointer);
         if (ti != null)
         {
@@ -1048,16 +995,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     @Override
     public boolean touchDragged(int x, int y, int pointer)
     {
-        if (exitDialog.visible)
-        {
-            exitDialog.touchDragged(x, invertY(y));
-            return true;
-        }
-        if(hud.boxTextPopup.showing)
-        {
-            if(hud.boxTextPopup.onTouchDragged(x, invertY(y), pointer))
-                return true;
-        }
+
         return false;
     }
 
