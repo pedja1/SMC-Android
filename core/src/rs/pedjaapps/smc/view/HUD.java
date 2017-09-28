@@ -55,8 +55,6 @@ public class HUD
 
 	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-	private Label scoreLabel;
-
 	public enum Key
 	{
 		none, pause, fire, jump, left, right, up, down, play, sound, music
@@ -72,9 +70,17 @@ public class HUD
 	private final NATypeConverter<Integer> coins = new NATypeConverter<>();
 	private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
 	private final HUDTimeText time = new HUDTimeText();
+
 	private Label ttsLabel;
 	private Label pauseLabel;
+	private Label scoreLabel;
+	private Label coinsLabel;
+	private Label timeLabel;
+	private Label livesLabel;
 	private Image imItemBox;
+	private Image imWaffles;
+	private Image imMaryoL;
+
 	public HUD(World world)
 	{
 		this.world = world;
@@ -128,7 +134,7 @@ public class HUD
 		rightPolygon.add(new Vector2(x + width, y));
 		rightPolygon.add(new Vector2(x + x / 100 * 23.25f, y));
 
-		width = MaryoGame.NATIVE_WIDTH / 7f;
+		width = MaryoGame.NATIVE_HEIGHT / 7f;
 		height = width * 1.24f;
 		x = x - width / 2f - width / 8f;
 		y = y + height / 2f;
@@ -238,14 +244,39 @@ public class HUD
 		pauseLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
 		stage.addActor(pauseLabel);
 
-		scoreLabel = new Label("", skin, Assets.LABEL_BORDER25);
-		scoreLabel.setPosition(0, stage.getHeight(), Align.topLeft);
+		scoreLabel = new Label(formatPointsString(0), skin, Assets.LABEL_BORDER25);
+		float padX = stage.getWidth() * 0.03f;
+		scoreLabel.setPosition(padX, maryoLR.y);
 		stage.addActor(scoreLabel);
 
 		imItemBox = new Image(itemBox);
-		imItemBox.setPosition(stage.getWidth() / 2, 0, Align.top);
+		imItemBox.setPosition(itemBoxR.x, itemBoxR.y);
+		imItemBox.setSize(itemBoxR.width, itemBoxR.height);
 		stage.addActor(imItemBox);
 
+		imWaffles = new Image(goldM);
+		imWaffles.setPosition(padX * 2 + scoreLabel.getWidth(), scoreLabel.getY());
+		stage.addActor(imWaffles);
+
+		coinsLabel = new Label(" ", skin, Assets.LABEL_BORDER25);
+		coinsLabel.setPosition(imWaffles.getX() + imWaffles.getWidth(), scoreLabel.getY());
+		stage.addActor(coinsLabel);
+
+		imMaryoL = new Image(maryoL);
+		imMaryoL.setPosition(maryoLR.x, maryoLR.y);
+		imMaryoL.setSize(maryoLR.width, maryoLR.height);
+		stage.addActor(imMaryoL);
+
+		livesLabel = new Label("0x", skin, Assets.LABEL_BORDER25);
+		livesLabel.setPosition(maryoLR.x, scoreLabel.getY(), Align.bottomRight);
+		stage.addActor(livesLabel);
+
+		time.update(0);
+		timeLabel = new Label(new String(time.getChars()), skin, Assets.LABEL_BORDER25);
+		timeLabel.setPosition(livesLabel.getX() - padX, scoreLabel.getY(), Align.bottomRight);
+		stage.addActor(timeLabel);
+
+		//TODO popuptextbox
 	}
 
 	public void render(GameScreen.GAME_STATE gameState, float deltaTime)
@@ -257,6 +288,11 @@ public class HUD
 				|| gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 		scoreLabel.setVisible(isInGame);
 		imItemBox.setVisible(isInGame);
+		coinsLabel.setVisible(isInGame);
+		imWaffles.setVisible(isInGame);
+		timeLabel.setVisible(isInGame);
+		imMaryoL.setVisible(isInGame);
+		livesLabel.setVisible(isInGame);
 
 		if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
 		{
@@ -279,22 +315,27 @@ public class HUD
 				batch.draw(pressedKeys.contains(Key.up) ? upP : up, upR.x, upR.y, upR.width, upR.height);
 				batch.draw(pressedKeys.contains(Key.down) ? downP : down, downR.x, downR.y, downR.width, downR.height);
 			}
+			//if(GameSave.getItem() != null)
+			//	batch.setColor(Color.RED);
 
-			//batch.draw(maryoL, maryoLR.x, maryoLR.y, maryoLR.width, maryoLR.height);
-			
 			// points
+			//TODO nicht jedes Mal ändern
 			pointsText = formatPointsString(GameSave.save.points);
 			scoreLabel.setText(pointsText);
 
 			//coins
+			//TODO nicht jedes Mal ändern
 			String coins =  this.coins.toString(GameSave.getCoins());
+			coinsLabel.setText(coins);
 
 			//time
+			//TODO nicht jedes Mal ändern und sowieso besser!
 			time.update(stateTime);
-			//fontGlyphLayout.setText(font, time);
+			timeLabel.setText(new String(time.getChars()));
 
 			//lives
-			String lives = this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0));
+			//TODO nicht jedes Mal ändern und sowieso besser!
+			livesLabel.setText(this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0)));
 
             //draw item if any
             if(GameSave.getItem() != null)

@@ -14,6 +14,11 @@ package rs.pedjaapps.smc.utility;
 public abstract class FLString implements CharSequence
 {
     private final int length;
+
+    public char[] getChars() {
+        return chars;
+    }
+
     protected final char[] chars;
 
     /**
