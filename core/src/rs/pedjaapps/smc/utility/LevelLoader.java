@@ -11,10 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,16 +73,16 @@ public class LevelLoader
 
     public synchronized void parseLevel(World world)
     {
-        JSONObject jLevel;
+        JsonValue jLevel;
         try
         {
-            jLevel = new JSONObject(Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_EXT).readString());
+            jLevel = new JsonReader().parse (Gdx.files.internal("data/levels/" + level.levelName + Level.LEVEL_EXT));
             parseInfo(jLevel, world.screen.game.assets);
             parseParticleEffect(jLevel, world.screen.game.assets);
             parseBg(jLevel, world.screen.game.assets);
             parseGameObjects(world, jLevel, world.screen.game.assets);
         }
-        catch (JSONException e)
+        catch (Throwable e)
         {
             e.printStackTrace();
             throw new RuntimeException("Unable to load level! " + e.getMessage());
@@ -91,12 +90,12 @@ public class LevelLoader
         levelParsed = true;
     }
 
-    private void parseParticleEffect(JSONObject jLevel, Assets assets)
+    private void parseParticleEffect(JsonValue jLevel, Assets assets)
     {
-        JSONObject jParticleEffect = jLevel.optJSONObject("particle_effect");
+        JsonValue jParticleEffect = jLevel.get("particle_effect");
         if(jParticleEffect != null)
         {
-            String effect = jParticleEffect.optString("effect");
+            String effect = jParticleEffect.getString("effect", "");
             if(!TextUtils.isEmpty(effect))
             {
                 assets.manager.load(effect, ParticleEffect.class, assets.particleEffectParameter);
@@ -105,12 +104,11 @@ public class LevelLoader
         }
     }
 
-    private void parseGameObjects(World world, JSONObject level, Assets assets) throws JSONException
+    private void parseGameObjects(World world, JsonValue level, Assets assets)
     {
-        JSONArray jObjects = level.getJSONArray("objects");
-        for (int i = 0; i < jObjects.length(); i++)
+        JsonValue jObjects = level.get("objects");
+        for (JsonValue jObject = jObjects.child; jObject != null; jObject = jObject.next)
         {
-            JSONObject jObject = jObjects.getJSONObject(i);
             switch (ObjectClass.valueOf(jObject.getString("obj_class")))
             {
                 case sprite:
@@ -147,72 +145,70 @@ public class LevelLoader
         Collections.sort(this.level.gameObjects, new ZSpriteComparator());
     }
 
-    private void parseInfo(JSONObject jLevel, Assets assets) throws JSONException
+    private void parseInfo(JsonValue jLevel, Assets assets)
     {
-        JSONObject jInfo = jLevel.getJSONObject("info");
-        float width = (float) jInfo.getDouble("level_width");
-        float height = (float) jInfo.getDouble("level_height");
+        JsonValue jInfo = jLevel.get("info");
+        float width = jInfo.getFloat("level_width");
+        float height = jInfo.getFloat("level_height");
         level.width = width;
         level.height = height;
         if (jInfo.has("level_music"))
         {
-            JSONArray jMusic = jInfo.getJSONArray("level_music");
+            JsonValue jMusic = jInfo.get("level_music");
             Array<String> music = new Array<>();
-            for (int i = 0; i < jMusic.length(); i++)
+            for (JsonValue thisMusic = jMusic.child; thisMusic != null; thisMusic = thisMusic.next)
             {
-                String tmp = jMusic.getString(i);
+                String tmp = thisMusic.asString();
                 assets.manager.load(tmp, Music.class);
-                if (!levelParsed) music.add(jMusic.getString(i));
+                if (!levelParsed) music.add(thisMusic.asString());
             }
             if (!levelParsed) level.music = music;
         }
     }
 
-    private void parseBg(JSONObject jLevel, Assets assets) throws JSONException
+    private void parseBg(JsonValue jLevel, Assets assets)
     {
-        JSONArray jBgs = jLevel.optJSONArray("backgrounds");
+        JsonValue jBgs = jLevel.get("backgrounds");
         if (jBgs != null)
         {
-            for (int i = 0; i < jBgs.length(); i++)
+            for (JsonValue jBg = jBgs.child; jBg != null; jBg = jBg.next)
             {
-                JSONObject jBg = jBgs.optJSONObject(i);
-
-                int type = jBg.optInt("type");
+                int type = jBg.getInt("type", 0);
                 if (type == BG_IMG_ALL || type == BG_IMG_BOTTOM || type == BG_IMG_TOP)
                 {
-                    String textureName = jBg.optString("texture_name", null);
+                    String textureName = jBg.getString("texture_name", null);
                     if (textureName != null)
                         assets.manager.load(textureName, Texture.class, assets.textureParameter);
                     if (levelParsed) return;
 
                     Vector2 speed = new Vector2();
 
-                    speed.x = (float) jBg.optDouble("speedx");
-                    speed.y = (float) jBg.optDouble("speedy");
+                    speed.x = jBg.getFloat("speedx", 0);
+                    speed.y = jBg.getFloat("speedy", 0);
 
                     Vector2 pos = new Vector2();
 
-                    pos.x = (float) jBg.optDouble("posx");
-                    pos.y = (float) jBg.optDouble("posy");
+                    pos.x = jBg.getFloat("posx", 0);
+                    pos.y = jBg.getFloat("posy", 0);
 
-                    float width = (float) jBg.optDouble("width");
-                    float height = (float) jBg.optDouble("height");
+                    float width = jBg.getFloat("width", 0);
+                    float height = jBg.getFloat("height", 0);
 
                     Background bg = new Background(pos, speed, textureName, width, height, level.width, level.height, type);
 
-                    bg.width = (float) jBg.optDouble("width");
-                    bg.height = (float) jBg.optDouble("height");
+                    bg.width = jBg.getFloat("width", 0);
+                    bg.height = jBg.getFloat("height", 0);
                     level.backgrounds.add(bg);
                 }
                 else if (type == BG_GR_VER || type == BG_GR_HOR)
                 {
                     Background bg = new Background(type);
-                    float r1 = (float) jBg.getDouble("r_1") / 255;//convert from 0-255 range to 0-1 range
-                    float r2 = (float) jBg.getDouble("r_2") / 255;
-                    float g1 = (float) jBg.getDouble("g_1") / 255;
-                    float g2 = (float) jBg.getDouble("g_2") / 255;
-                    float b1 = (float) jBg.getDouble("b_1") / 255;
-                    float b2 = (float) jBg.getDouble("b_2") / 255;
+                    float r1 = jBg.getFloat("r_1") / 255;//convert from 0-255 range to 0-1 range
+                    float r2 = jBg.getFloat("r_2") / 255;
+                    float g1 = jBg.getFloat("g_1") / 255;
+                    float g2 = jBg.getFloat("g_2") / 255;
+                    float b1 = jBg.getFloat("b_1") / 255;
+                    float b2 = jBg.getFloat("b_2") / 255;
 
                     Color color1 = new Color(r1, g1, b1, 0f);//color is 0-1 range where 1 = 255
                     Color color2 = new Color(r2, g2, b2, 0f);
@@ -224,20 +220,20 @@ public class LevelLoader
         }
     }
 
-    private void parsePlayer(JSONObject jPlayer, World world) throws JSONException
+    private void parsePlayer(JsonValue jPlayer, World world)
     {
         if (levelParsed) return;
-        float x = (float) jPlayer.getDouble("posx");
-        float y = (float) jPlayer.getDouble("posy");
+        float x = jPlayer.getFloat("posx");
+        float y = jPlayer.getFloat("posy");
         level.spanPosition = new Vector3(x, y, Maryo.POSITION_Z);
         Maryo maryo = new Maryo(world, level.spanPosition, new Vector2(0.9f, 0.9f));
         world.maryo = maryo;
         level.gameObjects.add(maryo);
     }
 
-    private void parseSprite(World world, JSONObject jSprite, Assets assets) throws JSONException
+    private void parseSprite(World world, JsonValue jSprite, Assets assets)
     {
-        Vector3 position = new Vector3((float) jSprite.getDouble("posx"), (float) jSprite.getDouble("posy"), 0);
+        Vector3 position = new Vector3(jSprite.getFloat("posx"), jSprite.getFloat("posy"), 0);
         Sprite.Type sType = null;
         if (jSprite.has("massive_type"))
         {
@@ -265,19 +261,19 @@ public class LevelLoader
         {
             position.z = m_pos_z_front_passive_start;
         }
-        Vector2 size = new Vector2((float) jSprite.getDouble("width"), (float) jSprite.getDouble("height"));
+        Vector2 size = new Vector2(jSprite.getFloat("width"), jSprite.getFloat("height"));
 
         Rectangle rectangle = new Rectangle();
-        rectangle.x = (float) jSprite.optDouble("c_posx", 0);
-        rectangle.y = (float) jSprite.optDouble("c_posy", 0);
-        rectangle.width = (float) jSprite.optDouble("c_width", size.x);
-        rectangle.height = (float) jSprite.optDouble("c_height", size.y);
+        rectangle.x = jSprite.getFloat("c_posx", 0);
+        rectangle.y = jSprite.getFloat("c_posy", 0);
+        rectangle.width = jSprite.getFloat("c_width", size.x);
+        rectangle.height = jSprite.getFloat("c_height", size.y);
         Sprite sprite = new Sprite(world, size, position, rectangle);
         sprite.type = sType;
-        sprite.groundType = jSprite.optInt("ground_type", Sprite.GROUND_NORMAL);
+        sprite.groundType = jSprite.getInt("ground_type", Sprite.GROUND_NORMAL);
 
         sprite.textureName = jSprite.getString("texture_name");
-        sprite.textureAtlas = jSprite.optString("texture_atlas", null);
+        sprite.textureAtlas = jSprite.getString("texture_atlas", null);
 
         if (TextUtils.isEmpty(sprite.textureName) && TextUtils.isEmpty(sprite.textureAtlas))
         {
@@ -299,9 +295,9 @@ public class LevelLoader
             assets.manager.load(sprite.textureAtlas, TextureAtlas.class);
         }
 
-        sprite.mRotationX = jSprite.optInt("rotationX");
-        sprite.mRotationY = jSprite.optInt("rotationY");
-        sprite.mRotationZ = jSprite.optInt("rotationZ");
+        sprite.mRotationX = jSprite.getInt("rotationX", 0);
+        sprite.mRotationY = jSprite.getInt("rotationY", 0);
+        sprite.mRotationZ = jSprite.getInt("rotationZ", 0);
         if (sprite.mRotationZ == 270)
         {
             sprite.mRotationZ = -sprite.mRotationZ;
@@ -310,7 +306,7 @@ public class LevelLoader
 
     }
 
-    private void parseEnemy(World world, JSONObject jEnemy, Assets assets) throws JSONException
+    private void parseEnemy(World world, JsonValue jEnemy, Assets assets)
     {
         Enemy enemy = Enemy.initEnemy(world, jEnemy);
         if (enemy == null) return;
@@ -327,66 +323,66 @@ public class LevelLoader
         if (!levelParsed) level.gameObjects.add(enemy);
     }
 
-    private void parseEnemyStopper(World world, JSONObject jEnemyStopper) throws JSONException
+    private void parseEnemyStopper(World world, JsonValue jEnemyStopper)
     {
         if (levelParsed) return;
-        Vector3 position = new Vector3((float) jEnemyStopper.getDouble("posx"), (float) jEnemyStopper.getDouble("posy"), 0);
-        float width = (float) jEnemyStopper.getDouble("width");
-        float height = (float) jEnemyStopper.getDouble("height");
+        Vector3 position = new Vector3(jEnemyStopper.getFloat("posx"), jEnemyStopper.getFloat("posy"), 0);
+        float width = jEnemyStopper.getFloat("width");
+        float height = jEnemyStopper.getFloat("height");
 
         EnemyStopper stopper = new EnemyStopper(world, new Vector2(width, height), position);
 
         level.gameObjects.add(stopper);
     }
 
-    private void parseLevelEntry(World world, JSONObject jEntry) throws JSONException
+    private void parseLevelEntry(World world, JsonValue jEntry)
     {
         if (levelParsed) return;
-        Vector3 position = new Vector3((float) jEntry.getDouble("posx"), (float) jEntry.getDouble("posy"), 0);
-        float width = (float) jEntry.getDouble("width");
-        float height = (float) jEntry.getDouble("height");
+        Vector3 position = new Vector3(jEntry.getFloat("posx"), jEntry.getFloat("posy"), 0);
+        float width = jEntry.getFloat("width");
+        float height = jEntry.getFloat("height");
 
         LevelEntry entry = new LevelEntry(world, new Vector2(width, height), position);
-        entry.direction = jEntry.optString("direction");
-        entry.type = jEntry.optInt("type");
-        entry.name = jEntry.optString("name");
+        entry.direction = jEntry.getString("direction", "");
+        entry.type = jEntry.getInt("type", 0);
+        entry.name = jEntry.getString("name", "");
 
         level.gameObjects.add(entry);
     }
 
-    private void parseLevelExit(World world, JSONObject jExit) throws JSONException
+    private void parseLevelExit(World world, JsonValue jExit)
     {
         if (levelParsed) return;
-        Vector3 position = new Vector3((float) jExit.getDouble("posx"), (float) jExit.getDouble("posy"), 0);
-        float width = (float) jExit.getDouble("width");
-        float height = (float) jExit.getDouble("height");
-        LevelExit exit = new LevelExit(world, new Vector2(width, height), position, jExit.optInt("type"), jExit.optString("direction"));
-        exit.cameraMotion = jExit.optInt("camera_motion");
-        exit.levelName = jExit.optString("level_name", null);
-        exit.entry = jExit.optString("entry");
+        Vector3 position = new Vector3(jExit.getFloat("posx"), jExit.getFloat("posy"), 0);
+        float width = jExit.getFloat("width");
+        float height = jExit.getFloat("height");
+        LevelExit exit = new LevelExit(world, new Vector2(width, height), position, jExit.getInt("type", 0), jExit.getString("direction", ""));
+        exit.cameraMotion = jExit.getInt("camera_motion", 0);
+        exit.levelName = jExit.getString("level_name", null);
+        exit.entry = jExit.getString("entry", "");
 
         level.gameObjects.add(exit);
     }
 
-    private void parseMovingPlatform(World world, JSONObject jMovingPlatform, Assets assets) throws JSONException
+    private void parseMovingPlatform(World world, JsonValue jMovingPlatform, Assets assets)
     {
         if (levelParsed) return;
-        Vector3 position = new Vector3((float) jMovingPlatform.getDouble("posx"), (float) jMovingPlatform.getDouble("posy"), 0);
-        float width = (float) jMovingPlatform.getDouble("width");
-        float height = (float) jMovingPlatform.getDouble("height");
+        Vector3 position = new Vector3(jMovingPlatform.getFloat("posx"), jMovingPlatform.getFloat("posy"), 0);
+        float width = jMovingPlatform.getFloat("width");
+        float height = jMovingPlatform.getFloat("height");
         MovingPlatform platform = new MovingPlatform(world, new Vector2(width, height), position, null);
-        platform.max_distance = jMovingPlatform.optInt("max_distance");
-        platform.speed = (float) jMovingPlatform.optDouble("speed");
-        platform.touch_time = (float) jMovingPlatform.optDouble("touch_time");
-        platform.shake_time = (float) jMovingPlatform.optDouble("shake_time");
-        platform.touch_move_time = (float) jMovingPlatform.optDouble("touch_move_time");
-        platform.move_type = jMovingPlatform.optInt("move_type");
-        platform.middle_img_count = jMovingPlatform.optInt("middle_img_count");
-        platform.direction = jMovingPlatform.optString("direction");
-        platform.image_top_left = jMovingPlatform.optString("image_top_left");
-        platform.image_top_middle = jMovingPlatform.optString("image_top_middle");
-        platform.image_top_right = jMovingPlatform.optString("image_top_right");
-        platform.textureAtlas = jMovingPlatform.optString("texture_atlas");
+        platform.max_distance = jMovingPlatform.getInt("max_distance", 0);
+        platform.speed = jMovingPlatform.getFloat("speed", 0);
+        platform.touch_time = jMovingPlatform.getFloat("touch_time", 0);
+        platform.shake_time = jMovingPlatform.getFloat("shake_time", 0);
+        platform.touch_move_time = jMovingPlatform.getFloat("touch_move_time", 0);
+        platform.move_type = jMovingPlatform.getInt("move_type", 0);
+        platform.middle_img_count = jMovingPlatform.getInt("middle_img_count", 0);
+        platform.direction = jMovingPlatform.getString("direction", "");
+        platform.image_top_left = jMovingPlatform.getString("image_top_left", "");
+        platform.image_top_middle = jMovingPlatform.getString("image_top_middle", "");
+        platform.image_top_right = jMovingPlatform.getString("image_top_right", "");
+        platform.textureAtlas = jMovingPlatform.getString("texture_atlas", "");
         if (platform.textureAtlas != null && !platform.textureAtlas.trim().isEmpty())
         {
             assets.manager.load(platform.textureAtlas, TextureAtlas.class);
@@ -427,7 +423,7 @@ public class LevelLoader
         }
         platform.type = sType;
 
-        JSONObject jPath = jMovingPlatform.optJSONObject("path");
+        JsonValue jPath = jMovingPlatform.get("path");
         if (platform.move_type == MovingPlatform.MOVING_PLATFORM_TYPE_PATH && jPath == null)
         {
             throw new GdxRuntimeException("MovingPlatform type is 'path' but no path defined");
@@ -435,23 +431,22 @@ public class LevelLoader
         if (jPath != null)
         {
             MovingPlatform.Path path = new MovingPlatform.Path();
-            path.posx = (float) jPath.optDouble("posx");
-            path.posy = (float) jPath.optDouble("posy");
-            path.rewind = jPath.optInt("rewind");
+            path.posx = jPath.getFloat("posx", 0);
+            path.posy = jPath.getFloat("posy", 0);
+            path.rewind = jPath.getInt("rewind", 0);
 
-            JSONArray jSegments = jPath.optJSONArray("segments");
-            if (jSegments == null || jSegments.length() == 0)
+            JsonValue jSegments = jPath.get("segments");
+            if (jSegments == null || jSegments.child == null)
             {
                 throw new GdxRuntimeException("Path doesn't contain segments. Level: " + level.levelName);
             }
-            for (int i = 0; i < jSegments.length(); i++)
+            for (JsonValue jSegment = jSegments.child; jSegment != null; jSegment = jSegment.next)
             {
-                JSONObject jSegment = jSegments.optJSONObject(i);
                 MovingPlatform.Path.Segment segment = new MovingPlatform.Path.Segment();
-                segment.start.x = (float) jSegment.optDouble("startx");
-                segment.start.y = (float) jSegment.optDouble("starty");
-                segment.end.x = (float) jSegment.optDouble("endx");
-                segment.end.y = (float) jSegment.optDouble("endy");
+                segment.start.x = jSegment.getFloat("startx", 0);
+                segment.start.y = jSegment.getFloat("starty", 0);
+                segment.end.x = jSegment.getFloat("endx", 0);
+                segment.end.y = jSegment.getFloat("endy", 0);
                 path.segments.add(segment);
             }
             platform.path = path;
@@ -460,11 +455,11 @@ public class LevelLoader
         level.gameObjects.add(platform);
     }
 
-    private void parseItem(World world, JSONObject jItem, Assets assets) throws JSONException
+    private void parseItem(World world, JsonValue jItem, Assets assets)
     {
-        Vector3 position = new Vector3((float) jItem.getDouble("posx"), (float) jItem.getDouble("posy"), 0);
+        Vector3 position = new Vector3(jItem.getFloat("posx", 0), jItem.getFloat("posy", 0), 0);
 
-        Item item = Item.createObject(world, assets, jItem.optInt("mushroom_type"), jItem.getString("type"), new Vector2((float) jItem.getDouble("width"), (float) jItem.getDouble("height")), position);
+        Item item = Item.createObject(world, assets, jItem.getInt("mushroom_type", 0), jItem.getString("type"), new Vector2(jItem.getFloat("width"), jItem.getFloat("height")), position);
         if (item == null) return;
         if (jItem.has("texture_atlas"))
         {
@@ -474,7 +469,7 @@ public class LevelLoader
         if (!levelParsed) level.gameObjects.add(item);
     }
 
-    private void parseBox(World world, JSONObject jBox, Assets assets) throws JSONException
+    private void parseBox(World world, JsonValue jBox, Assets assets)
     {
         Box box = Box.initBox(world, jBox, assets);
         if (!levelParsed) level.gameObjects.add(box);

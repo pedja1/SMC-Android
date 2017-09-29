@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Collections;
 
@@ -177,47 +175,47 @@ public abstract class Enemy extends DynamicObject
         }
     }
 
-    public static Enemy initEnemy(World world, JSONObject jEnemy) throws JSONException
+    public static Enemy initEnemy(World world, JsonValue jEnemy)
     {
-        Vector3 position = new Vector3((float) jEnemy.getDouble("posx"), (float) jEnemy.getDouble("posy"), 0);
+        Vector3 position = new Vector3(jEnemy.getFloat("posx"), jEnemy.getFloat("posy"), 0);
         String enemyClassString = jEnemy.getString("enemy_class");
-        Vector2 size = new Vector2((float) jEnemy.getDouble("width"), (float) jEnemy.getDouble("height"));
+        Vector2 size = new Vector2(jEnemy.getFloat("width"), jEnemy.getFloat("height"));
         CLASS enemyClass = CLASS.fromString(enemyClassString);
         Enemy enemy = null;
         switch (enemyClass)
         {
             case eato:
-                enemy = new Eato(world, size, position, jEnemy.optString("direction"));
+                enemy = new Eato(world, size, position, jEnemy.getString("direction", ""));
                 break;
             case flyon:
-                enemy = new Flyon(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
+                enemy = new Flyon(world, size, position, jEnemy.getFloat("max_distance"), jEnemy.getFloat("speed"), jEnemy.getString("direction", "up"));
                 break;
             case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position, jEnemy.optInt("max_downgrade_count"));
+                enemy = new Furball(world, size, position, jEnemy.getInt("max_downgrade_count", 0));
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;
-                enemy = new Turtle(world, size, position, jEnemy.optString("color"));
+                enemy = new Turtle(world, size, position, jEnemy.getString("color", ""));
                 break;
             case gee:
-                enemy = new Gee(world, size, position, (float) jEnemy.getDouble("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), (float) jEnemy.getDouble("wait_time"));
+                enemy = new Gee(world, size, position, jEnemy.getFloat("fly_distance"), jEnemy.getString("color"), jEnemy.getString("direction"), jEnemy.getFloat("wait_time"));
                 break;
             case krush:
                 enemy = new Krush(world, size, position);
                 break;
             case thromp:
-                enemy = new Thromp(world, size, position, (float) jEnemy.getDouble("max_distance"), (float) jEnemy.getDouble("speed"), jEnemy.optString("direction", "up"));
+                enemy = new Thromp(world, size, position, jEnemy.getFloat("max_distance"), jEnemy.getFloat("speed"), jEnemy.getString("direction", "up"));
                 break;
             case spika:
-                enemy = new Spika(world, size, position, jEnemy.optString("color"));
+                enemy = new Spika(world, size, position, jEnemy.getString("color", ""));
                 break;
             case rokko:
-                enemy = new Rokko(world, size, position, jEnemy.optString("direction"));
+                enemy = new Rokko(world, size, position, jEnemy.getString("direction", ""));
                 world.screen.game.assets.manager.load("data/sounds/enemy/rokko/hit.mp3", Sound.class);
                 break;
             case _static:
-                enemy = new Static(world, size, position, jEnemy.optInt("rotation_speed"), jEnemy.optInt("fire_resistance"), jEnemy.optInt("ice_resistance"));
+                enemy = new Static(world, size, position, jEnemy.getInt("rotation_speed", 0), jEnemy.getInt("fire_resistance", 0), jEnemy.getInt("ice_resistance", 0));
                 break;
             case spikeball:
                 enemy = new Spikeball(world, size, position);
