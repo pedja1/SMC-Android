@@ -318,10 +318,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         shapeRenderer.rect(0, 0, camWidth, camHeight);
 
         shapeRenderer.end();
-
-        spriteBatch.setProjectionMatrix(cam.combined);
-        spriteBatch.begin();
-        spriteBatch.end();
     }
 
     public void showBoxText(Box box)
@@ -381,7 +377,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             }
             else
             {
-                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName), false));
+                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName, parent), false));
             }
             game.levelEnd(levelName, false);
         }
