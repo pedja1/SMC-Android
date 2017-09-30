@@ -31,7 +31,7 @@ public class Fireball extends DynamicObject
     public float velY = -1;
     private ParticleEffect trail, explosion;
     private boolean destroyed;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Fireball(World world, Vector3 position)
     {

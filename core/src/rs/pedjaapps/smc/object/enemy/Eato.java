@@ -19,7 +19,7 @@ public class Eato extends Enemy
 {
     public static final float POSITION_Z = 0.087f;
     private String direction;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Eato(World world, Vector2 size, Vector3 position, String direction)
     {
@@ -78,13 +78,13 @@ public class Eato extends Enemy
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
-        		frames.add(atlas.findRegion(TKey.one.toString()));
-        		frames.add(atlas.findRegion(TKey.two.toString()));
-        		frames.add(atlas.findRegion(TKey.three.toString()));
-        frames.add(atlas.findRegion(TKey.two.toString()));
+        TextureRegion[] frames = new TextureRegion[4];
+        frames[0] = atlas.findRegion(TKey.one.toString());
+        frames[1] = atlas.findRegion(TKey.two.toString());
+        frames[2] = atlas.findRegion(TKey.three.toString());
+        frames[3] = atlas.findRegion(TKey.two.toString());
 
-        animation = new Animation(0.18f, frames);
+        animation = new Animation<>(0.18f, frames);
     }
 
     @Override

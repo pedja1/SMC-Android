@@ -4,7 +4,7 @@ apply plugin: "gwt"
 apply plugin: "war"
 
 gwt {
-    gwtVersion='2.6.0' // Should match the gwt version used for building the gwt backend
+    gwtVersion='2.8.0' // Should match the gwt version used for building the gwt backend
     maxHeapSize="1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
     minHeapSize="1G"
 
@@ -15,7 +15,6 @@ gwt {
 
     compiler {
         strict = true;
-        enableClosureCompiler = true;
         disableCastChecking = true;
     }
 }
@@ -63,7 +62,7 @@ task addSource << {
 tasks.compileGwt.dependsOn(addSource)
 tasks.draftCompileGwt.dependsOn(addSource)
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 

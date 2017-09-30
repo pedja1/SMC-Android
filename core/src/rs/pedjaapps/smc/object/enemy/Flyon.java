@@ -28,7 +28,7 @@ public class Flyon extends Enemy
     public boolean staying = true;
     private float waitTime;
     private float rotation;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
     private Rectangle tmpRect = new Rectangle();
 
     public Flyon(World world, Vector2 size, Vector3 position, float maxDistance, float speed, String direction)
@@ -65,12 +65,12 @@ public class Flyon extends Enemy
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
-        frames.add(atlas.findRegion("closed", 1));
-        frames.add(atlas.findRegion("closed", 2));
-        frames.add(atlas.findRegion("open", 1));
-        frames.add(atlas.findRegion("open", 2));
-        animation = new Animation(0.13f, frames);
+        TextureRegion[] frames = new TextureRegion[4];
+        frames[0] = atlas.findRegion("closed", 1);
+        frames[1] = atlas.findRegion("closed", 2);
+        frames[2] = atlas.findRegion("open", 1);
+        frames[3] = atlas.findRegion("open", 2);
+        animation = new Animation<>(0.13f, frames);
     }
 
     @Override

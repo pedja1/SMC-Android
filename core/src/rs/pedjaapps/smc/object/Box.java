@@ -69,7 +69,7 @@ public class Box extends Sprite
     //public Item itemObject;
     private boolean spinning;
     private float spinningTime;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
     private Texture texture;
 
     private ParticleEffect itemEffect;

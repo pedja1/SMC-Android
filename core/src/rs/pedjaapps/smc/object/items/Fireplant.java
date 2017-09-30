@@ -23,7 +23,7 @@ public class Fireplant extends Item
     public static final int POINTS = 700;
     public static final float VELOCITY_POP = 1.6f;
     public static final float DEF_SIZE = 0.65625f;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     public Fireplant(World world, Vector2 size, Vector3 position)
     {

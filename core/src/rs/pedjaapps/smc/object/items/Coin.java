@@ -25,7 +25,7 @@ public class Coin extends Item
     public static final float DEF_SIZE = 0.59375f;
     public static final String DEF_ATL = "data/game/items/goldpiece/yellow.pack";
     public int points = 5;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
 
     /**
      * Coin will move out of the screen when collected

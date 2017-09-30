@@ -50,7 +50,7 @@ public class Spikeball extends Enemy
     private static final int MAX_WALK_TIME = 8;
     private static final int MAX_RUN_TIME = 4;
 
-    private Animation walkAnimation;
+    private Animation<TextureRegion> walkAnimation;
     private TextureRegion tTurn, tDead;
 
     private int state;

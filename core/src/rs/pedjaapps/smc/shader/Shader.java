@@ -12,7 +12,7 @@ public class Shader
     public static ShaderProgram SHAKE_SHADER;
     public static ShaderProgram NORMAL_BLEND_SHADER;
     public static ShaderProgram GLOW_SHADER;
-    public static ShaderProgram GS_SHADER;
+    public static ShaderProgram GS_SHADER; //Grayscale!
 
     public static void init()
     {

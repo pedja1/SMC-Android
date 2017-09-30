@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.object.enemy;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -36,7 +37,8 @@ public class Gee extends Enemy
     private ParticleEffect effect, deadEffect;
     private boolean canStartParticle;
     private boolean dying;
-    private Animation animation;
+    private Animation<TextureRegion> animation;
+    private TextureRegion deadRegion;
 
     public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
     {
@@ -83,7 +85,7 @@ public class Gee extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return animation.getKeyFrames()[4];
+        return deadRegion;
     }
 
     @Override
@@ -91,8 +93,9 @@ public class Gee extends Enemy
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
         Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
+        deadRegion = frames.get(4);
         frames.add(frames.removeIndex(1));
-        animation = new Animation(0.14f, frames);
+        animation = new Animation<TextureRegion>(0.14f, frames);
         if("vertical".equals(direction))
         {
             effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
