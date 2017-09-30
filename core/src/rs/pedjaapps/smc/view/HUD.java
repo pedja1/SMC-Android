@@ -36,6 +36,9 @@ import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD
 {
+	private static final float UPDATE_FREQ = .15f;
+	private float noUpdateDuration;
+
 	private World world;
 	
 	private TextureRegion pause, play, fire, jump, up, down, right,
@@ -318,32 +321,37 @@ public class HUD
 			//if(GameSave.getItem() != null)
 			//	batch.setColor(Color.RED);
 
-			// points
-			//TODO nicht jedes Mal ändern
-			pointsText = formatPointsString(GameSave.save.points);
-			scoreLabel.setText(pointsText);
+			noUpdateDuration = noUpdateDuration + deltaTime;
 
-			//coins
-			//TODO nicht jedes Mal ändern
-			String coins =  this.coins.toString(GameSave.getCoins());
-			coinsLabel.setText(coins);
+			if (noUpdateDuration >= UPDATE_FREQ) {
+				noUpdateDuration = 0;
+				// points
+				//TODO nicht jedes Mal ändern
+				pointsText = formatPointsString(GameSave.save.points);
+				scoreLabel.setText(pointsText);
 
-			//time
-			//TODO nicht jedes Mal ändern und sowieso besser!
-			time.update(stateTime);
-			timeLabel.setText(new String(time.getChars()));
+				//coins
+				//TODO nicht jedes Mal ändern
+				String coins = this.coins.toString(GameSave.getCoins());
+				coinsLabel.setText(coins);
 
-			//lives
-			//TODO nicht jedes Mal ändern und sowieso besser!
-			livesLabel.setText(this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0)));
+				//time
+				//TODO nicht jedes Mal ändern und sowieso besser!
+				time.update(stateTime);
+				timeLabel.setText(new String(time.getChars()));
+
+				//lives
+				//TODO nicht jedes Mal ändern und sowieso besser!
+				livesLabel.setText(this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0)));
+			}
 
             //draw item if any
             if(GameSave.getItem() != null)
             {
                 float w = imItemBox.getWidth() * 0.5f;
                 float h = imItemBox.getHeight() * 0.5f;
-                float x = imItemBox.getX();
-                float y = imItemBox.getY();
+                float x = imItemBox.getX() + w * .5f;
+                float y = imItemBox.getY() + h * .5f;
                 batch.draw(GameSave.getItem().texture, x, y, w, h);
             }
 
