@@ -196,6 +196,10 @@ public class HUD
 
     public void initAssets()
 	{
+		// already initialized
+		if (pauseLabel != null)
+			return;
+
 		TextureAtlas atlas = world.screen.game.assets.manager.get("data/hud/controls.pack", TextureAtlas.class);
 		TextureAtlas hud = world.screen.game.assets.manager.get("data/hud/hud.pack", TextureAtlas.class);
 		pause = hud.findRegion("pause");
