@@ -1061,8 +1061,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         KillPointsTextHandler(BitmapFont font)
         {
             this.font = font;
-            font.getData().setScale(0.015f);
-            font.setUseIntegerPositions(false);
         }
 
         public void add(int points, float positionX, float positionY)
@@ -1082,6 +1080,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         public void render(SpriteBatch batch, float deltaTime)
         {
             //noinspection ForLoopReplaceableByForEach
+            float oldScale = font.getData().scaleX;
+            boolean useInt = font.usesIntegerPositions();
+            font.getData().setScale(0.015f);
+            font.setUseIntegerPositions(false);
+
             for (int i = 0, size = pointsTextPool.size(); i < size; i++)
             {
                 KillPoint point = pointsTextPool.get(i);
@@ -1090,6 +1093,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                     point.draw(batch, deltaTime, font, text);
                 }
             }
+
+            font.getData().setScale(oldScale);
+            font.setUseIntegerPositions(useInt);
+
         }
 
         private static class KillPoint
