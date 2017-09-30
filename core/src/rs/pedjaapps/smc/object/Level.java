@@ -69,6 +69,6 @@ public class Level
 				return (LevelEntry) go;
 			}
 		}
-		throw new GdxRuntimeException(String.format("Entry '%s' not found in level '%s'", entry, levelName));
+		throw new GdxRuntimeException("Entry " + entry + " not found in level " + levelName);
 	}
 }
