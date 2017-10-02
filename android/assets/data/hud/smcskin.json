@@ -88,6 +88,15 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		over: selected_small_square_button
 		disabled: disabled_small_square_button
 	}
+	jump: {
+		up: button_jump
+		down: button_jumping
+	}
+	fire: {
+		up: button_fire
+		down: button_firing
+		disabled: button_firing
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
@@ -264,6 +273,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	small: {
 		background: background2
 		titleFont: grobold25bl
+	}
+	frameless: {
+		titleFont: grobold25
+		stageBackground: stagebackground
 	}
 }
 }

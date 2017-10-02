@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -16,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,13 +25,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
-import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -49,99 +47,48 @@ import rs.pedjaapps.smc.view.HUD;
 
 import static rs.pedjaapps.smc.utility.GameSave.save;
 
-public class GameScreen extends AbstractScreen implements InputProcessor
-{
-    private World world;
+public class GameScreen extends AbstractScreen implements InputProcessor {
+    private static final float LEVEL_END_ANIMATION_DURATION = .5f;
+    private static final String GOD_MOD_TEXT = "god";
     public OrthographicCamera cam;
-    private OrthographicCamera pCamera;
     public OrthographicCamera guiCam;
-
+    public HUD hud;
+    public String levelName;
+    public KillPointsTextHandler killPointsTextHandler;
+    public String entryName;
+    public GameScreen parent;
+    public boolean resumed, forceCheckEnter;
+    private World world;
+    private OrthographicCamera pCamera;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
-
     /**
      * Textures *
      */
     private ParticleEffect globalEffect;
-
     private SpriteBatch spriteBatch;
     private boolean debug = PrefsManager.isDebug();
-
     private BitmapFont debugFont, debugObjectFont;
     private GlyphLayout debugGlyph;
-
     private Vector2 camMin = new Vector2();
     private Vector2 camMax = new Vector2();
-
-    public HUD hud;
-
     private float width, height;
-
-    public String levelName;
     private Rectangle maryoBWO = new Rectangle();
-
-    public void setGameState(GAME_STATE gameState)
-    {
-        this.gameState = gameState;
-        hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING || gameState == GAME_STATE.NO_UPDATE);
-        if(gameState == GAME_STATE.GAME_OVER)
-        {
-            music = game.assets.manager.get("data/music/game/lost_1.mp3");
-            MusicManager.play(music);
-        }
-    }
-
-    public GAME_STATE getGameState()
-    {
-        return gameState;
-    }
-
-    public enum GAME_STATE
-    {
-        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
-        NO_UPDATE, PLAYER_UPDATING, GAME_EDIT_MODE
-    }
-
     private GAME_STATE gameState;
-
-    private HashMap<Integer, TouchInfo> touches = new HashMap<>();
     private LevelLoader loader;
-
-    private Sound audioOn;
     private Music music;
-
     private float goAlpha = 0.0f;
     private boolean goTouched = false;
-
-    public boolean isDebug()
-    {
-        return debug;
-    }
-
-    public void setDebug(boolean debug)
-    {
-        this.debug = debug;
-    }
-
-    public KillPointsTextHandler killPointsTextHandler;
-
-    public String entryName;
-    public GameScreen parent;
-    public boolean resumed, forceCheckEnter;
-
     private boolean cameraForceSnap;
     private Vector3 cameraEditModeTranslate = new Vector3();
-
-    private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
+    private StringBuilder mGodModInputCheckBuilder = new StringBuilder();
 
-    public GameScreen(MaryoGame game, boolean fromMenu, String levelName)
-    {
+    public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
         this(game, fromMenu, levelName, null);
     }
 
-    public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent)
-    {
+    public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent) {
         super(game);
         this.parent = parent;
         this.levelName = levelName;
@@ -149,7 +96,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
         world = new World(this);
-        hud = new HUD(world);
+        hud = new HUD(world, this);
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.update();
@@ -165,46 +112,69 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         spriteBatch = new SpriteBatch();
 
-        for (int i = 0; i < 5; i++) //handle max 4 touches
-        {
-            touches.put(i, new TouchInfo());
-        }
         loader = new LevelLoader(levelName);
         //Gdx.graphics.setContinuousRendering(false);
         if (fromMenu) GameSave.startLevelFresh();
     }
 
+    public GAME_STATE getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(GAME_STATE gameState) {
+        this.gameState = gameState;
+        hud.onGameStateChange();
+        hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
+                gameState == GAME_STATE.NO_UPDATE);
+        if (gameState == GAME_STATE.GAME_OVER) {
+            music = game.assets.manager.get("data/music/game/lost_1.mp3");
+            MusicManager.play(music);
+        }
+    }
+
+    public Music getMusic() {
+        return music;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
     @Override
-    public void show()
-    {
+    public void show() {
         GameSave.unlockLevel(levelName);
         music = game.assets.manager.get(loader.level.music.first());
-        if(!resumed)
+        if (!resumed)
             music.setPosition(0);
         music.setLooping(true);
         MusicManager.play(music);
         if (debug) GLProfiler.enable();
-        if (!resumed || forceCheckEnter)
-        {
+        if (!resumed || forceCheckEnter) {
             world.maryo.checkLevelEnter(entryName);
             forceCheckEnter = false;
         }
         Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(this);
-        if (!resumed)
-        {
+
+        InputMultiplexer multiInput = new InputMultiplexer();
+        multiInput.addProcessor(this);
+        multiInput.addProcessor(hud.stage);
+
+        Gdx.input.setInputProcessor(multiInput);
+        if (!resumed) {
             game.levelStart(levelName);
         }
-        if (resumed)
-        {
+        if (resumed) {
             cameraForceSnap = true;
         }
     }
 
     @Override
-    public void render(float delta)
-    {
-        delta = Math.min(delta, 1/30f);
+    public void render(float delta) {
+        delta = Math.min(delta, 1 / 30f);
         if (delta <= 0)
             return;
 
@@ -215,16 +185,18 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         updateObjects(delta);
         //physics end
 
-        moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position, gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState != GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
+        moveCamera(cam, gameState == GAME_STATE.GAME_EDIT_MODE ? cameraEditModeTranslate : world.maryo.position,
+                gameState == GAME_STATE.GAME_EDIT_MODE || (gameState != GAME_STATE.GAME_RUNNING && gameState !=
+                        GAME_STATE.PLAYER_UPDATING && gameState != GAME_STATE.PLAYER_DEAD));
         drawBackground();
         spriteBatch.setProjectionMatrix(cam.combined);
         spriteBatch.begin();
         drawObjects();
         killPointsTextHandler.render(spriteBatch, delta);
 
-        if(globalEffect != null)
-        {
-            globalEffect.setPosition(cam.position.x - Constants.CAMERA_WIDTH * 0.5f, cam.position.y + 0.5f * Constants.CAMERA_HEIGHT);
+        if (globalEffect != null) {
+            globalEffect.setPosition(cam.position.x - Constants.CAMERA_WIDTH * 0.5f, cam.position.y + 0.5f *
+                    Constants.CAMERA_HEIGHT);
             globalEffect.draw(spriteBatch);
 
             if (gameState == GAME_STATE.GAME_RUNNING) globalEffect.update(delta);
@@ -240,59 +212,45 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         hud.render(gameState, delta);
 
-        if (gameState == GAME_STATE.GAME_OVER)
-        {
+        if (gameState == GAME_STATE.GAME_OVER) {
             handleGameOver();
         }
 
-        if (gameState == GAME_STATE.GAME_LEVEL_END)
-        {
+        if (gameState == GAME_STATE.GAME_LEVEL_END) {
             handleLevelEnded(delta);
         }
 
         //cleanup
-        for (int i = 0; i < world.trashObjects.size; i++)
-        {
-             world.level.gameObjects.remove(world.trashObjects.get(i));
+        for (int i = 0; i < world.trashObjects.size; i++) {
+            world.level.gameObjects.remove(world.trashObjects.get(i));
         }
         world.trashObjects.clear();
 
         //debug
-        if (gameState == GAME_STATE.GAME_EDIT_MODE)
-        {
-            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            {
+        if (gameState == GAME_STATE.GAME_EDIT_MODE) {
+            if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 cameraEditModeTranslate.x += 0.2f;
-            }
-            else if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 cameraEditModeTranslate.x -= 0.2f;
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.UP))
-            {
+            if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
                 cameraEditModeTranslate.y += 0.2f;
-            }
-            else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 cameraEditModeTranslate.y -= 0.2f;
             }
         }
         if (debug) GLProfiler.reset();
     }
 
-    public void endLevel(String nextLevelName)
-    {
+    public void endLevel(String nextLevelName) {
         mNextLevelName = nextLevelName;
         levelEndAnimationStateTime = LEVEL_END_ANIMATION_DURATION;
         setGameState(GAME_STATE.GAME_LEVEL_END);
     }
 
-    private void handleLevelEnded(float delta)
-    {
-        if (levelEndAnimationStateTime <= 0)
-        {
-            if("game_tutorial".equals(levelName))
-            {
+    private void handleLevelEnded(float delta) {
+        if (levelEndAnimationStateTime <= 0) {
+            if ("game_tutorial".equals(levelName)) {
                 GameSave.reset();
             }
             world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
@@ -320,16 +278,13 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         shapeRenderer.end();
     }
 
-    public void showBoxText(Box box)
-    {
+    public void showBoxText(Box box) {
         setGameState(GAME_STATE.NO_UPDATE);
         //TODO hud.boxTextPopup.show(box, this);
     }
 
-    private void handleGameOver()
-    {
-        if (save.lifes < 0)
-        {
+    private void handleGameOver() {
+        if (save.lifes < 0) {
             Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
             Gdx.gl.glEnable(GL20.GL_BLEND);
 
@@ -369,61 +324,48 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         spriteBatch.end();
         //background changes to black if i don't add this after blend
 
-        if (goAlpha >= 1)
-        {
-            if (save.lifes < 0)
-            {
+        if (goAlpha >= 1) {
+            if (save.lifes < 0) {
                 game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
-            }
-            else
-            {
+            } else {
                 game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName, parent), false));
             }
             game.levelEnd(levelName, false);
         }
     }
 
-    public void won()
-    {
+    public void won() {
         music = game.assets.manager.get("data/music/game/courseclear.mp3");
-        music.setOnCompletionListener(new Music.OnCompletionListener()
-        {
+        //TODO einfache Verzögerung!?
+        music.setOnCompletionListener(new Music.OnCompletionListener() {
             @Override
-            public void onCompletion(Music music)
-            {
+            public void onCompletion(Music music) {
                 game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
             }
         });
         MusicManager.play(music);
     }
 
-    private void drawBackground()
-    {
-        for(Background background : world.level.backgrounds)
-        {
+    private void drawBackground() {
+        for (Background background : world.level.backgrounds) {
             background.render(cam, spriteBatch);
         }
     }
 
-    private void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap)
-    {
+    private void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap) {
         if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting))
             return;
-        if (snap || cameraForceSnap)
-        {
+        if (snap || cameraForceSnap) {
             cam.position.set(pos);
             cameraForceSnap = false;
-        }
-        else
-        {
+        } else {
             cam.position.lerp(pos, 0.05f);
         }
         cam.update();
         if (gameState != GAME_STATE.GAME_EDIT_MODE) keepCameraInBounds(cam);
     }
 
-    private void keepCameraInBounds(OrthographicCamera cam)
-    {
+    private void keepCameraInBounds(OrthographicCamera cam) {
         float camX = cam.position.x;
         float camY = cam.position.y;
 
@@ -440,34 +382,28 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         cam.update();
     }
 
-    private void updateObjects(float delta)
-    {
+    private void updateObjects(float delta) {
         world.createMaryoRectWithOffset(maryoBWO, 8);
-        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++)
-        {
+        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++) {
             GameObject go = world.level.gameObjects.get(i);
-            if (maryoBWO.overlaps(go.mColRect))
-            {
-                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo))
-                {
+            if (maryoBWO.overlaps(go.mColRect)) {
+                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState ==
+                        GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo)) {
                     go._update(delta);
                 }
             }
         }
     }
 
-    private void drawObjects()
-    {
+    private void drawObjects() {
         world.drawVisibleObjects(cam, spriteBatch);
     }
 
-    private void drawDebug()
-    {
+    private void drawDebug() {
         // render blocks
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        for (int i = 0; i < world.getVisibleObjects().size; i++)
-        {
+        for (int i = 0; i < world.getVisibleObjects().size; i++) {
             GameObject go = world.getVisibleObjects().get(i);
             Rectangle colRect = go.mColRect;
             Rectangle drawRect = go.mDrawRect;
@@ -486,14 +422,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         shapeRenderer.setColor(1, 0, 0, 1);
         shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
         shapeRenderer.setColor(0, 0, 1, 1);
-        shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect.height);
+        shapeRenderer.rect(maryo.debugRayRect.x, maryo.debugRayRect.y, maryo.debugRayRect.width, maryo.debugRayRect
+                .height);
         shapeRenderer.setColor(0.3f, 0.9f, 0, 0);
         shapeRenderer.rect(maryoBWO.x, maryoBWO.y, maryoBWO.width, maryoBWO.height);
         shapeRenderer.end();
     }
 
-    private void drawDebugText()
-    {
+    private void drawDebugText() {
         String debugMessage = generateDebugMessage();
         debugGlyph.setText(debugFont, debugMessage);
         debugFont.draw(spriteBatch, debugMessage, 20, height - 20);
@@ -503,10 +439,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         float y = invertY(Gdx.input.getY());
         Utility.guiPositionToGamePosition(x, y, this, point);
 
-        for (GameObject gameObject : world.level.gameObjects)
-        {
-            if (gameObject.mDrawRect.contains(point))
-            {
+        for (GameObject gameObject : world.level.gameObjects) {
+            if (gameObject.mDrawRect.contains(point)) {
                 String objectDebugText = gameObject.toString();
                 float tWidth = width * 0.4f;
                 debugGlyph.setText(debugObjectFont, objectDebugText, Color.BLACK, tWidth, Align.left, true);
@@ -519,8 +453,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         World.VECTOR2_POOL.free(point);
     }
 
-    private String generateDebugMessage()
-    {
+    private String generateDebugMessage() {
         return "Level: width=" + world.level.width + ", height=" + world.level.height
                 + "\n" + "Player: x=" + world.maryo.position.x + ", y=" + world.maryo.position.y
                 + "\n" + "LevelName: " + levelName
@@ -535,8 +468,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public void resize(int width, int height)
-    {
+    public void resize(int width, int height) {
         super.resize(width, height);
         this.width = width;
         this.height = height;
@@ -556,25 +488,22 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         guiCam.position.set(width / 2f, height / 2f, 0);
         guiCam.update();
 
-        for(Background background : world.level.backgrounds)
-        {
+        for (Background background : world.level.backgrounds) {
             background.resize(cam);
         }
         hud.resize(width, height);
     }
 
     @Override
-    public void hide()
-    {
-        gameState = GAME_STATE.GAME_PAUSED;
+    public void hide() {
+        setGameState(GAME_STATE.GAME_PAUSED);
         music.stop();
     }
 
     @Override
-    public void pause()
-    {
+    public void pause() {
         super.pause();
-        gameState = GAME_STATE.GAME_PAUSED;
+        setGameState(GAME_STATE.GAME_PAUSED);
         music.stop();
     }
 
@@ -584,36 +513,38 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         super.dispose();
         music.stop();
         hud.dispose();
         Gdx.input.setInputProcessor(null);
         game.assets.dispose();
         world.dispose();
-        if (globalEffect != null)
-        {
+        if (globalEffect != null) {
             globalEffect.dispose();
         }
         if (debug) GLProfiler.disable();
     }
 
     @Override
-    public void loadAssets()
-    {
+    public void loadAssets() {
         loader.parseLevel(world);
-        for (Maryo.MaryoState ms : Maryo.MaryoState.values())
-        {
+        for (Maryo.MaryoState ms : Maryo.MaryoState.values()) {
             game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
         }
         game.assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
-        game.assets.manager.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, game.assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets.particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, game.assets
+                .particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game
+                .assets.particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, game.assets
+                .particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, game
+                .assets.particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, game.assets
+                .particleEffectParameter);
+        game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets
+                .particleEffectParameter);
         game.assets.manager.load("data/animation/iceball.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/game/game_over.png", Texture.class);
         hud.loadAssets();
@@ -652,11 +583,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public void onAssetsLoaded()
-    {
+    public void onAssetsLoaded() {
         hud.initAssets();
         world.level = loader.level;
-        audioOn = game.assets.manager.get("data/sounds/audio_on.mp3", Sound.class);
 
         debugFont = new BitmapFont();
         debugFont.setColor(1, 0, 0, 1);
@@ -664,22 +593,20 @@ public class GameScreen extends AbstractScreen implements InputProcessor
         debugObjectFont = new BitmapFont();
         debugGlyph = new GlyphLayout();
 
-        for (GameObject go : loader.level.gameObjects)
-        {
+        for (GameObject go : loader.level.gameObjects) {
             go.initAssets();
         }
 
         BitmapFont pointsFont = game.assets.manager.get(Assets.SKIN_HUD, Skin.class).getFont(Assets.FONT_SIMPLE25);
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
-        for(Background background : world.level.backgrounds)
-        {
+        for (Background background : world.level.backgrounds) {
             background.onAssetsLoaded(cam, game.assets);
         }
 
-        if(!TextUtils.isEmpty(world.level.particleEffect))
-        {
-            globalEffect = new ParticleEffect(game.assets.manager.get(world.level.particleEffect, ParticleEffect.class));
+        if (!TextUtils.isEmpty(world.level.particleEffect)) {
+            globalEffect = new ParticleEffect(game.assets.manager.get(world.level.particleEffect, ParticleEffect
+                    .class));
             globalEffect.start();
         }
     }
@@ -687,137 +614,91 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     // * InputProcessor methods ***************************//
 
     @Override
-    public boolean keyDown(int keycode)
-    {
-        if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
+    public boolean keyDown(int keycode) {
+        if (gameState == GAME_STATE.GAME_READY)
+            setGameState(GAME_STATE.GAME_RUNNING);
         if (keycode == Input.Keys.LEFT)
-        {
             world.maryo.leftPressed();
-            hud.leftPressed();
-        }
+
         if (keycode == Input.Keys.RIGHT)
-        {
             world.maryo.rightPressed();
-            hud.rightPressed();
-        }
+
         if (keycode == Input.Keys.SPACE)
-        {
             world.maryo.jumpPressed();
-            hud.jumpPressed();
-        }
+
         if (keycode == Input.Keys.ALT_LEFT)
-        {
             world.maryo.firePressed();
-            hud.firePressed();
-        }
+
         if (keycode == Input.Keys.X)
-        {
             world.maryo.firePressed();
-            hud.firePressed();
-        }
+
         if (keycode == Input.Keys.DOWN)
-        {
             world.maryo.downPressed();
-            hud.downPressed();
-        }
+
         if (keycode == Input.Keys.UP)
-        {
             world.maryo.upPressed();
-            hud.upPressed();
-        }
-        if (keycode == Input.Keys.F8)
-        {
-            if (gameState == GAME_STATE.GAME_EDIT_MODE)
-            {
-                gameState = GAME_STATE.GAME_RUNNING;
+
+        if (keycode == Input.Keys.F8) {
+            if (gameState == GAME_STATE.GAME_EDIT_MODE) {
+                setGameState(GAME_STATE.GAME_RUNNING);
                 cam.zoom = 1;
-            }
-            else
-            {
+            } else {
                 cameraEditModeTranslate.set(cam.position);
-                gameState = GAME_STATE.GAME_EDIT_MODE;
+                setGameState(GAME_STATE.GAME_EDIT_MODE);
             }
         }
         return true;
     }
 
     @Override
-    public boolean keyUp(int keycode)
-    {
+    public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.LEFT)
-        {
             world.maryo.leftReleased();
-            hud.leftReleased();
-        }
+
         if (keycode == Input.Keys.RIGHT)
-        {
             world.maryo.rightReleased();
-            hud.rightReleased();
-        }
+
         if (keycode == Input.Keys.SPACE)
-        {
             world.maryo.jumpReleased();
-            hud.jumpReleased();
-        }
+
         if (keycode == Input.Keys.ALT_LEFT)
-        {
             world.maryo.fireReleased();
-            hud.fireReleased();
-        }
+
         if (keycode == Input.Keys.X)
-        {
             world.maryo.fireReleased();
-            hud.fireReleased();
-        }
+
         if (keycode == Input.Keys.DOWN)
-        {
             world.maryo.downReleased();
-            hud.downReleased();
-        }
+
         if (keycode == Input.Keys.UP)
-        {
             world.maryo.upReleased();
-            hud.upReleased();
-        }
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
-        {
-            if (gameState == GAME_STATE.GAME_PAUSED)
-            {
+
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
+            if (gameState == GAME_STATE.GAME_PAUSED) {
                 exitToMenu();
-            }
-            else
-            {
-                gameState = GAME_STATE.GAME_PAUSED;
+            } else {
+                setGameState(GAME_STATE.GAME_PAUSED);
             }
         }
         if (keycode == Input.Keys.D)
             debug = !debug;
 
-        if (keycode == Input.Keys.ENTER)
-        {
+        if (keycode == Input.Keys.ENTER) {
             //hud.boxTextPopup.hide();
             setGameState(GAME_STATE.GAME_RUNNING);
         }
         return true;
     }
 
-    private StringBuilder mGodModInputCheckBuilder = new StringBuilder();
-    private static final String GOD_MOD_TEXT = "god";
-
     @Override
-    public boolean keyTyped(char character)
-    {
+    public boolean keyTyped(char character) {
         mGodModInputCheckBuilder.append(character);
-        if (mGodModInputCheckBuilder.length() == GOD_MOD_TEXT.length())
-        {
-            if (mGodModInputCheckBuilder.toString().equals(GOD_MOD_TEXT))
-            {
+        if (mGodModInputCheckBuilder.length() == GOD_MOD_TEXT.length()) {
+            if (mGodModInputCheckBuilder.toString().equals(GOD_MOD_TEXT)) {
                 Maryo.STAR_EFFECT_TIMEOUT = Float.MAX_VALUE;
                 world.maryo.canWalkOnAir = true;
                 world.maryo.starPicked();
-            }
-            else
-            {
+            } else {
                 mGodModInputCheckBuilder = new StringBuilder();
             }
         }
@@ -825,181 +706,34 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public boolean touchDown(int x, int y, int pointer, int button)
-    {
-        if (gameState == GAME_STATE.GAME_READY) gameState = GAME_STATE.GAME_RUNNING;
-        if (gameState == GAME_STATE.GAME_OVER) goTouched = true;
-        if (pointer < 5)
-        {
-            Vector2 vect = World.VECTOR2_POOL.obtain();
-            if (MaryoGame.showOnScreenControls())
-            {
-                if (Intersector.isPointInPolygon(hud.rightPolygon, vect.set(x, invertY(y))))//is right
-                {
-                    world.maryo.rightPressed();
-                    touches.get(pointer).clickArea = HUD.Key.right;
-                    hud.rightPressed();
-                }
-                if (Intersector.isPointInPolygon(hud.leftPolygon, vect.set(x, invertY(y))))//is left
-                {
-                    world.maryo.leftPressed();
-                    touches.get(pointer).clickArea = HUD.Key.left;
-                    hud.leftPressed();
-                }
-                if (Intersector.isPointInPolygon(hud.upPolygon, vect.set(x, invertY(y))))//is top
-                {
-                    world.maryo.upPressed();
-                    touches.get(pointer).clickArea = HUD.Key.up;
-                    hud.upPressed();
-                }
-                if (Intersector.isPointInPolygon(hud.downPolygon, vect.set(x, invertY(y))))//is bottom
-                {
-                    world.maryo.downPressed();
-                    touches.get(pointer).clickArea = HUD.Key.down;
-                    hud.downPressed();
-                }
-                if (hud.jumpRT.contains(x, invertY(y)))
-                {
-                    world.maryo.jumpPressed();
-                    touches.get(pointer).clickArea = HUD.Key.jump;
-                    hud.jumpPressed();
-                }
-                if (hud.fireRT.contains(x, invertY(y)))
-                {
-                    world.maryo.firePressed();
-                    touches.get(pointer).clickArea = HUD.Key.fire;
-                    hud.firePressed();
-                }
-            }
-            if (hud.pauseR.contains(x, invertY(y)))
-            {
-                touches.get(pointer).clickArea = HUD.Key.pause;
-                hud.pausePressed();
-            }
-            if (gameState == GAME_STATE.GAME_PAUSED && hud.soundR.contains(x, invertY(y)))
-            {
-                touches.get(pointer).clickArea = HUD.Key.sound;
-                hud.soundPressed();
-            }
-            if (gameState == GAME_STATE.GAME_PAUSED && hud.musicR.contains(x, invertY(y)))
-            {
-                touches.get(pointer).clickArea = HUD.Key.music;
-                hud.musicPressed();
-            }
-            if (gameState == GAME_STATE.GAME_PAUSED && hud.playR.contains(x, invertY(y)))
-            {
-                touches.get(pointer).clickArea = HUD.Key.play;
-                hud.playPressed();
-            }
-            World.VECTOR2_POOL.free(vect);
-        }
-        //if (hud.boxTextPopup.showing)
-        {
-        //    hud.boxTextPopup.hide();
-        //    setGameState(GAME_STATE.GAME_RUNNING);
-        }
+    public boolean touchDown(int x, int y, int pointer, int button) {
+        if (gameState == GAME_STATE.GAME_READY)
+            setGameState(GAME_STATE.GAME_RUNNING);
+        else if (gameState == GAME_STATE.GAME_OVER)
+            goTouched = true;
+        else
+            return false;
+
         return true;
     }
 
-    private float invertY(float y)
-    {
+    private float invertY(float y) {
         return height - y;
     }
 
     @Override
-    public boolean touchUp(int x, int y, int pointer, int button)
-    {
-        TouchInfo ti = touches.get(pointer);
-        if (ti != null)
-        {
-            switch (ti.clickArea)
-            {
-                case right:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.rightReleased();
-                        hud.rightReleased();
-                    }
-                    break;
-                case left:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.leftReleased();
-                        hud.leftReleased();
-                    }
-                    break;
-                case up:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.upReleased();
-                        hud.upReleased();
-                    }
-                    break;
-                case down:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.downReleased();
-                        hud.downReleased();
-                    }
-                    break;
-                case jump:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.jumpReleased();
-                        hud.jumpReleased();
-                    }
-                    break;
-                case fire:
-                    if (MaryoGame.showOnScreenControls())
-                    {
-                        world.maryo.fireReleased();
-                        hud.fireReleased();
-                    }
-                    break;
-                case pause:
-                    if (gameState == GAME_STATE.GAME_RUNNING) gameState = GAME_STATE.GAME_PAUSED;
-                    hud.pauseReleased();
-                    break;
-                case play:
-                    gameState = GAME_STATE.GAME_RUNNING;
-                    hud.playReleased();
-                    break;
-                case sound:
-                    if (Utility.toggleSound())
-                    {
-                        SoundManager.play(audioOn);
-                    }
-                    hud.soundReleased();
-                    break;
-                case music:
-                    if (Utility.toggleMusic())
-                    {
-                        MusicManager.play(music);
-                    }
-                    else
-                    {
-                        music.pause();
-                    }
-                    hud.musicReleased();
-                    break;
-            }
-            touches.get(pointer).clickArea = HUD.Key.none;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean touchDragged(int x, int y, int pointer)
-    {
-
+    public boolean touchUp(int x, int y, int pointer, int button) {
         return false;
     }
 
     @Override
-    public boolean scrolled(int amount)
-    {
-        if (gameState == GAME_STATE.GAME_EDIT_MODE || debug)
-        {
+    public boolean touchDragged(int x, int y, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        if (gameState == GAME_STATE.GAME_EDIT_MODE || debug) {
             cam.zoom += amount * 0.1f;
             cam.update();
             return true;
@@ -1008,63 +742,51 @@ public class GameScreen extends AbstractScreen implements InputProcessor
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY)
-    {
+    public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
-    public World getWorld()
-    {
+    public World getWorld() {
         return world;
     }
 
-    public void setWorld(World world)
-    {
+    public void setWorld(World world) {
         this.world = world;
     }
 
-    public float getWidth()
-    {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(float width)
-    {
+    public void setWidth(float width) {
         this.width = width;
     }
 
-    public float getHeight()
-    {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(float height)
-    {
+    public void setHeight(float height) {
         this.height = height;
     }
 
-    private class TouchInfo
-    {
-        HUD.Key clickArea = HUD.Key.none;
+    public enum GAME_STATE {
+        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
+        NO_UPDATE, PLAYER_UPDATING, GAME_EDIT_MODE
     }
 
-    public static class KillPointsTextHandler
-    {
+    public static class KillPointsTextHandler {
         private final List<KillPoint> pointsTextPool = new ArrayList<>(10);
-        private BitmapFont font;
         NAHudText<Integer> text = new NAHudText<>(null, null);
+        private BitmapFont font;
 
-        KillPointsTextHandler(BitmapFont font)
-        {
+        KillPointsTextHandler(BitmapFont font) {
             this.font = font;
         }
 
-        public void add(int points, float positionX, float positionY)
-        {
-            for (KillPoint point : pointsTextPool)
-            {
-                if (point.recycled)
-                {
+        public void add(int points, float positionX, float positionY) {
+            for (KillPoint point : pointsTextPool) {
+                if (point.recycled) {
                     point.reset(positionX, positionY, points);
                     return;
                 }
@@ -1073,19 +795,16 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             pointsTextPool.add(point);
         }
 
-        public void render(SpriteBatch batch, float deltaTime)
-        {
+        public void render(SpriteBatch batch, float deltaTime) {
             //noinspection ForLoopReplaceableByForEach
             float oldScale = font.getData().scaleX;
             boolean useInt = font.usesIntegerPositions();
             font.getData().setScale(0.015f);
             font.setUseIntegerPositions(false);
 
-            for (int i = 0, size = pointsTextPool.size(); i < size; i++)
-            {
+            for (int i = 0, size = pointsTextPool.size(); i < size; i++) {
                 KillPoint point = pointsTextPool.get(i);
-                if (!point.recycled)
-                {
+                if (!point.recycled) {
                     point.draw(batch, deltaTime, font, text);
                 }
             }
@@ -1095,8 +814,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
 
         }
 
-        private static class KillPoint
-        {
+        private static class KillPoint {
             static final float velocity = 0.9f;
             static final float maxDistance = 0.4f;
             private boolean recycled = false;
@@ -1104,18 +822,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor
             private float positionX, positionY, origPosY;
             private float alpha = 1;
 
-            KillPoint(int points, float positionX, float positionY)
-            {
+            KillPoint(int points, float positionX, float positionY) {
                 this.points = points;
                 this.positionX = positionX;
                 this.positionY = positionY;
                 this.origPosY = positionY;
             }
 
-            public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text)
-            {
-                if (positionY >= origPosY + maxDistance)
-                {
+            public void draw(SpriteBatch spriteBatch, float deltaTime, BitmapFont font, NAHudText<Integer> text) {
+                if (positionY >= origPosY + maxDistance) {
                     recycled = true;
                     return;
                 }
@@ -1126,8 +841,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor
                 font.draw(spriteBatch, text.toString(points), positionX, positionY);
             }
 
-            void reset(float posX, float posY, int points)
-            {
+            void reset(float posX, float posY, int points) {
                 recycled = false;
                 positionX = posX;
                 positionY = posY;

@@ -6,7 +6,7 @@ filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 1922
+  xy: 1, 1918
   size: 665, 103
   split: 63, 54, 34, 34
   pad: 19, 22, 13, 13
@@ -15,7 +15,7 @@ background
   index: -1
 background2
   rotate: false
-  xy: 1, 282
+  xy: 1, 278
   size: 339, 96
   split: 37, 36, 32, 42
   pad: 29, 24, 13, 25
@@ -24,58 +24,86 @@ background2
   index: -1
 background2_disabled
   rotate: false
-  xy: 668, 1929
+  xy: 668, 1925
   size: 339, 96
   split: 37, 36, 32, 42
   pad: 29, 24, 13, 25
   orig: 339, 96
   offset: 0, 0
   index: -1
+button_fire
+  rotate: false
+  xy: 259, 196
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+button_firing
+  rotate: false
+  xy: 903, 1322
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+button_jump
+  rotate: false
+  xy: 342, 294
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+button_jumping
+  rotate: false
+  xy: 1009, 1941
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
 checkbox
   rotate: false
-  xy: 342, 308
+  xy: 645, 893
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 checkbox_disabled
   rotate: false
-  xy: 903, 1336
+  xy: 1091, 1951
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 checkbox_on
   rotate: false
-  xy: 1009, 1955
+  xy: 515, 633
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 checkbox_on_disabled
   rotate: false
-  xy: 259, 210
+  xy: 424, 304
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 checkbox_togge
   rotate: false
-  xy: 645, 897
+  xy: 259, 124
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 checkbox_togge_disabled
   rotate: false
-  xy: 515, 637
+  xy: 645, 821
   size: 77, 70
   orig: 77, 70
   offset: 0, 0
   index: -1
 disabled_small_square_button
   rotate: false
-  xy: 1088, 1961
+  xy: 1170, 1957
   size: 64, 64
   split: 25, 25, 23, 24
   pad: 15, 14, 13, 16
@@ -84,7 +112,7 @@ disabled_small_square_button
   index: -1
 disabled_square_button
   rotate: false
-  xy: 515, 839
+  xy: 515, 835
   size: 128, 128
   split: 50, 51, 47, 49
   pad: 26, 27, 14, 25
@@ -93,7 +121,7 @@ disabled_square_button
   index: -1
 empty_square_button
   rotate: false
-  xy: 773, 1278
+  xy: 773, 1274
   size: 128, 128
   split: 50, 51, 47, 49
   pad: 26, 27, 14, 25
@@ -102,49 +130,49 @@ empty_square_button
   index: -1
 fontawesome
   rotate: false
-  xy: 515, 1408
+  xy: 515, 1404
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 grobold25
   rotate: false
-  xy: 1, 24
+  xy: 1, 20
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 grobold25bl
   rotate: false
-  xy: 515, 1150
+  xy: 515, 1146
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 grobold25br
   rotate: false
-  xy: 1, 894
+  xy: 1, 890
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 grobold50
   rotate: false
-  xy: 1, 380
+  xy: 1, 376
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 grobold60bl
   rotate: false
-  xy: 1, 1408
+  xy: 1, 1404
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 progressbar_9
   rotate: false
-  xy: 1, 1
+  xy: 1009, 1918
   size: 20, 21
   split: 9, 9, 9, 10
   pad: 4, 4, 4, 4
@@ -153,21 +181,21 @@ progressbar_9
   index: -1
 progressbar_knob
   rotate: false
-  xy: 1009, 1936
+  xy: 773, 1156
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 progressbar_knobv
   rotate: false
-  xy: 903, 1317
+  xy: 871, 1255
   size: 17, 17
   orig: 17, 17
   offset: 0, 0
   index: -1
 progressbarbef
   rotate: false
-  xy: 342, 289
+  xy: 1, 1
   size: 17, 17
   split: 8, 8, 8, 8
   pad: 3, 3, 2, 4
@@ -176,7 +204,7 @@ progressbarbef
   index: -1
 selected_small_square_button
   rotate: false
-  xy: 259, 144
+  xy: 259, 58
   size: 64, 64
   split: 25, 25, 23, 24
   pad: 15, 14, 13, 16
@@ -185,7 +213,7 @@ selected_small_square_button
   index: -1
 selected_square_button
   rotate: false
-  xy: 515, 709
+  xy: 515, 705
   size: 128, 128
   split: 50, 51, 47, 49
   pad: 26, 27, 14, 25
@@ -194,7 +222,7 @@ selected_square_button
   index: -1
 slider
   rotate: false
-  xy: 982, 1389
+  xy: 903, 1303
   size: 17, 17
   split: 8, 8, 8, 8
   pad: 3, 3, 2, 4
@@ -203,7 +231,7 @@ slider
   index: -1
 slider_disabled
   rotate: false
-  xy: 645, 878
+  xy: 985, 1385
   size: 17, 17
   split: 8, 8, 8, 8
   pad: 3, 3, 2, 4
@@ -212,7 +240,7 @@ slider_disabled
   index: -1
 small_empty_square_button
   rotate: false
-  xy: 421, 314
+  xy: 515, 567
   size: 64, 64
   split: 25, 25, 23, 24
   pad: 15, 14, 13, 16
@@ -221,21 +249,21 @@ small_empty_square_button
   index: -1
 stagebackground
   rotate: false
-  xy: 760, 1138
+  xy: 760, 1134
   size: 10, 10
   orig: 10, 10
   offset: 0, 0
   index: -1
 touchpad
   rotate: false
-  xy: 773, 1151
-  size: 125, 125
-  orig: 125, 125
+  xy: 773, 1175
+  size: 96, 97
+  orig: 96, 97
   offset: 0, 0
   index: -1
 window
   rotate: false
-  xy: 515, 969
+  xy: 515, 965
   size: 243, 179
   split: 77, 79, 77, 75
   pad: 39, 34, 40, 31

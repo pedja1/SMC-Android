@@ -26,6 +26,11 @@ public class Assets {
     public static final String LABEL_BORDER25 = "outline_small";
     public static final String LABEL_BORDER60 = "outline";
 
+    public static final String WINDOW_NOFRAME = "frameless";
+
+    public static final String BUTTON_FA = "fa45";
+    public static final String BUTTON_SMALL = "small";
+
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
     public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;

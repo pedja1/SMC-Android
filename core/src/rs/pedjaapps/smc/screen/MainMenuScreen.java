@@ -29,16 +29,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.audio.MusicManager;
-import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
-import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.view.Background;
+import rs.pedjaapps.smc.view.MusicButton;
 import rs.pedjaapps.smc.view.SelectionAdapter;
 
 /**
@@ -84,6 +82,14 @@ public class MainMenuScreen extends AbstractScreen {
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
         world = new World(this);
+    }
+
+    public static Image createLogoImage(MaryoGame game) {
+        Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
+        gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        Image imGameLogo = new Image(gameLogo);
+        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
+        return imGameLogo;
     }
 
     private Array<SelectionAdapter.Level> loadSelectionItems() {
@@ -184,8 +190,6 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
-        game.assets.manager.load("data/hud/hud.pack", TextureAtlas.class);
-        game.assets.manager.load("data/hud/controls.pack", TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
@@ -232,26 +236,12 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
         //TODO wird verschieden breit. Breite setzen oder Fixfont einstellen
-        TextButton sound = new TextButton(getSoundStateIcon(), skin, "fa45");
-        sound.addListener(new ChangeListener() {
+        TextButton sound = new MusicButton(skin, audioOn) {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if (!PrefsManager.isPlaySounds()) {
-                    PrefsManager.setPlayMusic(true);
-                    PrefsManager.setPlaySounds(true);
-                    MusicManager.play(music);
-                } else if (PrefsManager.isPlayMusic()) {
-                    PrefsManager.setPlayMusic(false);
-                    PrefsManager.setPlaySounds(true);
-                    music.pause();
-                    SoundManager.play(audioOn);
-                } else {
-                    PrefsManager.setPlayMusic(false);
-                    PrefsManager.setPlaySounds(false);
-                }
-                ((TextButton) actor).setText(getSoundStateIcon());
+            protected Music getMusic() {
+                return music;
             }
-        });
+        };
 
         // Key Events
         stage.addListener(new InputListener() {
@@ -273,22 +263,5 @@ public class MainMenuScreen extends AbstractScreen {
         stage.addActor(sound);
         sound.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
 
-    }
-
-    public static Image createLogoImage(MaryoGame game) {
-        Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
-        gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image imGameLogo = new Image(gameLogo);
-        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
-        return imGameLogo;
-    }
-
-    private String getSoundStateIcon() {
-        if (PrefsManager.isPlayMusic())
-            return FontAwesome.SETTINGS_MUSIC;
-        else if (PrefsManager.isPlaySounds())
-            return FontAwesome.SETTINGS_SPEAKER_ON;
-        else
-            return FontAwesome.SETTINGS_SPEAKER_OFF;
     }
 }
