@@ -289,24 +289,33 @@ public class HUD {
                 - imMaryoL.getHeight() - imMaryoL.getHeight() / 2);
         stage.addActor(imMaryoL);
 
-        scoreLabel = new Label(formatPointsString(0), skin, Assets.LABEL_BORDER25);
-        scoreLabel.setPosition(padX, imMaryoL.getY());
+        scoreLabel = new Label(formatPointsString(0), skin, Assets.LABEL_BORDER60);
+        scoreLabel.setFontScale(.45f);
+        scoreLabel.setSize(scoreLabel.getPrefWidth(), scoreLabel.getPrefHeight());
+        scoreLabel.setPosition(padX, imMaryoL.getY() + (imMaryoL.getHeight() - scoreLabel.getHeight()) / 2);
         stage.addActor(scoreLabel);
 
         imWaffles = new Image(goldM);
+        imWaffles.setSize(imWaffles.getWidth() / 2, imWaffles.getHeight() / 2);
         imWaffles.setPosition(padX * 2 + scoreLabel.getWidth(), scoreLabel.getY());
         stage.addActor(imWaffles);
 
-        coinsLabel = new Label(" ", skin, Assets.LABEL_BORDER25);
+        coinsLabel = new Label(" ", skin, Assets.LABEL_BORDER60);
+        coinsLabel.setFontScale(.45f);
+        coinsLabel.setSize(coinsLabel.getPrefWidth(), coinsLabel.getPrefHeight());
         coinsLabel.setPosition(imWaffles.getX() + imWaffles.getWidth(), scoreLabel.getY());
         stage.addActor(coinsLabel);
 
-        livesLabel = new Label("0x", skin, Assets.LABEL_BORDER25);
+        livesLabel = new Label("0x", skin, Assets.LABEL_BORDER60);
+        livesLabel.setFontScale(.45f);
+        livesLabel.setSize(livesLabel.getPrefWidth(), livesLabel.getPrefHeight());
         livesLabel.setPosition(imMaryoL.getX(), scoreLabel.getY(), Align.bottomRight);
         stage.addActor(livesLabel);
 
         time.update(0);
-        timeLabel = new Label(new String(time.getChars()), skin, Assets.LABEL_BORDER25);
+        timeLabel = new Label(new String(time.getChars()), skin, Assets.LABEL_BORDER60);
+        timeLabel.setFontScale(.45f);
+        timeLabel.setSize(timeLabel.getPrefWidth(), timeLabel.getPrefHeight());
         timeLabel.setPosition(livesLabel.getX() - padX, scoreLabel.getY(), Align.bottomRight);
         stage.addActor(timeLabel);
 
