@@ -493,6 +493,19 @@ atlasData: {
 			tintName: null
 			name: touchpad
 		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/touchpad_knob.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: touchpad_knob
+		}
 	]
 }
 jsonData: {
@@ -3226,7 +3239,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: knob
 						optional: true
-						value: null
+						value: touchpad_knob
 					}
 				}
 				deletable: false

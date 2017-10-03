@@ -249,7 +249,10 @@ public class MainMenuScreen extends AbstractScreen {
             public boolean keyDown(InputEvent event, int keycode) {
                 switch (keycode) {
                     case Input.Keys.ENTER:
-                        selectionAdapter.show(stage);
+                        if (selectionAdapter.isVisible())
+                            selectionAdapter.hide();
+                        else
+                            selectionAdapter.show(stage);
                         return true;
                     default:
                         return false;

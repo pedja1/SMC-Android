@@ -262,6 +262,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: {
 		background: touchpad
+		knob: touchpad_knob
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {

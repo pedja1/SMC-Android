@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -38,6 +39,7 @@ import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD {
     private static final float UPDATE_FREQ = .15f;
+    public static final float TOUCHPAD_DEAD_RADIUS = .33f;
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
     private final HUDTimeText time = new HUDTimeText();
@@ -68,6 +70,9 @@ public class HUD {
     private Image imItemBox;
     private Image imWaffles;
     private Image imMaryoL;
+    private Skin skin;
+    private Dialog popupBox;
+
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
@@ -94,16 +99,16 @@ public class HUD {
 
     public void initAssets() {
         // already initialized
-        if (pauseLabel != null)
+        if (skin != null)
             return;
 
-        Skin skin = world.screen.game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
+        skin = world.screen.game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
         float padX = stage.getWidth() * 0.03f;
         float ibSize = MaryoGame.NATIVE_WIDTH / 14;
 
         fire = new Button(skin, "fire");
-        fire.setSize(MaryoGame.NATIVE_HEIGHT / 7f, MaryoGame.NATIVE_HEIGHT / 7f);
-        fire.setPosition(MaryoGame.NATIVE_WIDTH - fire.getWidth() * 1.5f, MaryoGame.NATIVE_HEIGHT * .35f);
+        fire.setSize(MaryoGame.NATIVE_HEIGHT * .2f, MaryoGame.NATIVE_HEIGHT * .2f);
+        fire.setPosition(MaryoGame.NATIVE_WIDTH - fire.getWidth() - padX, MaryoGame.NATIVE_HEIGHT * .5f - fire.getHeight());
         stage.addActor(fire);
         fire.addListener(new EventListener() {
             @Override
@@ -123,7 +128,7 @@ public class HUD {
 
         jump = new Button(skin, "jump");
         jump.setSize(fire.getWidth(), fire.getHeight());
-        jump.setPosition(fire.getX() - fire.getWidth() * 1.5f, fire.getY() - fire.getHeight() * 1.5f);
+        jump.setPosition(fire.getX() - fire.getWidth() * 1.5f, (fire.getY() - fire.getHeight()) / 2);
         stage.addActor(jump);
         jump.addListener(new EventListener() {
             @Override
@@ -142,38 +147,55 @@ public class HUD {
         });
 
         touchpad = new Touchpad(0, skin);
-        touchpad.setSize(MaryoGame.NATIVE_HEIGHT * .4f, MaryoGame.NATIVE_HEIGHT * .4f);
-        touchpad.setPosition(MaryoGame.NATIVE_HEIGHT / 15f, MaryoGame.NATIVE_HEIGHT / 15f);
+        touchpad.setSize(MaryoGame.NATIVE_HEIGHT * .5f, MaryoGame.NATIVE_HEIGHT * .5f);
+        touchpad.setPosition(0, 0);
         stage.addActor(touchpad);
         touchpad.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (upPressed != touchpad.getKnobPercentY() > .33f) {
-                    upPressed = touchpad.getKnobPercentY() > .33f;
+                boolean upNowPressed = touchpad.getKnobPercentY() > TOUCHPAD_DEAD_RADIUS;
+                boolean downNowPressed = touchpad.getKnobPercentY() < -TOUCHPAD_DEAD_RADIUS;
+                boolean rightNowPressed = touchpad.getKnobPercentX() > TOUCHPAD_DEAD_RADIUS;
+                boolean leftNowPressed = touchpad.getKnobPercentX() < -TOUCHPAD_DEAD_RADIUS;
+
+                // zwei Richtungen gleichzeitig: entscheiden welcher wichtiger ist
+                if ((upNowPressed || downNowPressed) && (leftNowPressed || rightNowPressed)) {
+                    if (Math.abs(touchpad.getKnobPercentY()) >= Math.abs(touchpad.getKnobPercentX())) {
+                        rightNowPressed = false;
+                        leftNowPressed = false;
+                    } else {
+                        upNowPressed = false;
+                        downNowPressed = false;
+                    }
+
+                }
+
+                if (upPressed != upNowPressed) {
+                    upPressed = upNowPressed;
                     if (upPressed)
                         world.maryo.upPressed();
                     else
                         world.maryo.upReleased();
                 }
 
-                if (downPressed != touchpad.getKnobPercentY() < -.33f) {
-                    downPressed = touchpad.getKnobPercentY() < -.33f;
+                if (downPressed != downNowPressed) {
+                    downPressed = downNowPressed;
                     if (downPressed)
                         world.maryo.downPressed();
                     else
                         world.maryo.downReleased();
                 }
 
-                if (rightPressed != touchpad.getKnobPercentX() > .33f) {
-                    rightPressed = touchpad.getKnobPercentX() > .33f;
+                if (rightPressed != rightNowPressed) {
+                    rightPressed = rightNowPressed;
                     if (rightPressed)
                         world.maryo.rightPressed();
                     else
                         world.maryo.rightReleased();
                 }
 
-                if (leftPressed != touchpad.getKnobPercentX() < -.33f) {
-                    leftPressed = touchpad.getKnobPercentX() < -.33f;
+                if (leftPressed != leftNowPressed) {
+                    leftPressed = leftNowPressed;
                     if (leftPressed)
                         world.maryo.leftPressed();
                     else
@@ -358,6 +380,28 @@ public class HUD {
         stage.getViewport().apply();
         stage.act(deltaTime);
         stage.draw();
+    }
+
+    public void showPopupBox(String text) {
+        popupBox = new Dialog("", skin, Assets.WINDOW_NOFRAME) {
+            @Override
+            protected void result(Object object) {
+                gameScreen.discardBoxText();
+                cancel();
+            }
+        };
+
+        Label textLabel = new Label(text, skin, Assets.LABEL_BORDER25);
+        textLabel.setWrap(true);
+        popupBox.getContentTable().add(textLabel).prefWidth
+                (MaryoGame.NATIVE_WIDTH / 2).pad(10);
+
+        popupBox.show(stage);
+    }
+
+    public void hidePopupBox() {
+        if (popupBox != null && popupBox.isVisible())
+            popupBox.hide();
     }
 
     private void drawDebug() {

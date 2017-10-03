@@ -125,7 +125,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         this.gameState = gameState;
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
-                gameState == GAME_STATE.NO_UPDATE);
+                gameState == GAME_STATE.SHOW_BOX);
         if (gameState == GAME_STATE.GAME_OVER) {
             music = game.assets.manager.get("data/music/game/lost_1.mp3");
             MusicManager.play(music);
@@ -279,8 +279,15 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     }
 
     public void showBoxText(Box box) {
-        setGameState(GAME_STATE.NO_UPDATE);
-        //TODO hud.boxTextPopup.show(box, this);
+        setGameState(GAME_STATE.SHOW_BOX);
+        hud.showPopupBox(box.text);
+    }
+
+    public void discardBoxText() {
+        if (gameState == GAME_STATE.SHOW_BOX) {
+            hud.hidePopupBox();
+            setGameState(GAME_STATE.GAME_RUNNING);
+        }
     }
 
     private void handleGameOver() {
@@ -617,6 +624,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     public boolean keyDown(int keycode) {
         if (gameState == GAME_STATE.GAME_READY)
             setGameState(GAME_STATE.GAME_RUNNING);
+        else if (gameState == GAME_STATE.SHOW_BOX)
+            discardBoxText();
+
+        if (gameState == GAME_STATE.GAME_PAUSED && keycode == Input.Keys.ENTER)
+            setGameState(GAME_STATE.GAME_RUNNING);
+        else if (gameState == GAME_STATE.GAME_PAUSED)
+            return false;
+
         if (keycode == Input.Keys.LEFT)
             world.maryo.leftPressed();
 
@@ -652,6 +667,19 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+
+        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
+            if (gameState == GAME_STATE.GAME_PAUSED) {
+                exitToMenu();
+            } else {
+                setGameState(GAME_STATE.GAME_PAUSED);
+            }
+            return true;
+        }
+
+        if (gameState == GAME_STATE.GAME_PAUSED)
+            return false;
+
         if (keycode == Input.Keys.LEFT)
             world.maryo.leftReleased();
 
@@ -673,20 +701,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         if (keycode == Input.Keys.UP)
             world.maryo.upReleased();
 
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
-            if (gameState == GAME_STATE.GAME_PAUSED) {
-                exitToMenu();
-            } else {
-                setGameState(GAME_STATE.GAME_PAUSED);
-            }
-        }
         if (keycode == Input.Keys.D)
             debug = !debug;
 
-        if (keycode == Input.Keys.ENTER) {
-            //hud.boxTextPopup.hide();
-            setGameState(GAME_STATE.GAME_RUNNING);
-        }
         return true;
     }
 
@@ -709,6 +726,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     public boolean touchDown(int x, int y, int pointer, int button) {
         if (gameState == GAME_STATE.GAME_READY)
             setGameState(GAME_STATE.GAME_RUNNING);
+        else if (gameState == GAME_STATE.SHOW_BOX)
+            discardBoxText();
         else if (gameState == GAME_STATE.GAME_OVER)
             goTouched = true;
         else
@@ -772,7 +791,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
     public enum GAME_STATE {
         GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
-        NO_UPDATE, PLAYER_UPDATING, GAME_EDIT_MODE
+        SHOW_BOX, PLAYER_UPDATING, GAME_EDIT_MODE
     }
 
     public static class KillPointsTextHandler {
