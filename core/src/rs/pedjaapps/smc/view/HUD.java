@@ -28,6 +28,7 @@ import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
+import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.MyMathUtils;
@@ -38,8 +39,8 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD {
-    private static final float UPDATE_FREQ = .15f;
     public static final float TOUCHPAD_DEAD_RADIUS = .33f;
+    private static final float UPDATE_FREQ = .15f;
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
     private final HUDTimeText time = new HUDTimeText();
@@ -72,6 +73,7 @@ public class HUD {
     private Image imMaryoL;
     private Skin skin;
     private Dialog popupBox;
+    private Image imGameLogo;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -90,11 +92,11 @@ public class HUD {
         world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets
                 .textureParameter);
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
-				.textureParameter);
+                .textureParameter);
         world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets
-				.textureParameter);
+                .textureParameter);
         world.screen.game.assets.manager.load("data/game/game_over.png", Texture.class, world.screen.game.assets
-				.textureParameter);
+                .textureParameter);
     }
 
     public void initAssets() {
@@ -108,7 +110,8 @@ public class HUD {
 
         fire = new Button(skin, "fire");
         fire.setSize(MaryoGame.NATIVE_HEIGHT * .2f, MaryoGame.NATIVE_HEIGHT * .2f);
-        fire.setPosition(MaryoGame.NATIVE_WIDTH - fire.getWidth() - padX, MaryoGame.NATIVE_HEIGHT * .5f - fire.getHeight());
+        fire.setPosition(MaryoGame.NATIVE_WIDTH - fire.getWidth() - padX, MaryoGame.NATIVE_HEIGHT * .5f - fire
+                .getHeight());
         stage.addActor(fire);
         fire.addListener(new EventListener() {
             @Override
@@ -219,8 +222,14 @@ public class HUD {
         ttsLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
         stage.addActor(ttsLabel);
 
+        imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
+        imGameLogo.setSize(imGameLogo.getWidth() * .6f, imGameLogo.getHeight() * .6f);
+        imGameLogo.setPosition(stage.getWidth() / 2, padX / 2, Align.bottom);
+        imGameLogo.getColor().a = .8f;
+        stage.addActor(imGameLogo);
+
         pauseLabel = new Label("PAUSE", skin, Assets.LABEL_BORDER60);
-        pauseLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 + padX / 2, Align.bottom);
+        pauseLabel.setPosition(stage.getWidth() / 2, stage.getHeight() * .75f, Align.center);
         pauseLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
         stage.addActor(pauseLabel);
 
@@ -241,7 +250,7 @@ public class HUD {
         });
 
         musicButton = new MusicButton(skin, world.screen.game.assets.manager.get("data/sounds/audio_on.mp3", Sound
-				.class)) {
+                .class)) {
             @Override
             protected Music getMusic() {
                 return gameScreen.getMusic();
@@ -253,7 +262,7 @@ public class HUD {
         buttonsTable.add(cancelButton);
         buttonsTable.add(play).uniform(false, true);
         buttonsTable.add(musicButton);
-        buttonsTable.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - padX * 2, Align.top);
+        buttonsTable.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.top);
         stage.addActor(buttonsTable);
 
         imItemBox = new Image(itemBox);
@@ -277,7 +286,7 @@ public class HUD {
         imMaryoL = new Image(maryoL);
         imMaryoL.setSize(ibSize / 1.25f, ibSize / 2.5f);
         imMaryoL.setPosition(pauseButton.getX() - imMaryoL.getHeight() * 3, imItemBox.getY() + imItemBox.getHeight()
-				- imMaryoL.getHeight() - imMaryoL.getHeight() / 2);
+                - imMaryoL.getHeight() - imMaryoL.getHeight() / 2);
         stage.addActor(imMaryoL);
 
         scoreLabel = new Label(formatPointsString(0), skin, Assets.LABEL_BORDER25);
@@ -322,6 +331,7 @@ public class HUD {
         imMaryoL.setVisible(isInGame);
         livesLabel.setVisible(isInGame);
         buttonsTable.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+        imGameLogo.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
         pauseButton.setVisible(isInGame);
         jump.setVisible(isInGame && MaryoGame.showOnScreenControls());
         fire.setVisible(jump.isVisible());

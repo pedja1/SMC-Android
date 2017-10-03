@@ -88,7 +88,7 @@ public class MainMenuScreen extends AbstractScreen {
         Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
         gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         Image imGameLogo = new Image(gameLogo);
-        imGameLogo.setSize(imGameLogo.getWidth() * .75f, imGameLogo.getHeight() * .75f);
+        imGameLogo.setSize(imGameLogo.getWidth() * .9f, imGameLogo.getHeight() * .9f);
         return imGameLogo;
     }
 
@@ -132,7 +132,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         drawObjects(delta);
 
-        batch.draw(marioFrame, 2, 4.609375f, 0.85f, 0.85f);
+        batch.draw(marioFrame, 1.4f, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
 
@@ -211,10 +211,6 @@ public class MainMenuScreen extends AbstractScreen {
         backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is
         // 0-1 range where 1 = 255
 
-        Image imGameLogo = createLogoImage(game);
-        imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10f, Align.top);
-        stage.addActor(imGameLogo);
-
         world.level = loader.level;
 
         TextureAtlas atlas = game.assets.manager.get("data/maryo/small.pack");
@@ -266,5 +262,8 @@ public class MainMenuScreen extends AbstractScreen {
         stage.addActor(sound);
         sound.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
 
+        Image imGameLogo = createLogoImage(game);
+        imGameLogo.setPosition(stage.getWidth() / 2, (stage.getHeight() + play.getY() + play.getHeight()) / 2, Align.center);
+        stage.addActor(imGameLogo);
     }
 }
