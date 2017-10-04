@@ -285,8 +285,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
     public void discardBoxText() {
         if (gameState == GAME_STATE.SHOW_BOX) {
-            hud.hidePopupBox();
-            setGameState(GAME_STATE.GAME_RUNNING);
+            if (hud.hidePopupBox())
+                setGameState(GAME_STATE.GAME_RUNNING);
         }
     }
 

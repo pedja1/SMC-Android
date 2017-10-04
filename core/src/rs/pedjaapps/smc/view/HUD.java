@@ -415,9 +415,15 @@ public class HUD {
         popupBox.show(stage);
     }
 
-    public void hidePopupBox() {
-        if (popupBox != null && popupBox.isVisible())
-            popupBox.hide();
+    public boolean hidePopupBox() {
+        if (popupBox != null && popupBox.hasParent()) {
+            // wenn Anzeige noch nicht voll gebracht, dann noch nicht verstecken
+            if (popupBox.getActions().size > 0)
+                return false;
+            else
+                popupBox.hide();
+        }
+        return true;
     }
 
     private void drawDebug() {
