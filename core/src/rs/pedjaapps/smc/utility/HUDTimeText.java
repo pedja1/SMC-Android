@@ -5,7 +5,7 @@ package rs.pedjaapps.smc.utility;
  */
 public class HUDTimeText extends FLString
 {
-    private static final String TIME_PREFIX = "Time ";
+    private static final String TIME_PREFIX = "TIME ";
     private static final int LENGTH = TIME_PREFIX.length() + 5;/*Time 00:05*/
     private static final char[] USED_CHARS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', };
 
