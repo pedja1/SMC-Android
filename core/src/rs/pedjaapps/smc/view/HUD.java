@@ -364,22 +364,18 @@ public class HUD {
             if (noUpdateDuration >= UPDATE_FREQ) {
                 noUpdateDuration = 0;
                 // points
-                //TODO nicht jedes Mal ändern
                 pointsText = formatPointsString(GameSave.save.points);
                 scoreLabel.setText(pointsText);
 
                 //coins
-                //TODO nicht jedes Mal ändern
                 String coins = this.coins.toString(GameSave.getCoins());
                 coinsLabel.setText(coins);
 
                 //time
-                //TODO nicht jedes Mal ändern und sowieso besser!
                 time.update(stateTime);
                 timeLabel.setText(new String(time.getChars()));
 
                 //lives
-                //TODO nicht jedes Mal ändern und sowieso besser!
                 livesLabel.setText(this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0)));
             }
 
@@ -410,7 +406,8 @@ public class HUD {
             }
         };
 
-        Label textLabel = new Label(text, skin, Assets.LABEL_BORDER25);
+        Label textLabel = new Label(text, skin, Assets.LABEL_BORDER60);
+        textLabel.setFontScale(.5f);
         textLabel.setWrap(true);
         popupBox.getContentTable().add(textLabel).prefWidth
                 (MaryoGame.NATIVE_WIDTH / 2).pad(10);
@@ -431,7 +428,7 @@ public class HUD {
             return pointsText;
         } else {
             this.points = points;
-            String pointsPrefix = "Points ";
+            String pointsPrefix = "SCORE ";
             String pointsString = points + "";
             int zeroCount = 8 - pointsString.length();
             for (int i = 0; i < zeroCount; i++) {
