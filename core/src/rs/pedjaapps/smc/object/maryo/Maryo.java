@@ -1101,6 +1101,15 @@ public class Maryo extends DynamicObject
         {
             ((Box) object).activate();
         }
+        else if (object instanceof LevelExit && !exiting) {
+            if (keys.contains(Keys.LEFT))
+                checkLeave("left");
+            else if (keys.contains(Keys.RIGHT))
+                checkLeave("right");
+            else if (keys.contains(Keys.UP))
+                checkLeave("up");
+            // down nicht beachtet, da der Spieler eh drauf steht
+        }
         return false;
     }
 
@@ -1552,38 +1561,32 @@ public class Maryo extends DynamicObject
     public void leftPressed()
     {
         keys.add(Keys.LEFT);
-        checkLeave("left");
+        //checkLeave("left");
     }
 
     public void rightPressed()
     {
         keys.add(Keys.RIGHT);
-        checkLeave("right");
+        //checkLeave("right");
     }
 
     public void upPressed()
     {
         keys.add(Keys.UP);
         boolean climbing = false;
-        Array<GameObject> vo = world.getVisibleObjects();
-        for (int i = 0, size = vo.size; i < size; i++)
-        {
-            GameObject go = vo.get(i);
-            if (go instanceof LevelExit
-                    && go.mColRect.overlaps(mColRect)
-                    && (((LevelExit) go).type == LEVEL_EXIT_BEAM || (((LevelExit) go).type == LevelExit.LEVEL_EXIT_WARP && "up".equals(((LevelExit) go).direction))))
-            {
-                exitLevel((LevelExit) go);
-                break;
+        //checkLeave("up");
+        //!exiting ist wahrscheinlich unnötig, aber vorher kam dieser Fall hier auch nur vor wenn kein Leave da war
+        if (!exiting && getWorldState() != GameObject.WorldState.CLIMBING) {
+            Array<GameObject> vo = world.getVisibleObjects();
+            for (int i = 0, size = vo.size; i < size; i++) {
+                GameObject go = vo.get(i);
+                if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect)) {
+                    climbing = true;
+                    break;
+                }
             }
-            else if (getWorldState() != GameObject.WorldState.CLIMBING &&
-                    go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
-            {
-                climbing = true;
-                break;
-            }
+            if (climbing) setWorldState(GameObject.WorldState.CLIMBING);
         }
-        if (climbing) setWorldState(GameObject.WorldState.CLIMBING);
     }
 
     private void checkLeave(String dir)
