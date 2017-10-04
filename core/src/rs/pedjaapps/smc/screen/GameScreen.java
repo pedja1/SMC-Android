@@ -125,7 +125,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         this.gameState = gameState;
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
-                gameState == GAME_STATE.SHOW_BOX);
+                gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.GAME_OVER);
         if (gameState == GAME_STATE.GAME_OVER) {
             music = game.assets.manager.get("data/music/game/lost_1.mp3");
             MusicManager.play(music);
