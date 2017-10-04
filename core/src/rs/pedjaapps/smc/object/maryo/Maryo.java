@@ -1279,7 +1279,7 @@ public class Maryo extends DynamicObject
             GameSave.save.lifes--;
         }
 
-        public boolean update(float delat)
+        public boolean update(float delta)
         {
             velocity.x = 0;
             position.x = diedPosition.x;

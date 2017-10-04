@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.object.maryo;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -198,7 +199,10 @@ public class Fireball extends DynamicObject
         explosion.getEmitters().get(0).getAngle().setHighMin(velocity.x > 0 ? 270 : -90);
         explosion.getEmitters().get(0).getAngle().setHighMax(velocity.x > 0 ? 90 : 90);
         Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_explosion.mp3");
-        SoundManager.play(sound);
+        // je weiter entfernt, desto leiser. 9 etwa ein Bildschirm, also nach 18 nur noch 1/3
+        float distance = Math.abs(position.x - world.maryo.position.x);
+        float volume = .3f + .7f * Math.max(0, (18 - distance) / 18);
+        SoundManager.play(sound, volume);
     }
 
     public void reset()
