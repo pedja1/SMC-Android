@@ -227,6 +227,7 @@ public class Turtle extends Enemy
     @Override
 	protected boolean handleCollision(GameObject object, boolean vertical)
 	{
+
         super.handleCollision(object, vertical);
 		if(!vertical)
 		{
@@ -246,7 +247,8 @@ public class Turtle extends Enemy
             {
                 turn();
             }
-            else if(object instanceof Box && isShell && isShellMoving)
+
+            if(object instanceof Box && isShell && isShellMoving)
             {
                 ((Box) object).activate();
             }
