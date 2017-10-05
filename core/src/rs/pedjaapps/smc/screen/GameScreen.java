@@ -22,7 +22,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.StringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ import rs.pedjaapps.smc.view.HUD;
 
 import static rs.pedjaapps.smc.utility.GameSave.save;
 
-public class GameScreen extends AbstractScreen implements InputProcessor {
+public class GameScreen extends AbstractScreen {
     private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private static final String GOD_MOD_TEXT = "god";
     public OrthographicCamera cam;
@@ -58,6 +57,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     public String entryName;
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
+    protected boolean debug = PrefsManager.isDebug();
+    protected Vector3 cameraEditModeTranslate = new Vector3();
+    protected boolean goTouched = false;
     private World world;
     private OrthographicCamera pCamera;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
@@ -66,7 +68,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
      */
     private ParticleEffect globalEffect;
     private SpriteBatch spriteBatch;
-    private boolean debug = PrefsManager.isDebug();
     private BitmapFont debugFont, debugObjectFont;
     private GlyphLayout debugGlyph;
     private Vector2 camMin = new Vector2();
@@ -77,12 +78,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     private LevelLoader loader;
     private Music music;
     private float goAlpha = 0.0f;
-    private boolean goTouched = false;
     private boolean cameraForceSnap;
-    private Vector3 cameraEditModeTranslate = new Vector3();
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
-    private StringBuilder mGodModInputCheckBuilder = new StringBuilder();
+    private InputProcessor keyboardAndTouch;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
         this(game, fromMenu, levelName, null);
@@ -97,6 +96,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         height = Gdx.graphics.getHeight();
         world = new World(this);
         hud = new HUD(world, this);
+        keyboardAndTouch = new GameScreenInput(this, world);
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.update();
@@ -163,7 +163,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         Gdx.input.setCatchBackKey(true);
 
         InputMultiplexer multiInput = new InputMultiplexer();
-        multiInput.addProcessor(this);
+        multiInput.addProcessor(keyboardAndTouch);
         multiInput.addProcessor(hud.stage);
 
         Gdx.input.setInputProcessor(multiInput);
@@ -594,151 +594,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         }
     }
 
-    // * InputProcessor methods ***************************//
-
-    @Override
-    public boolean keyDown(int keycode) {
-        hud.setHasKeyboardOrController(true);
-
-        if (touchDown(0, 0, 0, 0))
-            return true;
-
-        if (gameState == GAME_STATE.GAME_PAUSED && keycode == Input.Keys.ENTER)
-            setGameState(GAME_STATE.GAME_RUNNING);
-        else if (gameState == GAME_STATE.GAME_PAUSED)
-            return false;
-
-        if (keycode == Input.Keys.LEFT)
-            world.maryo.leftPressed();
-
-        if (keycode == Input.Keys.RIGHT)
-            world.maryo.rightPressed();
-
-        if (keycode == Input.Keys.SPACE)
-            world.maryo.jumpPressed();
-
-        if (keycode == Input.Keys.ALT_LEFT)
-            world.maryo.firePressed();
-
-        if (keycode == Input.Keys.X)
-            world.maryo.firePressed();
-
-        if (keycode == Input.Keys.DOWN)
-            world.maryo.downPressed();
-
-        if (keycode == Input.Keys.UP)
-            world.maryo.upPressed();
-
-        if (keycode == Input.Keys.F8 && MaryoGame.GAME_DEVMODE) {
-            if (gameState == GAME_STATE.GAME_EDIT_MODE) {
-                setGameState(GAME_STATE.GAME_RUNNING);
-                cam.zoom = 1;
-            } else {
-                cameraEditModeTranslate.set(cam.position);
-                setGameState(GAME_STATE.GAME_EDIT_MODE);
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
-            if (gameState == GAME_STATE.GAME_PAUSED) {
-                exitToMenu();
-            } else {
-                setGameState(GAME_STATE.GAME_PAUSED);
-            }
-            return true;
-        }
-
-        if (gameState == GAME_STATE.GAME_PAUSED)
-            return false;
-
-        if (keycode == Input.Keys.LEFT)
-            world.maryo.leftReleased();
-
-        if (keycode == Input.Keys.RIGHT)
-            world.maryo.rightReleased();
-
-        if (keycode == Input.Keys.SPACE)
-            world.maryo.jumpReleased();
-
-        if (keycode == Input.Keys.ALT_LEFT)
-            world.maryo.fireReleased();
-
-        if (keycode == Input.Keys.X)
-            world.maryo.fireReleased();
-
-        if (keycode == Input.Keys.DOWN)
-            world.maryo.downReleased();
-
-        if (keycode == Input.Keys.UP)
-            world.maryo.upReleased();
-
-        if (keycode == Input.Keys.D && MaryoGame.GAME_DEVMODE)
-            debug = !debug;
-
-        return true;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        mGodModInputCheckBuilder.append(character);
-        if (mGodModInputCheckBuilder.length() == GOD_MOD_TEXT.length()) {
-            if (mGodModInputCheckBuilder.toString().equals(GOD_MOD_TEXT)) {
-                Maryo.STAR_EFFECT_TIMEOUT = Float.MAX_VALUE;
-                world.maryo.canWalkOnAir = true;
-                world.maryo.starPicked();
-            } else {
-                mGodModInputCheckBuilder = new StringBuilder();
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int x, int y, int pointer, int button) {
-        if (gameState == GAME_STATE.GAME_READY)
-            setGameState(GAME_STATE.GAME_RUNNING);
-        else if (gameState == GAME_STATE.SHOW_BOX)
-            discardBoxText();
-        else if (gameState == GAME_STATE.PLAYER_DIED)
-            goTouched = true;
-        else
-            return false;
-
-        return true;
-    }
-
     private float invertY(float y) {
         return height - y;
-    }
-
-    @Override
-    public boolean touchUp(int x, int y, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int x, int y, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        if (gameState == GAME_STATE.GAME_EDIT_MODE || debug) {
-            cam.zoom += amount * 0.1f;
-            cam.update();
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
     }
 
     public World getWorld() {
