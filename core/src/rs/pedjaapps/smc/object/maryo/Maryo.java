@@ -310,8 +310,8 @@ public class Maryo extends DynamicObject
             }
             resizeAnimStartTime = 0;
             resizingAnimation = null;
-            ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             maryoState = newState;
+            ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             newState = null;
             oldState = null;
             setupBoundingBox();
