@@ -55,11 +55,6 @@ public class MaryoGame extends Game
         Gdx.app.exit();
     }
 
-	public static boolean showOnScreenControls()
-	{
-		return true; //Gdx.app.getType() == Application.ApplicationType.Android || Gdx.app.getType() == Application.ApplicationType.iOS;
-	}
-
 	public void showAd()
 	{
 		if(event != null)

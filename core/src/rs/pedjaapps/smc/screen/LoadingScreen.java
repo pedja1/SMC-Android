@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.utility.PrefsManager;
+import rs.pedjaapps.smc.view.HUD;
 
 /**
  * @author Mats Svensson
@@ -51,7 +52,7 @@ public class LoadingScreen extends AbstractScreen {
 
         Label loading = new Label("Loading...", skin, "outline");
         loading.setPosition(stage.getWidth() / 2, progressBar.getY() + progressBar.getHeight() + 10, Align.bottom);
-        loading.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
+        loading.addAction(HUD.getForeverFade());
         stage.addActor(loading);
 
         Texture txtLoadingLogo = game.assets.manager.get(Assets.LOGO_LOADING, Texture.class);

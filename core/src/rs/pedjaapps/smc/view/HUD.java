@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.view;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -62,7 +64,7 @@ public class HUD {
     private float stateTime;
     private int points;
     private String pointsText;
-    private Label ttsLabel;
+    private Label readyLbl1;
     private Label pauseLabel;
     private Label scoreLabel;
     private Label coinsLabel;
@@ -74,12 +76,19 @@ public class HUD {
     private Skin skin;
     private Dialog popupBox;
     private Image imGameLogo;
+    private Label gameOverLabel;
+    private boolean hasKeyboardOrController;
+    private Label readyLbl2;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
         batch = new SpriteBatch();
         stage = new Stage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
+    }
+
+    public static RepeatAction getForeverFade() {
+        return Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f)));
     }
 
     public void resize(int width, int height) {
@@ -94,8 +103,6 @@ public class HUD {
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
                 .textureParameter);
         world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets
-                .textureParameter);
-        world.screen.game.assets.manager.load("data/game/game_over.png", Texture.class, world.screen.game.assets
                 .textureParameter);
     }
 
@@ -217,10 +224,17 @@ public class HUD {
         maryoL.setFilter(filter, filter);
         goldM.setFilter(filter, filter);
 
-        ttsLabel = new Label("TOUCH ANYWHERE TO START", skin, Assets.LABEL_BORDER60);
-        ttsLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
-        ttsLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
-        stage.addActor(ttsLabel);
+        readyLbl1 = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
+        readyLbl1.setAlignment(Align.center);
+        readyLbl1.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.bottom);
+        readyLbl1.addAction(getForeverFade());
+        stage.addActor(readyLbl1);
+        readyLbl2 = new Label("TOUCH ANYWHERE, PRESS A KEY OR HIT A BUTTON", skin, Assets.LABEL_BORDER60);
+        readyLbl2.setFontScale(.6f);
+        readyLbl2.setAlignment(Align.center);
+        readyLbl2.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.top);
+        readyLbl2.addAction(getForeverFade());
+        stage.addActor(readyLbl2);
 
         imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
         imGameLogo.setSize(imGameLogo.getWidth() * .6f, imGameLogo.getHeight() * .6f);
@@ -228,9 +242,16 @@ public class HUD {
         imGameLogo.getColor().a = .8f;
         stage.addActor(imGameLogo);
 
+        gameOverLabel = new Label("GAME OVER", skin, Assets.LABEL_BORDER60);
+        gameOverLabel.setPosition(stage.getWidth() / 2,
+                (stage.getHeight() + imGameLogo.getY() + imGameLogo.getHeight()) / 2, Align.center);
+        gameOverLabel.addAction(Actions.forever(
+                Actions.sequence(Actions.color(Color.SALMON, 1f), Actions.color(Color.WHITE, 1f))));
+        stage.addActor(gameOverLabel);
+
         pauseLabel = new Label("PAUSE", skin, Assets.LABEL_BORDER60);
         pauseLabel.setPosition(stage.getWidth() / 2, stage.getHeight() * .75f, Align.center);
-        pauseLabel.addAction(Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f))));
+        pauseLabel.addAction(getForeverFade());
         stage.addActor(pauseLabel);
 
         TextButton cancelButton = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
@@ -326,12 +347,16 @@ public class HUD {
 
     public void onGameStateChange() {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
-
-        ttsLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
-        pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
-
+        boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.save.lifes < 0);
         boolean isInGame = !(gameState == GameScreen.GAME_STATE.GAME_READY
                 || gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+
+        readyLbl1.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
+        readyLbl2.setVisible(readyLbl1.isVisible());
+
+        gameOverLabel.setVisible(isGameOver);
+        pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+
         scoreLabel.setVisible(isInGame);
         imItemBox.setVisible(isInGame);
         coinsLabel.setVisible(isInGame);
@@ -340,9 +365,9 @@ public class HUD {
         imMaryoL.setVisible(isInGame);
         livesLabel.setVisible(isInGame);
         buttonsTable.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
-        imGameLogo.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
-        pauseButton.setVisible(isInGame);
-        jump.setVisible(isInGame && MaryoGame.showOnScreenControls());
+        imGameLogo.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED || isGameOver);
+        pauseButton.setVisible(isInGame && !isGameOver);
+        jump.setVisible(isInGame && !isGameOver && !hasKeyboardOrController);
         fire.setVisible(jump.isVisible());
         touchpad.setVisible(jump.isVisible());
 
@@ -461,6 +486,14 @@ public class HUD {
 
     public void dispose() {
         stage.dispose();
+    }
+
+    public void setHasKeyboardOrController(boolean hasKeyboardOrController) {
+        if (this.hasKeyboardOrController = hasKeyboardOrController)
+            return;
+
+        this.hasKeyboardOrController = hasKeyboardOrController;
+        onGameStateChange();
     }
 
     public enum Key {

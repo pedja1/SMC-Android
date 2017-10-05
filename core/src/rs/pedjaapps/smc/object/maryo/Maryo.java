@@ -1295,7 +1295,7 @@ public class Maryo extends DynamicObject
             if (mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
             {
                 GameSave.save.playerState = MaryoState.small;
-                ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_OVER);
+                ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DIED);
                 world.trashObjects.add(Maryo.this);
                 return false;
             }

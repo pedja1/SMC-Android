@@ -122,11 +122,14 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     }
 
     public void setGameState(GAME_STATE gameState) {
+        if (gameState == GAME_STATE.GAME_PAUSED && this.gameState == GAME_STATE.PLAYER_DIED)
+            return;
+
         this.gameState = gameState;
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
-                gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.GAME_OVER);
-        if (gameState == GAME_STATE.GAME_OVER) {
+                gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.PLAYER_DIED);
+        if (gameState == GAME_STATE.PLAYER_DIED) {
             music = game.assets.manager.get("data/music/game/lost_1.mp3");
             MusicManager.play(music);
         }
@@ -212,8 +215,8 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
         hud.render(gameState, delta);
 
-        if (gameState == GAME_STATE.GAME_OVER) {
-            handleGameOver();
+        if (gameState == GAME_STATE.PLAYER_DIED) {
+            handlePlayerDied();
         }
 
         if (gameState == GAME_STATE.GAME_LEVEL_END) {
@@ -250,13 +253,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
     private void handleLevelEnded(float delta) {
         if (levelEndAnimationStateTime <= 0) {
-            if ("game_tutorial".equals(levelName)) {
-                GameSave.reset();
-            }
             world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
             game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
             mNextLevelName = null;
-            game.showAd();
             return;
         }
         levelEndAnimationStateTime -= delta;
@@ -290,33 +289,11 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         }
     }
 
-    private void handleGameOver() {
-        if (save.lifes < 0) {
-            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
+    private void handlePlayerDied() {
+        if (save.lifes < 0 && !goTouched)
+            return;
 
-            shapeRenderer.setProjectionMatrix(guiCam.combined);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(0, 0, 0, 0.5f);
-            shapeRenderer.rect(0, 0, width, height);
-            shapeRenderer.end();
-
-            spriteBatch.setProjectionMatrix(guiCam.combined);
-            spriteBatch.begin();
-
-            Texture go = game.assets.manager.get("data/game/game_over.png");
-            go.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            float width = this.width * 0.8f;
-            float height = width / 4;
-
-            float x = this.width / 2 - width / 2;
-            float y = this.height / 2 - height / 2;
-            spriteBatch.draw(go, x, y, width, height);
-
-            spriteBatch.end();
-            if (!goTouched) return;
-        }
-
+        // Fade out
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
@@ -553,7 +530,6 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets
                 .particleEffectParameter);
         game.assets.manager.load("data/animation/iceball.png", Texture.class, game.assets.textureParameter);
-        game.assets.manager.load("data/game/game_over.png", Texture.class);
         hud.loadAssets();
 
         //audio
@@ -622,10 +598,10 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (gameState == GAME_STATE.GAME_READY)
-            setGameState(GAME_STATE.GAME_RUNNING);
-        else if (gameState == GAME_STATE.SHOW_BOX)
-            discardBoxText();
+        hud.setHasKeyboardOrController(true);
+
+        if (touchDown(0, 0, 0, 0))
+            return true;
 
         if (gameState == GAME_STATE.GAME_PAUSED && keycode == Input.Keys.ENTER)
             setGameState(GAME_STATE.GAME_RUNNING);
@@ -728,7 +704,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
             setGameState(GAME_STATE.GAME_RUNNING);
         else if (gameState == GAME_STATE.SHOW_BOX)
             discardBoxText();
-        else if (gameState == GAME_STATE.GAME_OVER)
+        else if (gameState == GAME_STATE.PLAYER_DIED)
             goTouched = true;
         else
             return false;
@@ -790,7 +766,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
     }
 
     public enum GAME_STATE {
-        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, GAME_OVER, PLAYER_DEAD,
+        GAME_READY, GAME_RUNNING, GAME_PAUSED, GAME_LEVEL_END, PLAYER_DIED, PLAYER_DEAD,
         SHOW_BOX, PLAYER_UPDATING, GAME_EDIT_MODE
     }
 
