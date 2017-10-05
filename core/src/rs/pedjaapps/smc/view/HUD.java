@@ -345,6 +345,9 @@ public class HUD {
         jump.setVisible(isInGame && MaryoGame.showOnScreenControls());
         fire.setVisible(jump.isVisible());
         touchpad.setVisible(jump.isVisible());
+
+        if (!isInGame && popupBox != null && popupBox.hasParent())
+            popupBox.hide();
     }
 
     public void render(GameScreen.GAME_STATE gameState, float deltaTime) {
