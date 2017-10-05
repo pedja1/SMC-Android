@@ -332,7 +332,7 @@ public class Maryo extends DynamicObject
                 setupBoundingBox();
             }
         }
-        else if (fire && (maryoState == MaryoState.fire || maryoState == MaryoState.ice))
+        else if (fire && (hasFireAbility()))
         {
             Animation<TextureRegion> animation = aMap[aIndex(maryoState, AKey._throw)];
             marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
@@ -1492,12 +1492,16 @@ public class Maryo extends DynamicObject
 
     public void fire()
     {
-        if (worldState == WorldState.DUCKING || (maryoState != MaryoState.fire && maryoState != MaryoState.ice))
+        if (worldState == WorldState.DUCKING || !hasFireAbility())
             return;
         if (bulletShotTime < BULLET_COOLDOWN)
             return;
         fire = true;
         doFire();
+    }
+
+    public boolean hasFireAbility() {
+        return maryoState == MaryoState.fire || maryoState == MaryoState.ice;
     }
 
     private void doFire()

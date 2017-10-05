@@ -3,6 +3,8 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import rs.pedjaapps.smc.MaryoGame;
+
 /**
  * Created by pedja on 21.9.14..
  */
@@ -83,7 +85,7 @@ public class PrefsManager
 
     public static boolean isDebug()
     {
-        return prefs.getBoolean(PrefsKey.debug.toString(), false);
+        return MaryoGame.GAME_DEVMODE && prefs.getBoolean(PrefsKey.debug.toString(), false);
     }
 
     public static void setDebug(boolean debug)

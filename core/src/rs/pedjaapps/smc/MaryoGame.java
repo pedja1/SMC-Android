@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +17,8 @@ public class MaryoGame extends Game
 	public static final int NATIVE_WIDTH = 1024;
 	public static final int NATIVE_HEIGHT = 576;
 
+    public static final boolean GAME_DEVMODE = true;
+
 	public Assets assets;
 	private Event event;
 
@@ -27,6 +30,9 @@ public class MaryoGame extends Game
 	@Override
 	public void create()
 	{
+        if (!GAME_DEVMODE)
+            Gdx.app.setLogLevel(Application.LOG_ERROR);
+
 		assets = new Assets();
 		Shader.init();
 		GameSave.init();

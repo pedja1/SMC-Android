@@ -629,7 +629,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         if (keycode == Input.Keys.UP)
             world.maryo.upPressed();
 
-        if (keycode == Input.Keys.F8) {
+        if (keycode == Input.Keys.F8 && MaryoGame.GAME_DEVMODE) {
             if (gameState == GAME_STATE.GAME_EDIT_MODE) {
                 setGameState(GAME_STATE.GAME_RUNNING);
                 cam.zoom = 1;
@@ -677,7 +677,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
         if (keycode == Input.Keys.UP)
             world.maryo.upReleased();
 
-        if (keycode == Input.Keys.D)
+        if (keycode == Input.Keys.D && MaryoGame.GAME_DEVMODE)
             debug = !debug;
 
         return true;

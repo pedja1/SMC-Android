@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -368,7 +369,7 @@ public class HUD {
         imGameLogo.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED || isGameOver);
         pauseButton.setVisible(isInGame && !isGameOver);
         jump.setVisible(isInGame && !isGameOver && !hasKeyboardOrController);
-        fire.setVisible(jump.isVisible());
+        fire.setVisible(jump.isVisible() && world.maryo.hasFireAbility());
         touchpad.setVisible(jump.isVisible());
 
         if (!isInGame && popupBox != null && popupBox.hasParent())
@@ -489,15 +490,10 @@ public class HUD {
     }
 
     public void setHasKeyboardOrController(boolean hasKeyboardOrController) {
-        if (this.hasKeyboardOrController = hasKeyboardOrController)
+        if (this.hasKeyboardOrController == hasKeyboardOrController)
             return;
 
         this.hasKeyboardOrController = hasKeyboardOrController;
         onGameStateChange();
     }
-
-    public enum Key {
-        none, pause, fire, jump, left, right, up, down, play, sound, music
-    }
-
 }
