@@ -7,61 +7,75 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 /**
  * Created by pedja on 6.9.15..
  */
-public class MusicManager
-{
+public class MusicManager {
     private static Music main, temporary;
+    private static boolean isPaused;
+    private static Music wasPlayingBeforePause;
 
-    public static void play(Music music)
-    {
+    public static void pause() {
+        if (isPaused)
+            return;
+
+        isPaused = true;
+
+        if (temporary != null && temporary.isPlaying())
+            wasPlayingBeforePause = temporary;
+        else if (main != null && main.isPlaying())
+            wasPlayingBeforePause = main;
+
+        if (wasPlayingBeforePause != null)
+            wasPlayingBeforePause.pause();
+    }
+
+    public static void resume() {
+        if (!isPaused)
+            return;
+
+        if (wasPlayingBeforePause != null)
+            wasPlayingBeforePause.play();
+
+        isPaused = false;
+        wasPlayingBeforePause = null;
+    }
+
+    public static void play(Music music) {
         play(music, PrefsManager.getMusicVolume(), true);
     }
 
-    public static void play(Music music, boolean main)
-    {
+    public static void play(Music music, boolean main) {
         play(music, PrefsManager.getMusicVolume(), main);
     }
 
-    public static void play(Music music, float volume)
-    {
+    public static void play(Music music, float volume) {
         play(music, volume, true);
     }
 
-    public static void play(Music music, float volume, boolean isMain)
-    {
+    private static void play(Music music, float volume, boolean isMain) {
         if (music == null || !PrefsManager.isPlayMusic()) return;
-        if(isMain)
-        {
-            if(main == music && music.isPlaying())
+        if (isMain) {
+            if (main == music && music.isPlaying())
                 return;
-            if (main != null)
-            {
+            if (main != null) {
                 main.stop();
                 main = null;
             }
             main = music;
             music.setVolume(volume);
             music.play();
-        }
-        else
-        {
-            if(main != null)
-            {
+        } else {
+            if (main != null) {
                 main.pause();
             }
-            if(temporary != null)
-            {
+            if (temporary != null) {
                 temporary.stop();
             }
             temporary = music;
             temporary.setVolume(volume);
             temporary.play();
-            temporary.setOnCompletionListener(new Music.OnCompletionListener()
-            {
+            temporary.setOnCompletionListener(new Music.OnCompletionListener() {
                 @Override
-                public void onCompletion(Music music)
-                {
-                    if(main != null)
-                    {
+                public void onCompletion(Music music) {
+                    if (main != null) {
                         main.play();
                     }
                 }
@@ -69,24 +83,17 @@ public class MusicManager
         }
     }
 
-    public static void stop(boolean isMain)
-    {
-        if(isMain)
-        {
-            if(main != null)
-            {
+    public static void stop(boolean isMain) {
+        if (isMain) {
+            if (main != null) {
                 main.stop();
                 main = null;
             }
-        }
-        else
-        {
-            if(temporary != null)
-            {
+        } else {
+            if (temporary != null) {
                 temporary.stop();
                 temporary = null;
-                if(main != null)
-                {
+                if (main != null) {
                     main.play();
                 }
             }

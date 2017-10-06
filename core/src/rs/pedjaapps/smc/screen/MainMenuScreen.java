@@ -166,14 +166,14 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void pause() {
-        music.pause();
+        MusicManager.pause();
         super.pause();
     }
 
     @Override
     public void resume() {
         super.resume();
-        MusicManager.play(music);
+        MusicManager.resume();
     }
 
     @Override
