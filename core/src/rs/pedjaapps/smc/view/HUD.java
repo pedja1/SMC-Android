@@ -35,13 +35,13 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
-import rs.pedjaapps.smc.utility.PrefsManager;
 
 import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD {
     public static final float TOUCHPAD_DEAD_RADIUS = .33f;
     private static final float UPDATE_FREQ = .15f;
+    private static boolean keyboardF1HintShown;
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
     private final HUDTimeText time = new HUDTimeText();
@@ -69,6 +69,7 @@ public class HUD {
     private Label coinsLabel;
     private Label timeLabel;
     private Label livesLabel;
+    private Label hintLabel;
     private Image imItemBox;
     private Image imWaffles;
     private Image imMaryoL;
@@ -342,6 +343,15 @@ public class HUD {
         imHelp.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
         stage.addActor(imHelp);
 
+        hintLabel = new Label(" ", skin, Assets.LABEL_BORDER60);
+        hintLabel.setFontScale(.5f);
+        hintLabel.setWrap(true);
+        hintLabel.setWidth(stage.getWidth() - 2 * padX);
+        hintLabel.setHeight(2 * hintLabel.getHeight());
+        hintLabel.setAlignment(Align.top, Align.center);
+        hintLabel.setPosition(padX, imItemBox.getY() - padX - hintLabel.getHeight());
+        stage.addActor(hintLabel);
+
         onGameStateChange();
     }
 
@@ -359,6 +369,11 @@ public class HUD {
         imHelp.setVisible(isInGame);
         if (!imHelp.isVisible())
             imHelp.getColor().a = 0;
+        hintLabel.setVisible(isInGame);
+        if (!hintLabel.isVisible()) {
+            hintLabel.getColor().a = 0;
+            hintLabel.clearActions();
+        }
 
         scoreLabel.setVisible(isInGame);
         imItemBox.setVisible(isInGame);
@@ -436,7 +451,6 @@ public class HUD {
 
             batch.end();
         }
-        if (PrefsManager.isDebug()) drawDebug();
 
         stage.getViewport().apply();
         stage.act(deltaTime);
@@ -472,7 +486,10 @@ public class HUD {
         return true;
     }
 
-    private void drawDebug() {
+    public void showHint(String hint, float duration) {
+        hintLabel.setText(hint);
+        hintLabel.clearActions();
+        hintLabel.addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.delay(duration), Actions.fadeOut(.2f)));
     }
 
     private String formatPointsString(int points) {
@@ -509,6 +526,11 @@ public class HUD {
     public void setHasKeyboardOrController(boolean hasKeyboardOrController) {
         if (this.hasKeyboardOrController == hasKeyboardOrController)
             return;
+
+        if (hasKeyboardOrController && !keyboardF1HintShown) {
+            showHint("Hold F1 key to see an overview of keys to control the game.", 10f);
+            keyboardF1HintShown = true;
+        }
 
         this.hasKeyboardOrController = hasKeyboardOrController;
         onGameStateChange();
