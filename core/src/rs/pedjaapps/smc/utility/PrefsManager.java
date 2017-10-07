@@ -83,17 +83,6 @@ public class PrefsManager
 		flush();
     }
 
-    public static boolean isDebug()
-    {
-        return MaryoGame.GAME_DEVMODE && prefs.getBoolean(PrefsKey.debug.toString(), false);
-    }
-
-    public static void setDebug(boolean debug)
-    {
-        prefs.putBoolean(PrefsKey.debug.toString(), debug);
-        flush();
-    }
-
 	public static void flush()
 	{
 		prefs.flush();

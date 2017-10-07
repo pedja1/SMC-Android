@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
@@ -305,6 +307,15 @@ public class HUD {
         imMaryoL.setPosition(pauseButton.getX() - imMaryoL.getHeight() * 3, imItemBox.getY() + imItemBox.getHeight()
                 - imMaryoL.getHeight() - imMaryoL.getHeight() / 2);
         stage.addActor(imMaryoL);
+
+        if (MaryoGame.GAME_DEVMODE)
+            imMaryoL.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    gameScreen.setDebug(!gameScreen.isDebug());
+                    return true;
+                }
+            });
 
         scoreLabel = new Label(formatPointsString(0), skin, Assets.LABEL_BORDER60);
         scoreLabel.setFontScale(.45f);

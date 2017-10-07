@@ -25,7 +25,7 @@ public class GameScreenInput implements InputProcessor {
 
         if (keycode != Input.Keys.BACK)
             gameScreen.hud.setHasKeyboardOrController(true);
-        
+
         if (waitedForinput)
             return true;
 
@@ -126,7 +126,7 @@ public class GameScreenInput implements InputProcessor {
         }
 
         if (keycode == Input.Keys.D && MaryoGame.GAME_DEVMODE)
-            gameScreen.debug = !gameScreen.debug;
+            gameScreen.setDebug(!gameScreen.isDebug());
 
         return true;
     }
@@ -164,7 +164,7 @@ public class GameScreenInput implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        if (gameScreen.getGameState() == GameScreen.GAME_STATE.GAME_EDIT_MODE || gameScreen.debug) {
+        if (gameScreen.getGameState() == GameScreen.GAME_STATE.GAME_EDIT_MODE || gameScreen.isDebug()) {
             gameScreen.cam.zoom += amount * 0.1f;
             gameScreen.cam.update();
             return true;

@@ -37,7 +37,6 @@ import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NAHudText;
-import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
@@ -56,9 +55,9 @@ public class GameScreen extends AbstractScreen {
     public String entryName;
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
-    protected boolean debug = PrefsManager.isDebug();
     protected Vector3 cameraEditModeTranslate = new Vector3();
     protected boolean goTouched = false;
+    private boolean debug;
     private World world;
     private OrthographicCamera pCamera;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
