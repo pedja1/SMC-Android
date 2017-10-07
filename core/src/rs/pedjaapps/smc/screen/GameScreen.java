@@ -125,6 +125,11 @@ public class GameScreen extends AbstractScreen {
         if (gameState == GAME_STATE.GAME_PAUSED && this.gameState == GAME_STATE.PLAYER_DIED)
             return;
 
+        if (gameState == GAME_STATE.GAME_PAUSED && this.gameState != GAME_STATE.GAME_PAUSED)
+            MusicManager.pause();
+        else if (gameState != GAME_STATE.GAME_PAUSED && this.gameState == GAME_STATE.GAME_PAUSED)
+            MusicManager.resume();
+
         this.gameState = gameState;
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||

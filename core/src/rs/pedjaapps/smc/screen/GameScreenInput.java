@@ -34,6 +34,9 @@ public class GameScreenInput implements InputProcessor {
             return false;
 
         switch (keycode) {
+            case Input.Keys.F1:
+                gameScreen.hud.showKeyboardHelp();
+                break;
             case Input.Keys.LEFT:
                 world.maryo.leftPressed();
                 break;
@@ -90,6 +93,9 @@ public class GameScreenInput implements InputProcessor {
             return false;
 
         switch (keycode) {
+            case Input.Keys.F1:
+                gameScreen.hud.hideKeyboardHelp();
+                break;
             case Input.Keys.LEFT:
                 world.maryo.leftReleased();
                 break;

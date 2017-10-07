@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -37,7 +38,7 @@ public class SelectionAdapter extends Dialog {
 
             final String levelId = level.levelId;
             TextButton levelButton = new TextButton(String.valueOf(offset), skin, "small");
-            levelButton.setDisabled(!level.isUnlocked);
+            levelButton.setDisabled(!level.isUnlocked && !MaryoGame.GAME_DEVMODE);
             levelButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {

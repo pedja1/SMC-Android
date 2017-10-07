@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -80,6 +79,7 @@ public class HUD {
     private Label gameOverLabel;
     private boolean hasKeyboardOrController;
     private Label readyLbl2;
+    private Image imHelp;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -104,6 +104,8 @@ public class HUD {
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
                 .textureParameter);
         world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets
+                .textureParameter);
+        world.screen.game.assets.manager.load("data/hud/help.png", Texture.class, world.screen.game.assets
                 .textureParameter);
     }
 
@@ -341,7 +343,12 @@ public class HUD {
         timeLabel.setPosition(livesLabel.getX() - padX, scoreLabel.getY(), Align.bottomRight);
         stage.addActor(timeLabel);
 
-        //TODO popuptextbox
+        Texture helpScreen = world.screen.game.assets.manager.get("data/hud/help.png", Texture.class);
+        helpScreen.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        imHelp = new Image(helpScreen);
+        imHelp.setSize(imHelp.getWidth() * .8f, imHelp.getHeight() * .8f);
+        imHelp.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        stage.addActor(imHelp);
 
         onGameStateChange();
     }
@@ -357,6 +364,10 @@ public class HUD {
 
         gameOverLabel.setVisible(isGameOver);
         pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+
+        imHelp.setVisible(isInGame);
+        if (!imHelp.isVisible())
+            imHelp.getColor().a = 0;
 
         scoreLabel.setVisible(isInGame);
         imItemBox.setVisible(isInGame);
@@ -374,6 +385,16 @@ public class HUD {
 
         if (!isInGame && popupBox != null && popupBox.hasParent())
             popupBox.hide();
+    }
+
+    public void showKeyboardHelp() {
+        imHelp.clearActions();
+        imHelp.addAction(Actions.fadeIn(.5f));
+    }
+
+    public void hideKeyboardHelp() {
+        imHelp.clearActions();
+        imHelp.addAction(Actions.fadeOut(.3f));
     }
 
     public void render(GameScreen.GAME_STATE gameState, float deltaTime) {
