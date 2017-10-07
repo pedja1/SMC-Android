@@ -352,6 +352,12 @@ public class HUD {
         hintLabel.setPosition(padX, imItemBox.getY() - padX - hintLabel.getHeight());
         stage.addActor(hintLabel);
 
+        // die on screen buttons müssen ganz vorne sein
+        int actorsNum = stage.getActors().size;
+        touchpad.setZIndex(actorsNum);
+        fire.setZIndex(actorsNum);
+        jump.setZIndex(actorsNum);
+
         onGameStateChange();
     }
 
@@ -396,6 +402,11 @@ public class HUD {
     public void showKeyboardHelp() {
         imHelp.clearActions();
         imHelp.addAction(Actions.fadeIn(.5f));
+
+        if (hintLabel.getColor().a > 0) {
+            hintLabel.clearActions();
+            hintLabel.getColor().a = 0;
+        }
     }
 
     public void hideKeyboardHelp() {
@@ -528,7 +539,7 @@ public class HUD {
             return;
 
         if (hasKeyboardOrController && !keyboardF1HintShown) {
-            showHint("Hold F1 key to see an overview of keys to control the game.", 10f);
+            showHint("Hold F1 key to see an overview of keys to control the game", 10f);
             keyboardF1HintShown = true;
         }
 

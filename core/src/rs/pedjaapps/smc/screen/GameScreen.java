@@ -490,14 +490,13 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void pause() {
-        MusicManager.pause();
-        super.pause();
         setGameState(GAME_STATE.GAME_PAUSED);
+        super.pause();
     }
 
     @Override
     public void resume() {
-        MusicManager.resume();
+        super.resume();
     }
 
     @Override
