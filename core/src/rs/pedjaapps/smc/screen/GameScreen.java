@@ -133,10 +133,6 @@ public class GameScreen extends AbstractScreen {
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
                 gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.PLAYER_DIED);
-        if (gameState == GAME_STATE.PLAYER_DIED) {
-            music = game.assets.manager.get("data/music/game/lost_1.mp3");
-            MusicManager.play(music);
-        }
     }
 
     public Music getMusic() {
@@ -564,7 +560,6 @@ public class GameScreen extends AbstractScreen {
         game.assets.manager.load("data/sounds/item/iceball_explosion.mp3", Sound.class);
         game.assets.manager.load("data/sounds/item/fireball_explosion.mp3", Sound.class);
 
-        game.assets.manager.load("data/music/game/lost_1.mp3", Music.class);
         game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
 
     }
