@@ -22,7 +22,10 @@ public class GameScreenInput implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         boolean waitedForinput = touchDown(0, 0, 0, 0);
-        gameScreen.hud.setHasKeyboardOrController(true);
+
+        if (keycode != Input.Keys.BACK)
+            gameScreen.hud.setHasKeyboardOrController(true);
+        
         if (waitedForinput)
             return true;
 
