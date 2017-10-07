@@ -15,7 +15,6 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
-import rs.pedjaapps.smc.utility.MyMathUtils;
 
 
 public class World
@@ -33,7 +32,7 @@ public class World
     private Rectangle worldBounds = new Rectangle();
 
 	/**
-	 * 
+	 *
 	 */
 	public final Array<GameObject> trashObjects = new Array<>();
 
@@ -96,10 +95,10 @@ public class World
             return fb;
         }
     };
-    
+
     /**
      * Return only the blocks that need to be drawn *
-     * 
+     *
      */
     public void drawVisibleObjects(OrthographicCamera cam, SpriteBatch batch)
     {
@@ -127,15 +126,15 @@ public class World
 
 	public void createMaryoRectWithOffset(Rectangle offsetBounds, float offset)
 	{
-        float offsetX = MyMathUtils.max(offset, Constants.CAMERA_WIDTH);
-        float offsetY = MyMathUtils.max(offset * 0.5f, Constants.CAMERA_HEIGHT);
+        float offsetX = Math.max(offset, Constants.CAMERA_WIDTH);
+        float offsetY = Math.max(offset * 0.5f, Constants.CAMERA_HEIGHT);
 		float wX = maryo.mColRect.x - offsetX;
         float wY = maryo.mColRect.y - offsetY;
         float wW = maryo.mColRect.x + maryo.mColRect.width + offsetX * 2;
         float wH = maryo.mColRect.y + maryo.mColRect.height + offsetY * 2;
 		offsetBounds.set(wX, wY, wW, wH);
 	}
-	
+
     // --------------------
     public World(AbstractScreen screen)
     {

@@ -31,6 +31,9 @@ public class Assets {
     public static final String BUTTON_FA = "fa45";
     public static final String BUTTON_SMALL = "small";
 
+    public static final String DATA_SOUNDS_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.mp3";
+    public static final String DATA_SOUNDS_ITEM_LIVE_UP = "data/sounds/item/live_up.mp3";
+
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
     public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;

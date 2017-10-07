@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.items.Item;
@@ -25,7 +26,7 @@ public class GameSave
 			"pasol_1", "flippa_3", "dj_kirby_1", "jungle_1", "keywest_1", "underground", "clear_night", "wn_01",
 			"wn_02", "wn_03", "wn_04", "wn_05", "wn_06", "sauer2_1", "sauer2_2", "sauer2_3", "sauer2_4",
 			"sauer2_5", "sauer2_6", "sauer2_7");
-	
+
 	public static Save save;
 
 	public static void init()
@@ -107,9 +108,9 @@ public class GameSave
 			save.coins -= 100;
 			save.lifes++;
 			AssetManager manager = screen.game.assets.manager;
-			if(manager.isLoaded("data/sounds/item/live_up_2.mp3"))
+			if(manager.isLoaded(Assets.DATA_SOUNDS_ITEM_LIVE_UP_2))
 			{
-				SoundManager.play(manager.get("data/sounds/item/live_up_2.mp3", Sound.class));
+				SoundManager.play(manager.get(Assets.DATA_SOUNDS_ITEM_LIVE_UP_2, Sound.class));
 			}
 		}
 	}

@@ -33,7 +33,6 @@ import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
-import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
 import rs.pedjaapps.smc.utility.PrefsManager;
@@ -64,7 +63,7 @@ public class HUD {
     private float stateTime;
     private int points;
     private String pointsText;
-    private Label readyLbl1;
+    private Label readyLbl;
     private Label pauseLabel;
     private Label scoreLabel;
     private Label coinsLabel;
@@ -78,7 +77,6 @@ public class HUD {
     private Image imGameLogo;
     private Label gameOverLabel;
     private boolean hasKeyboardOrController;
-    private Label readyLbl2;
     private Image imHelp;
 
     public HUD(World world, GameScreen gameScreen) {
@@ -227,17 +225,11 @@ public class HUD {
         maryoL.setFilter(filter, filter);
         goldM.setFilter(filter, filter);
 
-        readyLbl1 = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
-        readyLbl1.setAlignment(Align.center);
-        readyLbl1.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.bottom);
-        readyLbl1.addAction(getForeverFade());
-        stage.addActor(readyLbl1);
-        readyLbl2 = new Label("TOUCH ANYWHERE, PRESS A KEY OR HIT A BUTTON", skin, Assets.LABEL_BORDER60);
-        readyLbl2.setFontScale(.6f);
-        readyLbl2.setAlignment(Align.center);
-        readyLbl2.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.top);
-        readyLbl2.addAction(getForeverFade());
-        stage.addActor(readyLbl2);
+        readyLbl = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
+        readyLbl.setAlignment(Align.center);
+        readyLbl.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        readyLbl.addAction(getForeverFade());
+        stage.addActor(readyLbl);
 
         imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
         imGameLogo.setSize(imGameLogo.getWidth() * .6f, imGameLogo.getHeight() * .6f);
@@ -359,8 +351,7 @@ public class HUD {
         boolean isInGame = !(gameState == GameScreen.GAME_STATE.GAME_READY
                 || gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
-        readyLbl1.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
-        readyLbl2.setVisible(readyLbl1.isVisible());
+        readyLbl.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
 
         gameOverLabel.setVisible(isGameOver);
         pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
@@ -426,7 +417,12 @@ public class HUD {
                 timeLabel.setText(new String(time.getChars()));
 
                 //lives
-                livesLabel.setText(this.lives.toString(MyMathUtils.max(GameSave.save.lifes, 0)));
+                int lifesToShow = GameSave.save.lifes;
+                //während Sterbens-Animation wurde Leben schon abgezogen, für Anzeige aber noch dazuzählen
+                if (gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DEAD ||
+                        gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED)
+                    lifesToShow++;
+                livesLabel.setText(this.lives.toString(lifesToShow));
             }
 
             //draw item if any

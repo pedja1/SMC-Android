@@ -36,7 +36,6 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
-import rs.pedjaapps.smc.utility.MyMathUtils;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.utility.TextUtils;
@@ -364,8 +363,8 @@ public class GameScreen extends AbstractScreen {
         camMax.sub(camMin); //bring to center
 
         //keep camera within borders
-        camX = MyMathUtils.min(camMax.x, MyMathUtils.max(camX, camMin.x));
-        camY = MyMathUtils.min(camMax.y, MyMathUtils.max(camY, camMin.y));
+        camX = Math.min(camMax.x, Math.max(camX, camMin.x));
+        camY = Math.min(camMax.y, Math.max(camY, camMin.y));
 
         cam.position.set(camX, camY, cam.position.z);
         cam.update();
@@ -552,6 +551,7 @@ public class GameScreen extends AbstractScreen {
         game.assets.manager.load("data/sounds/wall_hit.mp3", Sound.class);
         game.assets.manager.load("data/sounds/item/fireball.mp3", Sound.class);
         game.assets.manager.load("data/sounds/item/iceball.mp3", Sound.class);
+        game.assets.manager.load(Assets.DATA_SOUNDS_ITEM_LIVE_UP, Sound.class);
 
         game.assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
         game.assets.manager.load("data/sounds/item/star_kill.mp3", Sound.class);
