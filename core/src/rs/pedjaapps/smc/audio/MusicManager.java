@@ -22,6 +22,8 @@ public class MusicManager {
             wasPlayingBeforePause = temporary;
         else if (main != null && main.isPlaying())
             wasPlayingBeforePause = main;
+        else
+            wasPlayingBeforePause = null;
 
         if (wasPlayingBeforePause != null)
             wasPlayingBeforePause.pause();
@@ -51,6 +53,7 @@ public class MusicManager {
     }
 
     private static void play(Music music, float volume, boolean isMain) {
+        wasPlayingBeforePause = null;
         if (music == null || !PrefsManager.isPlayMusic()) return;
         if (isMain) {
             if (main == music && music.isPlaying())
@@ -84,6 +87,7 @@ public class MusicManager {
     }
 
     public static void stop(boolean isMain) {
+        wasPlayingBeforePause = null;
         if (isMain) {
             if (main != null) {
                 main.stop();
