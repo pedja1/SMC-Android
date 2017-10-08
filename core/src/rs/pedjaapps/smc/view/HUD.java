@@ -409,7 +409,7 @@ public class HUD {
         imItemBox.setVisible(isInGame);
         coinsLabel.setVisible(isInGame);
         imWaffles.setVisible(isInGame);
-        timeLabel.setVisible(isInGame);
+        timeLabel.setVisible(isInGame || showFps);
         imMaryoL.setVisible(isInGame);
         livesLabel.setVisible(isInGame);
         buttonsTable.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
@@ -435,10 +435,14 @@ public class HUD {
     }
 
     public void render(GameScreen.GAME_STATE gameState, float deltaTime) {
-        if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
+        if (gameState == GameScreen.GAME_STATE.GAME_PAUSED) {
             drawPauseOverlay();
 
-        else {
+            // die FPS auch Aktualisieren wenn in Pause
+            if (showFps)
+                timeLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()));
+
+        } else {
             if (updateTimer) stateTime += deltaTime;
 
             //if(GameSave.getItem() != null)
