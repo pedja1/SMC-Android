@@ -39,17 +39,6 @@ public class PrefsManager
 		flush();
     }
 
-    public static boolean isPhysicsPP()
-    {
-        return prefs.getBoolean(PrefsKey.phisycs_post_processing.toString(), true);
-    }
-
-    public static void setPhysicsPP(boolean pp)
-    {
-        prefs.putBoolean(PrefsKey.phisycs_post_processing.toString(), pp);
-		flush();
-    }
-	
 	public static String getSaveGame()
     {
         return prefs.getString(PrefsKey.sg.toString(), null);

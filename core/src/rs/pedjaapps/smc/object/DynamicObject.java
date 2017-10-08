@@ -15,35 +15,41 @@ import rs.pedjaapps.smc.utility.PrefsManager;
 
 public abstract class DynamicObject extends GameObject
 {
-	public float stateTime;
-	
-	private static final float ACCELERATION     = 20f;
     protected static final float DEF_MAX_VEL = 4f;
     protected static final float DEF_VEL_DUMP = .8f;
 
-	public boolean grounded = false;
+    // Nachbarn: maximale Geschwindigkeit liegt derzeit bei 4, es kann also pro Sekunde maximal
+    // 8 aufeinander zubewegt werden. Gravity ist 20.
+    // Bei einem Grenzwert von 5 reicht also Refresh alle 600 ms
+    // zur Sicherheit wird alle 400ms refresht
+    protected static final float FREQ_REFRESH_NEIGHBOURS = .2f;
+    protected static final float MAX_VELOCITY = 5;
+    protected static final float THRESHOLD_NEIGHBOURS_Y = (-Constants.GRAVITY + MAX_VELOCITY)
+            * FREQ_REFRESH_NEIGHBOURS * 1.5f;
+    protected static final float THRESHOLD_NEIGHBOURS_X = MAX_VELOCITY * 2 * FREQ_REFRESH_NEIGHBOURS * 1.5f;
+
+    public float stateTime;
+    public boolean grounded = false;
+    protected float groundY;
+    protected boolean ppEnabled = true;
+    protected float velocityDump = DEF_VEL_DUMP;
+    protected GameObject closestObject = null;
+
+    protected Array<GameObject> neighbours = new Array<>();
+    protected Rectangle tmpRect = new Rectangle();
+    protected float neighboursArrayAge = FREQ_REFRESH_NEIGHBOURS;
 
     private long lasHitSoundPlayed;
 
-    protected float groundY;
-
-    protected boolean ppEnabled = true;
-
-    public enum Direction
-    {
+    public enum Direction {
         right, left
     }
 
-    protected float velocityDump = DEF_VEL_DUMP;
-    protected GameObject closestObject = null;
-    protected Array<GameObject> tmpObjects = new Array<>();
-    protected Rectangle tmpRect = new Rectangle();
-	
-	public DynamicObject(World world, Vector2 size, Vector3 position)
+    public DynamicObject(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
     }
-	
+
 	protected void updatePosition(float deltaTime)
 	{
 		velocity.scl(deltaTime);
@@ -55,11 +61,11 @@ public abstract class DynamicObject extends GameObject
 
 		velocity.scl(1 / deltaTime);
 	}
-	
+
 	@Override
     public void _update(float delta)
     {
-        // Setting initial vertical acceleration 
+        // Setting initial vertical acceleration
         acceleration.y = Constants.GRAVITY;
 
         // Convert acceleration to frame time
@@ -71,7 +77,7 @@ public abstract class DynamicObject extends GameObject
         // checking collisions with the surrounding blocks depending on Maryo's velocity
         checkCollisionWithBlocks(delta);
 
-        // apply damping to halt Maryo nicely 
+        // apply damping to halt Maryo nicely
         velocity.x *= velocityDump;
 
         // ensure terminal velocity is not exceeded
@@ -102,19 +108,8 @@ public abstract class DynamicObject extends GameObject
     /** Collision checking **/
     protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
     {
-        tmpObjects.clear();
-        List<GameObject> surroundingObjects = world.level.gameObjects;
-        tmpRect.set(mColRect.x - 1, mColRect.y - 1, mColRect.width + 2, mColRect.height + 2);
-        //noinspection ForLoopReplaceableByForEach
-        for(int i = 0, size = surroundingObjects.size(); i < size; i++)
-        {
-            GameObject go = surroundingObjects.get(i);
-            if(tmpRect.overlaps(go.mColRect))
-            {
-                tmpObjects.add(go);
-            }
-        }
-        // scale velocity to frame units 
+        refreshNeighbours(delta);
+        // scale velocity to frame units
         velocity.scl(delta);
 
         if(xFirst)
@@ -173,13 +168,13 @@ public abstract class DynamicObject extends GameObject
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
 
-        if((checkX || checkY) && Constants.PHYSICS_PP && ppEnabled)
+        if((checkX || checkY) && ppEnabled)
         {
             //List<GameObject> surroundingObjects = world.level.gameObjects;
             //noinspection ForLoopReplaceableByForEach
-            for (int i = 0, size = tmpObjects.size; i < size; i++)
+            for (int i = 0, size = neighbours.size; i < size; i++)
             {
-                GameObject object = tmpObjects.get(i);
+                GameObject object = neighbours.get(i);
                 if (object != null && mColRect.overlaps(object.mColRect) && object instanceof Sprite
                         && ((Sprite) object).type == Sprite.Type.massive)
                 {
@@ -216,6 +211,25 @@ public abstract class DynamicObject extends GameObject
                     //diffRight: 1.040142
                     //diffTop: 0.055658817
                     //diffBottom: 1.3949661
+                }
+            }
+        }
+    }
+
+    protected void refreshNeighbours(float delta) {
+        neighboursArrayAge += delta;
+
+        if (neighboursArrayAge >= FREQ_REFRESH_NEIGHBOURS) {
+            neighboursArrayAge = 0;
+            neighbours.clear();
+            List<GameObject> surroundingObjects = world.level.gameObjects;
+            tmpRect.set(mColRect.x - THRESHOLD_NEIGHBOURS_X, mColRect.y - THRESHOLD_NEIGHBOURS_Y,
+                    mColRect.width + 2 * THRESHOLD_NEIGHBOURS_X, mColRect.height + 2 * THRESHOLD_NEIGHBOURS_Y);
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0, size = surroundingObjects.size(); i < size; i++) {
+                GameObject go = surroundingObjects.get(i);
+                if (tmpRect.overlaps(go.mColRect)) {
+                    neighbours.add(go);
                 }
             }
         }
@@ -261,10 +275,10 @@ public abstract class DynamicObject extends GameObject
         boolean found = false;
 
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = tmpObjects.size; i < size; i++)
+        for (int i = 0, size = neighbours.size; i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = tmpObjects.get(i);
+            GameObject object = neighbours.get(i);
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, true);
@@ -317,10 +331,10 @@ public abstract class DynamicObject extends GameObject
         //List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
         //noinspection ForLoopReplaceableByForEach
-        for (int i = 0, size = tmpObjects.size; i < size; i++)
+        for (int i = 0, size = neighbours.size; i < size; i++)
         //for (GameObject object : surroundingObjects)
         {
-            GameObject object = tmpObjects.get(i);
+            GameObject object = neighbours.get(i);
             if (mColRect.overlaps(object.mColRect))
             {
                 boolean tmp = handleCollision(object, false);

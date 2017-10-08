@@ -22,8 +22,6 @@ public class Constants
 
     public static final int GRAVITY = -20;
 
-    public static boolean PHYSICS_PP = PrefsManager.isPhysicsPP();
-
     static
     {
         initCamera();
