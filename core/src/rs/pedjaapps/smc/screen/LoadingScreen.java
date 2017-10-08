@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.utility.PrefsManager;
 import rs.pedjaapps.smc.view.HUD;
 
 /**
@@ -104,8 +102,7 @@ public class LoadingScreen extends AbstractScreen {
 
         //async loading is just for show, since loading takes less than a second event for largest levels
         //if debug mode just load it all at once
-        if (PrefsManager.isDebug())
-            game.assets.manager.finishLoading();
+        //game.assets.manager.finishLoading();
     }
 
     @Override
