@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,11 +12,8 @@ import java.util.Set;
 
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
-import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
-import rs.pedjaapps.smc.screen.GameScreen;
 
 public class GameSave
 {
@@ -43,7 +39,7 @@ public class GameSave
 	{
 		save.lifes = 3;
 		save.playerState = Maryo.MaryoState.small;
-		save.item = null;
+		save.item = 0;
 		save.coins = 0;
 		save.points = 0;
 	}
@@ -120,38 +116,19 @@ public class GameSave
 		return save.coins;
 	}
 
-	public static void setItem(AbstractScreen screen, Item item)
+	public static void setItem(AssetManager manager, int itemType)
 	{
-		save.item = item;
-		if(save.item != null)
+		save.item = itemType;
+		if(save.item != 0)
 		{
-			Sound sound = screen.game.assets.manager.get("data/sounds/itembox_set.mp3");
+			Sound sound = manager.get("data/sounds/itembox_set.mp3");
 			SoundManager.play(sound);
 		}
 	}
 
-	public static Item getItem()
+	public static int getItem()
 	{
 		return save.item;
-	}
-
-	public static void dropItem(World world)
-	{
-		if(save.item == null)
-			return;
-		//drop item
-		Item item = save.item;
-		OrthographicCamera cam = ((GameScreen) world.screen).cam;
-
-		item.mColRect.x = item.position.x = cam.position.x - item.mColRect.width * 0.5f;
-		item.mColRect.y = item.position.y = cam.position.y + cam.viewportHeight * 0.5f - 1.5f;
-
-		item.updateBounds();
-
-		world.level.gameObjects.add(item);
-		item.drop();
-
-		save.item = null;
 	}
 
 	public static class Save
@@ -164,7 +141,7 @@ public class GameSave
 		//in memory only
 		public Maryo.MaryoState playerState = Maryo.MaryoState.small;
 		public int lifes;
-		private Item item;
+		private int item;
 		
 		//copy constructor, only persistent objects are copied
 		public Save(Save save)

@@ -285,38 +285,14 @@ public class Box extends Sprite
             return createMushroom(box, loadAssets, assets);
         }
         else if(box.item == Item.TYPE_FIREPLANT)
-        {
-            if(loadAssets)
-            {
-                return createFireplant(box, true, assets);
-            }
-            else
-            {
-                return createFireplant(box, false, assets);
-            }
-        }
+            return createFireplant(box, loadAssets, assets);
+
         else if(box.item == Item.TYPE_STAR)
-        {
-            if(loadAssets)
-            {
-                return createStar(box, true, assets);
-            }
-            else
-            {
-                return createStar(box, false, assets);
-            }
-        }
+            return createStar(box, loadAssets, assets);
+
         else if(box.item == Item.TYPE_MOON)
-        {
-            if(loadAssets)
-            {
-                return createMoon(box, true, assets);
-            }
-            else
-            {
-                return createMoon(box, false, assets);
-            }
-        }
+            return createMoon(box, loadAssets, assets);
+
         return null;
     }
 

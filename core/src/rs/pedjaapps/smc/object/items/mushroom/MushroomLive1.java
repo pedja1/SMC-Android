@@ -27,6 +27,11 @@ public class MushroomLive1 extends Mushroom
     }
 
     @Override
+    public int getType() {
+        return TYPE_MUSHROOM_LIVE_1;
+    }
+
+    @Override
     protected void performCollisionAction()
     {
         playerHit = true;

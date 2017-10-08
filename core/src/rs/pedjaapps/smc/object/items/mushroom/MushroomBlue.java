@@ -23,6 +23,11 @@ public class MushroomBlue extends Mushroom
     }
 
     @Override
+    public int getType() {
+        return TYPE_MUSHROOM_BLUE;
+    }
+
+    @Override
     protected void performCollisionAction()
     {
         playerHit = true;

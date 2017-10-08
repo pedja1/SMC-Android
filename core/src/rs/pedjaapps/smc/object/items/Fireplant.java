@@ -33,6 +33,11 @@ public class Fireplant extends Item
     }
 
     @Override
+    public int getType() {
+        return TYPE_FIREPLANT;
+    }
+
+    @Override
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);

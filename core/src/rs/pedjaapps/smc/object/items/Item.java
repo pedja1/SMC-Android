@@ -60,6 +60,28 @@ public abstract class Item extends DynamicObject
         ppEnabled = false;
     }
 
+    public abstract int getType();
+
+    public static String getClassFromItemType(int itemType) {
+        switch (itemType) {
+            case TYPE_MUSHROOM_BLUE:
+            case TYPE_MUSHROOM_DEFAULT:
+            case TYPE_MUSHROOM_POISON:
+            case TYPE_MUSHROOM_LIVE_1:
+                return CLASS.mushroom.toString();
+            case TYPE_GOLDPIECE:
+                return CLASS.goldpiece.toString();
+            case TYPE_STAR:
+                return CLASS.jstar.toString();
+            case TYPE_MOON:
+                return CLASS.moon.toString();
+            case TYPE_FIREPLANT:
+                return CLASS.fireplant.toString();
+            default:
+                return null;
+        }
+    }
+
     public static Item createObject(World world, Assets assets, int mushroomType, String objectClassString, Vector2 size, Vector3 position)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);

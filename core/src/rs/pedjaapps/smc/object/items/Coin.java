@@ -40,6 +40,11 @@ public class Coin extends Item
     }
 
     @Override
+    public int getType() {
+        return TYPE_GOLDPIECE;
+    }
+
+    @Override
     public float maxVelocity()
     {
         return 0;

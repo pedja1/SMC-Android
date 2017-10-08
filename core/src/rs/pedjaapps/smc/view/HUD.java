@@ -53,13 +53,13 @@ public class HUD {
     public boolean jumpPressed;
     public boolean firePressed;
     public boolean upPressed, downPressed, rightPressed, leftPressed;
-    private float noUpdateDuration;
+    private float noUpdateDuration = UPDATE_FREQ;
     private World world;
     private GameScreen gameScreen;
     private TextButton pauseButton, play, musicButton;
     private Button fire, jump;
     private Touchpad touchpad;
-    private Texture itemBox, maryoL, goldM;
+    private Texture itemBox, maryoL, goldM, item;
     private SpriteBatch batch;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Table buttonsTable;
@@ -83,6 +83,7 @@ public class HUD {
     private boolean hasKeyboardOrController;
     private Image imHelp;
     private boolean showFps;
+    private Image imItemInBox;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -103,6 +104,8 @@ public class HUD {
         world.screen.game.assets.manager.load("data/sounds/item/live_up_2.mp3", Sound.class);
 
         world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets
+                .textureParameter);
+        world.screen.game.assets.manager.load(Assets.DATA_MUSHROOM_RED, Texture.class, world.screen.game.assets
                 .textureParameter);
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
                 .textureParameter);
@@ -222,6 +225,7 @@ public class HUD {
         });
 
         itemBox = world.screen.game.assets.manager.get("data/game/itembox.png");
+        item = world.screen.game.assets.manager.get(Assets.DATA_MUSHROOM_RED);
         maryoL = world.screen.game.assets.manager.get("data/game/maryo_l.png");
         goldM = world.screen.game.assets.manager.get("data/game/gold_m.png");
 
@@ -290,6 +294,12 @@ public class HUD {
         imItemBox.setPosition(MaryoGame.NATIVE_WIDTH / 2 - ibSize, MaryoGame.NATIVE_HEIGHT - ibSize - ibSize / 5);
         imItemBox.setSize(ibSize, ibSize);
         stage.addActor(imItemBox);
+
+        imItemInBox = new Image(item);
+        imItemInBox.setSize(imItemBox.getWidth() * 0.5f, imItemBox.getHeight() * 0.5f);
+        imItemInBox.setPosition(imItemBox.getX() + imItemBox.getWidth() * .25f,
+                imItemBox.getY() + imItemBox.getHeight() * .25f);
+        stage.addActor(imItemInBox);
 
         pauseButton = new TextButton(FontAwesome.BIG_PAUSE, skin, Assets.BUTTON_FA);
         pauseButton.getLabel().setFontScale(.5f);
@@ -475,20 +485,9 @@ public class HUD {
                         gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED)
                     lifesToShow++;
                 livesLabel.setText(this.lives.toString(lifesToShow));
-            }
 
-            //draw item if any
-            if (GameSave.getItem() != null) {
-                batch.setProjectionMatrix(stage.getCamera().combined);
-                batch.begin();
-                float w = imItemBox.getWidth() * 0.5f;
-                float h = imItemBox.getHeight() * 0.5f;
-                float x = imItemBox.getX() + w * .5f;
-                float y = imItemBox.getY() + h * .5f;
-                batch.draw(GameSave.getItem().texture, x, y, w, h);
-                batch.end();
+                imItemInBox.setVisible(GameSave.getItem() != 0);
             }
-
         }
 
         stage.getViewport().apply();

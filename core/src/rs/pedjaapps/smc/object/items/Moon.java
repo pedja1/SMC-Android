@@ -31,6 +31,11 @@ public class Moon extends Item
     }
 
     @Override
+    public int getType() {
+        return TYPE_MOON;
+    }
+
+    @Override
     public void initAssets()
     {
         TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);

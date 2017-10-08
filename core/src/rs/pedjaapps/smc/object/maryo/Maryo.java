@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -301,7 +302,7 @@ public class Maryo extends DynamicObject
                 godMode = true;
                 godModeActivatedTime = System.currentTimeMillis();
 
-                GameSave.dropItem(world);
+                dropSavedItem();
             }
             else
             {
@@ -434,6 +435,25 @@ public class Maryo extends DynamicObject
 
         spriteBatch.setShader(null);
         spriteBatch.setColor(Color.WHITE);
+    }
+
+    private void dropSavedItem() {
+        if(GameSave.getItem() == 0)
+            return;
+        //drop item
+
+        int itemType = GameSave.getItem();
+
+        OrthographicCamera cam = ((GameScreen) world.screen).cam;
+
+        Vector3 newPos = new Vector3(cam.position.x, cam.position.y + cam.viewportHeight * 0.5f - 1.5f, 0);
+
+        Item item = Item.createObject(world, world.screen.game.assets, itemType, Item.getClassFromItemType(itemType)
+                , null, newPos);
+        item.initAssets();
+        world.level.gameObjects.add(item);
+        item.drop();
+        GameSave.setItem(null, 0);
     }
 
     private int tIndex(MaryoState state, TKey tkey)
@@ -1152,7 +1172,7 @@ public class Maryo extends DynamicObject
             GameSave.save.playerState = MaryoState.small;
             setMarioState(MaryoState.small);
             updateBounds();
-            GameSave.setItem(null, null);
+            GameSave.setItem(null, 0);
             dyingAnim.start();
         }
         else
@@ -1170,7 +1190,7 @@ public class Maryo extends DynamicObject
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
-            GameSave.setItem(world.screen, item);
+            GameSave.setItem(world.screen.game.assets.manager, item.getType());
             return;
         }
         else if (maryoState == newState)

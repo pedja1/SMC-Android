@@ -20,6 +20,11 @@ public class MushroomPoison extends Mushroom
     }
 
     @Override
+    public int getType() {
+        return TYPE_MUSHROOM_POISON;
+    }
+
+    @Override
     protected void performCollisionAction()
     {
         playerHit = true;

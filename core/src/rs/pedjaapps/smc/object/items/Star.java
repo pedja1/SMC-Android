@@ -51,6 +51,11 @@ public class Star extends Item
     }
 
     @Override
+    public int getType() {
+        return TYPE_STAR;
+    }
+
+    @Override
     public void initAssets()
     {
         texture = world.screen.game.assets.manager.get(textureName);
