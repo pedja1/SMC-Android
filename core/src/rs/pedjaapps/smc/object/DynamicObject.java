@@ -22,11 +22,11 @@ public abstract class DynamicObject extends GameObject
     // 8 aufeinander zubewegt werden. Gravity ist 20.
     // Bei einem Grenzwert von 5 reicht also Refresh alle 600 ms
     // zur Sicherheit wird alle 400ms refresht
-    protected static final float FREQ_REFRESH_NEIGHBOURS = .2f;
+    protected static final float FREQ_REFRESH_NEIGHBOURLIST = .2f;
     protected static final float MAX_VELOCITY = 5;
     protected static final float THRESHOLD_NEIGHBOURS_Y = (-Constants.GRAVITY + MAX_VELOCITY)
-            * FREQ_REFRESH_NEIGHBOURS * 1.5f;
-    protected static final float THRESHOLD_NEIGHBOURS_X = MAX_VELOCITY * 2 * FREQ_REFRESH_NEIGHBOURS * 1.5f;
+            * FREQ_REFRESH_NEIGHBOURLIST * 1.5f;
+    protected static final float THRESHOLD_NEIGHBOURS_X = MAX_VELOCITY * 2 * FREQ_REFRESH_NEIGHBOURLIST * 1.5f;
 
     public float stateTime;
     public boolean grounded = false;
@@ -37,7 +37,7 @@ public abstract class DynamicObject extends GameObject
 
     protected Array<GameObject> neighbours = new Array<>();
     protected Rectangle tmpRect = new Rectangle();
-    protected float neighboursArrayAge = FREQ_REFRESH_NEIGHBOURS;
+    protected float neighboursArrayAge = FREQ_REFRESH_NEIGHBOURLIST;
 
     private long lasHitSoundPlayed;
 
@@ -108,7 +108,7 @@ public abstract class DynamicObject extends GameObject
     /** Collision checking **/
     protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
     {
-        refreshNeighbours(delta);
+        refreshNeighbourList(delta);
         // scale velocity to frame units
         velocity.scl(delta);
 
@@ -216,10 +216,10 @@ public abstract class DynamicObject extends GameObject
         }
     }
 
-    protected void refreshNeighbours(float delta) {
+    protected void refreshNeighbourList(float delta) {
         neighboursArrayAge += delta;
 
-        if (neighboursArrayAge >= FREQ_REFRESH_NEIGHBOURS) {
+        if (neighboursArrayAge >= FREQ_REFRESH_NEIGHBOURLIST) {
             neighboursArrayAge = 0;
             neighbours.clear();
             List<GameObject> surroundingObjects = world.level.gameObjects;
