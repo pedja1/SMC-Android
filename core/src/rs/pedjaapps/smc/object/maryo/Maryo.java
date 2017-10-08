@@ -1068,31 +1068,8 @@ public class Maryo extends DynamicObject
                 }
                 else
                 {
-                    if (object instanceof Turtle && ((Turtle) object).isShell && !((Turtle) object).isShellMoving)
-                    {
-                        Turtle turtle = (Turtle) object;
-                        turtle.isShellMoving = true;
-                        if (turtle.mColRect.x > mColRect.x)
-                        {
-                            turtle.setDirection(Direction.right);
-                            turtle.mColRect.x = turtle.position.x = mColRect.x + mColRect.width + 0.1f;
-                            turtle.updateBounds();
-                        }
-                        else
-                        {
-                            turtle.setDirection(Direction.left);
-                            turtle.mColRect.x = turtle.position.x = mColRect.x - turtle.mColRect.width - 0.1f;
-                            turtle.updateBounds();
-                        }
-                        String soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
-                        AssetManager assetManager = world.screen.game.assets.manager;
-                        if (assetManager.isLoaded(soundFile))
-                            SoundManager.play(assetManager.get(soundFile, Sound.class));
-                    }
-                    else
-                    {
-                        hitEnemy((Enemy) object, vertical);
-                    }
+                    hitEnemy((Enemy) object, vertical);
+
 
             }
         }
@@ -1125,7 +1102,7 @@ public class Maryo extends DynamicObject
             if (!godMode)
                 downgradeOrDie(false);
         }
-        else
+        else if (vertical)
         {
             velocity.y = 5f * Gdx.graphics.getDeltaTime();
         }

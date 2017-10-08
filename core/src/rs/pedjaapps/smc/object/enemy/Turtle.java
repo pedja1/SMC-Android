@@ -293,6 +293,27 @@ public class Turtle extends Enemy
     @Override
     public int hitByPlayer(Maryo maryo, boolean vertical)
     {
+        if (isShell && !isShellMoving)
+        {
+            isShellMoving = true;
+            if (mColRect.x > maryo.mColRect.x)
+            {
+                setDirection(Direction.right);
+                mColRect.x = position.x = maryo.mColRect.x + maryo.mColRect.width + 0.1f;
+            }
+            else
+            {
+                setDirection(Direction.left);
+                mColRect.x = position.x = maryo.mColRect.x - maryo.mColRect.width - 0.1f;
+            }
+            updateBounds();
+            String soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
+            AssetManager assetManager = world.screen.game.assets.manager;
+            if (assetManager.isLoaded(soundFile))
+                SoundManager.play(assetManager.get(soundFile, Sound.class));
+            return HIT_RESOLUTION_CUSTOM;
+        }
+        else
         if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
         {
             //transform to shell if not shell
@@ -311,14 +332,25 @@ public class Turtle extends Enemy
             }
             else
             {
-                direction = (maryo.position.x + maryo.mColRect.width * 0.5f) > (position.x + mColRect.width * 0.5f) ? Direction.right : Direction.left;
                 isShellMoving = !isShellMoving;
             }
             return HIT_RESOLUTION_CUSTOM;
         }
         else
         {
-            return HIT_RESOLUTION_PLAYER_DIED;
+            // wenn sich die Schildkröte als Panzer bewegt, dann nur töten wenn auf Maryo draufgelaufen wird
+            if (isShell) {
+                float maryoMiddle = maryo.mColRect.x + maryo.mColRect.width / 2;
+                float shellMiddle = mColRect.x + mColRect.width / 2;
+
+                if (maryoMiddle > shellMiddle && direction == Direction.right
+                    || maryoMiddle < shellMiddle && direction == Direction.left)
+                    return HIT_RESOLUTION_PLAYER_DIED;
+                else
+                    return HIT_RESOLUTION_CUSTOM;
+
+            } else
+                return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
 
