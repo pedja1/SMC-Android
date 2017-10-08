@@ -28,6 +28,8 @@ public class Fireball extends DynamicObject
     public static final float POSITION_Z = 0.095f;
     public static final float VELOCITY_X = 7f;
     public static final float VELOCITY_Y = 5f;
+    public static final float MAX_DURATION = 2f;
+    private float duration;
     public Direction direction = Direction.right;
     public float velY = -1;
     private ParticleEffect trail, explosion;
@@ -63,6 +65,8 @@ public class Fireball extends DynamicObject
         trail.update(delta);
         if(!destroyed)
         {
+            duration += delta;
+
             velocity.x = direction == Direction.right ? VELOCITY_X : -VELOCITY_X;
             if (velY != -1)
             {
@@ -91,6 +95,9 @@ public class Fireball extends DynamicObject
                 velocity.x = maxVelocity();
             if (velocity.x < -maxVelocity())
                 velocity.x = -maxVelocity();
+
+            if (duration > MAX_DURATION)
+                destroy(false);
         }
         else
         {
@@ -125,7 +132,7 @@ public class Fireball extends DynamicObject
                 }
                 else
                 {
-                    if (mColRect.y > groundY) destroy();
+                    if (mColRect.y > groundY) destroy(true);
                 }
                 return true;
             }
@@ -149,7 +156,7 @@ public class Fireball extends DynamicObject
                 SoundManager.play(sound);
                 //repelled sound
             }
-            destroy();
+            destroy(true);
         }
         return false;
     }
@@ -157,7 +164,7 @@ public class Fireball extends DynamicObject
     @Override
     protected boolean handleDroppedBelowWorld()
     {
-        destroy();
+        destroy(false);
         return true;
     }
 
@@ -191,23 +198,26 @@ public class Fireball extends DynamicObject
         return true;
     }
 
-    public void destroy()
+    public void destroy(boolean playSound)
     {
         destroyed = true;
         trail.allowCompletion();
         explosion.reset();
         explosion.getEmitters().get(0).getAngle().setHighMin(velocity.x > 0 ? 270 : -90);
         explosion.getEmitters().get(0).getAngle().setHighMax(velocity.x > 0 ? 90 : 90);
-        Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_explosion.mp3");
-        // je weiter entfernt, desto leiser. 9 etwa ein Bildschirm, also nach 18 nur noch 1/3
-        float distance = Math.abs(position.x - world.maryo.position.x);
-        float volume = .3f + .7f * Math.max(0, (18 - distance) / 18);
-        SoundManager.play(sound, volume);
+        if (playSound) {
+            Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_explosion.mp3");
+            // je weiter entfernt, desto leiser. 9 etwa ein Bildschirm, also nach 18 nur noch 1/3
+            float distance = Math.abs(position.x - world.maryo.position.x);
+            float volume = .3f + .7f * Math.max(0, (18 - distance) / 18);
+            SoundManager.play(sound, volume);
+        }
     }
 
     public void reset()
     {
         velocity.set(0, 0, 0);
+        duration = 0;
         destroyed = false;
         trail.reset();
         trail.setPosition(mColRect.x, mColRect.y + mColRect.height * 0.5f);

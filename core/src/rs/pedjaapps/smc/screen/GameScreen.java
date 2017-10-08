@@ -33,6 +33,8 @@ import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.maryo.Fireball;
+import rs.pedjaapps.smc.object.maryo.Iceball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -391,7 +393,7 @@ public class GameScreen extends AbstractScreen {
                 world.createMaryoRectWithOffset(maryoBWO, 8);
                 for (int i = 0, size = world.level.gameObjects.size(); i < size; i++) {
                     GameObject go = world.level.gameObjects.get(i);
-                    if (maryoBWO.overlaps(go.mColRect)) {
+                    if (maryoBWO.overlaps(go.mColRect) || (go instanceof Fireball) || (go instanceof Iceball)) {
                         objectsToUpdate.add(go);
                         go._update(delta);
                     }
