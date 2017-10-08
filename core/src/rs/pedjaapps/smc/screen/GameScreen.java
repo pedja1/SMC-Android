@@ -132,6 +132,9 @@ public class GameScreen extends AbstractScreen {
         hud.onGameStateChange();
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
                 gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.PLAYER_DIED);
+
+        if (gameState == GAME_STATE.PLAYER_DIED && save.lifes < 0)
+            MusicManager.stop(true);
     }
 
     public Music getMusic() {
