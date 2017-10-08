@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,10 @@ public class GameScreen extends AbstractScreen {
     private float levelEndAnimationStateTime;
     private String mNextLevelName;
     private InputProcessor keyboardAndTouch;
+    private Array<GameObject> objectsToUpdate = new Array<>(75);
+    private static final float FREQ_OTU_REFRESH = .2f;
+    private float timeSinceUpdObjRefresh = FREQ_OTU_REFRESH;
+    private int objRefreshSize;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
         this(game, fromMenu, levelName, null);
@@ -231,10 +236,13 @@ public class GameScreen extends AbstractScreen {
         }
 
         //cleanup
-        for (int i = 0; i < world.trashObjects.size; i++) {
-            world.level.gameObjects.remove(world.trashObjects.get(i));
+        if (world.trashObjects.size > 0) {
+            for (int i = 0; i < world.trashObjects.size; i++)
+                world.level.gameObjects.remove(world.trashObjects.get(i));
+            world.trashObjects.clear();
+            // neuaufbau der objectstoupdate auslösen
+            objRefreshSize = 0;
         }
-        world.trashObjects.clear();
 
         //debug
         if (gameState == GAME_STATE.GAME_EDIT_MODE) {
@@ -374,16 +382,29 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void updateObjects(float delta) {
-        world.createMaryoRectWithOffset(maryoBWO, 8);
-        for (int i = 0, size = world.level.gameObjects.size(); i < size; i++) {
-            GameObject go = world.level.gameObjects.get(i);
-            if (maryoBWO.overlaps(go.mColRect)) {
-                if (gameState == GAME_STATE.GAME_RUNNING || ((gameState == GAME_STATE.PLAYER_DEAD || gameState ==
-                        GAME_STATE.PLAYER_UPDATING) && go instanceof Maryo)) {
+        if (gameState == GAME_STATE.GAME_RUNNING) {
+            timeSinceUpdObjRefresh += delta;
+            if (timeSinceUpdObjRefresh >= FREQ_OTU_REFRESH || world.level.gameObjects.size() != objRefreshSize) {
+                objectsToUpdate.clear();
+                timeSinceUpdObjRefresh = 0;
+                objRefreshSize = world.level.gameObjects.size();
+                world.createMaryoRectWithOffset(maryoBWO, 8);
+                for (int i = 0, size = world.level.gameObjects.size(); i < size; i++) {
+                    GameObject go = world.level.gameObjects.get(i);
+                    if (maryoBWO.overlaps(go.mColRect)) {
+                        objectsToUpdate.add(go);
+                        go._update(delta);
+                    }
+                }
+            } else {
+                for (int i = 0; i < objectsToUpdate.size; i++) {
+                    GameObject go = objectsToUpdate.get(i);
                     go._update(delta);
                 }
             }
-        }
+
+        } else if (gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
+            world.maryo._update(delta);
     }
 
     private void drawObjects() {
