@@ -144,6 +144,10 @@ public class GameScreen extends AbstractScreen {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+        if (debug)
+            GLProfiler.enable();
+        else
+            GLProfiler.disable();
     }
 
     @Override
@@ -154,7 +158,6 @@ public class GameScreen extends AbstractScreen {
             music.setPosition(0);
         music.setLooping(true);
         MusicManager.play(music);
-        if (debug) GLProfiler.enable();
         if (!resumed || forceCheckEnter) {
             world.maryo.checkLevelEnter(entryName);
             forceCheckEnter = false;
@@ -206,13 +209,15 @@ public class GameScreen extends AbstractScreen {
 
         spriteBatch.end();
 
-        spriteBatch.setProjectionMatrix(guiCam.combined);
-        spriteBatch.begin();
-        if (debug) drawDebugText();
-        spriteBatch.end();
-        if (debug) drawDebug();
-
         hud.render(gameState, delta);
+
+        if (debug) {
+            spriteBatch.setProjectionMatrix(guiCam.combined);
+            spriteBatch.begin();
+            drawDebugText();
+            spriteBatch.end();
+            drawDebug();
+        }
 
         if (gameState == GAME_STATE.PLAYER_DIED) {
             handlePlayerDied();

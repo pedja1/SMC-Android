@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -81,6 +82,7 @@ public class HUD {
     private Label gameOverLabel;
     private boolean hasKeyboardOrController;
     private Image imHelp;
+    private boolean showFps;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -346,13 +348,14 @@ public class HUD {
         timeLabel.setSize(timeLabel.getPrefWidth(), timeLabel.getPrefHeight());
         timeLabel.setPosition(livesLabel.getX() - padX, scoreLabel.getY(), Align.bottomRight);
         stage.addActor(timeLabel);
-
-        Texture helpScreen = world.screen.game.assets.manager.get("data/hud/help.png", Texture.class);
-        helpScreen.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        imHelp = new Image(helpScreen);
-        imHelp.setSize(imHelp.getWidth() * .8f, imHelp.getHeight() * .8f);
-        imHelp.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
-        stage.addActor(imHelp);
+        if (MaryoGame.GAME_DEVMODE)
+            timeLabel.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    showFps = !showFps;
+                    return true;
+                }
+            });
 
         hintLabel = new Label(" ", skin, Assets.LABEL_BORDER60);
         hintLabel.setFontScale(.5f);
@@ -363,6 +366,13 @@ public class HUD {
         hintLabel.setPosition(padX, imItemBox.getY() - padX - hintLabel.getHeight());
         stage.addActor(hintLabel);
 
+        Texture helpScreen = world.screen.game.assets.manager.get("data/hud/help.png", Texture.class);
+        helpScreen.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        imHelp = new Image(helpScreen);
+        imHelp.setSize(imHelp.getWidth() * .8f, imHelp.getHeight() * .8f);
+        imHelp.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        stage.addActor(imHelp);
+
         // die on screen buttons müssen ganz vorne sein
         int actorsNum = stage.getActors().size;
         touchpad.setZIndex(actorsNum);
@@ -372,22 +382,25 @@ public class HUD {
         onGameStateChange();
     }
 
+    private boolean isInGame(GameScreen.GAME_STATE gameState) {
+        return !(gameState == GameScreen.GAME_STATE.GAME_READY
+                || gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+    }
+
     public void onGameStateChange() {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
         boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.save.lifes < 0);
-        boolean isInGame = !(gameState == GameScreen.GAME_STATE.GAME_READY
-                || gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+        boolean isInGame = isInGame(gameState);
 
         readyLbl.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
 
         gameOverLabel.setVisible(isGameOver);
         pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
-        imHelp.setVisible(isInGame);
-        if (!imHelp.isVisible())
+        if (!isInGame) {
+            imHelp.setVisible(false);
             imHelp.getColor().a = 0;
-        hintLabel.setVisible(isInGame);
-        if (!hintLabel.isVisible()) {
+            hintLabel.setVisible(false);
             hintLabel.getColor().a = 0;
             hintLabel.clearActions();
         }
@@ -412,17 +425,13 @@ public class HUD {
 
     public void showKeyboardHelp() {
         imHelp.clearActions();
+        imHelp.setVisible(isInGame(gameScreen.getGameState()));
         imHelp.addAction(Actions.fadeIn(.5f));
-
-        if (hintLabel.getColor().a > 0) {
-            hintLabel.clearActions();
-            hintLabel.getColor().a = 0;
-        }
     }
 
     public void hideKeyboardHelp() {
         imHelp.clearActions();
-        imHelp.addAction(Actions.fadeOut(.3f));
+        imHelp.addAction(Actions.sequence(Actions.fadeOut(.3f), Actions.visible(false)));
     }
 
     public void render(GameScreen.GAME_STATE gameState, float deltaTime) {
@@ -431,8 +440,6 @@ public class HUD {
 
         else {
             if (updateTimer) stateTime += deltaTime;
-            batch.setProjectionMatrix(stage.getCamera().combined);
-            batch.begin();
 
             //if(GameSave.getItem() != null)
             //	batch.setColor(Color.RED);
@@ -450,8 +457,12 @@ public class HUD {
                 coinsLabel.setText(coins);
 
                 //time
-                time.update(stateTime);
-                timeLabel.setText(new String(time.getChars()));
+                if (showFps)
+                    timeLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()));
+                else {
+                    time.update(stateTime);
+                    timeLabel.setText(new String(time.getChars()));
+                }
 
                 //lives
                 int lifesToShow = GameSave.save.lifes;
@@ -464,14 +475,16 @@ public class HUD {
 
             //draw item if any
             if (GameSave.getItem() != null) {
+                batch.setProjectionMatrix(stage.getCamera().combined);
+                batch.begin();
                 float w = imItemBox.getWidth() * 0.5f;
                 float h = imItemBox.getHeight() * 0.5f;
                 float x = imItemBox.getX() + w * .5f;
                 float y = imItemBox.getY() + h * .5f;
                 batch.draw(GameSave.getItem().texture, x, y, w, h);
+                batch.end();
             }
 
-            batch.end();
         }
 
         stage.getViewport().apply();
@@ -511,7 +524,8 @@ public class HUD {
     public void showHint(String hint, float duration) {
         hintLabel.setText(hint);
         hintLabel.clearActions();
-        hintLabel.addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.delay(duration), Actions.fadeOut(.2f)));
+        hintLabel.setVisible(isInGame(gameScreen.getGameState()));
+        hintLabel.addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.delay(duration), Actions.fadeOut(.2f), Actions.visible(false)));
     }
 
     private String formatPointsString(int points) {
