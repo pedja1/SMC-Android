@@ -486,7 +486,7 @@ public class HUD {
                     lifesToShow++;
                 livesLabel.setText(this.lives.toString(lifesToShow));
 
-                imItemInBox.setVisible(GameSave.getItem() != 0);
+                imItemInBox.setVisible(GameSave.getItem() != 0 && imItemBox.isVisible());
             }
         }
 
