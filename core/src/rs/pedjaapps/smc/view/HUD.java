@@ -417,6 +417,7 @@ public class HUD {
 
         scoreLabel.setVisible(isInGame);
         imItemBox.setVisible(isInGame);
+        imItemInBox.setVisible(isInGame && GameSave.getItem() != 0);
         coinsLabel.setVisible(isInGame);
         imWaffles.setVisible(isInGame);
         timeLabel.setVisible(isInGame || showFps);
