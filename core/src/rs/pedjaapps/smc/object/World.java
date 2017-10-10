@@ -103,15 +103,7 @@ public class World
     public void drawVisibleObjects(OrthographicCamera cam, SpriteBatch batch)
     {
         visibleObjects.clear();
-        float camX = cam.position.x;
-        float camY = cam.position.y;
-        float camWidth = (cam.viewportWidth * cam.zoom);
-        float camHeight = (cam.viewportHeight * cam.zoom);
-        float wX = camX - camWidth * 0.5f - 1;
-        float wY = camY - camHeight * 0.5f - 1;
-        float wW = camWidth + 1;
-        float wH = camHeight + 1;
-		worldBounds.set(wX, wY, wW, wH);
+        setRectToVisibleCamArea(worldBounds, cam);
         for (int i = 0, size = level.gameObjects.size(); i < size; i++)
         {
             GameObject object = level.gameObjects.get(i);
@@ -124,7 +116,19 @@ public class World
         }
     }
 
-	public void createMaryoRectWithOffset(Rectangle offsetBounds, float offset)
+    public static void setRectToVisibleCamArea(Rectangle worldBounds, OrthographicCamera cam) {
+        float camX = cam.position.x;
+        float camY = cam.position.y;
+        float camWidth = (cam.viewportWidth * cam.zoom);
+        float camHeight = (cam.viewportHeight * cam.zoom);
+        float wX = camX - camWidth * 0.5f - 1;
+        float wY = camY - camHeight * 0.5f - 1;
+        float wW = camWidth + 1;
+        float wH = camHeight + 1;
+        worldBounds.set(wX, wY, wW, wH);
+    }
+
+    public void createMaryoRectWithOffset(Rectangle offsetBounds, float offset)
 	{
         float offsetX = Math.max(offset, Constants.CAMERA_WIDTH);
         float offsetY = Math.max(offset * 0.5f, Constants.CAMERA_HEIGHT);
@@ -148,23 +152,12 @@ public class World
 
     /**
      * Check if obejct is visible in current camera bounds
-     * @param fallback value to return if cant determine if object is visible
      *
      */
-    public boolean isObjectVisible(GameObject object, boolean fallback)
+    public boolean isObjectVisible(GameObject object, OrthographicCamera cam)
     {
-        if(!(screen instanceof GameScreen))return fallback;
-        float camX = ((GameScreen) screen).cam.position.x;
-        float camY = ((GameScreen) screen).cam.position.y;;
-        float wX = camX - Constants.CAMERA_WIDTH / 2 - 1;
-        float wY = camY - Constants.CAMERA_HEIGHT / 2 - 1;
-        float wW = Constants.CAMERA_WIDTH + 1;
-        float wH = Constants.CAMERA_HEIGHT + 1;
-        Rectangle worldBounds = RECT_POOL.obtain();
-        worldBounds.set(wX, wY, wW, wH);
-        boolean result = object.mDrawRect.overlaps(worldBounds);
-        RECT_POOL.free(worldBounds);
-        return result;
+        setRectToVisibleCamArea(worldBounds, cam);
+        return object.mDrawRect.overlaps(worldBounds);
     }
 
     public void dispose()

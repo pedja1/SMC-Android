@@ -354,8 +354,11 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void moveCamera(OrthographicCamera cam, Vector3 pos, boolean snap) {
-        if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting))
+        //frieren bei größer/kleiner, aber sicherstellen das Maryo sichtbar ist (falls aus Kamerabereich geplumpst)
+        if ((gameState == GAME_STATE.PLAYER_UPDATING && !world.maryo.entering && !world.maryo.exiting
+                && world.isObjectVisible(world.maryo, cam))) {
             return;
+        }
         if (snap || cameraForceSnap) {
             cam.position.set(pos);
             cameraForceSnap = false;
