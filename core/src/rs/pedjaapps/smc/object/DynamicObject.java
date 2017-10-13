@@ -378,7 +378,7 @@ public abstract class DynamicObject extends GameObject
 			{
                 if(velocity.y > 0 && this instanceof Maryo && !(object instanceof Box))
                 {
-                    ((Maryo)this).jumped = true;
+                    ((Maryo)this).jumpPeakReached = true;
                     if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
                     {
                         Sound sound = world.screen.game.assets.manager.get("data/sounds/wall_hit.mp3");

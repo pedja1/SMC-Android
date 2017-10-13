@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.object.maryo;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,7 +29,6 @@ import rs.pedjaapps.smc.object.MovingPlatform;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.enemy.Enemy;
-import rs.pedjaapps.smc.object.enemy.Turtle;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
@@ -56,7 +54,7 @@ public class Maryo extends DynamicObject
     private static final float POWER_MAX_JUMP_SPEED = 12f;
     private float mMaxJumpSpeed = MAX_JUMP_SPEED;
 
-    public boolean jumped;
+    public boolean jumpPeakReached;
 
     private float downPressTime;
 
@@ -600,14 +598,14 @@ public class Maryo extends DynamicObject
             boolean resetDownPressedTime = true;
             if (keys.contains(Keys.JUMP))
             {
-                if (!jumped && velocity.y < mMaxJumpSpeed)
+                if (!jumpPeakReached && velocity.y < mMaxJumpSpeed)
                 {
                     float jumpTime = 0.1f;
                     float acceleration = mMaxJumpSpeed / (jumpTime / delta);
                     if (velocity.y + acceleration > mMaxJumpSpeed)
                     {
                         velocity.y = mMaxJumpSpeed;
-                        jumped = true;
+                        jumpPeakReached = true;
                     }
                     else
                     {
@@ -618,7 +616,7 @@ public class Maryo extends DynamicObject
                 }
                 else
                 {
-                    jumped = true;
+                    jumpPeakReached = true;
                 }
             }
             if (getWorldState() == GameObject.WorldState.CLIMBING)
@@ -1619,6 +1617,7 @@ public class Maryo extends DynamicObject
         if (grounded || getWorldState() == GameObject.WorldState.CLIMBING)
         {
             setWorldState(GameObject.WorldState.JUMPING);
+            jumpPeakReached = false;
             keys.add(Keys.JUMP);
 
             setJumpSound();
@@ -1656,7 +1655,6 @@ public class Maryo extends DynamicObject
     public void jumpReleased()
     {
         keys.remove(Keys.JUMP);
-        jumped = false;
     }
 
     public void fireReleased()
