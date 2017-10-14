@@ -1553,6 +1553,7 @@ public class Maryo extends DynamicObject
 
     public void starPicked()
     {
+        starEffectTime = 0;
         mInvincibleStar = true;
     }
 
