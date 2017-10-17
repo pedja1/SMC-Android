@@ -315,14 +315,14 @@ public class Box extends Sprite
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
                     assets.manager.load("data/game/items/mushroom_red.png", Texture.class, assets.textureParameter);
-                    assets.manager.load("data/sounds/item/mushroom.mp3", Sound.class);
+                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
                     assets.manager.load("data/game/items/mushroom_green.png", Texture.class, assets.textureParameter);
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
                     assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, assets.textureParameter);
-                    assets.manager.load("data/sounds/item/mushroom_blue.mp3", Sound.class);
+                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_BLUE, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
                     assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, assets.textureParameter);
@@ -386,7 +386,7 @@ public class Box extends Sprite
         if(loadAssets)
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
-            assets.manager.load("data/sounds/item/fireplant.mp3", Sound.class);
+            assets.manager.load(Assets.SOUND_ITEM_FIREPLANT, Sound.class);
             assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
             assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
         }
@@ -419,7 +419,7 @@ public class Box extends Sprite
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
             assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
-            assets.manager.load("data/sounds/item/moon.mp3", Sound.class);
+            assets.manager.load(Assets.SOUND_ITEM_MOON, Sound.class);
         }
         else
         {
@@ -492,17 +492,17 @@ public class Box extends Sprite
                 {
                     if (item.textureAtlas.contains("yellow"))
                     {
-                        sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_1.mp3");
+                        sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE1);
                     }
                     else
                     {
-                        sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
+                        sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE_RED);
                     }
                 }
                 else if(item instanceof Mushroom)
                 {
                     createItemEffect();
-                    sound = world.screen.game.assets.manager.get("data/sounds/sprout_1.mp3");
+                    sound = world.screen.game.assets.manager.get(Assets.SOUND_SPROUT);
                 }
                 else if(item instanceof Moon)
                 {
@@ -520,7 +520,7 @@ public class Box extends Sprite
         }
         else
         {
-            sound = world.screen.game.assets.manager.get("data/sounds/wall_hit.mp3");
+            sound = world.screen.game.assets.manager.get(Assets.SOUND_WALL_HIT);
         }
         SoundManager.play(sound);
     }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Collections;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
@@ -116,7 +117,7 @@ public abstract class Enemy extends DynamicObject
 
     protected String getDeadSound()
     {
-        return "data/sounds/enemy/furball/die.mp3";
+        return Assets.SOUND_ENEMY_DIE_FURBALL;
     }
 
     private enum CLASS
@@ -161,13 +162,14 @@ public abstract class Enemy extends DynamicObject
     {
         super(world, size, position);
         world.screen.game.assets.manager.load(getDeadSound(), Sound.class);
-        world.screen.game.assets.manager.load("data/sounds/item/ice_kill.mp3", Sound.class);
+        world.screen.game.assets.manager.load(Assets.SOUND_ITEM_ICE_KILL, Sound.class);
     }
 
     protected void playDeadSound(boolean starKill)
     {
         AssetManager manager = world.screen.game.assets.manager;
-        String soundKey = starKill ? "data/sounds/item/star_kill.mp3" : frozen ? "data/sounds/item/ice_kill.mp3" : getDeadSound();
+        String soundKey = starKill ? Assets.SOUND_ITEM_STAR_KILL :
+                frozen ? Assets.SOUND_ITEM_ICE_KILL : getDeadSound();
         if(manager.isLoaded(soundKey))
         {
             Sound sound = manager.get(soundKey);
@@ -212,7 +214,7 @@ public abstract class Enemy extends DynamicObject
                 break;
             case rokko:
                 enemy = new Rokko(world, size, position, jEnemy.getString("direction", ""));
-                world.screen.game.assets.manager.load("data/sounds/enemy/rokko/hit.mp3", Sound.class);
+                world.screen.game.assets.manager.load(Assets.SOUND_ENEMY_ROKKO_HIT, Sound.class);
                 break;
             case _static:
                 enemy = new Static(world, size, position, jEnemy.getInt("rotation_speed", 0), jEnemy.getInt("fire_resistance", 0), jEnemy.getInt("ice_resistance", 0));

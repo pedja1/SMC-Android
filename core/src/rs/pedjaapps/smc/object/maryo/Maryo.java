@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
@@ -1175,7 +1176,7 @@ public class Maryo extends DynamicObject
         }
         else
         {
-            SoundManager.play(world.screen.game.assets.manager.get("data/sounds/player/powerdown.mp3", Sound.class));
+            SoundManager.play(world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_POWERDOWN, Sound.class));
             upgrade(MaryoState.small, null, true);
         }
     }
@@ -1216,11 +1217,11 @@ public class Maryo extends DynamicObject
         switch (newState)
         {
             case big:
-                return world.screen.game.assets.manager.get("data/sounds/item/mushroom.mp3");
+                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MUSHROOM);
             case fire:
-                return world.screen.game.assets.manager.get("data/sounds/item/fireplant.mp3");
+                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREPLANT);
             case ice:
-                return world.screen.game.assets.manager.get("data/sounds/item/mushroom_blue.mp3");
+                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MUSHROOM_BLUE);
         }
         return null;
     }
@@ -1276,7 +1277,7 @@ public class Maryo extends DynamicObject
             diedTime = stateTime;
             handleCollision = false;
             diedPosition = new Vector3(position);
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/player/dead.mp3");
+            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_DEAD);
             SoundManager.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
             GameSave.save.lifes--;
@@ -1338,11 +1339,11 @@ public class Maryo extends DynamicObject
             case small:
                 if (powerJump)
                 {
-                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small_power.mp3");
+                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_SMALL_POWER);
                 }
                 else
                 {
-                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_small.mp3");
+                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_SMALL);
                 }
                 break;
             case big:
@@ -1350,11 +1351,11 @@ public class Maryo extends DynamicObject
             case ice:
                 if (powerJump)
                 {
-                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big_power.mp3");
+                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_BIG_POWER);
                 }
                 else
                 {
-                    jumpSound = world.screen.game.assets.manager.get("data/sounds/player/jump_big.mp3");
+                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_BIG);
                 }
                 break;
         }
@@ -1392,7 +1393,7 @@ public class Maryo extends DynamicObject
 
     public void enterLevel(LevelEntry entry)
     {
-        Sound sound = world.screen.game.assets.manager.get("data/sounds/enter_pipe.mp3");
+        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENTER_PIPE);
         SoundManager.play(sound);
         ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
         entering = true;
@@ -1459,7 +1460,7 @@ public class Maryo extends DynamicObject
                 break;
             case LevelExit.LEVEL_EXIT_WARP:
                 if (exiting) return;
-                Sound sound = world.screen.game.assets.manager.get("data/sounds/leave_pipe.mp3");
+                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_LEAVE_PIPE);
                 SoundManager.play(sound);
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
                 exiting = true;
@@ -1509,7 +1510,7 @@ public class Maryo extends DynamicObject
                 addFireball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
-            sound = world.screen.game.assets.manager.get("data/sounds/item/fireball.mp3");
+            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL);
         }
         else if (maryoState == MaryoState.ice)
         {
@@ -1519,7 +1520,7 @@ public class Maryo extends DynamicObject
                 addIceball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
-            sound = world.screen.game.assets.manager.get("data/sounds/item/iceball.mp3");
+            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL);
         }
 
         SoundManager.play(sound);

@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
@@ -381,7 +382,7 @@ public abstract class DynamicObject extends GameObject
                     ((Maryo)this).jumpPeakReached = true;
                     if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
                     {
-                        Sound sound = world.screen.game.assets.manager.get("data/sounds/wall_hit.mp3");
+                        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_WALL_HIT);
                         if (sound != null && PrefsManager.isPlaySounds())
                         {
                             SoundManager.play(sound);

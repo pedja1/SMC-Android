@@ -31,9 +31,46 @@ public class Assets {
     public static final String BUTTON_FA = "fa45";
     public static final String BUTTON_SMALL = "small";
 
-    public static final String DATA_SOUNDS_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.mp3";
-    public static final String DATA_SOUNDS_ITEM_LIVE_UP = "data/sounds/item/live_up.mp3";
     public static final String DATA_MUSHROOM_RED = "data/game/items/mushroom_red.png";
+
+    public static final String SOUND_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.ogg";
+    public static final String SOUND_ITEM_LIVE_UP = "data/sounds/item/live_up.ogg";
+    public static final String SOUND_PLAYER_DEAD = "data/sounds/player/dead.ogg";
+    public static final String SOUND_JUMP_BIG = "data/sounds/player/jump_big.ogg";
+    public static final String SOUND_JUMP_BIG_POWER = "data/sounds/player/jump_big_power.ogg";
+    public static final String SOUND_JUMP_SMALL = "data/sounds/player/jump_small.ogg";
+    public static final String SOUND_PLAYER_POWERDOWN = "data/sounds/player/powerdown.ogg";
+    public static final String SOUND_JUMP_SMALL_POWER = "data/sounds/player/jump_small_power.ogg";
+    public static final String SOUND_AUDIO_ON = "data/sounds/audio_on.ogg";
+    public static final String SOUND_ENTER_PIPE = "data/sounds/enter_pipe.ogg";
+    public static final String SOUND_LEAVE_PIPE = "data/sounds/leave_pipe.ogg";
+    public static final String SOUND_SPROUT = "data/sounds/sprout_1.ogg";
+    //???? unused
+    public static final String SOUND_STOMP1 = "data/sounds/stomp_1.ogg";
+    public static final String SOUND_STOMP4 = "data/sounds/stomp_4.ogg";
+    public static final String SOUND_WALL_HIT = "data/sounds/wall_hit.ogg";
+    public static final String SOUND_BOSS_FURBALL_HIT_FAILED = "data/sounds/enemy/boss/furball/hit_failed.ogg";
+    public static final String SOUND_BOSS_FURBALL_HIT = "data/sounds/enemy/boss/furball/hit.ogg";
+    public static final String SOUND_ENEMY_DIE_EATO = "data/sounds/enemy/eato/die.ogg";
+    public static final String SOUND_ENEMY_DIE_FLYON = "data/sounds/enemy/flyon/die.ogg";
+    public static final String SOUND_ENEMY_DIE_FURBALL = "data/sounds/enemy/furball/die.ogg";
+    public static final String SOUND_ENEMY_DIE_GEE = "data/sounds/enemy/gee/die.ogg";
+    public static final String SOUND_ENEMY_DIE_KRUSH = "data/sounds/enemy/krush/die.ogg";
+    public static final String SOUND_ENEMY_ROKKO_HIT = "data/sounds/enemy/rokko/hit.ogg";
+    public static final String SOUND_ENEMY_TURTLE_SHELL_HIT = "data/sounds/enemy/turtle/shell/hit.ogg";
+    public static final String SOUND_ENEMY_DIE_THROMP = "data/sounds/enemy/thromp/die.ogg";
+    public static final String SOUND_ITEM_FIREBALL = "data/sounds/item/fireball.ogg";
+    public static final String SOUND_ITEM_FIREBALL_EXPLOSION = "data/sounds/item/fireball_explosion.ogg";
+    public static final String SOUND_ITEM_ICEBALL_HIT = "data/sounds/item/iceball.ogg";
+    public static final String SOUND_ITEM_FIREBALL_REPELLED = "data/sounds/item/fireball_repelled.ogg";
+    public static final String SOUND_ITEM_FIREPLANT = "data/sounds/item/fireplant.ogg";
+    public static final String SOUND_ITEM_GOLDPIECE1 = "data/sounds/item/goldpiece_1.ogg";
+    public static final String SOUND_ITEM_GOLDPIECE_RED = "data/sounds/item/goldpiece_red.ogg";
+    public static final String SOUND_ITEM_ICE_KILL = "data/sounds/item/ice_kill.ogg";
+    public static final String SOUND_ITEM_MOON = "data/sounds/item/moon.ogg";
+    public static final String SOUND_ITEM_MUSHROOM = "data/sounds/item/mushroom.ogg";
+    public static final String SOUND_ITEM_MUSHROOM_BLUE = "data/sounds/item/mushroom_blue.ogg";
+    public static final String SOUND_ITEM_STAR_KILL = "data/sounds/item/star_kill.ogg";
 
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;

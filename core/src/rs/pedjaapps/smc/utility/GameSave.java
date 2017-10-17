@@ -104,9 +104,9 @@ public class GameSave
 			save.coins -= 100;
 			save.lifes++;
 			AssetManager manager = screen.game.assets.manager;
-			if(manager.isLoaded(Assets.DATA_SOUNDS_ITEM_LIVE_UP_2))
+			if(manager.isLoaded(Assets.SOUND_ITEM_LIVE_UP_2))
 			{
-				SoundManager.play(manager.get(Assets.DATA_SOUNDS_ITEM_LIVE_UP_2, Sound.class));
+				SoundManager.play(manager.get(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class));
 			}
 		}
 	}
@@ -119,11 +119,6 @@ public class GameSave
 	public static void setItem(AssetManager manager, int itemType)
 	{
 		save.item = itemType;
-		if(save.item != 0)
-		{
-			Sound sound = manager.get("data/sounds/itembox_set.mp3");
-			SoundManager.play(sound);
-		}
 	}
 
 	public static int getItem()

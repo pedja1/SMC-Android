@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -155,12 +156,12 @@ public class Coin extends Item
         if (textureAtlas.contains("yellow"))
         {
             GameSave.addCoins(world.screen, 1);
-            sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_1.mp3");
+            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE1);
         }
         else
         {
             GameSave.addCoins(world.screen, 5);
-            sound = world.screen.game.assets.manager.get("data/sounds/item/goldpiece_red.mp3");
+            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE_RED);
         }
         SoundManager.play(sound);
         GameSave.save.points += points;

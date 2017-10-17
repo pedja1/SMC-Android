@@ -565,33 +565,28 @@ public class GameScreen extends AbstractScreen {
         hud.loadAssets();
 
         //audio
-        game.assets.manager.load("data/sounds/audio_on.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/goldpiece_1.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/goldpiece_red.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/dead.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_big.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_big_power.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_small.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/jump_small_power.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/pickup_item.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/powerdown.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/player/run_stop.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/wall_hit.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/fireball.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/iceball.mp3", Sound.class);
-        game.assets.manager.load(Assets.DATA_SOUNDS_ITEM_LIVE_UP, Sound.class);
+        game.assets.manager.load(Assets.SOUND_AUDIO_ON, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_GOLDPIECE1, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_GOLDPIECE_RED, Sound.class);
+        game.assets.manager.load(Assets.SOUND_PLAYER_DEAD, Sound.class);
+        game.assets.manager.load(Assets.SOUND_JUMP_BIG, Sound.class);
+        game.assets.manager.load(Assets.SOUND_JUMP_BIG_POWER, Sound.class);
+        game.assets.manager.load(Assets.SOUND_JUMP_SMALL, Sound.class);
+        game.assets.manager.load(Assets.SOUND_JUMP_SMALL_POWER, Sound.class);
+        game.assets.manager.load(Assets.SOUND_PLAYER_POWERDOWN, Sound.class);
+        game.assets.manager.load(Assets.SOUND_WALL_HIT, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP, Sound.class);
 
-        game.assets.manager.load("data/sounds/sprout_1.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/star_kill.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/itembox_set.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/leave_pipe.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/enter_pipe.mp3", Sound.class);
+        game.assets.manager.load(Assets.SOUND_SPROUT, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_STAR_KILL, Sound.class);
+        game.assets.manager.load(Assets.SOUND_LEAVE_PIPE, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ENTER_PIPE, Sound.class);
 
-        game.assets.manager.load("data/sounds/enemy/furball/die.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/fireball_repelled.mp3", Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_REPELLED, Sound.class);
 
-        game.assets.manager.load("data/sounds/item/iceball_explosion.mp3", Sound.class);
-        game.assets.manager.load("data/sounds/item/fireball_explosion.mp3", Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_ICEBALL_HIT, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_EXPLOSION, Sound.class);
 
         game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
 

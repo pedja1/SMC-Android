@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -71,8 +72,8 @@ public class Furball extends Enemy
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
         state = STATE_WALKING;
-        world.screen.game.assets.manager.load("data/sounds/enemy/boss/furball/hit_failed.mp3", Sound.class);
-        world.screen.game.assets.manager.load("data/sounds/enemy/boss/furball/hit.mp3", Sound.class);
+        world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT_FAILED, Sound.class);
+        world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT, Sound.class);
     }
 
     @Override
@@ -321,13 +322,13 @@ public class Furball extends Enemy
         {
             if (state == STATE_STAYING || state == STATE_RUNNING)
             {
-                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/boss/furball/hit_failed.mp3");
+                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_BOSS_FURBALL_HIT_FAILED);
                 SoundManager.play(sound);
                 return HIT_RESOLUTION_CUSTOM;
             }
             if (downgradeCount < maxDowngradeCount)
             {
-                Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/boss/furball/hit.mp3");
+                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_BOSS_FURBALL_HIT);
                 SoundManager.play(sound);
                 downgradeCount++;
                 state = STATE_STAYING;
@@ -337,7 +338,7 @@ public class Furball extends Enemy
             stateTime = 0;
             handleCollision = false;
             dying = true;
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/furball/die.mp3");
+            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENEMY_DIE_FURBALL);
             SoundManager.play(sound);
             if(type == Type.boss)
             {

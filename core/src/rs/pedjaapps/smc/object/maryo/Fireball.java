@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.GameObject;
@@ -152,7 +153,7 @@ public class Fireball extends DynamicObject
                 ((Enemy) object).downgradeOrDie(this, false, false);
             else
             {
-                Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_repelled.mp3");
+                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL_REPELLED);
                 SoundManager.play(sound);
                 //repelled sound
             }
@@ -206,7 +207,7 @@ public class Fireball extends DynamicObject
         explosion.getEmitters().get(0).getAngle().setHighMin(velocity.x > 0 ? 270 : -90);
         explosion.getEmitters().get(0).getAngle().setHighMax(velocity.x > 0 ? 90 : 90);
         if (playSound) {
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/item/fireball_explosion.mp3");
+            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL_EXPLOSION);
             // je weiter entfernt, desto leiser. 9 etwa ein Bildschirm, also nach 18 nur noch 1/3
             float distance = Math.abs(position.x - world.maryo.position.x);
             float volume = .3f + .7f * Math.max(0, (18 - distance) / 18);

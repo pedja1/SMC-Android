@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -240,6 +241,6 @@ public class Rokko extends Enemy
     @Override
     protected String getDeadSound()
     {
-        return "data/sounds/enemy/rokko/hit.mp3";
+        return Assets.SOUND_ENEMY_ROKKO_HIT;
     }
 }

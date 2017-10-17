@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -229,6 +230,6 @@ public class Krush extends Enemy
     @Override
     protected String getDeadSound()
     {
-        return "data/sounds/enemy/krush/die.mp3";
+        return Assets.SOUND_ENEMY_DIE_KRUSH;
     }
 }

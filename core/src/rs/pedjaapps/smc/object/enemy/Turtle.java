@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
@@ -53,7 +54,7 @@ public class Turtle extends Enemy
             mVelocityShell = 7.1f;
         }
         setupBoundingBox();
-        world.screen.game.assets.manager.load("data/sounds/enemy/turtle/shell/hit.mp3", Sound.class);
+        world.screen.game.assets.manager.load(Assets.SOUND_ENEMY_TURTLE_SHELL_HIT, Sound.class);
     }
 
     @Override
@@ -307,7 +308,7 @@ public class Turtle extends Enemy
                 mColRect.x = position.x = maryo.mColRect.x - maryo.mColRect.width - 0.1f;
             }
             updateBounds();
-            String soundFile = "data/sounds/enemy/turtle/shell/hit.mp3";
+            String soundFile = Assets.SOUND_ENEMY_TURTLE_SHELL_HIT;
             AssetManager assetManager = world.screen.game.assets.manager;
             if (assetManager.isLoaded(soundFile))
                 SoundManager.play(assetManager.get(soundFile, Sound.class));
@@ -363,6 +364,6 @@ public class Turtle extends Enemy
     @Override
     protected String getDeadSound()
     {
-        return "data/sounds/stomp_4.mp3";
+        return Assets.SOUND_STOMP4;
     }
 }

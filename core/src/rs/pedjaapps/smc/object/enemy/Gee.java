@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -78,7 +79,7 @@ public class Gee extends Enemy
             world.screen.game.assets.manager.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
         }
         world.screen.game.assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
-        world.screen.game.assets.manager.load("data/sounds/enemy/gee/die.mp3", Sound.class);
+        world.screen.game.assets.manager.load(Assets.SOUND_ENEMY_DIE_GEE, Sound.class);
         ppEnabled = false;
     }
 
@@ -354,7 +355,7 @@ public class Gee extends Enemy
             deadEffect.start();
             stateTime = 0;
             handleCollision = false;
-            Sound sound = world.screen.game.assets.manager.get("data/sounds/enemy/gee/die.mp3");
+            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENEMY_DIE_GEE);
             SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
         }
@@ -367,6 +368,6 @@ public class Gee extends Enemy
     @Override
     protected String getDeadSound()
     {
-        return "data/sounds/enemy/gee/die.mp3";
+        return Assets.SOUND_ENEMY_DIE_GEE;
     }
 }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -65,7 +66,7 @@ public class Eato extends Enemy
     @Override
     protected String getDeadSound()
     {
-        return "data/sounds/enemy/eato/die.mp3";
+        return Assets.SOUND_ENEMY_DIE_EATO;
     }
 
     @Override
