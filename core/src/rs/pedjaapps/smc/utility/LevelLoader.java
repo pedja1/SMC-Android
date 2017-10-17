@@ -151,7 +151,7 @@ public class LevelLoader
         float width = jInfo.getFloat("level_width");
         float height = jInfo.getFloat("level_height");
         level.width = width;
-        level.height = height;
+        level.height = Math.max(height, Constants.CAMERA_HEIGHT);
         if (jInfo.has("level_music"))
         {
             JsonValue jMusic = jInfo.get("level_music");
