@@ -58,7 +58,7 @@ public class Maryo extends DynamicObject
 
     private float downPressTime;
 
-    private static Set<Keys> keys = new HashSet<>(Keys.values().length);
+    private Set<Keys> keys = new HashSet<>(Keys.values().length);
 
     public enum MaryoState
     {
