@@ -336,7 +336,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void won() {
-        music = game.assets.manager.get("data/music/game/courseclear.mp3");
+        music = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
         //TODO einfache Verzögerung!?
         music.setOnCompletionListener(new Music.OnCompletionListener() {
             @Override
@@ -588,7 +588,7 @@ public class GameScreen extends AbstractScreen {
         game.assets.manager.load(Assets.SOUND_ITEM_ICEBALL_HIT, Sound.class);
         game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_EXPLOSION, Sound.class);
 
-        game.assets.manager.load("data/music/game/courseclear.mp3", Music.class);
+        game.assets.manager.load(Assets.MUSIC_COURSECLEAR, Music.class);
 
     }
 

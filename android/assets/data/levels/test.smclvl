@@ -50,7 +50,7 @@
          		"massive_type": "halfmassive"
          	},],
 	"info": {
-		"level_music": ["data/music/land/land_5.mp3"],
+		"level_music": ["data/music/land/land_5.ogg"],
 		"level_height": 25,
 		"level_width": 15.8125
 	}

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
@@ -250,12 +251,12 @@ public class Star extends Item
         if (isInBox) return;
         playerHit = true;
         AssetManager manager = world.screen.game.assets.manager;
-        if(!manager.isLoaded("data/music/game/star.mp3"))
+        if(!manager.isLoaded(Assets.MUSIC_INVINCIBLE))
         {
-            manager.load("data/music/game/star.mp3", Music.class);
+            manager.load(Assets.MUSIC_INVINCIBLE, Music.class);
             manager.finishLoading();
         }
-        MusicManager.play(manager.get("data/music/game/star.mp3", Music.class), false);
+        MusicManager.play(manager.get(Assets.MUSIC_INVINCIBLE, Music.class), false);
         GameSave.save.points += 1000;
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();

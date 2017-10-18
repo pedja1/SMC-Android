@@ -72,6 +72,9 @@ public class Assets {
     public static final String SOUND_ITEM_MUSHROOM_BLUE = "data/sounds/item/mushroom_blue.ogg";
     public static final String SOUND_ITEM_STAR_KILL = "data/sounds/item/star_kill.ogg";
 
+    public static final String MUSIC_COURSECLEAR = "data/music/game/courseclear.ogg";
+    public static final String MUSIC_INVINCIBLE = "data/music/game/star.ogg";
+
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
     public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
@@ -89,8 +92,8 @@ public class Assets {
 
         // set the loaders for the generator and the fonts themselves
         manager.setLoader(ParticleEffect.class, ".p", new ParticleEffectLoader(new InternalFileHandleResolver()));
-        manager.setLoader(Sound.class, ".mp3", new SoundLoader(new InternalFileHandleResolver()));
-        manager.setLoader(Music.class, ".mp3", new MusicLoader(new InternalFileHandleResolver()));
+        manager.setLoader(Sound.class, ".ogg", new SoundLoader(new InternalFileHandleResolver()));
+        manager.setLoader(Music.class, ".ogg", new MusicLoader(new InternalFileHandleResolver()));
     }
 
     public void dispose() {
