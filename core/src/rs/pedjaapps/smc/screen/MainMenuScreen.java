@@ -190,14 +190,12 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
+        game.assets.manager.load(Assets.ATLAS_STATIC, TextureAtlas.class);
         game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load(Assets.SOUND_AUDIO_ON, Sound.class);
         cloudsPEffect = new ParticleEffect();
-        cloudsPEffect.load(Gdx.files.internal("data/animation/particles/clouds_emitter.p"), Gdx.files.internal
-                ("data/clouds/default_1/"));
-        cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
-        cloudsPEffect.start();
+        cloudsPEffect.loadEmitters(Gdx.files.internal("data/animation/particles/clouds_emitter.p"));
     }
 
     @Override
@@ -206,6 +204,11 @@ public class MainMenuScreen extends AbstractScreen {
                 Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH * 2, Constants
                 .MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);
         background.onAssetsLoaded(drawCam, game.assets);
+
+        cloudsPEffect.loadEmitterImages(game.assets.manager.get(Assets.ATLAS_STATIC, TextureAtlas.class), "clouds_default_1_");
+        cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
+        cloudsPEffect.start();
+
 
         backgroundColor = new Background(Background.BG_GR_VER);
         backgroundColor.setColors(new Color(.117f, 0.705f, .05f, 0f), new Color(0f, 0.392f, 0.039f, 0f));//color is

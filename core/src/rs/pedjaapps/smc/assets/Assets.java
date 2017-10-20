@@ -75,6 +75,8 @@ public class Assets {
     public static final String MUSIC_COURSECLEAR = "data/music/game/courseclear.ogg";
     public static final String MUSIC_INVINCIBLE = "data/music/game/star.ogg";
 
+    public static final String ATLAS_STATIC = "data/static.pack";
+
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;
     public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;

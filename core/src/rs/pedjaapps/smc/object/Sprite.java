@@ -98,7 +98,7 @@ public class Sprite extends GameObject
 
         if (txt == null && region == null)
         {
-            throw new GdxRuntimeException("both Texture and TextureRegion are null");
+            throw new GdxRuntimeException("both Texture and TextureRegion are null: " + textureName);
         }
 
         if (!rotationAplied)

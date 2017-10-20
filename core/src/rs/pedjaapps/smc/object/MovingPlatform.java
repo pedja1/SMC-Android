@@ -113,7 +113,8 @@ public class MovingPlatform extends Sprite
 
         spriteBatch.draw(rRight, mDrawRect.x + singlePeaceWidth * (middle_img_count + 1), mDrawRect.y, originX, originY, singlePeaceWidth, mDrawRect.height, 1, 1, fallingRotation);
 
-        spriteBatch.setShader(null);
+        if(platformState == MOVING_PLATFORM_SHAKE)
+            spriteBatch.setShader(null);
     }
 
     @Override
