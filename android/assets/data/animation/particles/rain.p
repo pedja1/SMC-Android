@@ -118,4 +118,4 @@ additive: false
 behind: false
 premultipliedAlpha: false
 - Image Path -
-/home/pedja/workspace/SMC-Android/data/data_1080/animation/particles/rain.png
+rain.png
