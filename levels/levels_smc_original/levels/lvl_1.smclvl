@@ -2979,7 +2979,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="            ---    Enemies   ---&lt;br/&gt;&lt;br/&gt;Most enemies can be hit through jumping on their head like the hairy Furball on the ground but not the plant which jumps out of the pipe.&lt;br/&gt;" />
+        <property name="text" value="Power Jump&lt;br/&gt;&lt;br/&gt;To perform a power jump, duck down until stars are sparkling out of your shoes. This way, you can reach higher platforms.&lt;br/&gt;" />
     </box>
     <box >
         <property name="posx" value="3876" />
@@ -3088,6 +3088,6 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="What happened ?&lt;br/&gt;&lt;br/&gt;Monsters are everywhere but luckily they seem to have missed me.&lt;br/&gt;&lt;br/&gt;I should find out what happened...&lt;br/&gt;" />
+        <property name="text" value="Welcome to Secret Chronicles Classic Platformer!&lt;br/&gt;&lt;br/&gt;Do you know an Italian Plumber? Perfect, than you know the basic rules of this game. Make your way through the levels, most enemies can be killed by jumping on top of them. Good luck!&lt;br/&gt;" />
     </box>
 </level>
