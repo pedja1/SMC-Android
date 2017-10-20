@@ -70,7 +70,7 @@ public class Box extends Sprite
     private boolean spinning;
     private float spinningTime;
     private Animation<TextureRegion> animation;
-    private Texture texture;
+    private TextureRegion texture;
 
     private ParticleEffect itemEffect;
 
@@ -85,56 +85,54 @@ public class Box extends Sprite
     @Override
     public void initAssets()
     {
-        txDisabled = new TextureRegion(world.screen.game.assets.manager.get("data/game/box/brown1_1.png", Texture.class));
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_STATIC, TextureAtlas.class);
+        txDisabled = atlas.findRegion("game_box_brown1_1");
         if (textureName == null)
-        {
-            textureName = "data/game/box/yellow/default.png";
-        }
-        texture = world.screen.game.assets.manager.get(textureName);
+            textureName = "game_box_yellow_default";
+
+        texture = atlas.findRegion(textureName);
+
         if (animationName == null || "default".equalsIgnoreCase(animationName))
         {
             if(!"spin".equals(boxType))return;
         }
-        if("spin".equals(boxType))
-        {
-            textureAtlas = "data/game/box/yellow/spin.pack";
-        }
-        if (textureAtlas == null) return;
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+
         Array<TextureRegion> frames = new Array<TextureRegion>();
         float animSpeed = 0;
         if ("bonus".equalsIgnoreCase(animationName))
         {
-            frames.add(atlas.findRegion("1"));
-            frames.add(atlas.findRegion("2"));
-            frames.add(atlas.findRegion("3"));
-            frames.add(atlas.findRegion("4"));
-            frames.add(atlas.findRegion("5"));
-            frames.add(atlas.findRegion("6"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_1"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_2"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_3"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_4"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_5"));
+            frames.add(atlas.findRegion("game_box_yellow_bonus_6"));
             animSpeed = 0.09f;
         }
         if ("power".equalsIgnoreCase(animationName))
         {
-            frames.add(atlas.findRegion("power", 1));
-            frames.add(atlas.findRegion("power", 2));
-            frames.add(atlas.findRegion("power", 3));
-            frames.add(atlas.findRegion("power", 4));
+            frames.add(atlas.findRegion("game_box_yellow_power_1"));
+            frames.add(atlas.findRegion("game_box_yellow_power_2"));
+            frames.add(atlas.findRegion("game_box_yellow_power_3"));
+            frames.add(atlas.findRegion("game_box_yellow_power_4"));
             animSpeed = 0.1f;
         }
         if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
         {
-            frames.add(new TextureRegion(world.screen.game.assets.manager.get("data/game/box/yellow/default.png", Texture.class)));
-            frames.add(atlas.findRegion("1"));
-            frames.add(atlas.findRegion("2"));
-            frames.add(atlas.findRegion("3"));
-            frames.add(atlas.findRegion("4"));
-            frames.add(atlas.findRegion("5"));
-            txDisabled = atlas.findRegion("6");
+            animationName = "spin";
+            frames.add(atlas.findRegion("game_box_yellow_default"));
+            frames.add(atlas.findRegion("game_box_yellow_spin_1"));
+            frames.add(atlas.findRegion("game_box_yellow_spin_2"));
+            frames.add(atlas.findRegion("game_box_yellow_spin_3"));
+            frames.add(atlas.findRegion("game_box_yellow_spin_4"));
+            frames.add(atlas.findRegion("game_box_yellow_spin_5"));
+            txDisabled = atlas.findRegion("game_box_yellow_spin_6");
             animSpeed = 0.08f;
         }
-        if(frames.size == 0)
+        if(frames.size == 0 && animationName != null)
             throw new GdxRuntimeException("No frames in animation. boxType=" + boxType + " animationName=" + animationName);
-        animation = new Animation(animSpeed, frames);
+          if (frames.size > 0)
+            animation = new Animation(animSpeed, frames);
     }
 
     @Override
@@ -197,7 +195,7 @@ public class Box extends Sprite
                 {
                     Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
                 }
-                if (textureAtlas != null && animationName != null && !"default".equalsIgnoreCase(animationName))
+                if (animation != null && animationName != null && !"default".equalsIgnoreCase(animationName))
                 {
                     TextureRegion frame = animation.getKeyFrame(stateTime, true);
                     Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
@@ -223,21 +221,6 @@ public class Box extends Sprite
         box.item = jBox.getInt("item", 0);
 
         box.textureName = jBox.getString("texture_name", null);
-        if(!TextUtils.isEmpty(box.textureName) && !LevelLoader.TXT_NAME_IN_ATLAS.matcher(box.textureName).matches())
-        {
-            world.screen.game.assets.manager.load(box.textureName, Texture.class, world.screen.game.assets.textureParameter);
-        }
-        if (jBox.has("texture_atlas"))
-        {
-            box.textureAtlas = jBox.getString("texture_atlas");
-            world.screen.game.assets.manager.load(box.textureAtlas, TextureAtlas.class);
-        }
-        if("spin".equals(box.boxType))
-        {
-            world.screen.game.assets.manager.load("data/game/box/yellow/spin.pack", TextureAtlas.class);
-        }
-        world.screen.game.assets.manager.load("data/game/box/yellow/default.png", Texture.class, world.screen.game.assets.textureParameter);
-        world.screen.game.assets.manager.load("data/game/box/brown1_1.png", Texture.class, world.screen.game.assets.textureParameter);
         addBoxItem(box, true, assets);
         //addBoxItem(box, loader.getLevel());
         return box;

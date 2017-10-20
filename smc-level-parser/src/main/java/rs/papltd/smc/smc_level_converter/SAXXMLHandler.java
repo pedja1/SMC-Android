@@ -398,37 +398,33 @@ public class SAXXMLHandler extends DefaultHandler
         box.posx = box.posx / 64;
         box.posy = convertY(box.posy, 43f);
         String settingsFileName;
+        if (box.texture_name != null)
+            System.out.println("Box has own texture!");
+
         if (box.animation != null)
         {
             switch (box.animation)
             {
                 case "Bonus":
                     settingsFileName = "game/box/yellow/bonus/1.settings";
-                    box.texture_atlas = "data/game/box/yellow/bonus.pack";
                     break;
                 case "Default":
                     settingsFileName = "game/box/yellow/default.settings";
-                    box.texture_name = "data/game/box/yellow/default.png";
                     break;
                 case "Power":
                     settingsFileName = "game/box/yellow/power_1.settings";
-                    box.texture_atlas = "data/game/box/yellow/power.pack";
                     break;
                 case "Spin":
                     settingsFileName = "game/box/yellow/spin/1.settings";
-                    box.texture_atlas = "data/game/box/yellow/spin.pack";
                     break;
                 default:
                     settingsFileName = "game/box/yellow/default.settings";
-                    box.texture_name = "data/game/box/yellow/default.png";
                     break;
             }
         }
         else
-        {
             settingsFileName = "game/box/yellow/default.settings";
-            box.texture_name = "data/game/box/yellow/default.png";
-        }
+
         File settings = new File(Const.dataRoot, settingsFileName);
         String settingsData = readFileContents(settings);
         box.colRect = getCollisionRectangle(settingsData);
