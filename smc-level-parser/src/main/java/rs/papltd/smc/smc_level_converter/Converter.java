@@ -34,11 +34,12 @@ import rs.papltd.smc.smc_level_converter.objects.Sprite;
  */
 public class Converter
 {
+
     public static void main(String[] args) throws JSONException
     {
         try
         {
-            File levelsFolder = new File("/home/pedja/workspace/SMC-Android/levels/levels_smc_original/levels");
+            File levelsFolder = new File(Const.PROJECT_PATH + "/levels/levels_smc_original/levels");
             //File levelsFolder = new File("/sdcard/.AppProjects/SMC-Android/levels/levels_smc_original/levels");
             File[] files = levelsFolder.listFiles();
             for (File file : files)
@@ -57,7 +58,7 @@ public class Converter
 
                 String levelJson = convertToJson(level);
                 //System.out.println(levelJson);
-                PrintWriter writer = new PrintWriter("/home/pedja/workspace/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
+                PrintWriter writer = new PrintWriter(Const.PROJECT_PATH + "/android/assets/data/levels/" + file.getName(), "UTF-8");
                 //PrintWriter writer = new PrintWriter("/sdcard/.AppProjects/SMC-Android/android/assets/data/levels/" + file.getName(), "UTF-8");
                 writer.print(levelJson);
                 writer.flush();

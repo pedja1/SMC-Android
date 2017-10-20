@@ -7,4 +7,5 @@ public class Const
 	public static final String PROJECT_PATH = "C:/Users/Benni/Documents/Eigene Dokumente/game/smc";
 
 	public static final String UNPACKED_PATH = "C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/unpacked";
+
 }

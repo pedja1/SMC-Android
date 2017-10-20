@@ -773,6 +773,7 @@ public class SAXXMLHandler extends DefaultHandler
         float origWidth = 1;
         for (String s : lines)
         {
+            s =  s.replaceAll("\r","");
             String[] data = s.split(" ");
             if ("width".equals(data[0]))
             {
