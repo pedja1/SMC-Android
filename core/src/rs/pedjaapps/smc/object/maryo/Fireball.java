@@ -177,7 +177,7 @@ public class Fireball extends DynamicObject
             TextureAtlas atlas = world.screen.game.assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
             Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
 
-            animation = new Animation(0.05f, regions);
+            animation = new Animation<TextureRegion>(0.05f, regions);
         }
         trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class));
         explosion = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class));
