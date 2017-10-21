@@ -174,8 +174,11 @@ public class Fireball extends DynamicObject
     {
         if (animation == null)
         {
-            TextureAtlas atlas = world.screen.game.assets.manager.get("data/animation/fireball.pack", TextureAtlas.class);
-            Array<TextureAtlas.AtlasRegion> regions = atlas.getRegions();
+            TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
+            Array<TextureAtlas.AtlasRegion> regions = new Array<>(3);
+            regions.add(atlas.findRegion("animation_fireball_1"));
+            regions.add(atlas.findRegion("animation_fireball_2"));
+            regions.add(atlas.findRegion("animation_fireball_3"));
 
             animation = new Animation<TextureRegion>(0.05f, regions);
         }

@@ -244,40 +244,41 @@ public class Maryo extends DynamicObject
 
     private void loadTextures(MaryoState state)
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get("data/maryo/" + state + ".pack");
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        String prefix = "maryo_" + state + "_";
 
         TextureRegion tmpStandRight;
-        tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(TKey.stand_right.toString());
+        tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(prefix + TKey.stand_right.toString());
 
         TextureRegion[] walkFrames = new TextureRegion[4];
         walkFrames[0] = tmpStandRight;
-        walkFrames[1] = atlas.findRegion("walk_right", 1);
-        walkFrames[2] = atlas.findRegion("walk_right", 2);
+        walkFrames[1] = atlas.findRegion(prefix + "walk_right_1");
+        walkFrames[2] = atlas.findRegion(prefix + "walk_right_2");
         walkFrames[3] = walkFrames[1];
         aMap[aIndex(state, AKey.walk)] = new Animation<>(RUNNING_FRAME_DURATION, walkFrames);
 
         TextureRegion[] climbFrames = new TextureRegion[2];
-        climbFrames[0] = atlas.findRegion(TKey.climb_left + "");
-        climbFrames[1] = atlas.findRegion(TKey.climb_right + "");
+        climbFrames[0] = atlas.findRegion(prefix + TKey.climb_left + "");
+        climbFrames[1] = atlas.findRegion(prefix + TKey.climb_right + "");
         aMap[aIndex(state, AKey.climb)] = new Animation<>(CLIMB_FRAME_DURATION, climbFrames);
 
         if (state == MaryoState.ice || state == MaryoState.fire)
         {
             TextureRegion[] throwFrames = new TextureRegion[2];
-            throwFrames[0] = atlas.findRegion("throw_right", 1);
-            throwFrames[1] = atlas.findRegion("throw_right", 2);
+            throwFrames[0] = atlas.findRegion(prefix + "throw_right_1");
+            throwFrames[1] = atlas.findRegion(prefix + "throw_right_2");
             aMap[aIndex(state, AKey._throw)] = new Animation<>(THROW_FRAME_DURATION, throwFrames);
         }
 
-        tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(TKey.jump_right.toString());
-        tMap[tIndex(state, TKey.fall_right)] = atlas.findRegion(TKey.fall_right.toString());
+        tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(prefix + TKey.jump_right.toString());
+        tMap[tIndex(state, TKey.fall_right)] = atlas.findRegion(prefix + TKey.fall_right.toString());
 
         if (MaryoState.small == state)
         {
-            tMap[tIndex(state, TKey.dead_right)] = atlas.findRegion(TKey.dead_right.toString());
+            tMap[tIndex(state, TKey.dead_right)] = atlas.findRegion(prefix + TKey.dead_right.toString());
         }
 
-        tMap[tIndex(state, TKey.duck_right)] = atlas.findRegion(TKey.duck_right.toString());
+        tMap[tIndex(state, TKey.duck_right)] = atlas.findRegion(prefix + TKey.duck_right.toString());
     }
 
     @Override

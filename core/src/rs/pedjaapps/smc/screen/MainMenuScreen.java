@@ -191,7 +191,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void loadAssets() {
         loader.parseLevel(world);
         game.assets.manager.load(Assets.ATLAS_STATIC, TextureAtlas.class);
-        game.assets.manager.load("data/maryo/small.pack", TextureAtlas.class);
+        game.assets.manager.load(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
         game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
         game.assets.manager.load(Assets.SOUND_AUDIO_ON, Sound.class);
         cloudsPEffect = new ParticleEffect();
@@ -216,8 +216,8 @@ public class MainMenuScreen extends AbstractScreen {
 
         world.level = loader.level;
 
-        TextureAtlas atlas = game.assets.manager.get("data/maryo/small.pack");
-        marioFrame = atlas.findRegion(GameObject.TKey.stand_right.toString());
+        TextureAtlas atlas = game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        marioFrame = atlas.findRegion("maryo_small_" + GameObject.TKey.stand_right.toString());
 
         audioOn = game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class);
 

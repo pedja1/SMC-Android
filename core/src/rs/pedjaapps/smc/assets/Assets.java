@@ -76,6 +76,7 @@ public class Assets {
     public static final String MUSIC_INVINCIBLE = "data/music/game/star.ogg";
 
     public static final String ATLAS_STATIC = "data/static.pack";
+    public static final String ATLAS_DYNAMIC = "data/dynamic.pack";
 
     public AssetManager manager;
     public TextureLoader.TextureParameter textureParameter;

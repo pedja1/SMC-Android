@@ -1,9 +1,10 @@
 package rs.pedjaapps.smc.object.maryo;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -31,7 +32,7 @@ public class Iceball extends DynamicObject
     public float velY = -1;
     private ParticleEffect trail, explosion;
     private boolean destroyed;
-    private Texture texture;
+    private TextureRegion texture;
 
     public Iceball(World world, Vector3 position)
     {
@@ -167,7 +168,7 @@ public class Iceball extends DynamicObject
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get("data/animation/iceball.png");
+        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class).findRegion("animation_iceball");
         trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/iceball_emitter.p", ParticleEffect.class));
         explosion = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class));
     }

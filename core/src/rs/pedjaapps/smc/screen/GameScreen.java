@@ -545,10 +545,6 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
-        for (Maryo.MaryoState ms : Maryo.MaryoState.values()) {
-            game.assets.manager.load("data/maryo/" + ms.toString() + ".pack", TextureAtlas.class);
-        }
-        game.assets.manager.load("data/animation/fireball.pack", TextureAtlas.class);
         game.assets.manager.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, game.assets
                 .particleEffectParameter);
         game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game
@@ -561,7 +557,6 @@ public class GameScreen extends AbstractScreen {
                 .particleEffectParameter);
         game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets
                 .particleEffectParameter);
-        game.assets.manager.load("data/animation/iceball.png", Texture.class, game.assets.textureParameter);
         hud.loadAssets();
 
         //audio
