@@ -319,7 +319,6 @@
             "width": 0.59375,
             "posx": 11.265625,
             "type": "goldpiece",
-            "texture_atlas": "data/game/items/goldpiece/red.pack",
             "obj_class": "item"
         },
         {

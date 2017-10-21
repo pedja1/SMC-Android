@@ -253,14 +253,8 @@ public class Box extends Sprite
         }
         else if(box.item == Item.TYPE_GOLDPIECE)
         {
-            if(loadAssets)
-            {
-                assets.manager.load(Coin.DEF_ATL, TextureAtlas.class);
-            }
-            else
-            {
+            if(!loadAssets)
                 return createCoin(box);
-            }
         }
         else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
                 || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_POISON)
@@ -342,9 +336,8 @@ public class Box extends Sprite
 
     private static Item createCoin(Box box)
     {
-        Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position));
-        String ta = Coin.DEF_ATL;
-        coin.textureAtlas = ta;
+        Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position),
+                box.goldColor.equals("yellow") ? Coin.TYPE_YELLOW : Coin.TYPE_RED);
         coin.initAssets();
         coin.collectible = false;
         coin.visible = false;
@@ -472,16 +465,7 @@ public class Box extends Sprite
                 Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
                 item.popOutFromBox(position.y + mDrawRect.height);
                 if (item instanceof Coin)
-                {
-                    if (item.textureAtlas.contains("yellow"))
-                    {
-                        sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE1);
-                    }
-                    else
-                    {
-                        sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_GOLDPIECE_RED);
-                    }
-                }
+                    sound = ((Coin) item).getSound();
                 else if(item instanceof Mushroom)
                 {
                     createItemEffect();

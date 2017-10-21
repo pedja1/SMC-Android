@@ -34,7 +34,7 @@ public abstract class Item extends DynamicObject
     protected float popTargetPosY;
     public boolean playerHit;
     protected float stateTime;
-    enum CLASS
+    public enum CLASS
     {
         goldpiece, moon, jstar, mushroom, fireplant
     }
@@ -82,14 +82,14 @@ public abstract class Item extends DynamicObject
         }
     }
 
-    public static Item createObject(World world, Assets assets, int mushroomType, String objectClassString, Vector2 size, Vector3 position)
+    public static Item createObject(World world, Assets assets, int itemType, String objectClassString, Vector2 size, Vector3 position)
     {
         CLASS itemClass = CLASS.valueOf(objectClassString);
         Item object = null;
         switch (itemClass)
         {
             case goldpiece:
-                object = new Coin(world, size, position);
+                object = new Coin(world, size, position, itemType);
                 break;
             case moon:
                 Box.createMoon(assets);//load assets
@@ -101,8 +101,8 @@ public abstract class Item extends DynamicObject
                 ((Star)object).moving = true;
                 break;
             case mushroom:
-                Box.createMushroom(assets, mushroomType);//load assets
-                object = Box.createMushroom(world, position, mushroomType, false, assets, false);
+                Box.createMushroom(assets, itemType);//load assets
+                object = Box.createMushroom(world, position, itemType, false, assets, false);
                 ((Mushroom)object).moving = true;
                 break;
             case fireplant:

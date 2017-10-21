@@ -30,6 +30,7 @@ import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.enemy.EnemyStopper;
+import rs.pedjaapps.smc.object.items.Coin;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.view.Background;
@@ -459,7 +460,21 @@ public class LevelLoader
     {
         Vector3 position = new Vector3(jItem.getFloat("posx", 0), jItem.getFloat("posy", 0), 0);
 
-        Item item = Item.createObject(world, assets, jItem.getInt("mushroom_type", 0), jItem.getString("type"), new Vector2(jItem.getFloat("width"), jItem.getFloat("height")), position);
+        String type = jItem.getString("type");
+        int itemSubtype;
+        switch (Item.CLASS.valueOf(type)) {
+            case mushroom:
+                itemSubtype = jItem.getInt("mushroom_type", 0);
+                break;
+            case goldpiece:
+                itemSubtype = (jItem.getString("color", "").equals("red") ? Coin.TYPE_RED : Coin.TYPE_YELLOW);
+                break;
+            default:
+                itemSubtype = 0;
+        }
+
+        Item item = Item.createObject(world, assets, itemSubtype, type, new Vector2(jItem.getFloat("width"), jItem.getFloat("height")), position);
+
         if (item == null) return;
         if (jItem.has("texture_atlas"))
         {
