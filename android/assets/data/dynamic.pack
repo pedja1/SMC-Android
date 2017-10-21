@@ -6,644 +6,966 @@ filter: Linear,Linear
 repeat: none
 animation_fireball_1
   rotate: false
-  xy: 859, 67
+  xy: 1691, 651
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_fireball_2
   rotate: false
-  xy: 1301, 651
+  xy: 1431, 259
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_fireball_3
   rotate: false
-  xy: 911, 197
+  xy: 1821, 781
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_iceball
   rotate: false
-  xy: 1561, 911
+  xy: 1693, 519
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-game_items_fireplant
+enemy_furball_blue_dead
   rotate: false
-  xy: 945, 295
+  xy: 1855, 749
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_fireplant_left
+enemy_furball_blue_turn
   rotate: false
-  xy: 1431, 815
+  xy: 1465, 359
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_fireplant_right
+enemy_furball_blue_walk_1
   rotate: false
-  xy: 661, 35
+  xy: 1255, 33
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_moon_1
-  rotate: false
-  xy: 265, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_moon_2
-  rotate: false
-  xy: 1, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_mushroom_blue
-  rotate: false
-  xy: 1825, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_mushroom_green
-  rotate: false
-  xy: 1237, 555
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_mushroom_poison
-  rotate: false
-  xy: 529, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_mushroom_red
-  rotate: false
-  xy: 1497, 815
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_star
-  rotate: false
-  xy: 1561, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_1
-  rotate: false
-  xy: 595, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_10
-  rotate: false
-  xy: 945, 229
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_2
-  rotate: false
-  xy: 331, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_3
-  rotate: false
-  xy: 1367, 685
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_4
-  rotate: false
-  xy: 1891, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_5
-  rotate: false
-  xy: 1041, 425
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_6
-  rotate: false
-  xy: 397, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_7
-  rotate: false
-  xy: 1171, 555
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_8
-  rotate: false
-  xy: 1957, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_9
-  rotate: false
-  xy: 1301, 685
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_yellow_1
-  rotate: false
-  xy: 1627, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_yellow_10
-  rotate: false
-  xy: 1107, 425
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_yellow_2
+enemy_furball_blue_walk_2
   rotate: false
   xy: 793, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_3
+enemy_furball_blue_walk_3
   rotate: false
-  xy: 133, 35
+  xy: 1321, 33
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_4
+enemy_furball_blue_walk_4
   rotate: false
-  xy: 727, 35
+  xy: 925, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_5
+enemy_furball_blue_walk_5
   rotate: false
-  xy: 1693, 945
+  xy: 1387, 33
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_6
+enemy_furball_blue_walk_6
   rotate: false
-  xy: 1041, 359
+  xy: 991, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_7
+enemy_furball_blue_walk_7
   rotate: false
-  xy: 199, 35
+  xy: 1725, 619
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_8
+enemy_furball_blue_walk_8
   rotate: false
-  xy: 1107, 359
+  xy: 1825, 553
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_9
-  rotate: false
-  xy: 1759, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-maryo_big_climb_left
-  rotate: false
-  xy: 261, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_climb_right
-  rotate: false
-  xy: 391, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_duck_right
-  rotate: false
-  xy: 1, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_fall_right
-  rotate: false
-  xy: 521, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_fall_right_holding
-  rotate: false
-  xy: 1041, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_jump_right
-  rotate: false
-  xy: 911, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_jump_right_holding
-  rotate: false
-  xy: 651, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_stand_right
+enemy_furball_boss_dead
   rotate: false
   xy: 1, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-maryo_big_stand_right_holding
-  rotate: false
-  xy: 651, 101
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_up_right
-  rotate: false
-  xy: 1171, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_walk_right_1
-  rotate: false
-  xy: 131, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_walk_right_1_holding
-  rotate: false
-  xy: 1041, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_walk_right_2
-  rotate: false
-  xy: 781, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_big_walk_right_2_holding
-  rotate: false
-  xy: 781, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_climb_left
-  rotate: false
-  xy: 651, 361
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_climb_right
-  rotate: false
-  xy: 261, 361
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_duck_right
-  rotate: false
-  xy: 781, 361
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_fall_right
-  rotate: false
-  xy: 391, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_fall_right_holding
-  rotate: false
-  xy: 911, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_jump_right
-  rotate: false
-  xy: 131, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_jump_right_holding
-  rotate: false
-  xy: 521, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_stand_right
-  rotate: false
-  xy: 391, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_stand_right_holding
-  rotate: false
-  xy: 261, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_throw_right_1
-  rotate: false
-  xy: 1, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_throw_right_2
-  rotate: false
-  xy: 1041, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_up_right
-  rotate: false
-  xy: 1, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_walk_right_1
-  rotate: false
-  xy: 1, 361
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_walk_right_1_holding
-  rotate: false
-  xy: 911, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_walk_right_2
-  rotate: false
-  xy: 261, 101
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_fire_walk_right_2_holding
-  rotate: false
-  xy: 261, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_climb_left
-  rotate: false
-  xy: 1171, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_climb_right
-  rotate: false
-  xy: 131, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_duck_right
-  rotate: false
-  xy: 261, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_fall_right
-  rotate: false
-  xy: 521, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_fall_right_holding
-  rotate: false
-  xy: 1431, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_jump_right
-  rotate: false
-  xy: 651, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_jump_right_holding
-  rotate: false
-  xy: 1301, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_stand_right
-  rotate: false
-  xy: 1041, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_stand_right_holding
-  rotate: false
-  xy: 781, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_throw_right_1
-  rotate: false
-  xy: 651, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_throw_right_2
-  rotate: false
-  xy: 1301, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_up_right
-  rotate: false
-  xy: 261, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_walk_right_1
-  rotate: false
-  xy: 1171, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_walk_right_1_holding
-  rotate: false
-  xy: 131, 101
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_walk_right_2
-  rotate: false
-  xy: 521, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_ice_walk_right_2_holding
-  rotate: false
-  xy: 781, 101
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_climb_left
-  rotate: false
-  xy: 781, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_climb_right
-  rotate: false
-  xy: 131, 881
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_dead_right
-  rotate: false
-  xy: 911, 751
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_duck_right
-  rotate: false
-  xy: 781, 491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_fall_right
-  rotate: false
-  xy: 1, 621
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_fall_right_holding
-  rotate: false
-  xy: 391, 361
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_jump_right
-  rotate: false
-  xy: 521, 101
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_jump_right_holding
-  rotate: false
-  xy: 131, 231
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-maryo_small_stand_right
+enemy_furball_boss_hit
   rotate: false
   xy: 911, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-maryo_small_stand_right_holding
+enemy_furball_boss_turn
+  rotate: false
+  xy: 1041, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_1
+  rotate: false
+  xy: 521, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_2
+  rotate: false
+  xy: 651, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_3
+  rotate: false
+  xy: 911, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_4
+  rotate: false
+  xy: 651, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_5
+  rotate: false
+  xy: 391, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_6
+  rotate: false
+  xy: 1171, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_7
+  rotate: false
+  xy: 1041, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_boss_walk_8
+  rotate: false
+  xy: 781, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_dead
+  rotate: false
+  xy: 1, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_turn
+  rotate: false
+  xy: 1431, 293
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_1
+  rotate: false
+  xy: 1691, 685
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_2
+  rotate: false
+  xy: 1497, 291
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_3
+  rotate: false
+  xy: 595, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_4
+  rotate: false
+  xy: 1301, 99
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_5
+  rotate: false
+  xy: 727, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_6
+  rotate: false
+  xy: 463, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_7
+  rotate: false
+  xy: 1627, 489
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_furball_brown_walk_8
+  rotate: false
+  xy: 1759, 553
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_turtle_roll
+  rotate: false
+  xy: 261, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_shell
+  rotate: false
+  xy: 1663, 357
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_turtle_shell_look_1
+  rotate: false
+  xy: 1757, 685
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_turtle_shell_look_2
+  rotate: false
+  xy: 859, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_turtle_shell_look_3
+  rotate: false
+  xy: 1887, 815
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+enemy_turtle_turn
+  rotate: false
+  xy: 1691, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_1
+  rotate: false
+  xy: 131, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_2
+  rotate: false
+  xy: 391, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_3
+  rotate: false
+  xy: 911, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_4
+  rotate: false
+  xy: 1041, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_5
+  rotate: false
+  xy: 521, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_6
+  rotate: false
+  xy: 651, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_7
+  rotate: false
+  xy: 261, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_8
+  rotate: false
+  xy: 1431, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+enemy_turtle_walk_9
+  rotate: false
+  xy: 781, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+game_items_fireplant
+  rotate: false
+  xy: 397, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_fireplant_left
+  rotate: false
+  xy: 199, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_fireplant_right
+  rotate: false
+  xy: 1629, 291
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_moon_1
+  rotate: false
+  xy: 1367, 165
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_moon_2
+  rotate: false
+  xy: 331, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_blue
+  rotate: false
+  xy: 1597, 423
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_green
+  rotate: false
+  xy: 661, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_poison
+  rotate: false
+  xy: 1367, 99
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_red
+  rotate: false
+  xy: 1921, 749
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_star
+  rotate: false
+  xy: 265, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_1
+  rotate: false
+  xy: 1951, 945
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_10
+  rotate: false
+  xy: 1433, 193
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_2
+  rotate: false
+  xy: 1531, 357
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_3
+  rotate: false
+  xy: 1301, 165
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_4
+  rotate: false
+  xy: 1597, 357
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_5
+  rotate: false
+  xy: 1465, 425
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_6
+  rotate: false
+  xy: 1821, 815
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_7
+  rotate: false
+  xy: 67, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_8
+  rotate: false
+  xy: 1663, 423
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_9
+  rotate: false
+  xy: 133, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_1
+  rotate: false
+  xy: 1057, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_10
+  rotate: false
+  xy: 1531, 423
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_2
+  rotate: false
+  xy: 1693, 553
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_3
+  rotate: false
+  xy: 1123, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_4
+  rotate: false
+  xy: 1695, 291
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_5
+  rotate: false
+  xy: 1189, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_6
+  rotate: false
+  xy: 1791, 619
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_7
+  rotate: false
+  xy: 1561, 489
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_8
+  rotate: false
+  xy: 1561, 555
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_9
+  rotate: false
+  xy: 1627, 555
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+maryo_big_climb_left
+  rotate: false
+  xy: 1, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_climb_right
+  rotate: false
+  xy: 911, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_duck_right
+  rotate: false
+  xy: 131, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_fall_right
+  rotate: false
+  xy: 1171, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_fall_right_holding
+  rotate: false
+  xy: 1301, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_jump_right
+  rotate: false
+  xy: 781, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_jump_right_holding
+  rotate: false
+  xy: 1, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_stand_right
+  rotate: false
+  xy: 391, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_stand_right_holding
+  rotate: false
+  xy: 1301, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_up_right
+  rotate: false
+  xy: 781, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_walk_right_1
+  rotate: false
+  xy: 391, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_walk_right_1_holding
+  rotate: false
+  xy: 1041, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_walk_right_2
+  rotate: false
+  xy: 781, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_big_walk_right_2_holding
+  rotate: false
+  xy: 131, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_climb_left
+  rotate: false
+  xy: 651, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_climb_right
+  rotate: false
+  xy: 1171, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_duck_right
+  rotate: false
+  xy: 1691, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_fall_right
+  rotate: false
+  xy: 261, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_fall_right_holding
+  rotate: false
+  xy: 1171, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_jump_right
+  rotate: false
+  xy: 261, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_jump_right_holding
+  rotate: false
+  xy: 1301, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_stand_right
+  rotate: false
+  xy: 521, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_stand_right_holding
+  rotate: false
+  xy: 1431, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_throw_right_1
+  rotate: false
+  xy: 651, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_throw_right_2
+  rotate: false
+  xy: 1301, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_up_right
+  rotate: false
+  xy: 131, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_walk_right_1
+  rotate: false
+  xy: 781, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_walk_right_1_holding
+  rotate: false
+  xy: 1301, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_walk_right_2
+  rotate: false
+  xy: 1821, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_fire_walk_right_2_holding
+  rotate: false
+  xy: 391, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_climb_left
+  rotate: false
+  xy: 1431, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_climb_right
+  rotate: false
+  xy: 1, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_duck_right
+  rotate: false
+  xy: 131, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_fall_right
+  rotate: false
+  xy: 651, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_fall_right_holding
+  rotate: false
+  xy: 1171, 101
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_jump_right
+  rotate: false
+  xy: 261, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_jump_right_holding
+  rotate: false
+  xy: 261, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_stand_right
   rotate: false
   xy: 391, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-maryo_small_up_right
+maryo_ice_stand_right_holding
+  rotate: false
+  xy: 911, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_throw_right_1
+  rotate: false
+  xy: 1041, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_throw_right_2
+  rotate: false
+  xy: 261, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_up_right
+  rotate: false
+  xy: 1171, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_walk_right_1
+  rotate: false
+  xy: 1431, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_walk_right_1_holding
+  rotate: false
+  xy: 1041, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_walk_right_2
+  rotate: false
+  xy: 521, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_ice_walk_right_2_holding
+  rotate: false
+  xy: 781, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_climb_left
+  rotate: false
+  xy: 391, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_climb_right
+  rotate: false
+  xy: 131, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_dead_right
+  rotate: false
+  xy: 1041, 361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_duck_right
+  rotate: false
+  xy: 1561, 751
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_fall_right
+  rotate: false
+  xy: 1, 491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_fall_right_holding
+  rotate: false
+  xy: 911, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_jump_right
+  rotate: false
+  xy: 1301, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_jump_right_holding
+  rotate: false
+  xy: 911, 881
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_stand_right
+  rotate: false
+  xy: 1561, 621
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+maryo_small_stand_right_holding
   rotate: false
   xy: 521, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+maryo_small_up_right
+  rotate: false
+  xy: 1, 231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 maryo_small_walk_right_1
   rotate: false
-  xy: 131, 361
+  xy: 131, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -657,14 +979,14 @@ maryo_small_walk_right_1_holding
   index: -1
 maryo_small_walk_right_2
   rotate: false
-  xy: 391, 101
+  xy: 1171, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_walk_right_2_holding
   rotate: false
-  xy: 521, 491
+  xy: 521, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -678,63 +1000,63 @@ particles_cloud
   index: -1
 particles_fire_1
   rotate: false
-  xy: 1171, 521
+  xy: 1951, 911
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 particles_fire_4
   rotate: false
-  xy: 1431, 781
+  xy: 67, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 particles_ice_1
   rotate: false
-  xy: 67, 35
+  xy: 529, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 particles_leaf_brown
   rotate: false
-  xy: 391, 881
+  xy: 1561, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_light
   rotate: false
-  xy: 2023, 993
+  xy: 2017, 993
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 particles_rain
   rotate: false
-  xy: 911, 231
+  xy: 1431, 361
   size: 32, 128
   orig: 32, 128
   offset: 0, 0
   index: -1
 particles_smoke_grey_big
   rotate: false
-  xy: 651, 621
+  xy: 651, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_star
   rotate: false
-  xy: 651, 491
+  xy: 521, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_star_2
   rotate: false
-  xy: 463, 35
+  xy: 1563, 291
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

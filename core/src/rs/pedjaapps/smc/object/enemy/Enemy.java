@@ -194,7 +194,7 @@ public abstract class Enemy extends DynamicObject
                 break;
             case furball:
                 position.z = Furball.POS_Z;
-                enemy = new Furball(world, size, position, jEnemy.getInt("max_downgrade_count", 0));
+                enemy = new Furball(world, size, position, jEnemy.getInt("max_downgrade_count", 0), jEnemy.getString("color", ""));
                 break;
             case turtle:
                 position.z = Turtle.POS_Z;

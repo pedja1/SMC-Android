@@ -66,7 +66,7 @@ public class Furball extends Enemy
     private float mRunningCounter, mHitCounter;
     private float rotation;
 
-    public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount)
+    public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount, String color)
     {
         super(world, size, position);
         setupBoundingBox();
@@ -74,50 +74,49 @@ public class Furball extends Enemy
         state = STATE_WALKING;
         world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT_FAILED, Sound.class);
         world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT, Sound.class);
-    }
 
-    @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
-
-        for (int i = 1; i < 9; i++)
-        {
-            TextureRegion region = atlas.findRegion("walk", i);
-            walkFrames.add(region);
-        }
-
-        walkAnimation = new Animation(0.07f, walkFrames);
-
-        tTurn = atlas.findRegion("turn");
-        tDead = atlas.findRegion("dead");
-
-        if (textureAtlas.contains("brown"))
-        {
+        if (color.equals("blue")) {
+            type = Type.blue;
+            mKillPoints = 50;
+            mFireResistant = 0;
+            mIceResistance = .9f;
+            mCanBeHitFromShell = 1;
+        } else if (color.equals("boss")) {
+            type = Type.boss;
+            mKillPoints = 2500;
+            mFireResistant = 1;
+            mIceResistance = 1f;
+            mCanBeHitFromShell = 0;
+        } else {
             type = Type.brown;
             mKillPoints = 10;
             mFireResistant = 0;
             mIceResistance = .0f;
             mCanBeHitFromShell = 1;
         }
-        else if (textureAtlas.contains("blue"))
+    }
+
+    @Override
+    public void initAssets()
+    {
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        String textureNamePrefix = "enemy_furball_" + type.toString() + "_";
+
+        Array<TextureRegion> walkFrames = new Array<TextureRegion>();
+
+        for (int i = 1; i < 9; i++)
         {
-            type = Type.blue;
-            mKillPoints = 50;
-            mFireResistant = 0;
-            mIceResistance = .9f;
-            mCanBeHitFromShell = 1;
+            TextureRegion region = atlas.findRegion(textureNamePrefix + "walk_" + String.valueOf(i));
+            walkFrames.add(region);
         }
-        else if (textureAtlas.contains("boss"))
-        {
-            type = Type.boss;
-            mKillPoints = 2500;
-            mFireResistant = 1;
-            mIceResistance = 1f;
-            mCanBeHitFromShell = 0;
-            tHit = atlas.findRegion("hit");
-        }
+
+        walkAnimation = new Animation(0.07f, walkFrames);
+
+        tTurn = atlas.findRegion(textureNamePrefix + "turn");
+        tDead = atlas.findRegion(textureNamePrefix + "dead");
+
+        if (type.equals(Type.boss))
+            tHit = atlas.findRegion(textureNamePrefix + "hit");
     }
 
     @Override

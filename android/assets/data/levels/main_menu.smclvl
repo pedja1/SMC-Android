@@ -213,7 +213,7 @@
         },
         {
             "height": 0.671875,
-            "texture_atlas": "data/enemy/furball/brown.pack",
+            "color": "brown"
             "obj_class": "enemy",
             "enemy_class": "furball",
             "posy": 1.03125,

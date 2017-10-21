@@ -60,19 +60,19 @@ public class Turtle extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
         Array<TextureRegion> walkFrames = new Array<>();
 
-        for(int i = 1; i < 9; i++)
+        for(int i = 1; i <= 9; i++)
         {
-            TextureRegion region = atlas.findRegion("walk", i);
+            TextureRegion region = atlas.findRegion("enemy_turtle_walk_" + String.valueOf(i));
             walkFrames.add(region);
         }
 
         walkAnimation = new Animation(0.07f, walkFrames);
-        tTurn = atlas.findRegion("turn");
-        tShell = atlas.findRegion("shell");
-        tDead = atlas.findRegion("walk", 1);
+        tTurn = atlas.findRegion("enemy_turtle_turn");
+        tShell = atlas.findRegion("enemy_turtle_shell");
+        tDead = atlas.findRegion("enemy_turtle_roll");
     }
 
     @Override
