@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -48,7 +49,7 @@ public class Star extends Item
     {
         super(world, size, position);
         position.z = POSITION_Z;
-        textureName = "data/game/items/star.png";
+        textureName = "game_items_star";
     }
 
     @Override
@@ -59,7 +60,8 @@ public class Star extends Item
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
+        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
+                .findRegion(textureName);
         trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
     }
 
@@ -94,8 +96,7 @@ public class Star extends Item
         float width = Utility.getWidth(texture, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
-        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
-                1, 1, mRotationZ, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mRotationZ);
 
         spriteBatch.setShader(null);
         spriteBatch.setColor(Color.WHITE);

@@ -16,10 +16,13 @@ import rs.pedjaapps.smc.utility.GameSave;
  */
 public class MushroomDefault extends Mushroom
 {
+
+    public static final String TEXTURE_NAME = "game_items_mushroom_red";
+
     public MushroomDefault(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureName = Assets.DATA_MUSHROOM_RED;
+        textureName = TEXTURE_NAME;
         mPickPoints = 500;
     }
 

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -28,7 +29,6 @@ public class Fireplant extends Item
     public Fireplant(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureAtlas = "data/game/items/fireplant.pack";
         position.z = 0.051f;
     }
 
@@ -40,8 +40,10 @@ public class Fireplant extends Item
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        animation = new Animation(2f, atlas.getRegions());
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        animation = new Animation(1f, atlas.findRegion("game_items_fireplant_left"),
+                atlas.findRegion("game_items_fireplant"),
+                atlas.findRegion("game_items_fireplant_right"));
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
 

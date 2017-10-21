@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -32,6 +34,7 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -59,8 +62,8 @@ public class HUD {
     private TextButton pauseButton, play, musicButton;
     private Button fire, jump;
     private Touchpad touchpad;
-    private Texture itemBox, maryoL, goldM, item;
-    private SpriteBatch batch;
+    private TextureRegion item;
+    private Texture itemBox, maryoL, goldM;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Table buttonsTable;
     private float stateTime;
@@ -88,7 +91,6 @@ public class HUD {
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
-        batch = new SpriteBatch();
         stage = new Stage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
     }
 
@@ -104,8 +106,6 @@ public class HUD {
         world.screen.game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class);
 
         world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets
-                .textureParameter);
-        world.screen.game.assets.manager.load(Assets.DATA_MUSHROOM_RED, Texture.class, world.screen.game.assets
                 .textureParameter);
         world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
                 .textureParameter);
@@ -224,8 +224,9 @@ public class HUD {
             }
         });
 
+        TextureAtlas dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
+        item = dynAtlas.findRegion(MushroomDefault.TEXTURE_NAME);
         itemBox = world.screen.game.assets.manager.get("data/game/itembox.png");
-        item = world.screen.game.assets.manager.get(Assets.DATA_MUSHROOM_RED);
         maryoL = world.screen.game.assets.manager.get("data/game/maryo_l.png");
         goldM = world.screen.game.assets.manager.get("data/game/gold_m.png");
 

@@ -21,7 +21,7 @@ public class MushroomLive1 extends Mushroom
     public MushroomLive1(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureName = "data/game/items/mushroom_green.png";
+        textureName = "game_items_mushroom_green";
         mPickPoints = 1000;
     }
 

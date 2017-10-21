@@ -31,8 +31,6 @@ public class Assets {
     public static final String BUTTON_FA = "fa45";
     public static final String BUTTON_SMALL = "small";
 
-    public static final String DATA_MUSHROOM_RED = "data/game/items/mushroom_red.png";
-
     public static final String SOUND_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.ogg";
     public static final String SOUND_ITEM_LIVE_UP = "data/sounds/item/live_up.ogg";
     public static final String SOUND_PLAYER_DEAD = "data/sounds/player/dead.ogg";

@@ -618,7 +618,6 @@ public class SAXXMLHandler extends DefaultHandler
         {
             case "goldpiece":
                 item.width = item.height = 0.59375f;
-                item.texture_atlas = "data/game/items/goldpiece/" + item.color + ".pack";
                 item.image = "game/items/goldpiece/" + item.color + "/1.png";
                 break;
             case "mushroom":
@@ -649,7 +648,6 @@ public class SAXXMLHandler extends DefaultHandler
                 item.image = item.texture_name.substring(item.texture_name.indexOf("/"), item.texture_name.length());
                 break;
             case "fireplant":
-                item.texture_atlas = "data/game/items/fireplant.pack";
                 item.image = "game/items/fireplant.png";
                 break;
             case "jstar":
@@ -657,7 +655,6 @@ public class SAXXMLHandler extends DefaultHandler
                 item.image = item.texture_name.substring(item.texture_name.indexOf("/") - 1, item.texture_name.length() - 1);
                 break;
             case "moon":
-                item.texture_name = "data/game/items/moon.pack";
                 item.image = "game/items/moon_1.png";
                 break;
             default:

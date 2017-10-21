@@ -1,6 +1,6 @@
 package rs.pedjaapps.smc.object.items;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -45,7 +45,7 @@ public abstract class Item extends DynamicObject
     protected float originalPosY;
     //collectible by player
     public boolean collectible = true;
-    public Texture texture;
+    public TextureRegion texture;
 
     /**
      * Coin will smoothly pop out of the box*/
@@ -160,6 +160,6 @@ public abstract class Item extends DynamicObject
     @Override
     public void dispose()
     {
-        if(texture != null)texture.dispose();
+
     }
 }

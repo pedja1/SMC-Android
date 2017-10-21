@@ -6,147 +6,217 @@ filter: Linear,Linear
 repeat: none
 animation_fireball_1
   rotate: false
-  xy: 1107, 457
+  xy: 859, 67
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_fireball_2
   rotate: false
-  xy: 911, 197
+  xy: 1301, 651
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_fireball_3
   rotate: false
-  xy: 1041, 391
+  xy: 911, 197
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 animation_iceball
   rotate: false
-  xy: 1237, 587
+  xy: 1561, 911
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-game_items_waffle_red_1
-  rotate: false
-  xy: 1301, 685
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_10
-  rotate: false
-  xy: 1041, 425
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_2
-  rotate: false
-  xy: 529, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_3
-  rotate: false
-  xy: 1, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_4
-  rotate: false
-  xy: 595, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_5
-  rotate: false
-  xy: 1561, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_6
-  rotate: false
-  xy: 1627, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_7
-  rotate: false
-  xy: 1693, 945
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_red_8
+game_items_fireplant
   rotate: false
   xy: 945, 295
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_red_9
+game_items_fireplant_left
   rotate: false
-  xy: 67, 35
+  xy: 1431, 815
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_1
+game_items_fireplant_right
   rotate: false
-  xy: 1759, 945
+  xy: 661, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_10
-  rotate: false
-  xy: 397, 35
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_items_waffle_yellow_2
+game_items_moon_1
   rotate: false
   xy: 265, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_3
+game_items_moon_2
+  rotate: false
+  xy: 1, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_blue
   rotate: false
   xy: 1825, 945
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_4
+game_items_mushroom_green
+  rotate: false
+  xy: 1237, 555
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_poison
+  rotate: false
+  xy: 529, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_mushroom_red
+  rotate: false
+  xy: 1497, 815
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_star
+  rotate: false
+  xy: 1561, 945
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_1
+  rotate: false
+  xy: 595, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_10
+  rotate: false
+  xy: 945, 229
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_2
   rotate: false
   xy: 331, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_items_waffle_yellow_5
+game_items_waffle_red_3
+  rotate: false
+  xy: 1367, 685
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_4
   rotate: false
   xy: 1891, 945
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+game_items_waffle_red_5
+  rotate: false
+  xy: 1041, 425
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_6
+  rotate: false
+  xy: 397, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_7
+  rotate: false
+  xy: 1171, 555
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_8
+  rotate: false
+  xy: 1957, 945
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_red_9
+  rotate: false
+  xy: 1301, 685
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_1
+  rotate: false
+  xy: 1627, 945
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_10
+  rotate: false
+  xy: 1107, 425
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_2
+  rotate: false
+  xy: 793, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_3
+  rotate: false
+  xy: 133, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_4
+  rotate: false
+  xy: 727, 35
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_items_waffle_yellow_5
+  rotate: false
+  xy: 1693, 945
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 game_items_waffle_yellow_6
   rotate: false
-  xy: 1431, 815
+  xy: 1041, 359
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -160,406 +230,406 @@ game_items_waffle_yellow_7
   index: -1
 game_items_waffle_yellow_8
   rotate: false
-  xy: 1957, 945
+  xy: 1107, 359
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 game_items_waffle_yellow_9
   rotate: false
-  xy: 463, 35
+  xy: 1759, 945
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 maryo_big_climb_left
   rotate: false
-  xy: 131, 621
+  xy: 261, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_climb_right
   rotate: false
-  xy: 261, 881
+  xy: 391, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_duck_right
   rotate: false
-  xy: 1171, 751
+  xy: 1, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_fall_right
   rotate: false
-  xy: 521, 231
+  xy: 521, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_fall_right_holding
   rotate: false
-  xy: 781, 491
+  xy: 1041, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_jump_right
   rotate: false
-  xy: 1041, 881
+  xy: 911, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_jump_right_holding
   rotate: false
-  xy: 781, 621
+  xy: 651, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_stand_right
   rotate: false
-  xy: 1171, 881
+  xy: 1, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_stand_right_holding
   rotate: false
-  xy: 521, 101
+  xy: 651, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_up_right
   rotate: false
-  xy: 781, 751
+  xy: 1171, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_walk_right_1
   rotate: false
-  xy: 521, 881
+  xy: 131, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_walk_right_1_holding
   rotate: false
-  xy: 261, 491
+  xy: 1041, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_walk_right_2
   rotate: false
-  xy: 1, 231
+  xy: 781, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_big_walk_right_2_holding
   rotate: false
-  xy: 1431, 881
+  xy: 781, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_climb_left
   rotate: false
-  xy: 521, 621
+  xy: 651, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_climb_right
   rotate: false
-  xy: 1041, 621
+  xy: 261, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_duck_right
   rotate: false
-  xy: 1301, 881
+  xy: 781, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_fall_right
   rotate: false
-  xy: 261, 231
+  xy: 391, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_fall_right_holding
   rotate: false
-  xy: 521, 491
+  xy: 911, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_jump_right
   rotate: false
-  xy: 131, 231
+  xy: 131, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_jump_right_holding
   rotate: false
-  xy: 781, 101
+  xy: 521, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_stand_right
   rotate: false
-  xy: 651, 751
+  xy: 391, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_stand_right_holding
   rotate: false
-  xy: 391, 361
+  xy: 261, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_throw_right_1
   rotate: false
-  xy: 1, 361
+  xy: 1, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_throw_right_2
   rotate: false
-  xy: 261, 101
+  xy: 1041, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_up_right
   rotate: false
-  xy: 131, 491
+  xy: 1, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_walk_right_1
   rotate: false
-  xy: 261, 621
+  xy: 1, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_walk_right_1_holding
   rotate: false
-  xy: 1301, 751
+  xy: 911, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_walk_right_2
   rotate: false
-  xy: 911, 361
+  xy: 261, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_fire_walk_right_2_holding
   rotate: false
-  xy: 911, 751
+  xy: 261, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_climb_left
   rotate: false
-  xy: 651, 231
+  xy: 1171, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_climb_right
   rotate: false
-  xy: 1, 101
+  xy: 131, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_duck_right
   rotate: false
-  xy: 131, 101
+  xy: 261, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_fall_right
   rotate: false
-  xy: 651, 101
+  xy: 521, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_fall_right_holding
   rotate: false
-  xy: 1171, 621
+  xy: 1431, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_jump_right
   rotate: false
-  xy: 651, 621
+  xy: 651, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_jump_right_holding
   rotate: false
-  xy: 391, 491
+  xy: 1301, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_stand_right
   rotate: false
-  xy: 521, 751
+  xy: 1041, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_stand_right_holding
   rotate: false
-  xy: 1041, 491
+  xy: 781, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_throw_right_1
   rotate: false
-  xy: 911, 881
+  xy: 651, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_throw_right_2
   rotate: false
-  xy: 781, 361
+  xy: 1301, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_up_right
   rotate: false
-  xy: 1, 491
+  xy: 261, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_walk_right_1
   rotate: false
-  xy: 261, 751
+  xy: 1171, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_walk_right_1_holding
   rotate: false
-  xy: 651, 491
+  xy: 131, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_walk_right_2
   rotate: false
-  xy: 781, 231
+  xy: 521, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_ice_walk_right_2_holding
   rotate: false
-  xy: 651, 361
+  xy: 781, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_climb_left
   rotate: false
-  xy: 911, 491
+  xy: 781, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_climb_right
   rotate: false
-  xy: 391, 881
+  xy: 131, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_dead_right
   rotate: false
-  xy: 131, 361
+  xy: 911, 751
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_duck_right
   rotate: false
-  xy: 651, 881
+  xy: 781, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_fall_right
   rotate: false
-  xy: 131, 751
+  xy: 1, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_fall_right_holding
   rotate: false
-  xy: 391, 751
+  xy: 391, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_jump_right
   rotate: false
-  xy: 391, 231
+  xy: 521, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_jump_right_holding
   rotate: false
-  xy: 391, 101
+  xy: 131, 231
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_stand_right
   rotate: false
-  xy: 781, 881
+  xy: 911, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_stand_right_holding
   rotate: false
-  xy: 911, 621
+  xy: 391, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -573,7 +643,7 @@ maryo_small_up_right
   index: -1
 maryo_small_walk_right_1
   rotate: false
-  xy: 1, 621
+  xy: 131, 361
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -587,14 +657,14 @@ maryo_small_walk_right_1_holding
   index: -1
 maryo_small_walk_right_2
   rotate: false
-  xy: 1041, 751
+  xy: 391, 101
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 maryo_small_walk_right_2_holding
   rotate: false
-  xy: 1, 751
+  xy: 521, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
@@ -608,35 +678,35 @@ particles_cloud
   index: -1
 particles_fire_1
   rotate: false
-  xy: 1301, 651
+  xy: 1171, 521
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 particles_fire_4
   rotate: false
-  xy: 1171, 521
+  xy: 1431, 781
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 particles_ice_1
   rotate: false
-  xy: 133, 35
+  xy: 67, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 particles_leaf_brown
   rotate: false
-  xy: 391, 621
+  xy: 391, 881
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_light
   rotate: false
-  xy: 1367, 733
+  xy: 2023, 993
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -650,21 +720,21 @@ particles_rain
   index: -1
 particles_smoke_grey_big
   rotate: false
-  xy: 131, 881
+  xy: 651, 621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_star
   rotate: false
-  xy: 261, 361
+  xy: 651, 491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 particles_star_2
   rotate: false
-  xy: 1171, 555
+  xy: 463, 35
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

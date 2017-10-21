@@ -18,7 +18,7 @@ public class MushroomBlue extends Mushroom
     public MushroomBlue(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureName = "data/game/items/mushroom_blue.png";
+        textureName = "game_items_mushroom_blue";
         mPickPoints = 700;
     }
 

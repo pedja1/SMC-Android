@@ -27,7 +27,6 @@ public class Moon extends Item
     public Moon(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureAtlas = "data/game/items/moon.pack";
         position.z = 0.052f;
     }
 
@@ -39,8 +38,9 @@ public class Moon extends Item
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        animation = new Animation(2f, atlas.getRegions());
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        animation = new Animation(1f, atlas.findRegion("game_items_moon_1"),
+                atlas.findRegion("game_items_moon_2"));
         animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
 

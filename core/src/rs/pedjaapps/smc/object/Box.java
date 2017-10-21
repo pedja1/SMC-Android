@@ -291,18 +291,14 @@ public class Box extends Sprite
             {
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
-                    assets.manager.load("data/game/items/mushroom_red.png", Texture.class, assets.textureParameter);
                     assets.manager.load(Assets.SOUND_ITEM_MUSHROOM, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
-                    assets.manager.load("data/game/items/mushroom_green.png", Texture.class, assets.textureParameter);
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
-                    assets.manager.load("data/game/items/mushroom_blue.png", Texture.class, assets.textureParameter);
                     assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_BLUE, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
-                    assets.manager.load("data/game/items/mushroom_poison.png", Texture.class, assets.textureParameter);
                     break;
             }
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
@@ -363,7 +359,6 @@ public class Box extends Sprite
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
             assets.manager.load(Assets.SOUND_ITEM_FIREPLANT, Sound.class);
-            assets.manager.load("data/game/items/fireplant.pack", TextureAtlas.class);
             assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
         }
         else
@@ -394,7 +389,6 @@ public class Box extends Sprite
         if(loadAssets)
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
-            assets.manager.load("data/game/items/moon.pack", TextureAtlas.class);
             assets.manager.load(Assets.SOUND_ITEM_MOON, Sound.class);
         }
         else
@@ -423,7 +417,6 @@ public class Box extends Sprite
         if(loadAssets)
         {
             assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
-            assets.manager.load("data/game/items/star.png", Texture.class, assets.textureParameter);
         }
         else
         {

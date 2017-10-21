@@ -329,7 +329,6 @@
             "posx": 11.25,
             "type": "moon",
             "obj_class": "item",
-            "texture_name": "data/game/items/moon.pack"
         }
     ],
     "background": {
