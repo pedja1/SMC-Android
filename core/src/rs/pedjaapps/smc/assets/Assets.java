@@ -18,8 +18,8 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
  */
 public class Assets {
     public static final String SKIN_HUD = "data/hud/smcskin.json";
-    public static final String LOGO_GAME = "data/game/logo/smc_big_1.png";
-    public static final String LOGO_LOADING = "data/game/logo/loading.png";
+    public static final String LOGO_GAME = "logo_smc_big_1";
+    public static final String LOGO_LOADING = "logo_loading";
 
     public static final String FONT_SIMPLE25 = "grobold25";
     public static final String LABEL_SIMPLE25 = "small";

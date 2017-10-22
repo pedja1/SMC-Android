@@ -62,8 +62,7 @@ public class HUD {
     private TextButton pauseButton, play, musicButton;
     private Button fire, jump;
     private Touchpad touchpad;
-    private TextureRegion item;
-    private Texture itemBox, maryoL, goldM;
+    private TextureRegion item, itemBox, maryoL, goldM;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Table buttonsTable;
     private float stateTime;
@@ -104,13 +103,6 @@ public class HUD {
 
     public void loadAssets() {
         world.screen.game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class);
-
-        world.screen.game.assets.manager.load("data/game/itembox.png", Texture.class, world.screen.game.assets
-                .textureParameter);
-        world.screen.game.assets.manager.load("data/game/maryo_l.png", Texture.class, world.screen.game.assets
-                .textureParameter);
-        world.screen.game.assets.manager.load("data/game/gold_m.png", Texture.class, world.screen.game.assets
-                .textureParameter);
         world.screen.game.assets.manager.load("data/hud/help.png", Texture.class, world.screen.game.assets
                 .textureParameter);
     }
@@ -226,14 +218,9 @@ public class HUD {
 
         TextureAtlas dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
         item = dynAtlas.findRegion(MushroomDefault.TEXTURE_NAME);
-        itemBox = world.screen.game.assets.manager.get("data/game/itembox.png");
-        maryoL = world.screen.game.assets.manager.get("data/game/maryo_l.png");
-        goldM = world.screen.game.assets.manager.get("data/game/gold_m.png");
-
-        Texture.TextureFilter filter = Texture.TextureFilter.Linear;
-        itemBox.setFilter(filter, filter);
-        maryoL.setFilter(filter, filter);
-        goldM.setFilter(filter, filter);
+        itemBox = skin.getAtlas().findRegion("game_itembox");
+        maryoL = skin.getAtlas().findRegion("game_maryo_l");
+        goldM = skin.getAtlas().findRegion("game_gold_m");
 
         readyLbl = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
         readyLbl.setAlignment(Align.center);

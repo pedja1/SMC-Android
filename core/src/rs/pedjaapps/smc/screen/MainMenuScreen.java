@@ -85,8 +85,8 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     public static Image createLogoImage(MaryoGame game) {
-        Texture gameLogo = game.assets.manager.get(Assets.LOGO_GAME);
-        gameLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        TextureRegion gameLogo = game.assets.manager.get(Assets.SKIN_HUD, Skin.class)
+                .getAtlas().findRegion(Assets.LOGO_GAME);
         Image imGameLogo = new Image(gameLogo);
         imGameLogo.setSize(imGameLogo.getWidth() * .9f, imGameLogo.getHeight() * .9f);
         return imGameLogo;

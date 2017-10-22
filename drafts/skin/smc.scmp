@@ -506,6 +506,71 @@ atlasData: {
 			tintName: null
 			name: touchpad_knob
 		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/logo_loading.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: logo_loading
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/logo_smc_big_1.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: logo_smc_big_1
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/game_gold_m.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: game_gold_m
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/game_itembox.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: game_itembox
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/game_maryo_l.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: game_maryo_l
+		}
 	]
 }
 jsonData: {

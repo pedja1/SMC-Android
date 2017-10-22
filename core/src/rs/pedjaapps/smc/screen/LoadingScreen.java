@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -26,12 +27,11 @@ public class LoadingScreen extends AbstractScreen {
     private float percent;
     private AbstractScreen screenToLoadAfter;
     private boolean resume = false;
+    boolean assetsLoaded = false;
 
     public LoadingScreen(AbstractScreen screenToLoadAfter, boolean resume) {
         super(screenToLoadAfter.game);
-        game.assets.manager.load(Assets.LOGO_GAME, Texture.class, game.assets.textureParameter);
-        game.assets.manager.load(Assets.LOGO_LOADING, Texture.class, game.assets.textureParameter);
-        game.assets.manager.finishLoading();
+        game.assets.manager.finishLoadingAsset(Assets.SKIN_HUD);
 
         this.screenToLoadAfter = screenToLoadAfter;
         this.resume = resume;
@@ -53,8 +53,8 @@ public class LoadingScreen extends AbstractScreen {
         loading.addAction(HUD.getForeverFade());
         stage.addActor(loading);
 
-        Texture txtLoadingLogo = game.assets.manager.get(Assets.LOGO_LOADING, Texture.class);
-        txtLoadingLogo.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        TextureRegion txtLoadingLogo = game.assets.manager.get(Assets.SKIN_HUD, Skin.class)
+                .getAtlas().findRegion(Assets.LOGO_LOADING);
         Image imLoadingLogo = new Image(txtLoadingLogo);
         imLoadingLogo.setSize(imLoadingLogo.getWidth() * .33f, imLoadingLogo.getHeight() * .33f);
         imLoadingLogo.setPosition(stage.getWidth() / 2, loading.getY() + loading.getHeight() + (imGameLogo.getY() -
@@ -68,7 +68,7 @@ public class LoadingScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        screenToLoadAfter.loadAssets();
+        assetsLoaded = false;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class LoadingScreen extends AbstractScreen {
         // Clear the screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (game.assets.manager.update()) {
+        if (game.assets.manager.update() && assetsLoaded) {
             // Load some, will return true if done loading
             /*if(!resume)*/
             screenToLoadAfter.onAssetsLoaded();
@@ -97,6 +97,16 @@ public class LoadingScreen extends AbstractScreen {
 
         stage.act();
         stage.draw();
+
+        if (!assetsLoaded) {
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    screenToLoadAfter.loadAssets();
+                    assetsLoaded = true;
+                }
+            });
+        }
 
         //backgroundColor.render(stage.getCamera(), stage.getSp));
 
