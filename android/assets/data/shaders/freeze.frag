@@ -19,7 +19,7 @@ void main()
     color.rgb /= color.a;
 
     // Apply contrast.
-    color.rgb = ((color.rgb - 0.5f) * max(u_contrast, 0.0)) + 0.5f;
+    color.rgb = ((color.rgb - 0.5) * max(u_contrast, 0.0)) + 0.5;
 
     // Apply brightness.
     color.rgb += u_brightness;
