@@ -1,8 +1,8 @@
 package rs.pedjaapps.smc.object.enemy;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -28,8 +28,7 @@ public class Rokko extends Enemy
     private boolean flipX;
     private float mMinDistanceFront, mMaxDistanceFront, mMaxDistanceSides;
     private ParticleEffect effect;
-    private Texture texture;
-    private TextureRegion region;
+    private TextureRegion texture;
     private Rectangle tmpRect = new Rectangle();
 
     public Rokko(World world, Vector2 size, Vector3 position, String direction)
@@ -61,19 +60,21 @@ public class Rokko extends Enemy
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
-        if (region == null)
-        {
-            region = new TextureRegion(texture);
-        }
-        return region;
+    protected TextureRegion getDeadTextureRegion() {
+        return texture;
     }
 
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
+        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
+                .findRegion("enemy_rokko_r");
+
+        if (flipX) {
+            texture = new TextureRegion(texture);
+            texture.flip(flipX, false);
+        }
+
         effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/rokko_trail_emitter.p", ParticleEffect.class));
         effect.start();
     }
@@ -84,7 +85,6 @@ public class Rokko extends Enemy
         effect.dispose();
         effect = null;
         texture = null;
-        region = null;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Rokko extends Enemy
         float width = Utility.getWidth(texture, mDrawRect.height);
         float originX = width * 0.5f;
         float originY = mDrawRect.height * 0.5f;
-        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation, 0, 0, texture.getWidth(), texture.getHeight(), flipX, false);
+        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
 
         if (!staying)
         {

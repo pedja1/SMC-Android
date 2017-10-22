@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
 import rs.pedjaapps.smc.object.World;
@@ -51,7 +52,7 @@ public class Spikeball extends Enemy
     private static final int MAX_RUN_TIME = 4;
 
     private Animation<TextureRegion> walkAnimation;
-    private TextureRegion tTurn, tDead;
+    private TextureRegion tTurn;
 
     private int state;
 
@@ -73,19 +74,16 @@ public class Spikeball extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
         Array<TextureRegion> walkFrames = new Array<>();
 
-        for (int i = 1; i < 9; i++)
-        {
-            TextureRegion region = atlas.findRegion("walk", i);
-            walkFrames.add(region);
+        for (int i = 1; i < 9; i++) {
+            walkFrames.add(atlas.findRegion("enemy_spikeball_walk_" + String.valueOf(i)));
         }
 
         walkAnimation = new Animation(0.07f, walkFrames);
 
-        tTurn = atlas.findRegion("turn");
-        tDead = atlas.findRegion("turn");
+        tTurn = atlas.findRegion("enemy_spikeball_turn");
     }
 
     @Override
@@ -93,7 +91,6 @@ public class Spikeball extends Enemy
     {
         walkAnimation = null;
         tTurn = null;
-        tDead = null;
     }
 
     @Override
@@ -234,6 +231,6 @@ public class Spikeball extends Enemy
     @Override
     protected TextureRegion getDeadTextureRegion()
     {
-        return tDead;
+        return tTurn;
     }
 }

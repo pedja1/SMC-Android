@@ -458,7 +458,7 @@ public class SAXXMLHandler extends DefaultHandler
     {
         if ("eato".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/" + enemy.image_dir.substring(0, enemy.image_dir.length() - 1) + ".pack";
+            enemy.color = (enemy.image_dir.contains("green") ? "green" : "brown");
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "1.settings");
         }
@@ -476,7 +476,6 @@ public class SAXXMLHandler extends DefaultHandler
                 }
                 enemy.type = "flyon";
             }
-            enemy.texture_atlas = "data/" + enemy.image_dir.substring(0, enemy.image_dir.length() - 1) + ".pack";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "closed_1.settings");
             enemy.max_distance = enemy.max_distance / 64f;
@@ -492,14 +491,12 @@ public class SAXXMLHandler extends DefaultHandler
             }
             if ("black".equals(enemy.color))
                 enemy.color = "boss";
-            enemy.texture_atlas = "data/enemy/furball/" + enemy.color + ".pack";
             enemy.image_dir = "enemy/furball/" + enemy.color + "/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "dead.settings");
         }
         else if ("gee".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/gee/" + enemy.color + ".pack";
             enemy.posx = enemy.posx / 64;
             switch (enemy.color)
             {
@@ -519,35 +516,30 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if ("krush".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/krush/krush.pack";
             enemy.image_dir = "enemy/krush/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "big_1.settings");
         }
         else if ("rokko".equals(enemy.type))
         {
-            enemy.texture_name = "data/enemy/rokko/r.png";
             enemy.image_dir = "enemy/rokko/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "r.settings");
         }
         else if ("spika".equals(enemy.type))
         {
-            enemy.texture_name = "data/enemy/spika/" + enemy.color + ".png";
             enemy.image_dir = "enemy/spika/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, enemy.color + ".settings");
         }
         else if ("spikeball".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/spikeball/grey.pack";
             enemy.image_dir = "enemy/spikeball/grey/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "walk_1.settings");
         }
         else if ("thromp".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/thromp/" + (enemy.image_dir.contains("desert") ? "desert" : "thromp") + ".pack";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "down.settings");
             enemy.max_distance = enemy.max_distance / 64f;
@@ -555,13 +547,13 @@ public class SAXXMLHandler extends DefaultHandler
         }
         else if ("turtle".equals(enemy.type))
         {
-            enemy.texture_atlas = "data/enemy/turtle/green.pack";
             enemy.image_dir = "enemy/turtle/green/";
             enemy.posx = enemy.posx / 64;
             setEnemySettings(enemy, "walk_1.settings");
         }
         else if ("turtleboss".equals(enemy.type))
         {
+            System.out.println("turtleboss");
             enemy.texture_atlas = "data/enemy/bosses/turtle.pack";
             enemy.image_dir = "enemy/bosses/turtle/";
             enemy.posx = enemy.posx / 64;
@@ -571,7 +563,14 @@ public class SAXXMLHandler extends DefaultHandler
         {
             enemy.posx = enemy.posx / 64;
             if (enemy.image == null) enemy.image = "enemy/static/blocks/spike_1/2_grey.png";
-            enemy.texture_name = "data/" + enemy.image;
+
+            String nameInAtlas = getNameInAtlas(enemy.image);
+            File f = new File(Const.UNPACKED_PATH + "/dynamic/" + nameInAtlas);
+            if (f.exists() && !f.isDirectory())
+                enemy.texture_name = nameInAtlas.substring(0, nameInAtlas.lastIndexOf("."));
+            else
+                System.out.println("Not in atlas: " + nameInAtlas);
+
             enemy.image_dir = enemy.image.substring(0, enemy.image.lastIndexOf('/'));
             enemy.rotationSpeed = enemy.rotationSpeed * 0.5f;
             setEnemySettings(enemy, enemy.image.substring(enemy.image.lastIndexOf('/') + 1, enemy.image.length()).replaceAll("png", "settings"));

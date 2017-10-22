@@ -34,6 +34,7 @@ public class Gee extends Enemy
     private boolean forward, dirForward, staying = true;
     private float currWaitTime, waitTime;
     private Color color;
+    private String colorString;
     private boolean flipx;
     private ParticleEffect effect, deadEffect;
     private boolean canStartParticle;
@@ -45,6 +46,7 @@ public class Gee extends Enemy
     {
         super(world, size, position);
         this.direction = direction;
+        colorString = color;
         mOriginPosition = new Vector3(position);
         this.flyDistance = flyDistance;
         this.waitTime = waitTime;
@@ -92,10 +94,12 @@ public class Gee extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        Array<TextureAtlas.AtlasRegion> frames = atlas.getRegions();
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        Array<TextureAtlas.AtlasRegion> frames = new Array<>(10);
+        for (int i = 1; i <= 10; i++)
+            frames.add(atlas.findRegion("enemy_gee_" + colorString + "_" + String.valueOf(i)));
+
         deadRegion = frames.get(4);
-        frames.add(frames.removeIndex(1));
         animation = new Animation<TextureRegion>(0.14f, frames);
         if("vertical".equals(direction))
         {

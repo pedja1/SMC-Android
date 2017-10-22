@@ -1,13 +1,14 @@
 package rs.pedjaapps.smc.object.enemy;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -24,13 +25,14 @@ public class Spika extends Enemy
 
     private float mSpeed;
     private float mRotation, mDetectionSize;
-    private Texture texture;
-    private TextureRegion region;
+    private TextureRegion texture;
+    private String color;
     private Rectangle tmpRect = new Rectangle();
 
     public Spika(World world, Vector2 size, Vector3 position, String color)
     {
         super(world, size, position);
+        this.color = color;
         if("orange".equals(color))
         {
             mSpeed = 2;
@@ -56,20 +58,19 @@ public class Spika extends Enemy
             mIceResistance = 0.5f;
         }
         position.z = POS_Z;
-        setupBoundingBox();
     }
 
     @Override
     public void initAssets()
     {
-        texture = world.screen.game.assets.manager.get(textureName);
+        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
+                .findRegion("enemy_spika_" + color);
     }
 
     @Override
     public void dispose()
     {
         texture = null;
-        region = null;
     }
 
     @Override
@@ -87,7 +88,7 @@ public class Spika extends Enemy
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
             spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
-                    1, 1, -mRotation, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+                    1, 1, -mRotation);
         }
     }
 
@@ -176,34 +177,9 @@ public class Spika extends Enemy
 		}
 	}
 
-    private void setupBoundingBox()
-    {
-        //if(!isShell) mColRect.height = mColRect.height - 0.2f;
-    }
-
     @Override
-    public void updateBounds()
-    {
-        //if(!isShell)
-        //{
-        //    mDrawRect.height = mColRect.height + 0.2f;
-            super.updateBounds();
-        //}
-        //else
-        //{
-        //    mDrawRect.x = mColRect.x - ((mDrawRect.width - mColRect.width) - mColRect.width / 2);
-        //    mDrawRect.y = mColRect.y - ((mDrawRect.height - mColRect.height) - mColRect.height / 2);
-        //}
-    }
-
-    @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
-        if(region == null)
-        {
-            region = new TextureRegion(texture);
-        }
-        return region;
+    protected TextureRegion getDeadTextureRegion() {
+        return texture;
     }
 
     private boolean checkMaryoInFront()

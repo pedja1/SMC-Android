@@ -45,25 +45,21 @@ public class Krush extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
 
         Array<TextureRegion> smallFrames = new Array<>();
         Array<TextureRegion> bigFrames = new Array<>();
 
-        bigFrames.add(atlas.findRegion("big", 1));
-        bigFrames.add(atlas.findRegion("big", 2));
-        bigFrames.add(atlas.findRegion("big", 3));
-        bigFrames.add(atlas.findRegion("big", 4));
+        for (int i = 1; i <=4; i++)
+            bigFrames.add(atlas.findRegion("enemy_krush_big_" + String.valueOf(i)));
 
-        smallFrames.add(atlas.findRegion("small", 1));
-        smallFrames.add(atlas.findRegion("small", 2));
-        smallFrames.add(atlas.findRegion("small", 3));
-        smallFrames.add(atlas.findRegion("small", 4));
+        for (int i = 1; i <=4; i++)
+            smallFrames.add(atlas.findRegion("enemy_krush_small_" + String.valueOf(i)));
 
         aSmall = new Animation(0.07f, smallFrames);
         aBig = new Animation(0.12f, bigFrames);
 
-        tDead = atlas.findRegion("small", 1);
+        tDead = atlas.findRegion("enemy_krush_small_1");
     }
 
     @Override

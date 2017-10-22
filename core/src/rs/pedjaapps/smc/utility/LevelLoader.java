@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -317,10 +316,8 @@ public class LevelLoader
             assets.manager.load(enemy.textureAtlas, TextureAtlas.class);
         }
         if (jEnemy.has("texture_name"))
-        {
             enemy.textureName = jEnemy.getString("texture_name");
-            assets.manager.load(enemy.textureName, Texture.class, assets.textureParameter);
-        }
+
         if (!levelParsed) level.gameObjects.add(enemy);
     }
 

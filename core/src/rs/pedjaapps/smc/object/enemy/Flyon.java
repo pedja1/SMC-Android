@@ -65,12 +65,12 @@ public class Flyon extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
         TextureRegion[] frames = new TextureRegion[4];
-        frames[0] = atlas.findRegion("closed", 1);
-        frames[1] = atlas.findRegion("closed", 2);
-        frames[2] = atlas.findRegion("open", 1);
-        frames[3] = atlas.findRegion("open", 2);
+        frames[0] = atlas.findRegion("enemy_flyon_closed_1");
+        frames[1] = atlas.findRegion("enemy_flyon_closed_2");
+        frames[2] = atlas.findRegion("enemy_flyon_open_1");
+        frames[3] = atlas.findRegion("enemy_flyon_open_2");
         animation = new Animation<>(0.13f, frames);
     }
 

@@ -187,7 +187,7 @@ public abstract class Enemy extends DynamicObject
         switch (enemyClass)
         {
             case eato:
-                enemy = new Eato(world, size, position, jEnemy.getString("direction", ""));
+                enemy = new Eato(world, size, position, jEnemy.getString("direction", ""), jEnemy.getString("color", ""));
                 break;
             case flyon:
                 enemy = new Flyon(world, size, position, jEnemy.getFloat("max_distance"), jEnemy.getFloat("speed"), jEnemy.getString("direction", "up"));

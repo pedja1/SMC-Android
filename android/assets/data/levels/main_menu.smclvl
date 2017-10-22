@@ -204,7 +204,6 @@
             "height": 0.703125,
             "speed": 0.090625,
             "max_distance": 3,
-            "texture_atlas": "data/enemy/flyon/orange.pack",
             "obj_class": "enemy",
             "enemy_class": "flyon",
             "posy": 2.40625,
@@ -297,7 +296,7 @@
         },
         {
             "height": 0.5625,
-            "texture_atlas": "data/enemy/eato/brown.pack",
+            "color": "brown",
             "obj_class": "enemy",
             "enemy_class": "eato",
             "posy": 1,

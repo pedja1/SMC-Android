@@ -61,9 +61,9 @@ public class Thromp extends Enemy
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        tDefault = atlas.findRegion("default");
-        tActive = atlas.findRegion("active");
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        tDefault = atlas.findRegion("enemy_thromp_default");
+        tActive = atlas.findRegion("enemy_thromp_active");
     }
 
     @Override

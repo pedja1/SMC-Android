@@ -1,17 +1,18 @@
 package rs.pedjaapps.smc.object.enemy;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.Utility;
-import rs.pedjaapps.smc.utility.*;
 
 /**
  * Created by pedja on 18.5.14..
@@ -19,8 +20,7 @@ import rs.pedjaapps.smc.utility.*;
 public class Static extends Enemy
 {
     public static final float POS_Z = 0.094f;
-    private Texture texture;
-    private TextureRegion region;
+    private TextureRegion texture;
 
     public Static(World world, Vector2 size, Vector3 position, float speed, int fireResistance, float iceResistance)
     {
@@ -34,16 +34,15 @@ public class Static extends Enemy
     }
 
     @Override
-    public void initAssets()
-    {
-        texture = world.screen.game.assets.manager.get(textureName);
+    public void initAssets() {
+        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
+                .findRegion(textureName);
     }
 
     @Override
     public void dispose()
     {
         texture = null;
-        region = null;
     }
 
     @Override
@@ -61,7 +60,7 @@ public class Static extends Enemy
             float originX = width * 0.5f;
             float originY = mDrawRect.height * 0.5f;
             spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height,
-                    1, 1, -mRotationZ, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
+                    1, 1, -mRotationZ);
         }
     }
 
@@ -105,13 +104,8 @@ public class Static extends Enemy
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
-        if(region == null)
-        {
-            region = new TextureRegion(texture);
-        }
-        return region;
+    protected TextureRegion getDeadTextureRegion() {
+        return texture;
     }
 
     @Override

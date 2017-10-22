@@ -21,11 +21,14 @@ public class Eato extends Enemy
     public static final float POSITION_Z = 0.087f;
     private String direction;
     private Animation<TextureRegion> animation;
+    private TextureRegion tdead;
+    private String color;
 
-    public Eato(World world, Vector2 size, Vector3 position, String direction)
+    public Eato(World world, Vector2 size, Vector3 position, String direction, String color)
     {
         super(world, size, position);
         this.direction = direction;
+        this.color = color;
         position.z = POSITION_Z;
         mFireResistant = 1;
         mKillPoints = 150;
@@ -70,22 +73,22 @@ public class Eato extends Enemy
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
-        return animation.getKeyFrames()[0];
+    protected TextureRegion getDeadTextureRegion() {
+        return tdead;
     }
 
     @Override
     public void initAssets()
     {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
-        TextureRegion[] frames = new TextureRegion[4];
-        frames[0] = atlas.findRegion(TKey.one.toString());
-        frames[1] = atlas.findRegion(TKey.two.toString());
-        frames[2] = atlas.findRegion(TKey.three.toString());
-        frames[3] = atlas.findRegion(TKey.two.toString());
+        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
 
+        Array<TextureRegion> frames = new Array<>(3);
+        for (int i = 1; i < 4; i++)
+            frames.add(atlas.findRegion("enemy_eato_" + color + "_" + String.valueOf(i)));
+
+        tdead = frames.get(0);
         animation = new Animation<>(0.18f, frames);
+        animation.setPlayMode(Animation.PlayMode.LOOP_PINGPONG);
     }
 
     @Override
