@@ -301,7 +301,7 @@ public class Box extends Sprite
                 case Item.TYPE_MUSHROOM_POISON:
                     break;
             }
-            assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
+            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
         }
         else
         {
@@ -357,7 +357,7 @@ public class Box extends Sprite
     {
         if(loadAssets)
         {
-            assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
+            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
             assets.manager.load(Assets.SOUND_ITEM_FIREPLANT, Sound.class);
             assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
         }
@@ -415,9 +415,8 @@ public class Box extends Sprite
     public static Item createStar(World world, Vector3 position, boolean loadAssets, Assets assets, boolean initAssets)
     {
         if(loadAssets)
-        {
-            assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
-        }
+            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
+
         else
         {
             Star star = new Star(world, new Vector2(Star.DEF_SIZE, Star.DEF_SIZE), new Vector3(position));
@@ -487,7 +486,7 @@ public class Box extends Sprite
 
     private void createItemEffect()
     {
-        itemEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/box_activated.p", ParticleEffect.class));
+        itemEffect = new ParticleEffect(world.screen.game.assets.manager.get(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class));
         itemEffect.start();
     }
 

@@ -70,6 +70,8 @@ public class Assets {
     public static final String SOUND_ITEM_MUSHROOM_BLUE = "data/sounds/item/mushroom_blue.ogg";
     public static final String SOUND_ITEM_STAR_KILL = "data/sounds/item/star_kill.ogg";
 
+    public static final String PARTICLES_BOX_ACTIVATED = "data/animation/particles/box_activated.p";
+
     public static final String MUSIC_COURSECLEAR = "data/music/game/courseclear.ogg";
     public static final String MUSIC_INVINCIBLE = "data/music/game/star.ogg";
 
@@ -89,6 +91,8 @@ public class Assets {
         manager = new AssetManager();
 
         particleEffectParameter = new ParticleEffectLoader.ParticleEffectParameter();
+        particleEffectParameter.atlasFile = Assets.ATLAS_DYNAMIC;
+        particleEffectParameter.atlasPrefix = "particles_";
         particleEffectParameter.imagesDir = Gdx.files.internal("data/animation/particles");
 
         // set the loaders for the generator and the fonts themselves
