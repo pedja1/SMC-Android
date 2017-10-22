@@ -63,3 +63,6 @@ build/
 .DS_Store
 .nomedia
 android/assets/assets.zip
+
+## SMC
+smc-org-data/

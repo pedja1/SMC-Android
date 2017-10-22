@@ -35,17 +35,11 @@ android {
 
         instrumentTest.setRoot('tests')
     }
-    signingConfigs {
-        release {
-            storeFile = file("/home/pedja/keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PWD")
-            keyAlias = System.getenv("KEYSTORE_ALIAS")
-            keyPassword = System.getenv("KEYSTORE_ALIAS_PWD")
-        }
-    }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
         debug {
             applicationIdSuffix ".debug"
@@ -59,8 +53,8 @@ android {
 }
 
 play {
-    serviceAccountEmail = 'pcokulov@gmail.com'
-    pk12File = file('/home/pedja/Downloads/Google Play Android Developer-9a7c0e55d18d.p12')
+    serviceAccountEmail = 'lightblocks@golfgl.de'
+    //pk12File = file('/home/pedja/Downloads/Google Play Android Developer-9a7c0e55d18d.p12')
 }
 
 configurations { natives }
@@ -85,14 +79,18 @@ dependencies {
 task copyAndroidNatives() {
     file("libs/armeabi/").mkdirs();
     file("libs/armeabi-v7a/").mkdirs();
+    file("libs/arm64-v8a/").mkdirs();
+    file("libs/x86_64/").mkdirs();
     file("libs/x86/").mkdirs();
 
     configurations.natives.files.each { jar ->
         def outputDir = null
-        if (jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
-        if (jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
-        if (jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
-        if (outputDir != null) {
+        if(jar.name.endsWith("natives-arm64-v8a.jar")) outputDir = file("libs/arm64-v8a")
+        if(jar.name.endsWith("natives-armeabi-v7a.jar")) outputDir = file("libs/armeabi-v7a")
+        if(jar.name.endsWith("natives-armeabi.jar")) outputDir = file("libs/armeabi")
+        if(jar.name.endsWith("natives-x86_64.jar")) outputDir = file("libs/x86_64")
+        if(jar.name.endsWith("natives-x86.jar")) outputDir = file("libs/x86")
+        if(outputDir != null) {
             copy {
                 from zipTree(jar)
                 into outputDir
@@ -101,6 +99,7 @@ task copyAndroidNatives() {
         }
     }
 }
+
 task run(type: Exec) {
     def path
     def localProperties = project.file("../local.properties")
