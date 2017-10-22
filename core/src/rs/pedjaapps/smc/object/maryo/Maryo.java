@@ -452,6 +452,8 @@ public class Maryo extends DynamicObject
                 , null, newPos);
         item.initAssets();
         world.level.gameObjects.add(item);
+        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_GET);
+        SoundManager.play(sound);
         item.drop();
         GameSave.setItem(null, 0);
     }
@@ -1190,6 +1192,8 @@ public class Maryo extends DynamicObject
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
                 || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
         {
+            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_SET);
+            SoundManager.play(sound);
             GameSave.setItem(world.screen.game.assets.manager, item.getType());
             return;
         }

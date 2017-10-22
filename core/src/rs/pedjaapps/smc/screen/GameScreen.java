@@ -573,6 +573,8 @@ public class GameScreen extends AbstractScreen {
         game.assets.manager.load(Assets.SOUND_WALL_HIT, Sound.class);
         game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL, Sound.class);
         game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEMBOX_SET, Sound.class);
+        game.assets.manager.load(Assets.SOUND_ITEMBOX_GET, Sound.class);
 
         game.assets.manager.load(Assets.SOUND_SPROUT, Sound.class);
         game.assets.manager.load(Assets.SOUND_ITEM_STAR_KILL, Sound.class);

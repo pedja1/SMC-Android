@@ -43,6 +43,8 @@ public class Assets {
     public static final String SOUND_ENTER_PIPE = "data/sounds/enter_pipe.ogg";
     public static final String SOUND_LEAVE_PIPE = "data/sounds/leave_pipe.ogg";
     public static final String SOUND_SPROUT = "data/sounds/sprout_1.ogg";
+    public static final String SOUND_ITEMBOX_SET = "data/sounds/itembox_set.ogg";
+    public static final String SOUND_ITEMBOX_GET = "data/sounds/itembox_get.ogg";
     //???? unused
     public static final String SOUND_STOMP1 = "data/sounds/stomp_1.ogg";
     public static final String SOUND_STOMP4 = "data/sounds/stomp_4.ogg";
