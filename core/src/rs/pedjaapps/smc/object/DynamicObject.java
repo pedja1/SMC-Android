@@ -377,7 +377,7 @@ public abstract class DynamicObject extends GameObject
 		{
 			if(vertical)
 			{
-                if(velocity.y > 0 && this instanceof Maryo && !(object instanceof Box))
+                if(velocity.y > 0 && this instanceof Maryo)
                 {
                     ((Maryo)this).jumpPeakReached = true;
                     if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
