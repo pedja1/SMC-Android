@@ -24,7 +24,6 @@ public class LoadingScreen extends AbstractScreen {
     private final Color color1;
     private final Color color2;
     private final ShapeRenderer renderer;
-    private float percent;
     private AbstractScreen screenToLoadAfter;
     private boolean resume = false;
     boolean assetsLoaded = false;
@@ -85,10 +84,8 @@ public class LoadingScreen extends AbstractScreen {
             }
             game.setScreen(screenToLoadAfter);
         }
-        // Interpolate the percentage to make it more smooth
-        percent = Interpolation.linear.apply(percent, game.assets.manager.getProgress(), 0.1f);
 
-        progressBar.setValue(game.assets.manager.getProgress() * 100);
+        progressBar.setValue(assetsLoaded ? game.assets.manager.getProgress() * 100 : 0);
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setProjectionMatrix(stage.getCamera().combined);
@@ -99,6 +96,8 @@ public class LoadingScreen extends AbstractScreen {
         stage.draw();
 
         if (!assetsLoaded) {
+            // Auf nächste Ausfhührung posten, damit dieser Bildschirm auf langsamen Geräten schonmal einmal gezeichnet
+            // wird
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
