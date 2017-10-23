@@ -2979,7 +2979,7 @@
         <property name="type" value="text" />
         <property name="invisible" value="0" />
         <property name="useable_count" value="-1" />
-        <property name="text" value="Power Jump&lt;br/&gt;&lt;br/&gt;To perform a power jump, duck down until stars are sparkling out of your shoes. This way, you can reach higher platforms.&lt;br/&gt;" />
+        <property name="text" value="Power Jump&lt;br/&gt;&lt;br/&gt;To perform a power jump, duck down until stars are sparkling out of your shoes.&lt;br/&gt;" />
     </box>
     <box >
         <property name="posx" value="3876" />
