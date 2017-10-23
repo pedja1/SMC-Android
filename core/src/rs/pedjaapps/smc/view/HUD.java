@@ -247,7 +247,7 @@ public class HUD {
             }
         });
 
-        play = new TextButton("Resume", skin, Assets.BUTTON_SMALL);
+        play = new TextButton("RESUME", skin);
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -281,9 +281,8 @@ public class HUD {
                 imItemBox.getY() + imItemBox.getHeight() * .25f);
         stage.addActor(imItemInBox);
 
-        pauseButton = new TextButton(FontAwesome.BIG_PAUSE, skin, Assets.BUTTON_FA);
-        pauseButton.getLabel().setFontScale(.5f);
-        pauseButton.setSize(MaryoGame.NATIVE_HEIGHT / 10f, MaryoGame.NATIVE_HEIGHT / 10f);
+        pauseButton = new TextButton(FontAwesome.CIRCLE_PAUSE, skin, Assets.BUTTON_FA_FRAMELESS);
+        //pauseButton.getLabel().setFontScale(.5f);
         pauseButton.setPosition(MaryoGame.NATIVE_WIDTH - padX / 2 - pauseButton.getWidth(),
                 imItemBox.getY() + imItemBox.getHeight() - pauseButton.getHeight());
         stage.addActor(pauseButton);
@@ -477,7 +476,7 @@ public class HUD {
     }
 
     public void showPopupBox(String text) {
-        popupBox = new Dialog("", skin, Assets.WINDOW_NOFRAME) {
+        popupBox = new Dialog("", skin, Assets.WINDOW_SMALL) {
             @Override
             protected void result(Object object) {
                 gameScreen.discardBoxText();

@@ -9,9 +9,6 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	grobold25bl: {
 		file: grobold25bl.fnt
 	}
-	grobold40br: {
-		file: grobold25br.fnt
-	}
 	grobold50: {
 		file: grobold50.fnt
 	}
@@ -50,6 +47,12 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.6039216
 		a: 1
 	}
+	transparent: {
+		r: 1
+		g: 1
+		b: 1
+		a: 0
+	}
 	white: {
 		r: 1
 		g: 1
@@ -58,28 +61,6 @@ com.badlogic.gdx.graphics.Color: {
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
-	down_square_button: {
-		name: selected_square_button
-		color: {
-			r: 1
-			g: 0.5185555
-			b: 0
-			a: 1
-		}
-	}
-	down_small_square_button: {
-		name: small_empty_square_button
-		color: {
-			r: 1
-			g: 0.3789444
-			b: 0
-			a: 1
-		}
-	}
-	background_disabled: {
-		name: background
-		color: disabled
-	}
 	button_firing: {
 		name: button_fire
 		color: button_pressed
@@ -88,19 +69,44 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		name: button_jump
 		color: button_pressed
 	}
+	button_round_pressed: {
+		name: button_round
+		color: button_pressed
+	}
+	button_round_font_pressed: {
+		name: button_round_font
+		color: button_pressed
+	}
+	button_small_font_pressed: {
+		name: button_small_font
+		color: button_pressed
+	}
+	progressbarbef_green: {
+		name: progressbarbef
+		color: down
+	}
+	progressbarbef_pressed: {
+		name: progressbarbef
+		color: button_pressed
+	}
+	transparent: {
+		name: progressbar_9
+		color: transparent
+	}
+	checkbox_disabled: {
+		name: checkbox
+		color: button_pressed
+	}
+	checkbox_checked_disabled: {
+		name: checkbox_checked
+		color: button_pressed
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
-		up: empty_square_button
-		down: down_square_button
-		over: selected_square_button
-		disabled: disabled_square_button
-	}
-	small: {
-		up: small_empty_square_button
-		down: down_small_square_button
-		over: selected_small_square_button
-		disabled: disabled_small_square_button
+		up: button_round
+		down: button_round_pressed
+		disabled: button_round_pressed
 	}
 	jump: {
 		up: button_jump
@@ -114,54 +120,40 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
-		checkboxOn: checkbox_on
+		checkboxOn: checkbox_checked
 		checkboxOff: checkbox
-		checkboxOnDisabled: checkbox_on_disabled
+		checkboxOnDisabled: checkbox_checked_disabled
 		checkboxOffDisabled: checkbox_disabled
-		font: grobold40br
-		disabledFontColor: disabled
-	}
-	toggle: {
-		checkboxOn: checkbox_togge
-		checkboxOff: checkbox
-		checkboxOnDisabled: checkbox_togge_disabled
-		checkboxOffDisabled: checkbox_disabled
-		font: grobold40br
-		disabledFontColor: disabled
+		font: grobold60bl
+		disabledFontColor: button_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
 	default: {
-		up: empty_square_button
-		down: down_square_button
-		over: selected_square_button
-		disabled: disabled_square_button
+		up: button_round
+		down: button_round_pressed
+		disabled: button_round_pressed
 	}
 	small: {
-		up: small_empty_square_button
-		down: down_small_square_button
-		over: selected_small_square_button
-		disabled: disabled_small_square_button
+		imageUp: button_small_font
+		imageDown: button_small_font_pressed
+		disabled: button_small_font_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 	default: {
 		font: grobold50
-		fontColor: fontyellow
-		disabledFontColor: disabled
-		up: empty_square_button
-		down: down_square_button
-		over: selected_square_button
-		disabled: disabled_square_button
+		fontColor: white
+		downFontColor: button_pressed
+		disabledFontColor: button_pressed
+		up: button_round_font
+		down: button_round_font_pressed
+		disabled: button_round_font_pressed
 	}
 	small: {
 		font: grobold25
 		fontColor: fontyellow
 		disabledFontColor: disabled
-		up: small_empty_square_button
-		down: down_small_square_button
-		over: selected_small_square_button
-		disabled: disabled_small_square_button
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
@@ -180,92 +172,78 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: grobold25bl
 	}
 	box: {
-		font: grobold40br
+		font: grobold60bl
 		fontColor: white
-		background: background
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
-	default: {
-		font: grobold50
-		fontColorSelected: fontyellow
-		fontColorUnselected: down
-		selection: selected_small_square_button
-		background: background2
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
-		background: progressbar_9
-		knob: progressbar_knob
-		knobBefore: progressbarbef
+		background: transparent
+		knobBefore: progressbarbef_green
 	}
 	default-vertical: {
 		background: progressbar_9
-		knob: progressbar_knobv
 		knobBefore: progressbarbef
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		hScrollKnob: slider
-		vScrollKnob: slider
+		hScrollKnob: progressbarbef_pressed
+		vScrollKnob: progressbarbef_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: {
 		background: progressbar_9
-		knob: slider
-		disabledKnob: slider_disabled
+		knob: progressbarbef
 		knobBefore: progressbarbef
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
 		font: grobold50
-		fontColor: fontyellow
-		overFontColor: white
-		disabledFontColor: disabled
-		up: empty_square_button
-		down: down_square_button
-		over: selected_square_button
-		disabled: disabled_square_button
+		fontColor: white
+		downFontColor: button_pressed
+		disabledFontColor: button_pressed
+		up: button_round_font
+		down: button_round_font_pressed
+		disabled: button_round_font_pressed
 	}
 	small: {
 		font: grobold25
-		fontColor: fontyellow
-		disabledFontColor: disabled
-		up: small_empty_square_button
-		down: down_small_square_button
-		over: selected_small_square_button
-		disabled: disabled_small_square_button
+		fontColor: white
+		downFontColor: button_pressed
+		disabledFontColor: button_pressed
+		up: button_small_font
+		down: button_small_font_pressed
+		disabled: button_small_font_pressed
 	}
 	fa45: {
 		font: fa45
-		fontColor: fontyellow
+		fontColor: white
+		downFontColor: button_pressed
 		disabledFontColor: disabled
-		up: small_empty_square_button
-		down: down_small_square_button
-		over: selected_small_square_button
-		disabled: disabled_small_square_button
+		up: button_round
+		down: button_round_pressed
+	}
+	fa45noborder: {
+		font: fa45
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {
 		font: grobold50
 		fontColor: white
-		focusedFontColor: fontyellow
-		disabledFontColor: disabled
-		background: background
-		disabledBackground: background_disabled
+		focusedFontColor: emphasized
+		disabledFontColor: button_pressed
+		background: button_round_font
+		disabledBackground: button_round_font_pressed
 	}
 	big: {
-		font: grobold40br
+		font: grobold50
 		fontColor: fontyellow
 		focusedFontColor: white
 		disabledFontColor: disabled
-		background: background2
-		disabledBackground: background2_disabled
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
@@ -281,13 +259,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
-		background: window
-		titleFont: grobold40br
+		background: button_round
+		titleFont: grobold50
 		stageBackground: stagebackground
 	}
 	small: {
 		background: background2
-		titleFont: grobold25bl
+		titleFont: grobold25
 	}
 	frameless: {
 		titleFont: grobold25

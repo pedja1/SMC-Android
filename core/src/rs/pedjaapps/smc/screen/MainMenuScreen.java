@@ -227,7 +227,7 @@ public class MainMenuScreen extends AbstractScreen {
         Skin skin = game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
         selectionAdapter = new SelectionAdapter(loadSelectionItems(), this, skin);
 
-        TextButton play = new TextButton("Play", skin);
+        TextButton play = new TextButton("PLAY", skin);
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
