@@ -20,6 +20,12 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	}
 }
 com.badlogic.gdx.graphics.Color: {
+	button_pressed: {
+		r: 0.21960784
+		g: 0.21960784
+		b: 0.21960784
+		a: 1
+	}
 	disabled: {
 		r: 0.53666645
 		g: 0.53666645
@@ -73,6 +79,14 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	background_disabled: {
 		name: background
 		color: disabled
+	}
+	button_firing: {
+		name: button_fire
+		color: button_pressed
+	}
+	button_jumping: {
+		name: button_jump
+		color: button_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {

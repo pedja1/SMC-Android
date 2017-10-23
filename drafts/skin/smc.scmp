@@ -429,58 +429,6 @@ atlasData: {
 			name: window
 		}
 		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_jump.png
-			bgColor: {
-				r: 0
-				g: 0
-				b: 0
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: button_jump
-		}
-		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_jumping.png
-			bgColor: {
-				r: 1
-				g: 1
-				b: 1
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: button_jumping
-		}
-		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_fire.png
-			bgColor: {
-				r: 0
-				g: 0
-				b: 0
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: button_fire
-		}
-		{
-			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_firing.png
-			bgColor: {
-				r: 1
-				g: 1
-				b: 1
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: button_firing
-		}
-		{
 			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/touchpad.png
 			bgColor: {
 				r: 0
@@ -571,10 +519,72 @@ atlasData: {
 			tintName: null
 			name: game_maryo_l
 		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_fire.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: button_fire
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_jump.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: button_jump
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_fire.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: button_pressed
+			name: button_firing
+		}
+		{
+			file: C:/Users/Benni/Documents/Eigene Dokumente/game/smc/drafts/skin/smc_data/button_jump.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: button_pressed
+			name: button_jumping
+		}
 	]
 }
 jsonData: {
 	colors: [
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 0.21960784
+				g: 0.21960784
+				b: 0.21960784
+				a: 1
+			}
+			name: button_pressed
+		}
 		{
 			class: com.ray3k.skincomposer.data.ColorData
 			color: {
