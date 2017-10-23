@@ -6,9 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -62,7 +60,6 @@ public class HUD {
     private TextButton pauseButton, play, musicButton;
     private Button fire, jump;
     private Touchpad touchpad;
-    private TextureRegion item, itemBox, maryoL, goldM;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private Table buttonsTable;
     private float stateTime;
@@ -217,10 +214,6 @@ public class HUD {
         });
 
         TextureAtlas dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
-        item = dynAtlas.findRegion(MushroomDefault.TEXTURE_NAME);
-        itemBox = skin.getAtlas().findRegion("game_itembox");
-        maryoL = skin.getAtlas().findRegion("game_maryo_l");
-        goldM = skin.getAtlas().findRegion("game_gold_m");
 
         readyLbl = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
         readyLbl.setAlignment(Align.center);
@@ -277,12 +270,12 @@ public class HUD {
         buttonsTable.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.top);
         stage.addActor(buttonsTable);
 
-        imItemBox = new Image(itemBox);
+        imItemBox = new Image(skin, "game_itembox");
         imItemBox.setPosition(MaryoGame.NATIVE_WIDTH / 2 - ibSize, MaryoGame.NATIVE_HEIGHT - ibSize - ibSize / 5);
         imItemBox.setSize(ibSize, ibSize);
         stage.addActor(imItemBox);
 
-        imItemInBox = new Image(item);
+        imItemInBox = new Image(dynAtlas.findRegion(MushroomDefault.TEXTURE_NAME));
         imItemInBox.setSize(imItemBox.getWidth() * 0.5f, imItemBox.getHeight() * 0.5f);
         imItemInBox.setPosition(imItemBox.getX() + imItemBox.getWidth() * .25f,
                 imItemBox.getY() + imItemBox.getHeight() * .25f);
@@ -301,7 +294,7 @@ public class HUD {
             }
         });
 
-        imMaryoL = new Image(maryoL);
+        imMaryoL = new Image(skin, "game_maryo_l");
         imMaryoL.setSize(ibSize / 1.25f, ibSize / 2.5f);
         imMaryoL.setPosition(pauseButton.getX() - imMaryoL.getHeight() * 3, imItemBox.getY() + imItemBox.getHeight()
                 - imMaryoL.getHeight() - imMaryoL.getHeight() / 2);
@@ -322,7 +315,7 @@ public class HUD {
         scoreLabel.setPosition(padX, imMaryoL.getY() + (imMaryoL.getHeight() - scoreLabel.getHeight()) / 2);
         stage.addActor(scoreLabel);
 
-        imWaffles = new Image(goldM);
+        imWaffles = new Image(skin, "game_gold_m");
         imWaffles.setSize(imWaffles.getWidth() / 2, imWaffles.getHeight() / 2);
         imWaffles.setPosition(padX * 2 + scoreLabel.getWidth(), scoreLabel.getY());
         stage.addActor(imWaffles);
@@ -516,7 +509,8 @@ public class HUD {
         hintLabel.setText(hint);
         hintLabel.clearActions();
         hintLabel.setVisible(isInGame(gameScreen.getGameState()));
-        hintLabel.addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.delay(duration), Actions.fadeOut(.2f), Actions.visible(false)));
+        hintLabel.addAction(Actions.sequence(Actions.fadeIn(.2f), Actions.delay(duration), Actions.fadeOut(.2f),
+                Actions.visible(false)));
     }
 
     private String formatPointsString(int points) {
