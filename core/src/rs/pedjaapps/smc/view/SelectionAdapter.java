@@ -1,43 +1,49 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 
-public class SelectionAdapter extends Dialog {
-    public static final int ITEMS_COL_CNT = 10;
+public class SelectionAdapter extends Group {
     private MainMenuScreen mainMenuScreen;
+    private Skin skin;
 
-    public SelectionAdapter(Array<Level> items, MainMenuScreen mainMenuScreen, Skin skin) {
-        super("", skin);
+    public SelectionAdapter(MainMenuScreen mainMenuScreen, Skin skin) {
+        super();
 
         this.mainMenuScreen = mainMenuScreen;
+        this.skin = skin;
+    }
 
-        Table mainTable = getContentTable();
-        mainTable.row();
-        mainTable.add(new Label("Select Level", skin, "outline")).colspan(ITEMS_COL_CNT);
+    public void inflateWidgets(Array<Level> items) {
+        Table levelTable = new Table();
 
-        int col = 0;
-        int offset = 0;
+        Label lblChoose = new Label("Choose your challenge!", skin, Assets.LABEL_BORDER60);
+        lblChoose.setFontScale(.7f);
+        levelTable.add(lblChoose);
+
+        int number = 0;
         for (Level level : items) {
-            if (col == 0)
-                mainTable.row();
-            col++;
-            offset++;
+            levelTable.row();
+            number++;
 
             final String levelId = level.levelId;
-            TextButton levelButton = new TextButton(String.valueOf(offset), skin, "small");
+            Button levelButton = new Button(skin, Assets.BUTTON_SMALL);
             levelButton.setDisabled(!level.isUnlocked && !MaryoGame.GAME_DEVMODE);
             levelButton.addListener(new ChangeListener() {
                 @Override
@@ -48,25 +54,46 @@ public class SelectionAdapter extends Dialog {
                 }
             });
 
-            mainTable.add(levelButton);
+            levelButton.add(new Label(String.valueOf(number), skin, Assets.LABEL_BORDER60)).minWidth(100);
+            levelButton.add(new Label(level.levelId + "\n" + "Score: " + level.currentScore + "\nBest: " + level
+                    .bestScore, skin,
+                    Assets.LABEL_BORDER25)).fill().minWidth(300);
 
-            if (col == ITEMS_COL_CNT)
-                col = 0;
-
+            levelTable.add(levelButton).fill().uniform().pad(15);
         }
 
-        TextButton backButton = new TextButton("Back", skin, "small");
+        levelTable.row();
+        Label lbl = new Label("And there is even more to come! Or use the level editor!", skin, Assets.LABEL_BORDER25);
+        lbl.setWrap(true);
+        lbl.setAlignment(Align.center);
+        levelTable.add(lbl).fill();
+
+        ScrollPane scrollPane = new ScrollPane(levelTable);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setWidth(getWidth() * .5f);
+        scrollPane.setHeight(getHeight());
+        scrollPane.setPosition(getWidth() / 2, getHeight() / 2, Align.center);
+        this.addActor(scrollPane);
+
+        TextButton backButton = new TextButton("Back", skin, Assets.BUTTON_SMALL);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                SelectionAdapter.this.hide();
+                goBack();
             }
         });
-        getButtonTable().add(backButton);
+        backButton.setPosition(10, 10, Align.bottomLeft);
+        this.addActor(backButton);
+    }
+
+    protected void goBack() {
     }
 
     public static class Level {
         public boolean isUnlocked;
-        public String levelId, levelNumber;
+        public String levelId;
+        public TextureRegion icon;
+        public int currentScore;
+        public int bestScore;
     }
 }

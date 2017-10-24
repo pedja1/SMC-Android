@@ -13,17 +13,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -40,6 +39,7 @@ import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
+import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.MusicButton;
 import rs.pedjaapps.smc.view.SelectionAdapter;
@@ -48,7 +48,7 @@ import rs.pedjaapps.smc.view.SelectionAdapter;
  * Created by pedja on 2/17/14.
  */
 public class MainMenuScreen extends AbstractScreen {
-    public final Label.LabelStyle simpleLabel = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+    public static final float DURATION_TRANSITION = .5f;
     public MaryoGame game;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
@@ -234,9 +234,17 @@ public class MainMenuScreen extends AbstractScreen {
             go.initAssets();
 
         skin = game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
-        selectionAdapter = new SelectionAdapter(loadSelectionItems(), this, skin);
+        selectionAdapter = new SelectionAdapter(this, skin) {
+            @Override
+            protected void goBack() {
+                hideLevels();
+            }
+        };
 
         initStartMenu();
+
+        selectionAdapter.setSize(stage.getWidth(), stage.getHeight());
+        selectionAdapter.inflateWidgets(loadSelectionItems());
     }
 
     private void initStartMenu() {
@@ -248,7 +256,7 @@ public class MainMenuScreen extends AbstractScreen {
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                selectionAdapter.show(stage);
+                showLevels();
             }
         });
 
@@ -277,131 +285,33 @@ public class MainMenuScreen extends AbstractScreen {
         gameVersion.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                showAboutDialog();
+                new AboutDialog(skin).show(stage);
                 return true;
             }
         });
         startMenu.addActor(gameVersion);
     }
 
-    private void showAboutDialog() {
+    private void showLevels() {
+        if (startMenu.hasActions())
+            return;
 
-        Runnable gpl3runnable = getLicenseBoxRunnable("data/about/license_gpl3.txt");
-        Runnable apache2runnable = getLicenseBoxRunnable("data/about/license_ap2.txt");
-
-        Table aboutTable = new Table();
-        aboutTable.defaults().pad(5).align(Align.center);
-
-        aboutTable.add(new Label("Secret Chronicles Classic", skin, Assets.LABEL_BORDER60));
-        aboutTable.row();
-        aboutTable.add(new Label("Version " + MaryoGame.GAME_VERSION, skin, Assets.LABEL_SIMPLE25));
-        aboutTable.row();
-        aboutTable.add(new Label("brought to you by Benjamin Schulte", skin, Assets.LABEL_SIMPLE25));
-        aboutTable.row().padBottom(40);
-        aboutTable.add(getButtonsTable(Array.with("Website", "Google Play", "License"),
-                Array.with(getWebRunnable(MaryoGame.GAME_WEBURL),
-                        getWebRunnable(MaryoGame.GAME_STOREURL),
-                        gpl3runnable), Assets.BUTTON_SMALL));
-
-        aboutTable.row();
-        aboutTable.add(new Label("This game is based on the following projects:", skin, Assets.LABEL_SIMPLE25));
-
-        aboutTable.row().padTop(40);
-        aboutTable.add(getCenteredSmallLabel("Graphics, levels, sounds:\nSecret Maryo Chronicles by Florian Richter " +
-                "and others")).fill();
-        aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("http://www.secretmaryo.org/"),
-                        gpl3runnable)));
-
-        aboutTable.row().padTop(40);
-        aboutTable.add(getCenteredSmallLabel("Source code:\nSMC-Android by Predrag Cokulov")).fill();
-        aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("https://github.com/pedja1/SMC-Android"), gpl3runnable)));
-
-        aboutTable.row().padTop(40);
-        aboutTable.add(getCenteredSmallLabel("Source code:\nlibGDX game development framework")).fill();
-        aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("http://libgdx.badlogicgames.com/"), apache2runnable)));
-
-        aboutTable.row().padTop(40);
-        aboutTable.add(getCenteredSmallLabel("Game service connection:\ngdx-gamesvcs by Benjamin Schulte")).fill();
-        aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("https://github.com/MrStahlfelge/gdx-gamesvcs"), apache2runnable)));
-
-        aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Source code"),
-                Array.with(getWebRunnable(MaryoGame.GAME_SOURCEURL))));
-
-        Dialog aboutBox = constructScrollDialog(aboutTable, .8f, .5f);
-        aboutBox.show(stage);
-
+        startMenu.addAction(Actions.moveTo(0, stage.getHeight(), DURATION_TRANSITION, Interpolation.circle));
+        selectionAdapter.setPosition(0, -selectionAdapter.getHeight());
+        selectionAdapter.clearActions();
+        stage.addActor(selectionAdapter);
+        selectionAdapter.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
     }
 
-    private Runnable getLicenseBoxRunnable(final String file) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                String license = Gdx.files.internal(file).readString();
-                Label textLabel = new Label(license, simpleLabel);
-                textLabel.setWrap(true);
+    private void hideLevels() {
+        if (startMenu.hasActions())
+            return;
 
-                Dialog licenseBox = constructScrollDialog(textLabel, .5f, .75f);
-                licenseBox.show(stage);
-            }
-        };
+        selectionAdapter.clearActions();
+        selectionAdapter.addAction(Actions.sequence(Actions.moveTo(0, -selectionAdapter.getHeight(),
+                DURATION_TRANSITION, Interpolation.circle),
+                Actions.removeActor()));
+        startMenu.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
     }
 
-    private Runnable getWebRunnable(final String url) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                Gdx.net.openURI(url);
-            }
-        };
-    }
-
-    private Table getButtonsTable(Array<String> label, final Array<Runnable> run) {
-        return getButtonsTable(label, run, Assets.BUTTON_SMALL_FRAMELESS);
-    }
-
-    private Table getButtonsTable(Array<String> label, final Array<Runnable> run, String styleName) {
-        Table storebuttons = new Table();
-        for (int i = 0; i < label.size; i++) {
-            TextButton actor = new TextButton(label.get(i), skin, styleName);
-            final Runnable runnable = run.get(i);
-            if (runnable != null)
-                actor.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        runnable.run();
-                    }
-
-                });
-            storebuttons.add(actor).uniform().fill().pad(5);
-
-        }
-        return storebuttons;
-    }
-
-    private Label getCenteredSmallLabel(String text) {
-        Label smLabel = new Label(text, skin, Assets.LABEL_SIMPLE25);
-        smLabel.setWrap(true);
-        smLabel.setAlignment(Align.center);
-        return smLabel;
-    }
-
-    private Dialog constructScrollDialog(Actor scrollActor, float percentWidth, float percentHeight) {
-        Dialog aboutBox = new Dialog("", skin, Assets.WINDOW_SMALL);
-        ScrollPane scrollPane = new ScrollPane(scrollActor, skin);
-        scrollPane.setScrollingDisabled(true, false);
-        scrollPane.setFadeScrollBars(false);
-        aboutBox.getContentTable().add(scrollPane).minWidth(stage.getWidth() * percentWidth)
-                .height(stage.getHeight() * percentHeight);
-        aboutBox.button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
-        return aboutBox;
-    }
 }

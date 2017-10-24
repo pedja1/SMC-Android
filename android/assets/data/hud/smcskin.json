@@ -99,6 +99,14 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		down: button_firing
 		disabled: button_firing
 	}
+	small: {
+		up: button_small_font
+		down: button_small_font_pressed
+		disabled: button_small_font_pressed
+	}
+	shadow: {
+		up: background2
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
