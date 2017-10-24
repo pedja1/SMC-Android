@@ -17,9 +17,13 @@ public class MaryoGame extends Game
 	public static final int NATIVE_WIDTH = 1024;
 	public static final int NATIVE_HEIGHT = 576;
 
+	public static final String GAME_VERSION = "1.1.1710";
     public static final boolean GAME_DEVMODE = true;
+	public static final String GAME_STOREURL = "https://play.google.com/store/apps/details?id=de.golfgl.smc.android";
+	public static final String GAME_WEBURL = "https://www.golfgl.de/smcplf/";
+	public static final String GAME_SOURCEURL = "https://www.golfgl.de/smcplf/smcsrc.zip";
 
-	public Assets assets;
+    public Assets assets;
 	private Event event;
 
 	public MaryoGame(Event event)

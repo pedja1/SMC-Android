@@ -23,28 +23,10 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.21960784
 		a: 1
 	}
-	disabled: {
-		r: 0.53666645
-		g: 0.53666645
-		b: 0.53666645
-		a: 1
-	}
 	down: {
 		r: 0
 		g: 0.59666634
 		b: 0.061259847
-		a: 1
-	}
-	emphasized: {
-		r: 0.73333305
-		g: 0.73333305
-		b: 0.73333305
-		a: 1
-	}
-	fontyellow: {
-		r: 0.9764706
-		g: 1
-		b: 0.6039216
 		a: 1
 	}
 	transparent: {
@@ -152,28 +134,22 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 	}
 	small: {
 		font: grobold25
-		fontColor: fontyellow
-		disabledFontColor: disabled
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
 		font: grobold50
-		fontColor: fontyellow
+		fontColor: white
 	}
 	small: {
 		font: grobold25
-		fontColor: fontyellow
+		fontColor: white
 	}
 	outline: {
 		font: grobold60bl
 	}
 	outline_small: {
 		font: grobold25bl
-	}
-	box: {
-		font: grobold60bl
-		fontColor: white
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
@@ -188,8 +164,10 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: {
-		hScrollKnob: progressbarbef_pressed
-		vScrollKnob: progressbarbef_pressed
+		hScroll: progressbarbef_pressed
+		hScrollKnob: progressbarbef
+		vScroll: progressbarbef_pressed
+		vScrollKnob: progressbarbef
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
@@ -222,28 +200,26 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		font: fa45
 		fontColor: white
 		downFontColor: button_pressed
-		disabledFontColor: disabled
 		up: button_round
 		down: button_round_pressed
 	}
 	fa45noborder: {
 		font: fa45
 	}
+	smallnoborder: {
+		font: grobold25
+		fontColor: white
+		downFontColor: button_pressed
+		disabledFontColor: button_pressed
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {
 		font: grobold50
 		fontColor: white
-		focusedFontColor: emphasized
 		disabledFontColor: button_pressed
 		background: button_round_font
 		disabledBackground: button_round_font_pressed
-	}
-	big: {
-		font: grobold50
-		fontColor: fontyellow
-		focusedFontColor: white
-		disabledFontColor: disabled
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {

@@ -32,6 +32,7 @@ public class Assets {
     public static final String BUTTON_FA = "fa45";
     public static final String BUTTON_FA_FRAMELESS = "fa45noborder";
     public static final String BUTTON_SMALL = "small";
+    public static final String BUTTON_SMALL_FRAMELESS = "smallnoborder";
 
     public static final String SOUND_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.ogg";
     public static final String SOUND_ITEM_LIVE_UP = "data/sounds/item/live_up.ogg";
