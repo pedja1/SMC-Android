@@ -40,6 +40,7 @@ public class LoadingScreen extends AbstractScreen {
 
         progressBar.setSize(stage.getWidth() * .75f, 30);
         progressBar.setPosition(stage.getWidth() / 2, 20, Align.bottom);
+        progressBar.setColor(skin.getColor(Assets.COLOR_EMPH2));
 
         stage.addActor(progressBar);
 
@@ -48,6 +49,7 @@ public class LoadingScreen extends AbstractScreen {
         stage.addActor(imGameLogo);
 
         Label loading = new Label("Loading...", skin, "outline");
+        loading.setFontScale(.8f);
         loading.setPosition(stage.getWidth() / 2, progressBar.getY() + progressBar.getHeight() + 10, Align.bottom);
         loading.addAction(HUD.getForeverFade());
         stage.addActor(loading);

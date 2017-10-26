@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -26,13 +25,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -42,7 +39,7 @@ import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.MusicButton;
-import rs.pedjaapps.smc.view.SelectionAdapter;
+import rs.pedjaapps.smc.view.ChoseLevelView;
 
 /**
  * Created by pedja on 2/17/14.
@@ -62,10 +59,10 @@ public class MainMenuScreen extends AbstractScreen {
     private Sound audioOn;
     private World world;
     private ParticleEffect cloudsPEffect;
-    private SelectionAdapter selectionAdapter;
+    private ChoseLevelView choseLevelView;
     private Viewport viewPort;
+    private Image shadeBackground;
 
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
     private TextureRegion marioFrame;
     private Group startMenu;
     private Skin skin;
@@ -93,22 +90,9 @@ public class MainMenuScreen extends AbstractScreen {
     }
 
     public static Image createLogoImage(MaryoGame game) {
-        TextureRegion gameLogo = game.assets.manager.get(Assets.SKIN_HUD, Skin.class)
-                .getAtlas().findRegion(Assets.LOGO_GAME);
-        Image imGameLogo = new Image(gameLogo);
+        Image imGameLogo = new Image(game.assets.manager.get(Assets.SKIN_HUD, Skin.class), Assets.LOGO_GAME);
         imGameLogo.setSize(imGameLogo.getWidth() * .9f, imGameLogo.getHeight() * .9f);
         return imGameLogo;
-    }
-
-    private Array<SelectionAdapter.Level> loadSelectionItems() {
-        Array<SelectionAdapter.Level> items = new Array<SelectionAdapter.Level>();
-        for (int i = 0; i < GameSave.LEVELS.size(); i++) {
-            SelectionAdapter.Level level = new SelectionAdapter.Level();
-            if (i < GameSave.LEVELS.size()) level.levelId = GameSave.LEVELS.get(i);
-            level.isUnlocked = i == 0 || GameSave.isUnlocked(level.levelId);
-            items.add(level);
-        }
-        return items;
     }
 
     @Override
@@ -225,8 +209,9 @@ public class MainMenuScreen extends AbstractScreen {
 
         world.level = loader.level;
 
-        TextureAtlas atlas = game.assets.manager.get(Assets.ATLAS_DYNAMIC);
-        marioFrame = atlas.findRegion("maryo_small_" + GameObject.TKey.stand_right.toString());
+        TextureAtlas dynAtlas = game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        marioFrame = dynAtlas.findRegion("maryo_" + GameSave.save.playerState.toString()
+                + "_" + GameObject.TKey.stand_right.toString());
 
         audioOn = game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class);
 
@@ -234,7 +219,7 @@ public class MainMenuScreen extends AbstractScreen {
             go.initAssets();
 
         skin = game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
-        selectionAdapter = new SelectionAdapter(this, skin) {
+        choseLevelView = new ChoseLevelView(this, skin) {
             @Override
             protected void goBack() {
                 hideLevels();
@@ -243,16 +228,22 @@ public class MainMenuScreen extends AbstractScreen {
 
         initStartMenu();
 
-        selectionAdapter.setSize(stage.getWidth(), stage.getHeight());
-        selectionAdapter.inflateWidgets(loadSelectionItems());
+        choseLevelView.setSize(stage.getWidth(), stage.getHeight());
+        choseLevelView.inflateWidgets(dynAtlas);
     }
 
     private void initStartMenu() {
+        shadeBackground = new Image(skin, "stagebackground");
+        shadeBackground.setFillParent(true);
+        shadeBackground.getColor().a = 0;
+        stage.addActor(shadeBackground);
+
         startMenu = new Group();
         startMenu.setSize(stage.getWidth(), stage.getHeight());
         stage.addActor(startMenu);
-        TextButton play = new TextButton(FontAwesome.BIG_PLAY, skin, Assets.BUTTON_FA);
-        play.setWidth(200);
+        TextButton play = new TextButton("Play", skin, Assets.BUTTON_BORDER);
+        play.getLabel().setFontScale(.8f);
+        play.setSize(play.getPrefWidth() * 1.2f, play.getPrefHeight());
         play.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -296,19 +287,23 @@ public class MainMenuScreen extends AbstractScreen {
         if (startMenu.hasActions())
             return;
 
+        shadeBackground.addAction(Actions.alpha(.8f, DURATION_TRANSITION));
+
         startMenu.addAction(Actions.moveTo(0, stage.getHeight(), DURATION_TRANSITION, Interpolation.circle));
-        selectionAdapter.setPosition(0, -selectionAdapter.getHeight());
-        selectionAdapter.clearActions();
-        stage.addActor(selectionAdapter);
-        selectionAdapter.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
+        choseLevelView.setPosition(0, -choseLevelView.getHeight());
+        choseLevelView.clearActions();
+        stage.addActor(choseLevelView);
+        choseLevelView.onShow(stage);
+        choseLevelView.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
     }
 
     private void hideLevels() {
         if (startMenu.hasActions())
             return;
 
-        selectionAdapter.clearActions();
-        selectionAdapter.addAction(Actions.sequence(Actions.moveTo(0, -selectionAdapter.getHeight(),
+        shadeBackground.addAction(Actions.alpha(0, DURATION_TRANSITION));
+        choseLevelView.clearActions();
+        choseLevelView.addAction(Actions.sequence(Actions.moveTo(0, -choseLevelView.getHeight(),
                 DURATION_TRANSITION, Interpolation.circle),
                 Actions.removeActor()));
         startMenu.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));

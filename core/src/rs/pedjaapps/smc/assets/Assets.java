@@ -29,10 +29,15 @@ public class Assets {
     public static final String WINDOW_NOFRAME = "frameless";
     public static final String WINDOW_SMALL = "small";
 
+    public static final String BUTTON_BORDER = "framed";
     public static final String BUTTON_FA = "fa45";
     public static final String BUTTON_FA_FRAMELESS = "fa45noborder";
     public static final String BUTTON_SMALL = "small";
     public static final String BUTTON_SMALL_FRAMELESS = "smallnoborder";
+
+    public static final String COLOR_EMPH1 = "emph1";
+    public static final String COLOR_EMPH2 = "emph2";
+    public static final String COLOR_PRESSED = "button_pressed";
 
     public static final String SOUND_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.ogg";
     public static final String SOUND_ITEM_LIVE_UP = "data/sounds/item/live_up.ogg";

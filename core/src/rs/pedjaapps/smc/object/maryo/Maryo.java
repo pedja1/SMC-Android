@@ -36,6 +36,7 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
+import rs.pedjaapps.smc.utility.Level;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.TextUtils;
 
@@ -976,7 +977,7 @@ public class Maryo extends DynamicObject
         if (TextUtils.isEmpty(exit.levelName) && TextUtils.isEmpty(exit.entry))
         {
             String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-            nextLevelName = GameSave.getNextLevel(currentLevel);
+            nextLevelName = Level.getNextLevel(currentLevel);
 
             if (((GameScreen) world.screen).parent != null)
             {

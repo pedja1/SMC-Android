@@ -23,10 +23,16 @@ com.badlogic.gdx.graphics.Color: {
 		b: 0.21960784
 		a: 1
 	}
-	down: {
-		r: 0
-		g: 0.59666634
-		b: 0.061259847
+	emph1: {
+		r: 0.105882354
+		g: 0.7176471
+		b: 0.047058824
+		a: 1
+	}
+	emph2: {
+		r: 0.92941177
+		g: 0.50980395
+		b: 0.003921569
 		a: 1
 	}
 	transparent: {
@@ -63,10 +69,6 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 		name: button_small_font
 		color: button_pressed
 	}
-	progressbarbef_green: {
-		name: progressbarbef
-		color: down
-	}
 	progressbarbef_pressed: {
 		name: progressbarbef
 		color: button_pressed
@@ -81,6 +83,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	}
 	checkbox_checked_disabled: {
 		name: checkbox_checked
+		color: button_pressed
+	}
+	button_font_frame_pressed: {
+		name: button_font_frame
 		color: button_pressed
 	}
 }
@@ -106,6 +112,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	}
 	shadow: {
 		up: background2
+	}
+	framed: {
+		up: button_font_frame
+		down: button_font_frame_pressed
+		disabled: button_font_frame_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
@@ -143,6 +154,13 @@ com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
 	small: {
 		font: grobold25
 	}
+	framed: {
+		font: grobold60bl
+		disabledFontColor: button_pressed
+		up: button_font_frame
+		down: button_font_frame_pressed
+		disabled: button_font_frame_pressed
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
@@ -163,7 +181,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
 		background: transparent
-		knobBefore: progressbarbef_green
+		knobBefore: progressbarbef
 	}
 	default-vertical: {
 		background: progressbar_9
@@ -208,8 +226,10 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		font: fa45
 		fontColor: white
 		downFontColor: button_pressed
+		disabledFontColor: button_pressed
 		up: button_round
 		down: button_round_pressed
+		disabled: button_round_pressed
 	}
 	fa45noborder: {
 		font: fa45
@@ -219,6 +239,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: white
 		downFontColor: button_pressed
 		disabledFontColor: button_pressed
+	}
+	framed: {
+		font: grobold60bl
+		disabledFontColor: button_pressed
+		up: button_font_frame
+		down: button_font_frame_pressed
+		disabled: button_font_frame_pressed
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {

@@ -21,14 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
-import java.awt.Font;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
@@ -59,16 +56,14 @@ public class HUD {
     private float noUpdateDuration = UPDATE_FREQ;
     private World world;
     private GameScreen gameScreen;
-    private TextButton pauseButton, play, musicButton;
+    private TextButton pauseButton, playButton, musicButton;
     private Button fire, jump;
     private Touchpad touchpad;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private Table buttonsTable;
     private float stateTime;
     private int points;
     private String pointsText;
     private Label readyLbl;
-    private Label pauseLabel;
     private Label scoreLabel;
     private Label coinsLabel;
     private Label timeLabel;
@@ -85,6 +80,7 @@ public class HUD {
     private Image imHelp;
     private boolean showFps;
     private Image imItemInBox;
+    private TextButton cancelButton;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -223,39 +219,40 @@ public class HUD {
         readyLbl.addAction(getForeverFade());
         stage.addActor(readyLbl);
 
-        imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
-        imGameLogo.setSize(imGameLogo.getWidth() * .6f, imGameLogo.getHeight() * .6f);
-        imGameLogo.setPosition(stage.getWidth() / 2, padX / 2, Align.bottom);
-        imGameLogo.getColor().a = .8f;
-        stage.addActor(imGameLogo);
-
         gameOverLabel = new Label("GAME OVER", skin, Assets.LABEL_BORDER60);
-        gameOverLabel.setPosition(stage.getWidth() / 2,
-                (stage.getHeight() + imGameLogo.getY() + imGameLogo.getHeight()) / 2, Align.center);
+        gameOverLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - 50, Align.center);
         gameOverLabel.addAction(Actions.forever(
-                Actions.sequence(Actions.color(Color.SALMON, 1f), Actions.color(Color.WHITE, 1f))));
+                Actions.sequence(Actions.color(skin.getColor(Assets.COLOR_EMPH2), 1f),
+                        Actions.color(Color.WHITE, 1f))));
         stage.addActor(gameOverLabel);
 
-        pauseLabel = new Label("PAUSE", skin, Assets.LABEL_BORDER60);
-        pauseLabel.setPosition(stage.getWidth() / 2, stage.getHeight() * .75f, Align.center);
-        pauseLabel.addAction(getForeverFade());
-        stage.addActor(pauseLabel);
-
-        TextButton cancelButton = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
+        cancelButton = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
         cancelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.exitToMenu();
             }
         });
+        cancelButton.setPosition(10, 10, Align.bottomLeft);
+        stage.addActor(cancelButton);
 
-        play = new TextButton(FontAwesome.BIG_PLAY, skin, Assets.BUTTON_FA);
-        play.addListener(new ChangeListener() {
+        playButton = new TextButton("PAUSE", skin, Assets.BUTTON_BORDER);
+        playButton.getLabel().setFontScale(.8f);
+        playButton.setHeight(playButton.getPrefHeight());
+        playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             }
         });
+        playButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - 50, Align.center);
+        stage.addActor(playButton);
+
+        imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
+        imGameLogo.setPosition(stage.getWidth() / 2, (stage.getHeight() + playButton.getY() + playButton.getHeight()) /
+                2, Align.center);
+        stage.addActor(imGameLogo);
+
 
         musicButton = new MusicButton(skin, world.screen.game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class)) {
             @Override
@@ -263,14 +260,8 @@ public class HUD {
                 return gameScreen.getMusic();
             }
         };
-
-        buttonsTable = new Table();
-        buttonsTable.defaults().uniform().pad(padX / 2).fill();
-        buttonsTable.add(cancelButton);
-        buttonsTable.add(play).uniform(false, true).minWidth(250);
-        buttonsTable.add(musicButton);
-        buttonsTable.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.top);
-        stage.addActor(buttonsTable);
+        musicButton.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
+        stage.addActor(musicButton);
 
         imItemBox = new Image(skin, "game_itembox");
         imItemBox.setPosition(MaryoGame.NATIVE_WIDTH / 2 - ibSize, MaryoGame.NATIVE_HEIGHT - ibSize - ibSize / 5);
@@ -382,11 +373,11 @@ public class HUD {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
         boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.save.lifes < 0);
         boolean isInGame = isInGame(gameState);
+        boolean isPaused = (gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
         readyLbl.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
 
         gameOverLabel.setVisible(isGameOver);
-        pauseLabel.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
         if (!isInGame) {
             imHelp.setVisible(false);
@@ -404,8 +395,10 @@ public class HUD {
         timeLabel.setVisible(isInGame || showFps);
         imMaryoL.setVisible(isInGame);
         livesLabel.setVisible(isInGame);
-        buttonsTable.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED);
-        imGameLogo.setVisible(gameState == GameScreen.GAME_STATE.GAME_PAUSED || isGameOver);
+        playButton.setVisible(isPaused);
+        musicButton.setVisible(isPaused);
+        cancelButton.setVisible(isPaused);
+        imGameLogo.setVisible(isPaused || isGameOver);
         pauseButton.setVisible(isInGame && !isGameOver);
         jump.setVisible(isInGame && !isGameOver && !hasKeyboardOrController);
         fire.setVisible(jump.isVisible() && world.maryo.hasFireAbility());
