@@ -44,6 +44,7 @@ import static com.badlogic.gdx.Gdx.gl;
 public class HUD {
     public static final float TOUCHPAD_DEAD_RADIUS = .33f;
     private static final float UPDATE_FREQ = .15f;
+    public static final String IMAGE_WAFFLES = "game_gold_m";
     private static boolean keyboardF1HintShown;
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
@@ -233,7 +234,7 @@ public class HUD {
                 gameScreen.exitToMenu();
             }
         });
-        cancelButton.setPosition(10, 10, Align.bottomLeft);
+        cancelButton.setPosition(10, stage.getHeight() - 10, Align.topLeft);
         stage.addActor(cancelButton);
 
         playButton = new TextButton("PAUSE", skin, Assets.BUTTON_BORDER);
@@ -307,7 +308,7 @@ public class HUD {
         scoreLabel.setPosition(padX, imMaryoL.getY() + (imMaryoL.getHeight() - scoreLabel.getHeight()) / 2);
         stage.addActor(scoreLabel);
 
-        imWaffles = new Image(skin, "game_gold_m");
+        imWaffles = new Image(skin, IMAGE_WAFFLES);
         imWaffles.setSize(imWaffles.getWidth() / 2, imWaffles.getHeight() / 2);
         imWaffles.setPosition(padX * 2 + scoreLabel.getWidth(), scoreLabel.getY());
         stage.addActor(imWaffles);

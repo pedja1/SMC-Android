@@ -63,7 +63,7 @@ public class MainMenuScreen extends AbstractScreen {
     private Viewport viewPort;
     private Image shadeBackground;
 
-    private TextureRegion marioFrame;
+    private Image maryo;
     private Group startMenu;
     private Skin skin;
 
@@ -123,8 +123,6 @@ public class MainMenuScreen extends AbstractScreen {
         cloudsPEffect.draw(batch, delta);
 
         drawObjects(delta);
-
-        batch.draw(marioFrame, 1.4f, 4.609375f, 0.85f, 0.85f);
 
         batch.end();
 
@@ -210,8 +208,6 @@ public class MainMenuScreen extends AbstractScreen {
         world.level = loader.level;
 
         TextureAtlas dynAtlas = game.assets.manager.get(Assets.ATLAS_DYNAMIC);
-        marioFrame = dynAtlas.findRegion("maryo_" + GameSave.save.playerState.toString()
-                + "_" + GameObject.TKey.stand_right.toString());
 
         audioOn = game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class);
 
@@ -230,6 +226,12 @@ public class MainMenuScreen extends AbstractScreen {
 
         choseLevelView.setSize(stage.getWidth(), stage.getHeight());
         choseLevelView.inflateWidgets(dynAtlas);
+
+        maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.save.playerState.toString()
+                + "_" + GameObject.TKey.stand_right.toString()));
+        maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
+        maryo.setPosition(100, 378);
+        stage.addActor(maryo);
     }
 
     private void initStartMenu() {
