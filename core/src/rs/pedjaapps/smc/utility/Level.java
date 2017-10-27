@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -67,6 +66,9 @@ public class Level {
 
                     levelIds.add(curlevel.levelId);
                     levels.put(curlevel.levelId, curlevel);
+
+                    if (numLevel == 1)
+                        GameSave.unlockLevel(curlevel.levelId);
                 }
             }
         }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -28,6 +28,9 @@ public class ChoseLevelView extends Group {
     private ScrollPane levelScrollPane;
     private Label numLives;
     private Group statusgroup;
+    private Table levelStatusGroup;
+    private TextButton backButton;
+    private LevelButton currentSelectedButton;
 
     public ChoseLevelView(MainMenuScreen mainMenuScreen, Skin skin) {
         super();
@@ -38,6 +41,7 @@ public class ChoseLevelView extends Group {
 
     public void inflateWidgets(TextureAtlas dynAtlas) {
         Table levelTable = new Table();
+        LevelButton preselected = null;
 
         Label lblChoose = new Label("Choose challenge!", skin, Assets.LABEL_BORDER60);
         lblChoose.setFontScale(.6f);
@@ -58,13 +62,20 @@ public class ChoseLevelView extends Group {
             LevelButton levelButton = new LevelButton(skin, dynAtlas) {
                 @Override
                 protected void onChosen() {
-                    ChoseLevelView.this.mainMenuScreen.game.setScreen(
-                            new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
-                                    getLevel().levelId), false));
+                    if (!isMarked())
+                        levelButtonSelected(this);
+                    else if (isUnlocked() || MaryoGame.GAME_DEVMODE)
+                        ChoseLevelView.this.mainMenuScreen.game.setScreen(
+                                new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
+                                        getLevel().levelId), false));
+
                 }
             };
             levelButton.setLevel(level, GameSave.isUnlocked(levelId));
             levelTable.add(levelButton).fill().uniform().pad(15);
+
+            if (levelButton.isUnlocked())
+                preselected = levelButton;
         }
 
         levelTable.row();
@@ -75,7 +86,7 @@ public class ChoseLevelView extends Group {
         lbl.setAlignment(Align.center);
         levelTable.add(lbl).fill().minHeight(getHeight() * .35f);
 
-        TextButton backButton = new TextButton(FontAwesome.LEFT_ARROW, skin, Assets.BUTTON_FA);
+        backButton = new TextButton(FontAwesome.LEFT_ARROW, skin, Assets.BUTTON_FA);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -130,24 +141,80 @@ public class ChoseLevelView extends Group {
         imCoins.setPosition(numCoins.getX() - 5, numCoins.getY(), Align.bottomRight);
         statusgroup.addActor(imCoins);
 
-        Label lblTotal = new Label("TOTAL SCORE", skin, Assets.LABEL_BORDER60);
-        lblTotal.setFontScale(.4f);
-        lblTotal.setHeight(lblTotal.getPrefHeight());
-        lblTotal.setPosition(numCoins.getX(), getHeight() - 10, Align.topLeft);
+        Label lblTotal = getScaledLabel("TOTAL SCORE", .5f);
+        lblTotal.setPosition(levelScrollPane.getX() / 2, getHeight() / 2, Align.center);
         statusgroup.addActor(lblTotal);
 
-        Label totalScore = new Label(String.valueOf(GameSave.save.points), skin, Assets.LABEL_BORDER60);
-        totalScore.setFontScale(.7f);
-        totalScore.setHeight(totalScore.getPrefHeight());
-        totalScore.setPosition(lblTotal.getX(), lblTotal.getY() + 5, Align.topLeft);
+        Label totalScore = getScaledLabel(String.valueOf(GameSave.save.points), .6f);
+        totalScore.setPosition(levelScrollPane.getX() / 2, lblTotal.getY(), Align.top);
         statusgroup.addActor(totalScore);
-
 
         addActor(statusgroup);
 
+        levelScrollPane.validate();
+
+        levelButtonSelected(preselected);
+    }
+
+    private void levelButtonSelected(LevelButton levelButton) {
+        if (currentSelectedButton != levelButton && currentSelectedButton != null)
+            currentSelectedButton.setMarked(false);
+
+        currentSelectedButton = levelButton;
+        levelButton.setMarked(true);
+
+        if (levelStatusGroup != null)
+            removeActor(levelStatusGroup);
+
+        final Level level = currentSelectedButton.getLevel();
+
+        levelStatusGroup = new Table();
+        levelStatusGroup.add().minWidth(numLives.getX());
+        levelStatusGroup.add().minWidth(levelScrollPane.getX() - numLives.getX());
+        levelStatusGroup.row();
+        if (levelButton.isUnlocked()) {
+            levelStatusGroup.add(getScaledLabel("LEVEL " + level.number + " SCORES", .5f)).colspan(2).padBottom(5);
+
+            levelStatusGroup.row();
+            levelStatusGroup.add(new Label("CURRENT", skin, Assets.LABEL_BORDER25)).right().bottom()
+                    .padRight(5);
+            levelStatusGroup.add(getScaledLabel(String.valueOf(level.currentScore), .5f)).left();
+
+            levelStatusGroup.row();
+            levelStatusGroup.add(new Label("BEST", skin, Assets.LABEL_BORDER25)).right().bottom()
+                    .padRight(5);
+            levelStatusGroup.add(getScaledLabel(String.valueOf(level.bestScore), .5f)).left();
+        } else {
+            Label levelTitle = getScaledLabel("LEVEL " + level.number + " LOCKED", .5f);
+            levelStatusGroup.add(levelTitle).colspan(2).padBottom(5);
+
+            levelStatusGroup.row();
+            Label unlockHint = getScaledLabel("CLEAR LEVEL " + String.valueOf(level.number - 1)
+                    + " TO UNLOCK", .5f);
+            levelStatusGroup.add(unlockHint).colspan(2);
+            unlockHint.addAction(HUD.getForeverFade());
+            levelTitle.addAction(HUD.getForeverFade());
+        }
+
+
+        levelStatusGroup.row();
+        levelStatusGroup.add(new TextButton("SHOW LEADER", skin, Assets.BUTTON_SMALL_FRAMELESS)).colspan(2)
+                .padTop(5).minHeight(backButton.getPrefHeight() * .75f);
+        levelStatusGroup.validate();
+        levelStatusGroup.setPosition(levelScrollPane.getX() / 2, levelStatusGroup.getPrefHeight() / 2 + 10);
+        addActor(levelStatusGroup);
+    }
+
+    private Label getScaledLabel(String text, float scale) {
+        Label newLabelActor = new Label(text, skin, Assets.LABEL_BORDER60);
+        newLabelActor.setFontScale(scale);
+        newLabelActor.setHeight(newLabelActor.getPrefHeight());
+        newLabelActor.setWidth(newLabelActor.getPrefWidth());
+        return newLabelActor;
     }
 
     protected void goBack() {
+        //overriden
     }
 
     /**
@@ -159,5 +226,7 @@ public class ChoseLevelView extends Group {
         //statusgroup.addAction(Actions.sequence(Actions.alpha(0),
         //        Actions.delay(MainMenuScreen.DURATION_TRANSITION), Actions.fadeIn(1f)));
         stage.setScrollFocus(levelScrollPane);
+        if (currentSelectedButton != null)
+            currentSelectedButton.scrollTo();
     }
 }
