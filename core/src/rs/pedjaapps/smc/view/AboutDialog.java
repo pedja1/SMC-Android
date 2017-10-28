@@ -41,10 +41,10 @@ public class AboutDialog extends ScrollDialog {
         aboutTable.row();
         aboutTable.add(new Label("brought to you by Benjamin Schulte", skin, Assets.LABEL_SIMPLE25));
         aboutTable.row().padBottom(40);
-        aboutTable.add(getButtonsTable(Array.with("Website", "Google Play", "License"),
-                Array.with(getWebRunnable(MaryoGame.GAME_WEBURL),
+        aboutTable.add(getButtonsTable(new String[] {"Website", "Google Play", "License"},
+                new Runnable[] {getWebRunnable(MaryoGame.GAME_WEBURL),
                         getWebRunnable(MaryoGame.GAME_STOREURL),
-                        gpl3runnable), Assets.BUTTON_SMALL));
+                        gpl3runnable}, Assets.BUTTON_SMALL));
 
         aboutTable.row();
         aboutTable.add(new Label("This game is based on the following projects:", skin, Assets.LABEL_SIMPLE25));
@@ -53,31 +53,31 @@ public class AboutDialog extends ScrollDialog {
         aboutTable.add(getCenteredSmallLabel("Graphics, levels, sounds:\nSecret Maryo Chronicles by Florian Richter " +
                 "and others")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("http://www.secretmaryo.org/"),
-                        gpl3runnable)));
+        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
+                new Runnable[] {getWebRunnable("http://www.secretmaryo.org/"),
+                        gpl3runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Source code:\nSMC-Android by Predrag Cokulov")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("https://github.com/pedja1/SMC-Android"), gpl3runnable)));
+        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
+                new Runnable[] {getWebRunnable("https://github.com/pedja1/SMC-Android"), gpl3runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Source code:\nlibGDX game development framework")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("http://libgdx.badlogicgames.com/"), apache2runnable)));
+        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
+                new Runnable[] {getWebRunnable("http://libgdx.badlogicgames.com/"), apache2runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Game service connection:\ngdx-gamesvcs by Benjamin Schulte")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Website", "License"),
-                Array.with(getWebRunnable("https://github.com/MrStahlfelge/gdx-gamesvcs"), apache2runnable)));
+        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
+                new Runnable[] {getWebRunnable("https://github.com/MrStahlfelge/gdx-gamesvcs"), apache2runnable}));
 
         aboutTable.row();
-        aboutTable.add(getButtonsTable(Array.with("Source code"),
-                Array.with(getWebRunnable(MaryoGame.GAME_SOURCEURL))));
+        aboutTable.add(getButtonsTable(new String[] {"Source code"},
+                new Runnable[] {getWebRunnable(MaryoGame.GAME_SOURCEURL)}));
 
         scrollActor = aboutTable;
     }
@@ -106,15 +106,15 @@ public class AboutDialog extends ScrollDialog {
         };
     }
 
-    private Table getButtonsTable(Array<String> label, final Array<Runnable> run) {
+    private Table getButtonsTable(String[] label, Runnable[] run) {
         return getButtonsTable(label, run, Assets.BUTTON_SMALL_FRAMELESS);
     }
 
-    private Table getButtonsTable(Array<String> label, final Array<Runnable> run, String styleName) {
+    private Table getButtonsTable(String[] label, final Runnable[] run, String styleName) {
         Table storebuttons = new Table();
-        for (int i = 0; i < label.size; i++) {
-            TextButton actor = new TextButton(label.get(i), skin, styleName);
-            final Runnable runnable = run.get(i);
+        for (int i = 0; i < label.length; i++) {
+            TextButton actor = new TextButton(label[i], skin, styleName);
+            final Runnable runnable = run[i];
             if (runnable != null)
                 actor.addListener(new ChangeListener() {
                     @Override
