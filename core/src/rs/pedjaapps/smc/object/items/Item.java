@@ -9,6 +9,8 @@ import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.DynamicObject;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.items.mushroom.Mushroom;
+import rs.pedjaapps.smc.object.items.mushroom.MushroomBlue;
+import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
 
 /**
  * Created by pedja on 24.5.14..
@@ -80,6 +82,20 @@ public abstract class Item extends DynamicObject
             default:
                 return null;
         }
+    }
+
+    public static String getSavedItemTextureName(int itemType) {
+        switch (itemType) {
+            case TYPE_MUSHROOM_BLUE:
+                return MushroomBlue.TEXTURE_NAME;
+            case TYPE_MUSHROOM_DEFAULT:
+                return MushroomDefault.TEXTURE_NAME;
+            case TYPE_FIREPLANT:
+                return "game_items_fireplant";
+            default:
+                return null;
+        }
+
     }
 
     public static Item createObject(World world, Assets assets, int itemType, String objectClassString, Vector2 size, Vector3 position)

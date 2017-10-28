@@ -15,10 +15,13 @@ import rs.pedjaapps.smc.utility.GameSave;
  */
 public class MushroomBlue extends Mushroom
 {
+
+    public static final String TEXTURE_NAME = "game_items_mushroom_blue";
+
     public MushroomBlue(World world, Vector2 size, Vector3 position)
     {
         super(world, size, position);
-        textureName = "game_items_mushroom_blue";
+        textureName = TEXTURE_NAME;
         mPickPoints = 700;
     }
 

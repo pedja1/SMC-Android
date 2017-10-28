@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -31,7 +32,7 @@ import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
+import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -43,8 +44,8 @@ import static com.badlogic.gdx.Gdx.gl;
 
 public class HUD {
     public static final float TOUCHPAD_DEAD_RADIUS = .33f;
-    private static final float UPDATE_FREQ = .15f;
     public static final String IMAGE_WAFFLES = "game_gold_m";
+    private static final float UPDATE_FREQ = .15f;
     private static boolean keyboardF1HintShown;
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
@@ -71,6 +72,7 @@ public class HUD {
     private Label livesLabel;
     private Label hintLabel;
     private Image imItemBox;
+    private int shownItemInBox;
     private Image imWaffles;
     private Image imMaryoL;
     private Skin skin;
@@ -82,6 +84,7 @@ public class HUD {
     private boolean showFps;
     private Image imItemInBox;
     private TextButton cancelButton;
+    private TextureAtlas dynAtlas;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -212,7 +215,7 @@ public class HUD {
             }
         });
 
-        TextureAtlas dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
+        dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
 
         readyLbl = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
         readyLbl.setAlignment(Align.center);
@@ -269,7 +272,7 @@ public class HUD {
         imItemBox.setSize(ibSize, ibSize);
         stage.addActor(imItemBox);
 
-        imItemInBox = new Image(dynAtlas.findRegion(MushroomDefault.TEXTURE_NAME));
+        imItemInBox = new Image();
         imItemInBox.setSize(imItemBox.getWidth() * 0.5f, imItemBox.getHeight() * 0.5f);
         imItemInBox.setPosition(imItemBox.getX() + imItemBox.getWidth() * .25f,
                 imItemBox.getY() + imItemBox.getHeight() * .25f);
@@ -390,7 +393,7 @@ public class HUD {
 
         scoreLabel.setVisible(isInGame);
         imItemBox.setVisible(isInGame);
-        imItemInBox.setVisible(isInGame && GameSave.getItem() != 0);
+        refreshItemInBox();
         coinsLabel.setVisible(isInGame);
         imWaffles.setVisible(isInGame);
         timeLabel.setVisible(isInGame || showFps);
@@ -461,14 +464,23 @@ public class HUD {
                         gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED)
                     lifesToShow++;
                 livesLabel.setText(this.lives.toString(lifesToShow));
-
-                imItemInBox.setVisible(GameSave.getItem() != 0 && imItemBox.isVisible());
+                refreshItemInBox();
             }
         }
 
         stage.getViewport().apply();
         stage.act(deltaTime);
         stage.draw();
+    }
+
+    private void refreshItemInBox() {
+        int savedItem = GameSave.getItem();
+        imItemInBox.setVisible(savedItem != 0 && imItemBox.isVisible());
+        if (savedItem != shownItemInBox) {
+            imItemInBox.setDrawable(new TextureRegionDrawable(
+                    dynAtlas.findRegion(Item.getSavedItemTextureName(savedItem))));
+            shownItemInBox = savedItem;
+        }
     }
 
     public void showPopupBox(String text) {

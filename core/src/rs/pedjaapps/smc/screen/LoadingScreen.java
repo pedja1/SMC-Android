@@ -41,6 +41,7 @@ public class LoadingScreen extends AbstractScreen {
         progressBar.setSize(stage.getWidth() * .75f, 30);
         progressBar.setPosition(stage.getWidth() / 2, 20, Align.bottom);
         progressBar.setColor(skin.getColor(Assets.COLOR_EMPH2));
+        progressBar.setAnimateDuration(.15f);
 
         stage.addActor(progressBar);
 
@@ -87,7 +88,7 @@ public class LoadingScreen extends AbstractScreen {
             game.setScreen(screenToLoadAfter);
         }
 
-        progressBar.setValue(assetsLoaded ? game.assets.manager.getProgress() * 100 : 5);
+        progressBar.setValue(Math.max(assetsLoaded ? game.assets.manager.getProgress() * 100 : 0, 2));
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setProjectionMatrix(stage.getCamera().combined);

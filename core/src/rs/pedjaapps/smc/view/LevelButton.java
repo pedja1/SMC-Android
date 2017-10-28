@@ -127,7 +127,7 @@ public class LevelButton extends Button {
     }
 
     private String getStatusLabel() {
-        return !unlocked ? "LOCKED" : marked ? "HIT TO PLAY" : level.currentScore > 0 ?
+        return !unlocked ? "LOCKED" : marked ? "PRESS TO PLAY" : level.currentScore > 0 ?
                 "SCORE " + String.valueOf(level.currentScore) : "UNLOCKED";
     }
 

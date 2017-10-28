@@ -36,18 +36,21 @@ public class ScrollDialog extends Dialog {
         this.scrollActor = scrollActor;
     }
 
-    private void addScrollWidget(Stage stage) {
+    private ScrollPane addScrollWidget(Stage stage) {
         ScrollPane scrollPane = new ScrollPane(scrollActor, skin);
         scrollPane.setScrollingDisabled(true, false);
         scrollPane.setFadeScrollBars(false);
         getContentTable().add(scrollPane).minWidth(stage.getWidth() * percentWidth)
                 .height(stage.getHeight() * percentHeight);
         button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
+        return scrollPane;
     }
 
     @Override
     public Dialog show(Stage stage) {
-        addScrollWidget(stage);
-        return super.show(stage);
+        ScrollPane scrollPane = addScrollWidget(stage);
+        Dialog dialog = super.show(stage);
+        stage.setScrollFocus(scrollPane);
+        return dialog;
     }
 }

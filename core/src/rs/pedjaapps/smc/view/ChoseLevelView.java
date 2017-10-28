@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Align;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
+import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -123,6 +124,14 @@ public class ChoseLevelView extends Group {
 
         // Statusinfos zu Maryo
         statusgroup = new Group();
+
+        if (GameSave.getItem() != 0) {
+            Image imItem = new Image(dynAtlas.findRegion(Item.getSavedItemTextureName(GameSave.getItem())));
+            imItem.setScale(.7f);
+            imItem.setPosition(165, 380);
+            statusgroup.addActor(imItem);
+        }
+
         numLives = new Label(String.valueOf("x" + GameSave.save.lifes), skin, Assets.LABEL_BORDER60);
         numLives.setFontScale(.5f);
         // die Zahlen sind die von Maryo
@@ -141,12 +150,12 @@ public class ChoseLevelView extends Group {
         imCoins.setPosition(numCoins.getX() - 5, numCoins.getY(), Align.bottomRight);
         statusgroup.addActor(imCoins);
 
-        Label lblTotal = getScaledLabel("TOTAL SCORE", .5f);
-        lblTotal.setPosition(levelScrollPane.getX() / 2, getHeight() / 2, Align.center);
+        Label lblTotal = getScaledLabel("SCORE", .5f);
+        lblTotal.setPosition(numCoins.getX() - 6, getHeight() / 2, Align.right);
         statusgroup.addActor(lblTotal);
 
-        Label totalScore = getScaledLabel(String.valueOf(GameSave.save.points), .6f);
-        totalScore.setPosition(levelScrollPane.getX() / 2, lblTotal.getY(), Align.top);
+        Label totalScore = getScaledLabel(String.valueOf(GameSave.save.points), .5f);
+        totalScore.setPosition(numCoins.getX(), getHeight() / 2, Align.left);
         statusgroup.addActor(totalScore);
 
         addActor(statusgroup);
@@ -173,17 +182,23 @@ public class ChoseLevelView extends Group {
         levelStatusGroup.add().minWidth(levelScrollPane.getX() - numLives.getX());
         levelStatusGroup.row();
         if (levelButton.isUnlocked()) {
-            levelStatusGroup.add(getScaledLabel("LEVEL " + level.number + " SCORES", .5f)).colspan(2).padBottom(5);
+            levelStatusGroup.add();
+            levelStatusGroup.add(getScaledLabel("LEVEL " + level.number + " SCORES", .5f)).padBottom(5).left();
 
             levelStatusGroup.row();
-            levelStatusGroup.add(new Label("CURRENT", skin, Assets.LABEL_BORDER25)).right().bottom()
-                    .padRight(5);
-            levelStatusGroup.add(getScaledLabel(String.valueOf(level.currentScore), .5f)).left();
+            if (level.bestScore == 0 && level.currentScore == 0) {
+                levelStatusGroup.add();
+                levelStatusGroup.add(getScaledLabel("- NO SCORES YET -", .5f)).left();
+            } else {
+                levelStatusGroup.add(new Label("CURRENT", skin, Assets.LABEL_BORDER25)).right().bottom()
+                        .padRight(5);
+                levelStatusGroup.add(getScaledLabel(String.valueOf(level.currentScore), .5f)).left();
 
-            levelStatusGroup.row();
-            levelStatusGroup.add(new Label("BEST", skin, Assets.LABEL_BORDER25)).right().bottom()
-                    .padRight(5);
-            levelStatusGroup.add(getScaledLabel(String.valueOf(level.bestScore), .5f)).left();
+                levelStatusGroup.row();
+                levelStatusGroup.add(new Label("BEST", skin, Assets.LABEL_BORDER25)).right().bottom()
+                        .padRight(5);
+                levelStatusGroup.add(getScaledLabel(String.valueOf(level.bestScore), .5f)).left();
+            }
         } else {
             Label levelTitle = getScaledLabel("LEVEL " + level.number + " LOCKED", .5f);
             levelStatusGroup.add(levelTitle).colspan(2).padBottom(5);
