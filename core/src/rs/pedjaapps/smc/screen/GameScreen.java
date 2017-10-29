@@ -125,7 +125,8 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void setGameState(GAME_STATE gameState) {
-        if (gameState == GAME_STATE.GAME_PAUSED && this.gameState == GAME_STATE.PLAYER_DIED)
+        if (gameState == GAME_STATE.GAME_PAUSED &&
+                (this.gameState == GAME_STATE.PLAYER_DIED || this.gameState == GAME_STATE.PLAYER_DEAD))
             return;
 
         if (gameState == GAME_STATE.GAME_PAUSED && this.gameState != GAME_STATE.GAME_PAUSED)

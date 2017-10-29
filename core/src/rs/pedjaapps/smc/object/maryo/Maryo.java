@@ -1171,6 +1171,9 @@ public class Maryo extends DynamicObject
     {
         if (maryoState == MaryoState.small || forceDie)
         {
+            if (mInvincibleStar)
+                MusicManager.stop(false);
+
             worldState = WorldState.DYING;
             GameSave.save.playerState = MaryoState.small;
             setMarioState(MaryoState.small);
@@ -1281,6 +1284,7 @@ public class Maryo extends DynamicObject
         public void start()
         {
             diedTime = stateTime;
+            MusicManager.stop(true);
             handleCollision = false;
             diedPosition = new Vector3(position);
             Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_DEAD);
