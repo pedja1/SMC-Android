@@ -2274,13 +2274,13 @@
 		<Property name="posx" value="375" />
 		<Property name="posy" value="-100" />
 		<Property name="image" value="blocks/wood/1.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<sprite>
 		<Property name="posx" value="375" />
 		<Property name="posy" value="-299" />
 		<Property name="image" value="blocks/wood/1.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<item>
 		<Property name="type" value="goldpiece" />
