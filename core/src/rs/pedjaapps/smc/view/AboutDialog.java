@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.assets.FontAwesome;
 
 /**
  * Created by Benjamin Schulte on 24.10.2017.
@@ -80,6 +81,7 @@ public class AboutDialog extends ScrollDialog {
                 new Runnable[] {getWebRunnable(MaryoGame.GAME_SOURCEURL)}));
 
         scrollActor = aboutTable;
+        button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
     }
 
     private Runnable getLicenseBoxRunnable(final String file) {
@@ -92,6 +94,7 @@ public class AboutDialog extends ScrollDialog {
 
                 ScrollDialog licenseBox = new ScrollDialog(skin, .5f, .75f);
                 licenseBox.setScrollActor(textLabel);
+                licenseBox.button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
                 licenseBox.show(stage);
             }
         };

@@ -42,7 +42,6 @@ public class ScrollDialog extends Dialog {
         scrollPane.setFadeScrollBars(false);
         getContentTable().add(scrollPane).minWidth(stage.getWidth() * percentWidth)
                 .height(stage.getHeight() * percentHeight);
-        button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
         return scrollPane;
     }
 
