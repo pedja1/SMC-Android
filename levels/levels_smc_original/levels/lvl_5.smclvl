@@ -6085,7 +6085,7 @@
 		<Property name="posx" value="6427" />
 		<Property name="posy" value="-891" />
 		<Property name="image" value="clouds/default_1/1_middle.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<sprite>
 		<Property name="posx" value="5324" />
@@ -6097,7 +6097,7 @@
 		<Property name="posx" value="6174" />
 		<Property name="posy" value="-1223" />
 		<Property name="image" value="clouds/default_1/1_middle.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<box>
 		<Property name="posx" value="5885" />
@@ -7739,7 +7739,7 @@
 		<Property name="posx" value="7643" />
 		<Property name="posy" value="-651" />
 		<Property name="image" value="clouds/default_1/1_right.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<sprite>
 		<Property name="posx" value="13407" />
@@ -7823,13 +7823,13 @@
 		<Property name="posx" value="7249" />
 		<Property name="posy" value="-715" />
 		<Property name="image" value="clouds/default_1/1_right.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<sprite>
 		<Property name="posx" value="6889" />
 		<Property name="posy" value="-862" />
 		<Property name="image" value="clouds/default_1/1_right.png" />
-		<Property name="type" value="halfmassive" />
+		<Property name="type" value="massive" />
 	</sprite>
 	<moving_platform>
 		<Property name="posx" value="10193" />

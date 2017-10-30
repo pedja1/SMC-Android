@@ -352,7 +352,7 @@ public class Gee extends Enemy
     @Override
     public int hitByPlayer(Maryo maryo, boolean vertical)
     {
-        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
+        if (maryo.velocity.y < velocity.y && vertical && maryo.mColRect.y >= mColRect.y)//enemy death from above
         {
             ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
             dying = true;
