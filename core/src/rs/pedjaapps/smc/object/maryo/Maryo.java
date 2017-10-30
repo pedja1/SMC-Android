@@ -1126,10 +1126,11 @@ public class Maryo extends DynamicObject
 
     private void hitEnemy(Enemy enemy, boolean vertical)
     {
+        boolean doBounce = false;
         int resolution = enemy.hitByPlayer(this, vertical);
         if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
         {
-            velocity.y = 5f * Gdx.graphics.getDeltaTime();
+            doBounce = true;
             GameSave.save.points += enemy.mKillPoints;
         }
         else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
@@ -1138,8 +1139,14 @@ public class Maryo extends DynamicObject
                 downgradeOrDie(false);
         }
         else if (vertical)
-        {
+            doBounce = true;
+
+        if (doBounce) {
             velocity.y = 5f * Gdx.graphics.getDeltaTime();
+            if (keys.contains(Keys.JUMP)) {
+                jumpPeakReached = false;
+                downPressTime = POWER_JUMP_DELTA + 1;
+            }
         }
     }
 
@@ -1640,16 +1647,17 @@ public class Maryo extends DynamicObject
 
     public void jumpPressed()
     {
+        keys.add(Keys.JUMP);
         if (grounded || getWorldState() == GameObject.WorldState.CLIMBING)
         {
             setWorldState(GameObject.WorldState.JUMPING);
             jumpPeakReached = false;
-            keys.add(Keys.JUMP);
 
             setJumpSound();
             Sound sound = jumpSound;
             SoundManager.play(sound);
-        }
+        } else
+            jumpPeakReached = true;
     }
 
     public void firePressed()
