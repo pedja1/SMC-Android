@@ -45,6 +45,8 @@ import static rs.pedjaapps.smc.object.Sprite.GROUND_ICE;
 
 public class Maryo extends DynamicObject
 {
+
+
     private enum Keys
     {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
@@ -67,7 +69,8 @@ public class Maryo extends DynamicObject
         small, big, fire, ice
     }
 
-    public static float STAR_EFFECT_TIMEOUT = 15f;
+    public static float STAR_EFFECT_TIMEOUT = 16f;
+    public static final float STAR_EFFECT_SPEEDFACTOR = 1.2f;
     private static final float GLIM_COLOR_START_ALPHA = 0f;
     private static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
 
@@ -161,6 +164,7 @@ public class Maryo extends DynamicObject
     public boolean mInvincibleStar;
     private final Color glimColor = new Color(0.160784314f, 0.654901961f, 1f, GLIM_COLOR_START_ALPHA);
     private float glimCounter;
+    private boolean starMusicPlaying;
     private boolean glimMode = true;
     private float starEffectTime;
     public boolean canWalkOnAir = false;
@@ -647,6 +651,7 @@ public class Maryo extends DynamicObject
             }
             else
             {
+                float speedFactor = (mInvincibleStar ? STAR_EFFECT_SPEEDFACTOR : 1f);
                 if (keys.contains(Keys.LEFT))
                 {
                     // left is pressed
@@ -655,7 +660,7 @@ public class Maryo extends DynamicObject
                     {
                         setWorldState(Maryo.WorldState.WALKING);
                     }
-                    velocity.set(velocity.x = -4.5f, velocity.y, velocity.z);
+                    velocity.set(velocity.x = -4.5f * speedFactor, velocity.y, velocity.z);
                 }
                 else if (keys.contains(Keys.RIGHT))
                 {
@@ -665,7 +670,7 @@ public class Maryo extends DynamicObject
                     {
                         setWorldState(Maryo.WorldState.WALKING);
                     }
-                    velocity.set(velocity.x = +4.5f, velocity.y, velocity.z);
+                    velocity.set(velocity.x = +4.5f * speedFactor, velocity.y, velocity.z);
                 }
                 else if (keys.contains(Keys.DOWN))
                 {
@@ -960,11 +965,18 @@ public class Maryo extends DynamicObject
             {
                 glimCounter -= (delta * 6f);
             }
-            if (starEffectTime >= STAR_EFFECT_TIMEOUT)
-            {
+            // Musik 1 Sekunde vor Ablauf beenden und blinken ebenfalls
+            if (starEffectTime >= STAR_EFFECT_TIMEOUT - 1f) {
+                if (starMusicPlaying)
+                    MusicManager.stop(false);
+                starMusicPlaying = false;
+                glimCounter = GLIM_COLOR_START_ALPHA;
+            } else
+                starMusicPlaying = true;
+            //und wenn die Zeit um ist, dann ganz beenden
+            if (starEffectTime >= STAR_EFFECT_TIMEOUT) {
                 mInvincibleStar = false;
                 starEffectTime = 0;
-                MusicManager.stop(false);
             }
         }
     }
@@ -1162,9 +1174,11 @@ public class Maryo extends DynamicObject
     }
 
     @Override
-    public float maxVelocity()
-    {
-        return MAX_VEL;
+    public float maxVelocity() {
+        if (mInvincibleStar)
+            return MAX_VEL * STAR_EFFECT_SPEEDFACTOR;
+        else
+            return MAX_VEL;
     }
 
     public void downgradeOrDie(boolean forceDie)

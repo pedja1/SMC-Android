@@ -54,7 +54,9 @@ public class MusicManager {
 
     private static void play(Music music, float volume, boolean isMain) {
         wasPlayingBeforePause = null;
-        if (music == null || !PrefsManager.isPlayMusic() && isMain) return;
+        if (music == null || !PrefsManager.isPlayMusic() && isMain || !isMain && !PrefsManager.isPlaySounds())
+            return;
+
         if (isMain) {
             if (main == music && music.isPlaying())
                 return;
