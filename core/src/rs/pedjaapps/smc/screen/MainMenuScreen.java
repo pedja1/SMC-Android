@@ -87,6 +87,9 @@ public class MainMenuScreen extends AbstractScreen {
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
         world = new World(this);
+
+        if (GameSave.getLifes() <= 0)
+            GameSave.resetGameOver();
     }
 
     public static Image createLogoImage(MaryoGame game) {

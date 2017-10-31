@@ -33,8 +33,9 @@ public class GameSave {
         return levelPlaytime;
     }
 
-    public static void addLevelPlaytime(long levelPlaytime) {
-        GameSave.levelPlaytime += levelPlaytime;
+    public static void addLevelPlaytime(long timeToAdd) {
+        levelPlaytime += timeToAdd;
+        totalPlaytime += timeToAdd;
     }
 
     public static void init() {
@@ -53,7 +54,7 @@ public class GameSave {
             Gdx.app.error("GameSave", "Error loading saved state", t);
         }
 
-        if (!didRead || lifes < 0)
+        if (!didRead || lifes <= 0)
             resetGameOver();
     }
 
@@ -220,7 +221,6 @@ public class GameSave {
         persistentItem = item;
         persistentMaryoState = maryoState;
         lifes++;
-        totalPlaytime += levelPlaytime;
 
         Level level = Level.getLevel(levelName);
         level.currentScore = levelScore;

@@ -1,13 +1,14 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -21,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -37,8 +39,10 @@ import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.HUDTimeText;
+import rs.pedjaapps.smc.utility.Level;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.NATypeConverter;
+import rs.pedjaapps.smc.utility.PrefsManager;
 
 import static com.badlogic.gdx.Gdx.gl;
 
@@ -78,14 +82,14 @@ public class HUD {
     private Skin skin;
     private Dialog popupBox;
     private Image imGameLogo;
-    private Label gameOverLabel;
     private boolean hasKeyboardOrController;
     private Image imHelp;
     private boolean showFps;
     private Image imItemInBox;
     private TextButton cancelButton;
     private TextureAtlas dynAtlas;
-
+    private Label levelNamePaused;
+    private Level gamescreenlevel;
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
@@ -94,6 +98,28 @@ public class HUD {
 
     public static RepeatAction getForeverFade() {
         return Actions.forever(Actions.sequence(Actions.alpha(.3f, 1f), Actions.fadeIn(1f)));
+    }
+
+    public boolean isHasKeyboardOrController() {
+        return hasKeyboardOrController;
+    }
+
+    public void setHasKeyboardOrController(boolean hasKeyboardOrController, boolean onInit) {
+        if (this.hasKeyboardOrController == hasKeyboardOrController)
+            return;
+
+        this.hasKeyboardOrController = hasKeyboardOrController;
+
+        if (onInit)
+            return;
+
+        if (hasKeyboardOrController && !keyboardF1HintShown) {
+            if (PrefsManager.showKeyboardHint())
+                showHint("Hold F1 key to see an overview of keys to control the game", 10f);
+            keyboardF1HintShown = true;
+        }
+
+        onGameStateChange();
     }
 
     public void resize(int width, int height) {
@@ -223,13 +249,6 @@ public class HUD {
         readyLbl.addAction(getForeverFade());
         stage.addActor(readyLbl);
 
-        gameOverLabel = new Label("GAME OVER", skin, Assets.LABEL_BORDER60);
-        gameOverLabel.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - 50, Align.center);
-        gameOverLabel.addAction(Actions.forever(
-                Actions.sequence(Actions.color(skin.getColor(Assets.COLOR_EMPH2), 1f),
-                        Actions.color(Color.WHITE, 1f))));
-        stage.addActor(gameOverLabel);
-
         cancelButton = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
         cancelButton.addListener(new ChangeListener() {
             @Override
@@ -240,8 +259,8 @@ public class HUD {
         cancelButton.setPosition(10, stage.getHeight() - 10, Align.topLeft);
         stage.addActor(cancelButton);
 
-        playButton = new TextButton("PAUSE", skin, Assets.BUTTON_BORDER);
-        playButton.getLabel().setFontScale(.8f);
+        playButton = new TextButton("RESUME", skin, Assets.BUTTON_BORDER);
+        playButton.getLabel().setFontScale(.7f);
         playButton.setHeight(playButton.getPrefHeight());
         playButton.addListener(new ChangeListener() {
             @Override
@@ -249,12 +268,18 @@ public class HUD {
                 gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             }
         });
-        playButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 2 - 50, Align.center);
+        playButton.setPosition(stage.getWidth() / 2, 10, Align.bottom);
         stage.addActor(playButton);
 
+        gamescreenlevel = Level.getLevel(gameScreen.getMenuLevelname());
+        levelNamePaused = getScaledLabel("LEVEL " + gamescreenlevel.number + " PAUSED", .8f);
+        levelNamePaused.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        levelNamePaused.addAction(HUD.getForeverFade());
+        stage.addActor(levelNamePaused);
+
         imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
-        imGameLogo.setPosition(stage.getWidth() / 2, (stage.getHeight() + playButton.getY() + playButton.getHeight()) /
-                2, Align.center);
+        imGameLogo.setSize(imGameLogo.getPrefWidth() * .6f, imGameLogo.getPrefHeight() * .6f);
+        imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10, Align.top);
         stage.addActor(imGameLogo);
 
 
@@ -370,18 +395,18 @@ public class HUD {
 
     private boolean isInGame(GameScreen.GAME_STATE gameState) {
         return !(gameState == GameScreen.GAME_STATE.GAME_READY
-                || gameState == GameScreen.GAME_STATE.GAME_PAUSED);
+                || gameState == GameScreen.GAME_STATE.GAME_PAUSED
+                || gameState == GameScreen.GAME_STATE.GAME_LEVEL_END);
     }
 
     public void onGameStateChange() {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
-        boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.getLifes() < 0);
+        boolean isDead = (gameState == GameScreen.GAME_STATE.PLAYER_DIED
+                || gameState == GameScreen.GAME_STATE.PLAYER_DEAD);
         boolean isInGame = isInGame(gameState);
         boolean isPaused = (gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
         readyLbl.setVisible(gameState == GameScreen.GAME_STATE.GAME_READY);
-
-        gameOverLabel.setVisible(isGameOver);
 
         if (!isInGame) {
             imHelp.setVisible(false);
@@ -400,12 +425,13 @@ public class HUD {
         imMaryoL.setVisible(isInGame);
         livesLabel.setVisible(isInGame);
         playButton.setVisible(isPaused);
+        levelNamePaused.setVisible(isPaused);
         musicButton.setVisible(isPaused);
         cancelButton.setVisible(isPaused);
-        imGameLogo.setVisible(isPaused || isGameOver);
-        pauseButton.setVisible(isInGame && !isGameOver);
-        jump.setVisible(isInGame && !isGameOver && !hasKeyboardOrController);
-        fire.setVisible(jump.isVisible() && world.maryo.hasFireAbility());
+        imGameLogo.setVisible(isPaused);
+        pauseButton.setVisible(isInGame && !isDead);
+        jump.setVisible(isInGame && !isDead && !hasKeyboardOrController);
+        fire.setVisible(jump.isVisible() && world.maryo.hasFireAbility() && !isDead);
         touchpad.setVisible(jump.isVisible());
 
         if (!isInGame && popupBox != null && popupBox.hasParent())
@@ -483,6 +509,84 @@ public class HUD {
         }
     }
 
+    public void showLevelEndScreen() {
+        // für gestorben, game over und level erfolgreich beendet
+        popupBox = new Dialog("", skin, Assets.WINDOW_SMALL);
+
+        Table table = popupBox.getContentTable();
+
+        ChangeListener proceed = new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.proceedFromPausedOrEnded();
+            }
+        };
+        TextButton abort = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
+        ChangeListener cancel = new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gameScreen.exitToMenu();
+            }
+        };
+        abort.addListener(cancel);
+
+        popupBox.getButtonTable().defaults().pad(20, 40, 0, 40);
+        if (gameScreen.getGameState() == GameScreen.GAME_STATE.GAME_LEVEL_END) {
+            // erfolgreich beendet
+            table.add(getScaledLabel("LEVEL " + gamescreenlevel.number + " CLEAR", .8f));
+            table.row();
+
+            Table scoreTable = new Table();
+            scoreTable.add(new Label("YOUR SCORE: ", skin, Assets.LABEL_SIMPLE25)).right();
+            scoreTable.add(getScaledLabel(String.valueOf(gamescreenlevel.currentScore), .6f))
+                    .right();
+            scoreTable.row();
+            scoreTable.add(new Label("BEST SCORE: ", skin, Assets.LABEL_SIMPLE25)).right();
+            scoreTable.add(getScaledLabel(String.valueOf(gamescreenlevel.bestScore), .6f))
+                    .right();
+
+            //TODO Show Leaderboard
+
+            table.add(scoreTable).pad(30);
+
+            TextButton toMenu = new TextButton(FontAwesome.MENU_SANDWICH, skin, Assets.BUTTON_FA);
+            toMenu.addListener(cancel);
+            popupBox.getButtonTable().add(toMenu);
+            TextButton nextLevel = new TextButton(FontAwesome.BIG_FORWARD, skin, Assets.BUTTON_FA);
+            nextLevel.addListener(proceed);
+            popupBox.getButtonTable().add(nextLevel);
+        } else if (gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DEAD
+                || gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED) {
+            // gestorben - Game over wenn keine Leben mehr über
+            table.add(getScaledLabel(GameSave.getLifes() > 0 ? "Retry level?" : "GAME OVER", .8f));
+            if (GameSave.getLifes() > 0) {
+                TextButton retry = new TextButton(FontAwesome.ROTATE_RELOAD, skin, Assets.BUTTON_FA);
+                retry.addListener(proceed);
+                popupBox.getButtonTable().add(retry);
+                popupBox.getButtonTable().add(abort);
+            } else {
+                table.row();
+                table.add(new Label("Total score gained: " + GameSave.getTotalScore(),
+                        skin, Assets.LABEL_SIMPLE25));
+
+                //TODO Show Leaderboard
+
+                if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
+                    table.row();
+                    table.add(new Label("Reload the game for new lifes.", skin, Assets.LABEL_SIMPLE25));
+                } else {
+                    popupBox.getButtonTable().add(abort);
+                }
+            }
+        }
+
+        popupBox.setKeepWithinStage(false);
+        popupBox.validate();
+        popupBox.setPosition(stage.getWidth() + popupBox.getWidth(), stage.getHeight() / 2, Align.left);
+        popupBox.show(stage, Actions.moveToAligned(stage.getWidth() / 2, stage.getHeight() / 2, Align.center, .5f,
+                Interpolation.circle));
+    }
+
     public void showPopupBox(String text) {
         popupBox = new Dialog("", skin, Assets.WINDOW_SMALL) {
             @Override
@@ -551,16 +655,11 @@ public class HUD {
         stage.dispose();
     }
 
-    public void setHasKeyboardOrController(boolean hasKeyboardOrController) {
-        if (this.hasKeyboardOrController == hasKeyboardOrController)
-            return;
-
-        if (hasKeyboardOrController && !keyboardF1HintShown) {
-            showHint("Hold F1 key to see an overview of keys to control the game", 10f);
-            keyboardF1HintShown = true;
-        }
-
-        this.hasKeyboardOrController = hasKeyboardOrController;
-        onGameStateChange();
+    private Label getScaledLabel(String text, float scale) {
+        Label newLabelActor = new Label(text, skin, Assets.LABEL_BORDER60);
+        newLabelActor.setFontScale(scale);
+        newLabelActor.setHeight(newLabelActor.getPrefHeight());
+        newLabelActor.setWidth(newLabelActor.getPrefWidth());
+        return newLabelActor;
     }
 }

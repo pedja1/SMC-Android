@@ -341,7 +341,7 @@ public class Furball extends Enemy
             SoundManager.play(sound);
             if(type == Type.boss)
             {
-                ((GameScreen)world.screen).won();
+                ((GameScreen)world.screen).endLevel();
             }
             return HIT_RESOLUTION_ENEMY_DIED;
         }

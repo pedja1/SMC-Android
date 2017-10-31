@@ -132,7 +132,7 @@ public class ChoseLevelView extends Group {
             statusgroup.addActor(imItem);
         }
 
-        numLives = new Label(String.valueOf("x" + GameSave.getLifes()), skin, Assets.LABEL_BORDER60);
+        numLives = new Label("x" + String.valueOf(GameSave.getLifes() - 1), skin, Assets.LABEL_BORDER60);
         numLives.setFontScale(.5f);
         // die Zahlen sind die von Maryo
         numLives.setPosition(175, 390);
@@ -212,9 +212,9 @@ public class ChoseLevelView extends Group {
         }
 
 
-        levelStatusGroup.row();
-        levelStatusGroup.add(new TextButton("SHOW LEADER", skin, Assets.BUTTON_SMALL_FRAMELESS)).colspan(2)
-                .padTop(5).minHeight(backButton.getPrefHeight() * .75f);
+//        levelStatusGroup.row();
+//        levelStatusGroup.add(new TextButton("SHOW LEADER", skin, Assets.BUTTON_SMALL_FRAMELESS)).colspan(2)
+//                .padTop(5).minHeight(backButton.getPrefHeight() * .75f);
         levelStatusGroup.validate();
         levelStatusGroup.setPosition(levelScrollPane.getX() / 2, levelStatusGroup.getPrefHeight() / 2 + 10);
         addActor(levelStatusGroup);

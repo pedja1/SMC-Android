@@ -64,6 +64,20 @@ public class PrefsManager {
         flush();
     }
 
+    /**
+     * den Hinweis maximal fünf mal anzeigen
+     */
+    public static boolean showKeyboardHint() {
+        int keyboardhintshown = prefs.getInteger("keyboardhintshown", 0);
+        keyboardhintshown++;
+        boolean showHintNow = keyboardhintshown <= 5;
+        if (showHintNow) {
+            prefs.putInteger("keyboardhintshown", keyboardhintshown);
+            prefs.flush();
+        }
+        return showHintNow;
+    }
+
     public static void flush() {
         prefs.flush();
     }

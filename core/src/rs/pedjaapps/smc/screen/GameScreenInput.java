@@ -28,17 +28,19 @@ public class GameScreenInput implements InputProcessor {
 
         if (!(keycode == Input.Keys.BACK || keycode == Input.Keys.VOLUME_DOWN
                 || keycode == Input.Keys.VOLUME_UP))
-            gameScreen.hud.setHasKeyboardOrController(true);
+            gameScreen.hud.setHasKeyboardOrController(true, false);
 
         if (waitedForinput)
             return true;
 
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
 
-        if (gameState == GameScreen.GAME_STATE.GAME_PAUSED && keycode == Input.Keys.ENTER)
-            gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
-        else if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
-            return false;
+        if (isGamePausedOrEnded(gameState)) {
+            if (keycode == Input.Keys.ENTER)
+                gameScreen.proceedFromPausedOrEnded();
+            else
+                return false;
+        }
 
         switch (keycode) {
             case Input.Keys.F1:
@@ -86,17 +88,17 @@ public class GameScreenInput implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
+        boolean pausedOrEnded = isGamePausedOrEnded(gameState);
 
         if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
-            if (gameState == GameScreen.GAME_STATE.GAME_PAUSED) {
+            if (pausedOrEnded)
                 gameScreen.exitToMenu();
-            } else {
+            else
                 gameScreen.setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
-            }
             return true;
         }
 
-        if (gameState == GameScreen.GAME_STATE.GAME_PAUSED)
+        if (pausedOrEnded)
             return false;
 
         switch (keycode) {
@@ -135,6 +137,21 @@ public class GameScreenInput implements InputProcessor {
         return true;
     }
 
+    public static boolean isGamePausedOrEnded(GameScreen.GAME_STATE gameState) {
+        boolean pausedOrEnded;
+        switch (gameState) {
+            case GAME_PAUSED:
+            case GAME_LEVEL_END:
+            case PLAYER_DIED:
+            case PLAYER_DEAD:
+                pausedOrEnded = true;
+                break;
+            default:
+                pausedOrEnded = false;
+        }
+        return pausedOrEnded;
+    }
+
     @Override
     public boolean keyTyped(char character) {
         return false;
@@ -148,8 +165,6 @@ public class GameScreenInput implements InputProcessor {
             gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
         else if (gameState == GameScreen.GAME_STATE.SHOW_BOX)
             gameScreen.discardBoxText();
-        else if (gameState == GameScreen.GAME_STATE.PLAYER_DIED)
-            gameScreen.goTouched = true;
         else if (MaryoGame.GAME_DEVMODE &&
                 gameState == GameScreen.GAME_STATE.GAME_EDIT_MODE && x != 0 && y != 0) {
             Vector2 point = World.VECTOR2_POOL.obtain();

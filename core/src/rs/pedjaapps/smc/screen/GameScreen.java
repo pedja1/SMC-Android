@@ -28,6 +28,7 @@ import java.util.List;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
+import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -36,6 +37,7 @@ import rs.pedjaapps.smc.object.maryo.Iceball;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
+import rs.pedjaapps.smc.utility.Level;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.NAHudText;
 import rs.pedjaapps.smc.utility.TextUtils;
@@ -45,6 +47,7 @@ import rs.pedjaapps.smc.view.HUD;
 
 public class GameScreen extends AbstractScreen {
     private static final String GOD_MOD_TEXT = "god";
+    private static final float FREQ_OTU_REFRESH = .2f;
     public OrthographicCamera cam;
     public OrthographicCamera guiCam;
     public HUD hud;
@@ -54,7 +57,6 @@ public class GameScreen extends AbstractScreen {
     public GameScreen parent;
     public boolean resumed, forceCheckEnter;
     protected Vector3 cameraEditModeTranslate = new Vector3();
-    protected boolean goTouched = false;
     private boolean debug;
     private World world;
     private OrthographicCamera pCamera;
@@ -73,13 +75,12 @@ public class GameScreen extends AbstractScreen {
     private GAME_STATE gameState;
     private LevelLoader loader;
     private Music music;
-    private float goAlpha = 0.0f;
     private boolean cameraForceSnap;
     private InputProcessor keyboardAndTouch;
     private Array<GameObject> objectsToUpdate = new Array<>(75);
-    private static final float FREQ_OTU_REFRESH = .2f;
     private float timeSinceUpdObjRefresh = FREQ_OTU_REFRESH;
     private int objRefreshSize;
+    private InputMultiplexer inputprocessor;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
         this(game, fromMenu, levelName, null);
@@ -94,6 +95,8 @@ public class GameScreen extends AbstractScreen {
         height = Gdx.graphics.getHeight();
         world = new World(this);
         hud = new HUD(world, this);
+        if (parent != null)
+            hud.setHasKeyboardOrController(parent.hud.isHasKeyboardOrController(), true);
         keyboardAndTouch = new GameScreenInput(this, world);
         this.cam = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
         this.cam.setToOrtho(false, Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
@@ -120,8 +123,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void setGameState(GAME_STATE gameState) {
-        if (gameState == GAME_STATE.GAME_PAUSED &&
-                (this.gameState == GAME_STATE.PLAYER_DIED || this.gameState == GAME_STATE.PLAYER_DEAD))
+        if (gameState == GAME_STATE.GAME_PAUSED && (GameScreenInput.isGamePausedOrEnded(this.gameState)))
             return;
 
         if (gameState == GAME_STATE.GAME_PAUSED && this.gameState != GAME_STATE.GAME_PAUSED)
@@ -134,8 +136,11 @@ public class GameScreen extends AbstractScreen {
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
                 gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.PLAYER_DIED);
 
-        if (gameState == GAME_STATE.PLAYER_DIED && GameSave.getLifes() < 0)
+        if (gameState == GAME_STATE.PLAYER_DIED || gameState == GAME_STATE.GAME_LEVEL_END)
             MusicManager.stop(true);
+
+        if (gameState == GAME_STATE.PLAYER_DEAD)
+            hud.showLevelEndScreen();
     }
 
     public Music getMusic() {
@@ -167,11 +172,11 @@ public class GameScreen extends AbstractScreen {
         }
         Gdx.input.setCatchBackKey(true);
 
-        InputMultiplexer multiInput = new InputMultiplexer();
-        multiInput.addProcessor(keyboardAndTouch);
-        multiInput.addProcessor(hud.stage);
+        inputprocessor = new InputMultiplexer();
+        inputprocessor.addProcessor(keyboardAndTouch);
+        inputprocessor.addProcessor(hud.stage);
 
-        Gdx.input.setInputProcessor(multiInput);
+        Gdx.input.setInputProcessor(inputprocessor);
         if (!resumed) {
             game.levelStart(levelName);
         }
@@ -256,7 +261,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void endLevel() {
-        String currentLevel = (parent == null ? levelName : parent.levelName);
+        String currentLevel = getMenuLevelname();
 
         if (parent != null) {
             parent.dispose();
@@ -265,8 +270,14 @@ public class GameScreen extends AbstractScreen {
 
         world.screen.game.levelEnd(currentLevel, true);
         GameSave.levelCleared(currentLevel);
+        Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
+        SoundManager.play(clear);
         setGameState(GAME_STATE.GAME_LEVEL_END);
-        exitToMenu();
+        hud.showLevelEndScreen();
+    }
+
+    public String getMenuLevelname() {
+        return parent == null ? levelName : parent.levelName;
     }
 
     private void handleLevelEnded(float delta) {
@@ -286,44 +297,6 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void handlePlayerDied() {
-        if (GameSave.getLifes() < 0 && !goTouched)
-            return;
-
-        // Fade out
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-
-        shapeRenderer.setProjectionMatrix(guiCam.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, goAlpha += 0.033f);
-        shapeRenderer.rect(0, 0, width, height);
-        shapeRenderer.end();
-
-        spriteBatch.setProjectionMatrix(cam.combined);
-        spriteBatch.begin();
-        spriteBatch.end();
-        //background changes to black if i don't add this after blend
-
-        if (goAlpha >= 1) {
-            if (GameSave.getLifes() < 0) {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
-            } else {
-                game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName, parent), false));
-            }
-            game.levelEnd(levelName, false);
-        }
-    }
-
-    public void won() {
-        music = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
-        //TODO einfache Verzögerung!?
-        music.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music music) {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
-            }
-        });
-        MusicManager.play(music);
     }
 
     private void drawBackground() {
@@ -515,7 +488,7 @@ public class GameScreen extends AbstractScreen {
         super.dispose();
         music.stop();
         hud.dispose();
-        Gdx.input.setInputProcessor(null);
+        inputprocessor.clear();
         game.assets.dispose();
         world.dispose();
         if (globalEffect != null) {
@@ -567,7 +540,7 @@ public class GameScreen extends AbstractScreen {
         game.assets.manager.load(Assets.SOUND_ITEM_ICEBALL_HIT, Sound.class);
         game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_EXPLOSION, Sound.class);
 
-        game.assets.manager.load(Assets.MUSIC_COURSECLEAR, Music.class);
+        game.assets.manager.load(Assets.MUSIC_COURSECLEAR, Sound.class);
 
     }
 
@@ -626,6 +599,33 @@ public class GameScreen extends AbstractScreen {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+
+    /**
+     * Wird aufgerufen wenn ENTER oder im HUD weiter gedrückt wird bei Tod, Game Over oder Levenende
+     */
+    public void proceedFromPausedOrEnded() {
+
+        // aus der Pause heraus einfach weitermachen
+        if (gameState == GAME_STATE.GAME_PAUSED)
+            setGameState(GAME_STATE.GAME_RUNNING);
+
+        else if (gameState == GAME_STATE.GAME_LEVEL_END) {
+            // nächstes Level
+            String nextLevel = Level.getNextLevel(getMenuLevelname());
+            if (nextLevel != null)
+                game.setScreen(new LoadingScreen(new GameScreen(game, true, nextLevel), false));
+            else
+                exitToMenu();
+
+        } else if (gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_DIED) {
+            if (GameSave.getLifes() > 0)
+                game.setScreen(new LoadingScreen(new GameScreen(game, true, getMenuLevelname()), false));
+            else
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+
+            game.levelEnd(levelName, false);
+        }
     }
 
     public enum GAME_STATE {
