@@ -34,10 +34,10 @@ public class MushroomLive1 extends Mushroom
     protected void performCollisionAction()
     {
         playerHit = true;
-        GameSave.save.lifes += 1;
+        GameSave.addLifes(1);
         Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_LIVE_UP);
         SoundManager.play(sound);
         world.trashObjects.add(this);
-        GameSave.save.points += mPickPoints;
+        GameSave.addScore(mPickPoints);
     }
 }

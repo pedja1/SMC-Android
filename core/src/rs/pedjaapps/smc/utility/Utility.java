@@ -80,17 +80,7 @@ public class Utility
     }
 
     /*(+x\y-height)/64*/
-	
-	public static String base64Encode(final String input) 
-	{
-		return Base64Coder.encodeString(input);
-	}
-	
-	public static String base64Decode(final String input) 
-	{
-		return Base64Coder.decodeString(input);
-	}
-	
+
 	public static int parseInt(String input, int defValue)
 	{
 		try
@@ -102,7 +92,7 @@ public class Utility
 			return defValue;
 		}
 	}
-	
+
 	public static String millisToString(float millis)
 	{
         int s = (int) millis % 60;
@@ -110,7 +100,7 @@ public class Utility
 
 		return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
 	}
-	
+
     public static void guiPositionToGamePosition(float positionX, float positionY, GameScreen gameScreen, Vector2 point)
     {
         OrthographicCamera cam = gameScreen.cam;
@@ -123,5 +113,23 @@ public class Utility
         point.x = camViewX + positionX / widthMul;
         point.y = camViewY + positionY / heightMul;
     }
+
+    public static String encode(String s, String key) {
+        return new String(Base64Coder.encode(xorWithKey(s.getBytes(), key.getBytes())));
+    }
+
+    public static String decode(String s, String key) {
+        return new String(xorWithKey(Base64Coder.decode(s), key.getBytes()));
+    }
+
+    private static byte[] xorWithKey(byte[] a, byte[] key) {
+        byte[] out = new byte[a.length];
+        for (int i = 0; i < a.length; i++) {
+            out[i] = (byte) (a[i] ^ key[i % key.length]);
+        }
+
+        return out;
+    }
+
 
 }

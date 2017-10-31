@@ -3,11 +3,15 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import rs.pedjaapps.smc.MaryoGame;
+
 /**
  * Created by pedja on 21.9.14..
  */
 public class PrefsManager {
-    public static Preferences prefs = Gdx.app.getPreferences("sccplf");
+    public static final String SCCPLF = "sccplf";
+
+    public static Preferences prefs = Gdx.app.getPreferences(SCCPLF);
 
     public static boolean isPlayMusic() {
         return prefs.getBoolean(PrefsKey.music.toString(), true);
@@ -28,11 +32,17 @@ public class PrefsManager {
     }
 
     public static String getSaveGame() {
-        return prefs.getString(PrefsKey.sg.toString(), null);
+        String savedState = prefs.getString(PrefsKey.sg.toString(), null);
+        if (savedState != null)
+            savedState = Utility.decode(savedState, SCCPLF);
+
+        return savedState;
     }
 
     public static void setSaveGame(String saveGame) {
-        prefs.putString(PrefsKey.sg.toString(), saveGame);
+        if (MaryoGame.GAME_DEVMODE)
+            Gdx.app.log("Gamesave", saveGame);
+        prefs.putString(PrefsKey.sg.toString(), Utility.encode(saveGame, SCCPLF));
         flush();
     }
 

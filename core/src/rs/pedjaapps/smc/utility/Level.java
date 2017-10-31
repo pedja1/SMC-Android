@@ -77,6 +77,9 @@ public class Level {
     }
 
     public static Level getLevel(String levelId) {
+        if (levels == null)
+            getLevelList();
+
         return levels.get(levelId);
     }
 }

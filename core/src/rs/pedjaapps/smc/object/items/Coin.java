@@ -159,7 +159,7 @@ public class Coin extends Item
         GameSave.addCoins(world.screen, coinType == TYPE_YELLOW ? 1 : 5);
         Sound sound = getSound();
         SoundManager.play(sound);
-        GameSave.save.points += points;
+        GameSave.addScore(points);
 
         collect();
     }
@@ -187,7 +187,7 @@ public class Coin extends Item
         {
             GameSave.addCoins(world.screen, 5);
         }
-        GameSave.save.points += points;
+        GameSave.addScore(points);
     }
 
     @Override

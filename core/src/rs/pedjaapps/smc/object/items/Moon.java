@@ -100,8 +100,8 @@ public class Moon extends Item
         if (isInBox) return;
         playerHit = true;
         world.trashObjects.add(this);
-        GameSave.save.lifes += 3;
-        GameSave.save.points += 4000;
+        GameSave.addLifes(3);
+        GameSave.addScore(4000);
 
         Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MOON);
         SoundManager.play(sound);

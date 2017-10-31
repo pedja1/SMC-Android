@@ -104,7 +104,7 @@ public class Fireplant extends Item
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.fire, this, false);
         world.trashObjects.add(this);
-        GameSave.save.points += POINTS;
+        GameSave.addScore(POINTS);
         ((GameScreen)world.screen).killPointsTextHandler.add(POINTS, position.x, position.y + mDrawRect.height);
     }
 

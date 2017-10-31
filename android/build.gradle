@@ -19,6 +19,7 @@ android {
         applicationId "rs.pedjaapps.smc.android"
         versionCode 20160527
         versionName "1.0.1"
+
         minSdkVersion 15
         targetSdkVersion 23
     }

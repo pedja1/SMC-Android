@@ -328,7 +328,7 @@ public class HUD {
         livesLabel.setPosition(imMaryoL.getX(), scoreLabel.getY(), Align.bottomRight);
         stage.addActor(livesLabel);
 
-        time.update(0);
+        time.update(GameSave.getLevelPlaytime());
         timeLabel = new Label(new String(time.getChars()), skin, Assets.LABEL_BORDER60);
         timeLabel.setFontScale(.45f);
         timeLabel.setSize(timeLabel.getPrefWidth(), timeLabel.getPrefHeight());
@@ -375,7 +375,7 @@ public class HUD {
 
     public void onGameStateChange() {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
-        boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.save.lifes < 0);
+        boolean isGameOver = (gameState == GameScreen.GAME_STATE.PLAYER_DIED && GameSave.getLifes() < 0);
         boolean isInGame = isInGame(gameState);
         boolean isPaused = (gameState == GameScreen.GAME_STATE.GAME_PAUSED);
 
@@ -442,28 +442,28 @@ public class HUD {
             if (noUpdateDuration >= UPDATE_FREQ) {
                 noUpdateDuration = 0;
                 // points
-                pointsText = formatPointsString(GameSave.save.points);
+                pointsText = formatPointsString(GameSave.getScore());
                 scoreLabel.setText(pointsText);
 
                 //coins
                 String coins = this.coins.toString(GameSave.getCoins());
                 coinsLabel.setText(coins);
 
+                if (stateTime >= 1f) {
+                    GameSave.addLevelPlaytime(1);
+                    stateTime = stateTime - 1f;
+                    time.update(GameSave.getLevelPlaytime());
+                }
+
                 //time
                 if (showFps)
                     timeLabel.setText(Integer.toString(Gdx.graphics.getFramesPerSecond()));
                 else {
-                    time.update(stateTime);
                     timeLabel.setText(new String(time.getChars()));
                 }
 
                 //lives
-                int lifesToShow = GameSave.save.lifes;
-                //während Sterbens-Animation wurde Leben schon abgezogen, für Anzeige aber noch dazuzählen
-                if (gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DEAD ||
-                        gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED)
-                    lifesToShow++;
-                livesLabel.setText(this.lives.toString(lifesToShow));
+                livesLabel.setText(this.lives.toString(GameSave.getLifes()));
                 refreshItemInBox();
             }
         }

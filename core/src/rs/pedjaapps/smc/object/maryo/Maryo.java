@@ -36,7 +36,6 @@ import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
-import rs.pedjaapps.smc.utility.Level;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.TextUtils;
 
@@ -66,7 +65,25 @@ public class Maryo extends DynamicObject
 
     public enum MaryoState
     {
-        small, big, fire, ice
+        small, big, fire, ice;
+
+        public static int toInt(MaryoState ms) {
+            switch (ms) {
+                case big: return 1;
+                case fire: return 2;
+                case ice: return 3;
+                default: return 0;
+            }
+        }
+
+        public static MaryoState fromInt(int i) {
+            switch (i) {
+                case 1: return big;
+                case 2: return fire;
+                case 3: return ice;
+                default: return small;
+            }
+        }
     }
 
     public static float STAR_EFFECT_TIMEOUT = 16f;
@@ -125,7 +142,7 @@ public class Maryo extends DynamicObject
     private static final float BULLET_COOLDOWN = 1f;//1 sec
 
     private WorldState worldState = WorldState.JUMPING;
-    private MaryoState maryoState = GameSave.save.playerState;
+    private MaryoState maryoState;
     private boolean facingLeft = false;
 
     private boolean handleCollision = true;
@@ -182,6 +199,7 @@ public class Maryo extends DynamicObject
     public Maryo(World world, Vector3 position, Vector2 size)
     {
         super(world, size, position);
+        maryoState = GameSave.getMaryoState();
         setupBoundingBox();
 
         position.y = mColRect.y = mDrawRect.y += 0.5f;
@@ -320,7 +338,7 @@ public class Maryo extends DynamicObject
             newState = null;
             oldState = null;
             setupBoundingBox();
-            GameSave.save.playerState = maryoState;
+            GameSave.setMaryoState(maryoState);
         }
         if (resizingAnimation != null)
         {
@@ -460,7 +478,7 @@ public class Maryo extends DynamicObject
         Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_GET);
         SoundManager.play(sound);
         item.drop();
-        GameSave.setItem(null, 0);
+        GameSave.setItem(0);
     }
 
     private int tIndex(MaryoState state, TKey tkey)
@@ -986,26 +1004,10 @@ public class Maryo extends DynamicObject
         //just change level
         String nextLevelName;
         //next level in list
+        GameScreen gameScreen = (GameScreen) world.screen;
         if (TextUtils.isEmpty(exit.levelName) && TextUtils.isEmpty(exit.entry))
-        {
-            String currentLevel = ((GameScreen) world.screen).parent == null ? ((GameScreen) world.screen).levelName : ((GameScreen) world.screen).parent.levelName;
-            nextLevelName = Level.getNextLevel(currentLevel);
+            gameScreen.endLevel();
 
-            if (((GameScreen) world.screen).parent != null)
-            {
-                ((GameScreen) world.screen).parent.dispose();
-                ((GameScreen) world.screen).parent = null;
-            }
-            if (exit.type == LevelExit.LEVEL_EXIT_BEAM)
-            {
-                ((GameScreen) world.screen).endLevel(nextLevelName);
-            }
-            else
-            {
-                world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
-                world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));
-            }
-        }
         //go to sublevel
         else
         {
@@ -1022,7 +1024,7 @@ public class Maryo extends DynamicObject
                     throw new GdxRuntimeException("Cannot go to sublevel, entry is null");
                 }*/
                 nextLevelName = exit.levelName;
-                GameScreen parent = ((GameScreen) world.screen).parent;
+                GameScreen parent = gameScreen.parent;
 
                 boolean resume = false;
                 GameScreen newScreen;
@@ -1048,11 +1050,11 @@ public class Maryo extends DynamicObject
                     {
                         parent.dispose();
                     }
-                    parent = (GameScreen) world.screen;
+                    parent = gameScreen;
                     newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
                     newScreen.entryName = exit.entry;
                 }
-                world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
+                world.screen.game.levelEnd(gameScreen.levelName, true);
                 world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
             }
         }
@@ -1079,7 +1081,7 @@ public class Maryo extends DynamicObject
                         if (((Enemy) object).canBeKilledByStar())
                         {
                             ((Enemy) object).downgradeOrDie(this, true, true);
-                            GameSave.save.points += ((Enemy) object).mKillPoints;
+                            GameSave.addScore(((Enemy) object).mKillPoints);
                         }
                         else
                         {
@@ -1094,7 +1096,7 @@ public class Maryo extends DynamicObject
                 else if (((Enemy) object).frozen)
                 {
                     ((Enemy) object).downgradeOrDie(this, true, false);
-                    GameSave.save.points += ((Enemy) object).mKillPoints;
+                    GameSave.addScore(((Enemy) object).mKillPoints);
                 }
                 else if (deadAnyway)
                 {
@@ -1131,7 +1133,7 @@ public class Maryo extends DynamicObject
         if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
         {
             doBounce = true;
-            GameSave.save.points += enemy.mKillPoints;
+            GameSave.addScore(enemy.mKillPoints);
         }
         else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
         {
@@ -1196,10 +1198,10 @@ public class Maryo extends DynamicObject
                 MusicManager.stop(false);
 
             worldState = WorldState.DYING;
-            GameSave.save.playerState = MaryoState.small;
+            GameSave.setMaryoState(MaryoState.small);
             setMarioState(MaryoState.small);
             updateBounds();
-            GameSave.setItem(null, 0);
+            GameSave.setItem(0);
             dyingAnim.start();
         }
         else
@@ -1219,7 +1221,7 @@ public class Maryo extends DynamicObject
         {
             Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_SET);
             SoundManager.play(sound);
-            GameSave.setItem(world.screen.game.assets.manager, item.getType());
+            GameSave.setItem(item.getType());
             return;
         }
         else if (maryoState == newState)
@@ -1311,7 +1313,6 @@ public class Maryo extends DynamicObject
             Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_DEAD);
             SoundManager.play(sound);
             ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
-            GameSave.save.lifes--;
         }
 
         public boolean update(float delta)
@@ -1320,7 +1321,7 @@ public class Maryo extends DynamicObject
             position.x = diedPosition.x;
             if (mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
             {
-                GameSave.save.playerState = MaryoState.small;
+                GameSave.setMaryoState(MaryoState.small);
                 ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DIED);
                 world.trashObjects.add(Maryo.this);
                 return false;

@@ -75,7 +75,7 @@ public class ChoseLevelView extends Group {
             levelButton.setLevel(level, GameSave.isUnlocked(levelId));
             levelTable.add(levelButton).fill().uniform().pad(15);
 
-            if (levelButton.isUnlocked())
+            if (levelButton.isUnlocked() && (level.number == 1 || level.currentScore == 0))
                 preselected = levelButton;
         }
 
@@ -132,7 +132,7 @@ public class ChoseLevelView extends Group {
             statusgroup.addActor(imItem);
         }
 
-        numLives = new Label(String.valueOf("x" + GameSave.save.lifes), skin, Assets.LABEL_BORDER60);
+        numLives = new Label(String.valueOf("x" + GameSave.getLifes()), skin, Assets.LABEL_BORDER60);
         numLives.setFontScale(.5f);
         // die Zahlen sind die von Maryo
         numLives.setPosition(175, 390);
@@ -151,10 +151,10 @@ public class ChoseLevelView extends Group {
         statusgroup.addActor(imCoins);
 
         Label lblTotal = getScaledLabel("SCORE", .5f);
-        lblTotal.setPosition(numCoins.getX() - 6, getHeight() / 2, Align.right);
+        lblTotal.setPosition(numCoins.getX() - 10, getHeight() / 2, Align.right);
         statusgroup.addActor(lblTotal);
 
-        Label totalScore = getScaledLabel(String.valueOf(GameSave.save.points), .5f);
+        Label totalScore = getScaledLabel(String.valueOf(GameSave.getTotalScore()), .5f);
         totalScore.setPosition(numCoins.getX(), getHeight() / 2, Align.left);
         statusgroup.addActor(totalScore);
 
@@ -191,12 +191,12 @@ public class ChoseLevelView extends Group {
                 levelStatusGroup.add(getScaledLabel("- NO SCORES YET -", .5f)).left();
             } else {
                 levelStatusGroup.add(new Label("CURRENT", skin, Assets.LABEL_BORDER25)).right().bottom()
-                        .padRight(5);
+                        .padRight(10);
                 levelStatusGroup.add(getScaledLabel(String.valueOf(level.currentScore), .5f)).left();
 
                 levelStatusGroup.row();
                 levelStatusGroup.add(new Label("BEST", skin, Assets.LABEL_BORDER25)).right().bottom()
-                        .padRight(5);
+                        .padRight(10);
                 levelStatusGroup.add(getScaledLabel(String.valueOf(level.bestScore), .5f)).left();
             }
         } else {

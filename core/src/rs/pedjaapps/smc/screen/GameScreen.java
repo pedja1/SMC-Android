@@ -43,10 +43,7 @@ import rs.pedjaapps.smc.utility.Utility;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.HUD;
 
-import static rs.pedjaapps.smc.utility.GameSave.save;
-
 public class GameScreen extends AbstractScreen {
-    private static final float LEVEL_END_ANIMATION_DURATION = .5f;
     private static final String GOD_MOD_TEXT = "god";
     public OrthographicCamera cam;
     public OrthographicCamera guiCam;
@@ -78,8 +75,6 @@ public class GameScreen extends AbstractScreen {
     private Music music;
     private float goAlpha = 0.0f;
     private boolean cameraForceSnap;
-    private float levelEndAnimationStateTime;
-    private String mNextLevelName;
     private InputProcessor keyboardAndTouch;
     private Array<GameObject> objectsToUpdate = new Array<>(75);
     private static final float FREQ_OTU_REFRESH = .2f;
@@ -115,9 +110,9 @@ public class GameScreen extends AbstractScreen {
 
         spriteBatch = new SpriteBatch();
 
-        loader = new LevelLoader(levelName);
-        //Gdx.graphics.setContinuousRendering(false);
         if (fromMenu) GameSave.startLevelFresh();
+
+        loader = new LevelLoader(levelName);
     }
 
     public GAME_STATE getGameState() {
@@ -139,7 +134,7 @@ public class GameScreen extends AbstractScreen {
         hud.updateTimer = !(gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING ||
                 gameState == GAME_STATE.SHOW_BOX || gameState == GAME_STATE.PLAYER_DIED);
 
-        if (gameState == GAME_STATE.PLAYER_DIED && save.lifes < 0)
+        if (gameState == GAME_STATE.PLAYER_DIED && GameSave.getLifes() < 0)
             MusicManager.stop(true);
     }
 
@@ -161,7 +156,6 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        GameSave.unlockLevel(levelName);
         music = game.assets.manager.get(loader.level.music.first());
         if (!resumed)
             music.setPosition(0);
@@ -261,36 +255,22 @@ public class GameScreen extends AbstractScreen {
         if (debug) GLProfiler.reset();
     }
 
-    public void endLevel(String nextLevelName) {
-        mNextLevelName = nextLevelName;
-        levelEndAnimationStateTime = LEVEL_END_ANIMATION_DURATION;
+    public void endLevel() {
+        String currentLevel = (parent == null ? levelName : parent.levelName);
+
+        if (parent != null) {
+            parent.dispose();
+            parent = null;
+        }
+
+        world.screen.game.levelEnd(currentLevel, true);
+        GameSave.levelCleared(currentLevel);
         setGameState(GAME_STATE.GAME_LEVEL_END);
+        exitToMenu();
     }
 
     private void handleLevelEnded(float delta) {
-        if (levelEndAnimationStateTime <= 0) {
-            world.screen.game.levelEnd(((GameScreen) world.screen).levelName, true);
-            game.setScreen(new LoadingScreen(new GameScreen(game, false, mNextLevelName), false));
-            mNextLevelName = null;
-            return;
-        }
-        levelEndAnimationStateTime -= delta;
 
-        float percent = 1 - levelEndAnimationStateTime / LEVEL_END_ANIMATION_DURATION;
-
-        float camWidth = hud.stage.getWidth();
-        float camHeight = hud.stage.getHeight();
-
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-
-        shapeRenderer.setProjectionMatrix(hud.stage.getCamera().combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
-        shapeRenderer.setColor(0, 0, 0, percent);
-        shapeRenderer.rect(0, 0, camWidth, camHeight);
-
-        shapeRenderer.end();
     }
 
     public void showBoxText(Box box) {
@@ -306,7 +286,7 @@ public class GameScreen extends AbstractScreen {
     }
 
     private void handlePlayerDied() {
-        if (save.lifes < 0 && !goTouched)
+        if (GameSave.getLifes() < 0 && !goTouched)
             return;
 
         // Fade out
@@ -325,7 +305,7 @@ public class GameScreen extends AbstractScreen {
         //background changes to black if i don't add this after blend
 
         if (goAlpha >= 1) {
-            if (save.lifes < 0) {
+            if (GameSave.getLifes() < 0) {
                 game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
             } else {
                 game.setScreen(new LoadingScreen(new GameScreen(game, false, levelName, parent), false));

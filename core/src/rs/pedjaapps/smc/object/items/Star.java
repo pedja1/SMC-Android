@@ -258,7 +258,7 @@ public class Star extends Item
             manager.finishLoading();
         }
         MusicManager.play(manager.get(Assets.MUSIC_INVINCIBLE, Music.class), false);
-        GameSave.save.points += 1000;
+        GameSave.addScore(1000);
         ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
         world.maryo.starPicked();
         world.trashObjects.add(this);

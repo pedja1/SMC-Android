@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -230,9 +229,9 @@ public class Box extends Sprite
     {
         //create item contained in box
         if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
-                (GameSave.save.playerState == Maryo.MaryoState.small
-                        || ((GameSave.save.playerState == Maryo.MaryoState.fire
-                        || GameSave.save.playerState == Maryo.MaryoState.ice))))
+                (GameSave.getMaryoState() == Maryo.MaryoState.small
+                        || ((GameSave.getMaryoState() == Maryo.MaryoState.fire
+                        || GameSave.getMaryoState() == Maryo.MaryoState.ice))))
         {
             int defBoxItem = box.item;
             box.item = Item.TYPE_MUSHROOM_DEFAULT;

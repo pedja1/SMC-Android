@@ -227,7 +227,7 @@ public class MainMenuScreen extends AbstractScreen {
         choseLevelView.setSize(stage.getWidth(), stage.getHeight());
         choseLevelView.inflateWidgets(dynAtlas);
 
-        maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.save.playerState.toString()
+        maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getMaryoState().toString()
                 + "_" + GameObject.TKey.stand_right.toString()));
         maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
         maryo.setPosition(100, 378);

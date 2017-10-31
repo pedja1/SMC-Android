@@ -37,6 +37,6 @@ public class MushroomDefault extends Mushroom
         playerHit = true;
         world.maryo.upgrade(Maryo.MaryoState.big, this, false);
         world.trashObjects.add(this);
-        GameSave.save.points += mPickPoints;
+        GameSave.addScore(mPickPoints);
     }
 }
