@@ -583,8 +583,8 @@ public class HUD {
         popupBox.setKeepWithinStage(false);
         popupBox.validate();
         popupBox.setPosition(stage.getWidth() + popupBox.getWidth(), stage.getHeight() / 2, Align.left);
-        popupBox.show(stage, Actions.moveToAligned(stage.getWidth() / 2, stage.getHeight() / 2, Align.center, .5f,
-                Interpolation.circle));
+        popupBox.show(stage, Actions.delay(.5f, Actions.moveToAligned(stage.getWidth() / 2, stage.getHeight() / 2,
+                Align.center, .5f, Interpolation.circle)));
     }
 
     public void showPopupBox(String text) {
