@@ -86,6 +86,7 @@ public class Maryo extends DynamicObject
         }
     }
 
+    private static final float GHOST_EFFECT_TIMEOUT = 10f;
     public static float STAR_EFFECT_TIMEOUT = 16f;
     public static final float STAR_EFFECT_SPEEDFACTOR = 1.2f;
     private static final float GLIM_COLOR_START_ALPHA = 0f;
@@ -185,6 +186,9 @@ public class Maryo extends DynamicObject
     private boolean glimMode = true;
     private float starEffectTime;
     public boolean canWalkOnAir = false;
+
+    public boolean ghostmode;
+    private float leftGhostTime;
 
     //textures
     private TextureRegion[] tMap = new TextureRegion[25];
@@ -425,7 +429,8 @@ public class Maryo extends DynamicObject
                 }
             }
             spriteBatch.setColor(glimColor);
-        }
+        } else if (ghostmode)
+            spriteBatch.setShader(Shader.GS_SHADER);
 
         marioFrame.flip(facingLeft, false);
         //if god mode, make player half-transparent
@@ -456,7 +461,9 @@ public class Maryo extends DynamicObject
         if (!powerJumpEffect.isComplete())
             powerJumpEffect.draw(spriteBatch);
 
-        spriteBatch.setShader(null);
+        if (mInvincibleStar || ghostmode)
+            spriteBatch.setShader(null);
+
         spriteBatch.setColor(Color.WHITE);
     }
 
@@ -995,6 +1002,13 @@ public class Maryo extends DynamicObject
             if (starEffectTime >= STAR_EFFECT_TIMEOUT) {
                 mInvincibleStar = false;
                 starEffectTime = 0;
+            }
+        }
+        if (ghostmode) {
+            leftGhostTime -= delta;
+            if (leftGhostTime < 0) {
+                ghostmode = false;
+                SoundManager.play(world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_GHOSTEND, Sound.class));
             }
         }
     }
@@ -1588,6 +1602,11 @@ public class Maryo extends DynamicObject
     {
         starEffectTime = 0;
         mInvincibleStar = true;
+    }
+
+    public void enableGhostMode() {
+        leftGhostTime = GHOST_EFFECT_TIMEOUT;
+        ghostmode = true;
     }
 
     public void leftPressed()

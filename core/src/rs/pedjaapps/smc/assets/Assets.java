@@ -42,6 +42,7 @@ public class Assets {
     public static final String SOUND_ITEM_LIVE_UP_2 = "data/sounds/item/live_up_2.ogg";
     public static final String SOUND_ITEM_LIVE_UP = "data/sounds/item/live_up.ogg";
     public static final String SOUND_PLAYER_DEAD = "data/sounds/player/dead.ogg";
+    public static final String SOUND_PLAYER_GHOSTEND = "data/sounds/player/ghost_end.ogg";
     public static final String SOUND_JUMP_BIG = "data/sounds/player/jump_big.ogg";
     public static final String SOUND_JUMP_BIG_POWER = "data/sounds/player/jump_big_power.ogg";
     public static final String SOUND_JUMP_SMALL = "data/sounds/player/jump_small.ogg";
@@ -78,6 +79,7 @@ public class Assets {
     public static final String SOUND_ITEM_MOON = "data/sounds/item/moon.ogg";
     public static final String SOUND_ITEM_MUSHROOM = "data/sounds/item/mushroom.ogg";
     public static final String SOUND_ITEM_MUSHROOM_BLUE = "data/sounds/item/mushroom_blue.ogg";
+    public static final String SOUND_ITEM_MUSHROOM_GHOST = "data/sounds/item/mushroom_ghost.ogg";
     public static final String SOUND_ITEM_STAR_KILL = "data/sounds/item/star_kill.ogg";
 
     public static final String PARTICLES_BOX_ACTIVATED = "data/animation/particles/box_activated.p";

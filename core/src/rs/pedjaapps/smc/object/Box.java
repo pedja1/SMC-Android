@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.object;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -25,6 +26,7 @@ import rs.pedjaapps.smc.object.items.Star;
 import rs.pedjaapps.smc.object.items.mushroom.Mushroom;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomBlue;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomDefault;
+import rs.pedjaapps.smc.object.items.mushroom.MushroomGhost;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomLive1;
 import rs.pedjaapps.smc.object.items.mushroom.MushroomPoison;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -32,7 +34,6 @@ import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
-import rs.pedjaapps.smc.utility.TextUtils;
 import rs.pedjaapps.smc.utility.Utility;
 
 public class Box extends Sprite
@@ -54,8 +55,8 @@ public class Box extends Sprite
     public static final float SIZE = 0.671875f;
     private String goldColor, animationName, boxType;
     public String text;
-    private boolean forceBestItem, invisible;
-    private int usableCount, item;
+    private boolean forceBestItem;
+    private int usableCount, item, invisible;
 
     protected float stateTime;
 
@@ -150,10 +151,10 @@ public class Box extends Sprite
     @Override
     public void _render(SpriteBatch spriteBatch)
     {
-        if (invisible)
-        {
+        if (invisible > 0 && !world.maryo.ghostmode)
             return;
-        }
+        else if (invisible > 0)
+            spriteBatch.setColor(1, 1, 1, .5f);
 
         if(itemEffect != null)
         {
@@ -201,6 +202,9 @@ public class Box extends Sprite
                 }
             }
         }
+
+        if (invisible > 0)
+            spriteBatch.setColor(Color.WHITE);
     }
 
     public static Box initBox(World world, JsonValue jBox, Assets assets)
@@ -215,7 +219,8 @@ public class Box extends Sprite
         box.boxType = jBox.getString("type", "");
         box.text = jBox.getString("text", "");
         box.forceBestItem = jBox.getInt("force_best_item", 0) == 1;
-        box.invisible = jBox.getInt("invisible", 0) == 1;
+        //TODO invisible 2 meint dass das Item auch nur mit ghost abholbar ist
+        box.invisible = jBox.getInt("invisible", 0);
         box.usableCount = jBox.getInt("useable_count", -1);
         box.item = jBox.getInt("item", 0);
 
@@ -256,7 +261,8 @@ public class Box extends Sprite
                 return createCoin(box);
         }
         else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
-                || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_POISON)
+                || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_POISON
+                || box.item == Item.TYPE_MUSHROOM_GHOST)
         {
             return createMushroom(box, loadAssets, assets);
         }
@@ -297,6 +303,10 @@ public class Box extends Sprite
                 case Item.TYPE_MUSHROOM_BLUE:
                     assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_BLUE, Sound.class);
                     break;
+                case Item.TYPE_MUSHROOM_GHOST:
+                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_GHOST, Sound.class);
+                    assets.manager.load(Assets.SOUND_PLAYER_GHOSTEND, Sound.class);
+                    break;
                 case Item.TYPE_MUSHROOM_POISON:
                     break;
             }
@@ -319,6 +329,9 @@ public class Box extends Sprite
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
                     mushroom = new MushroomPoison(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    break;
+                case Item.TYPE_MUSHROOM_GHOST:
+                    mushroom = new MushroomGhost(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
                     break;
             }
 
@@ -430,7 +443,7 @@ public class Box extends Sprite
     public void activate()
     {
         if (activated) return;
-		if(invisible)invisible = false;
+		invisible = BOX_VISIBLE;
         Sound sound = null;
         if("text".equals(boxType))
         {
