@@ -19,6 +19,7 @@ public class GameSave {
     // der aktuelle Stand, der gerade gespielt wird
     private static int levelScore;
     private static long levelPlaytime;
+    private static int levelStartedNum;
     private static int maryoState;
     private static int persistentMaryoState;
     private static int lifes;
@@ -28,6 +29,8 @@ public class GameSave {
     private static int item;
     private static int persistentItem;
     private static int totalScore;
+    private static int bestTotal;
+    private static int gameOverNum;
 
     public static long getLevelPlaytime() {
         return levelPlaytime;
@@ -64,6 +67,9 @@ public class GameSave {
         persistentItem = savegame.getInt("item");
         persistentMaryoState = savegame.getInt("state");
         totalPlaytime = savegame.getLong("playtime");
+        levelStartedNum = savegame.getInt("levelstarts", 0);
+        gameOverNum = savegame.getInt("gameovers", 1);
+        bestTotal = savegame.getInt("bestTotal", 0);
 
         JsonValue levelList = savegame.get("levels");
         unlockedLevels.clear();
@@ -90,6 +96,9 @@ public class GameSave {
         json.addChild("item", new JsonValue(persistentItem));
         json.addChild("state", new JsonValue(persistentMaryoState));
         json.addChild("playtime", new JsonValue(totalPlaytime));
+        json.addChild("levelstarts", new JsonValue(levelStartedNum));
+        json.addChild("gameovers", new JsonValue(gameOverNum));
+        json.addChild("bestTotal", new JsonValue(bestTotal));
 
         JsonValue levelArray = new JsonValue(JsonValue.ValueType.array);
         for (String levelId : Level.getLevelList()) {
@@ -117,6 +126,7 @@ public class GameSave {
         maryoState = 0;
         totalPlaytime = 0;
         totalScore = 0;
+        gameOverNum++;
 
         for (String levelId : Level.getLevelList()) {
             Level level = Level.getLevel(levelId);
@@ -209,6 +219,7 @@ public class GameSave {
         levelPlaytime = 0;
         lifes--;
         levelScore = 0;
+        levelStartedNum++;
         save();
         return lifes >= 0;
     }
@@ -227,9 +238,8 @@ public class GameSave {
         if (level.currentScore > level.bestScore)
             level.bestScore = levelScore;
 
-        save();
-
         recalcTotalScore();
+        save();
     }
 
     private static void recalcTotalScore() {
@@ -241,5 +251,7 @@ public class GameSave {
             totalScore += level.currentScore;
         }
 
+        if (totalScore > bestTotal)
+            bestTotal = totalScore;
     }
 }

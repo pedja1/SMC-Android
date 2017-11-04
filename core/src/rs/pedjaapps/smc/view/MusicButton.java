@@ -17,7 +17,7 @@ import rs.pedjaapps.smc.utility.PrefsManager;
  * Created by Benjamin Schulte on 02.10.2017.
  */
 
-public class MusicButton extends TextButton {
+public class MusicButton extends ColorableTextButton {
     public MusicButton(Skin skin, final Sound audioOn) {
         super(getSoundStateIcon(), skin, Assets.BUTTON_FA);
 

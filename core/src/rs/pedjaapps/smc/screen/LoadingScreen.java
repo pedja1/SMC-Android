@@ -88,7 +88,7 @@ public class LoadingScreen extends AbstractScreen {
             game.setScreen(screenToLoadAfter);
         }
 
-        progressBar.setValue(Math.max(assetsLoaded ? game.assets.manager.getProgress() * 100 : 0, 2));
+        progressBar.setValue(Math.max(assetsLoaded ? game.assets.manager.getProgress() * 100 : 0, 3));
 
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         renderer.setProjectionMatrix(stage.getCamera().combined);

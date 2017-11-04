@@ -1,9 +1,12 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
@@ -32,6 +36,7 @@ public class ChoseLevelView extends Group {
     private Table levelStatusGroup;
     private TextButton backButton;
     private LevelButton currentSelectedButton;
+    private TextButton leaderBoardButton;
 
     public ChoseLevelView(MainMenuScreen mainMenuScreen, Skin skin) {
         super();
@@ -40,7 +45,7 @@ public class ChoseLevelView extends Group {
         this.skin = skin;
     }
 
-    public void inflateWidgets(TextureAtlas dynAtlas) {
+    public void inflateWidgets(TextureAtlas dynAtlas, Array<Actor> focussableActors) {
         Table levelTable = new Table();
         LevelButton preselected = null;
 
@@ -87,7 +92,7 @@ public class ChoseLevelView extends Group {
         lbl.setAlignment(Align.center);
         levelTable.add(lbl).fill().minHeight(getHeight() * .35f);
 
-        backButton = new TextButton(FontAwesome.LEFT_ARROW, skin, Assets.BUTTON_FA);
+        backButton = new ColorableTextButton(FontAwesome.LEFT_ARROW, skin, Assets.BUTTON_FA);
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -116,6 +121,14 @@ public class ChoseLevelView extends Group {
                 super.act(delta);
             }
         };
+        levelScrollPane.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.DOWN)
+                    System.out.println("Next");
+                return super.keyDown(event, keycode);
+            }
+        });
         levelScrollPane.setScrollingDisabled(true, false);
         levelScrollPane.setWidth(getWidth() * .42f);
         levelScrollPane.setHeight(getHeight());
@@ -163,6 +176,13 @@ public class ChoseLevelView extends Group {
         levelScrollPane.validate();
 
         levelButtonSelected(preselected);
+
+        focussableActors.add(levelScrollPane);
+        focussableActors.add(backButton);
+
+        //kommt erst später in die Anzeige, hier hinzufügen wegen focussableActors
+        leaderBoardButton = new ColorableTextButton("SHOW LEADER", skin, Assets.BUTTON_SMALL_FRAMELESS);
+        focussableActors.add(leaderBoardButton);
     }
 
     private void levelButtonSelected(LevelButton levelButton) {
@@ -212,9 +232,9 @@ public class ChoseLevelView extends Group {
         }
 
 
-//        levelStatusGroup.row();
-//        levelStatusGroup.add(new TextButton("SHOW LEADER", skin, Assets.BUTTON_SMALL_FRAMELESS)).colspan(2)
-//                .padTop(5).minHeight(backButton.getPrefHeight() * .75f);
+        levelStatusGroup.row();
+        levelStatusGroup.add(leaderBoardButton).colspan(2)
+                .padTop(5).minHeight(backButton.getPrefHeight() * .75f);
         levelStatusGroup.validate();
         levelStatusGroup.setPosition(levelScrollPane.getX() / 2, levelStatusGroup.getPrefHeight() / 2 + 10);
         addActor(levelStatusGroup);
@@ -237,10 +257,10 @@ public class ChoseLevelView extends Group {
      *
      * @param stage
      */
-    public void onShow(Stage stage) {
+    public void onShow(MenuStage stage) {
         //statusgroup.addAction(Actions.sequence(Actions.alpha(0),
         //        Actions.delay(MainMenuScreen.DURATION_TRANSITION), Actions.fadeIn(1f)));
-        stage.setScrollFocus(levelScrollPane);
+        stage.setFocussedActor(levelScrollPane);
         if (currentSelectedButton != null)
             currentSelectedButton.scrollTo();
     }

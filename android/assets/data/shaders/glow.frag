@@ -10,32 +10,16 @@ varying vec2 v_texCoords;
 
 uniform sampler2D u_texture;
 
-const float blurSize = 1.0 / 512.0;
-const float intensity = 0.35;
+uniform float u_time;
+uniform vec4 a_color;
 
 void main()
 {
-    vec4 sum = vec4(0);
-
-     sum += texture2D(u_texture, vec2(v_texCoords.x - 4.0*blurSize, v_texCoords.y)) * 0.05;
-     sum += texture2D(u_texture, vec2(v_texCoords.x - 3.0*blurSize, v_texCoords.y)) * 0.09;
-     sum += texture2D(u_texture, vec2(v_texCoords.x - 2.0*blurSize, v_texCoords.y)) * 0.12;
-     sum += texture2D(u_texture, vec2(v_texCoords.x - blurSize, v_texCoords.y)) * 0.15;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y)) * 0.16;
-     sum += texture2D(u_texture, vec2(v_texCoords.x + blurSize, v_texCoords.y)) * 0.15;
-     sum += texture2D(u_texture, vec2(v_texCoords.x + 2.0*blurSize, v_texCoords.y)) * 0.12;
-     sum += texture2D(u_texture, vec2(v_texCoords.x + 3.0*blurSize, v_texCoords.y)) * 0.09;
-     sum += texture2D(u_texture, vec2(v_texCoords.x + 4.0*blurSize, v_texCoords.y)) * 0.05;
-
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - 4.0*blurSize)) * 0.05;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - 3.0*blurSize)) * 0.09;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - 2.0*blurSize)) * 0.12;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - blurSize)) * 0.15;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y)) * 0.16;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + blurSize)) * 0.15;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + 2.0*blurSize)) * 0.12;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + 3.0*blurSize)) * 0.09;
-     sum += texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y + 4.0*blurSize)) * 0.05;
-
-     gl_FragColor = sum * texture2D(u_texture, v_texCoords);
+    // Smooth interpolation between 0.1 and 0.9
+    float y = smoothstep(.1, 1.8, sin((v_texCoords.x-v_texCoords.y+u_time)*3.));
+    vec4 textureColor = texture2D(u_texture, v_texCoords);
+    vec4 color;
+    color = vec4(vec3(1. - .5 * y), 1.) * textureColor;
+    //color = vec4(vec3(1.), 1.-1.2*y) * textureColor;
+     gl_FragColor = v_color * color;
 }

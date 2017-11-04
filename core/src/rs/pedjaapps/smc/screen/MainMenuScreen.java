@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -33,13 +33,15 @@ import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
-import rs.pedjaapps.smc.view.MusicButton;
 import rs.pedjaapps.smc.view.ChoseLevelView;
+import rs.pedjaapps.smc.view.ColorableTextButton;
+import rs.pedjaapps.smc.view.MusicButton;
 
 /**
  * Created by pedja on 2/17/14.
@@ -66,6 +68,7 @@ public class MainMenuScreen extends AbstractScreen {
     private Image maryo;
     private Group startMenu;
     private Skin skin;
+    private TextButton playButton;
 
     public MainMenuScreen(MaryoGame game) {
         super(game);
@@ -228,7 +231,7 @@ public class MainMenuScreen extends AbstractScreen {
         initStartMenu();
 
         choseLevelView.setSize(stage.getWidth(), stage.getHeight());
-        choseLevelView.inflateWidgets(dynAtlas);
+        choseLevelView.inflateWidgets(dynAtlas, stage.getFocussableActors());
 
         maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getMaryoState().toString()
                 + "_" + GameObject.TKey.stand_right.toString()));
@@ -246,10 +249,27 @@ public class MainMenuScreen extends AbstractScreen {
         startMenu = new Group();
         startMenu.setSize(stage.getWidth(), stage.getHeight());
         stage.addActor(startMenu);
-        TextButton play = new TextButton("Play", skin, Assets.BUTTON_BORDER);
-        play.getLabel().setFontScale(.8f);
-        play.setSize(play.getPrefWidth() * 1.2f, play.getPrefHeight());
-        play.addListener(new ChangeListener() {
+        playButton = new ColorableTextButton("Play", skin, Assets.BUTTON_BORDER) {
+//            private float time;
+//
+//            @Override
+//            public void act(float delta) {
+//                super.act(delta);
+//                time += delta;
+//            }
+//
+//            @Override
+//            public void draw(Batch batch, float parentAlpha) {
+//                stage.getBatch().setShader(Shader.GLOW_SHADER);
+//                Shader.GLOW_SHADER.setUniformf("u_time", time);
+//                super.draw(batch, parentAlpha);
+//                stage.getBatch().setShader(null);
+//            }
+        };
+        stage.setEmphColor(skin.getColor(Assets.COLOR_EMPH2));
+        playButton.getLabel().setFontScale(.8f);
+        playButton.setSize(playButton.getPrefWidth() * 1.2f, playButton.getPrefHeight());
+        playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 showLevels();
@@ -263,13 +283,16 @@ public class MainMenuScreen extends AbstractScreen {
             }
         };
 
-        startMenu.addActor(play);
-        play.setPosition(startMenu.getWidth() / 2, startMenu.getHeight() / 2 - 50, Align.center);
+        startMenu.addActor(playButton);
+        stage.addFocussableActor(playButton);
+        playButton.setPosition(startMenu.getWidth() / 2, startMenu.getHeight() / 2 - 50, Align.center);
         startMenu.addActor(sound);
+        stage.addFocussableActor(sound);
         sound.setPosition(startMenu.getWidth() - 10, 10, Align.bottomRight);
 
         Image imGameLogo = createLogoImage(game);
-        imGameLogo.setPosition(startMenu.getWidth() / 2, (startMenu.getHeight() + play.getY() + play.getHeight()) /
+        imGameLogo.setPosition(startMenu.getWidth() / 2, (startMenu.getHeight() + playButton.getY() + playButton
+                .getHeight()) /
                 2, Align.center);
         startMenu.addActor(imGameLogo);
 
@@ -286,6 +309,9 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
         startMenu.addActor(gameVersion);
+        stage.addFocussableActor(gameVersion);
+
+        stage.setFocussedActor(playButton);
     }
 
     private void showLevels() {
@@ -312,6 +338,7 @@ public class MainMenuScreen extends AbstractScreen {
                 DURATION_TRANSITION, Interpolation.circle),
                 Actions.removeActor()));
         startMenu.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
+        stage.setFocussedActor(playButton);
     }
 
 }
