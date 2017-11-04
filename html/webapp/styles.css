@@ -4,7 +4,12 @@ canvas {
 }
 
 body {
-    background-color: #ffffff;
+    background-color: #009006;
+}
+
+.preloadlogo {
+	max-width: 100%;
+	max-height: 70%;
 }
 
 .superdev {
