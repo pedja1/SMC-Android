@@ -14,29 +14,21 @@ import rs.pedjaapps.smc.shader.Shader;
 public class ColorableTextButton extends TextButton {
     public ColorableTextButton(String text, Skin skin) {
         super(text, skin);
-        getStyle().fontColor = getColor();
     }
 
     public ColorableTextButton(String text, Skin skin, String styleName) {
         super(text, skin, styleName);
-        getStyle().fontColor = getColor();
     }
 
     public ColorableTextButton(String text, TextButtonStyle style) {
         super(text, style);
-        getStyle().fontColor = getColor();
     }
 
     @Override
-    public void setColor(Color color) {
-        super.setColor(color);
+    public void draw(Batch batch, float parentAlpha) {
+        Color oldColor = getStyle().fontColor;
         getStyle().fontColor = getColor();
+        super.draw(batch, parentAlpha);
+        getStyle().fontColor = oldColor;
     }
-
-    @Override
-    public void setColor(float r, float g, float b, float a) {
-        super.setColor(r, g, b, a);
-        getStyle().fontColor = getColor();
-    }
-
 }

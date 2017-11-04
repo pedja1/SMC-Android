@@ -81,7 +81,7 @@ public class AboutDialog extends ScrollDialog {
                 new Runnable[] {getWebRunnable(MaryoGame.GAME_SOURCEURL)}));
 
         scrollActor = aboutTable;
-        button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
+        button(new ColorableTextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
     }
 
     private Runnable getLicenseBoxRunnable(final String file) {
@@ -94,7 +94,7 @@ public class AboutDialog extends ScrollDialog {
 
                 ScrollDialog licenseBox = new ScrollDialog(skin, .5f, .75f);
                 licenseBox.setScrollActor(textLabel);
-                licenseBox.button(new TextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
+                licenseBox.button(new ColorableTextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
                 licenseBox.show(stage);
             }
         };
@@ -116,7 +116,7 @@ public class AboutDialog extends ScrollDialog {
     private Table getButtonsTable(String[] label, final Runnable[] run, String styleName) {
         Table storebuttons = new Table();
         for (int i = 0; i < label.length; i++) {
-            TextButton actor = new TextButton(label[i], skin, styleName);
+            TextButton actor = new ColorableTextButton(label[i], skin, styleName);
             final Runnable runnable = run[i];
             if (runnable != null)
                 actor.addListener(new ChangeListener() {

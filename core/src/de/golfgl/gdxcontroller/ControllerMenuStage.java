@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -38,6 +39,10 @@ public class ControllerMenuStage extends Stage {
     public void clearFocussableActors() {
         setFocussedActor(null);
         focussableActors.clear();
+    }
+
+    public void removeFocussableActor(Actor actor) {
+        focussableActors.removeValue(actor, true);
     }
 
     public Array<Actor> getFocussableActors() {

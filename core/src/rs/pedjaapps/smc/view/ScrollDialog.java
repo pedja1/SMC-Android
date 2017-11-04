@@ -5,16 +5,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
+import de.golfgl.gdxcontroller.ControllerMenuDialog;
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.assets.FontAwesome;
 
 /**
  * Created by Benjamin Schulte on 24.10.2017.
  */
 
-public class ScrollDialog extends Dialog {
+public class ScrollDialog extends ControllerMenuDialog {
 
     protected Skin skin;
     protected float percentHeight;
