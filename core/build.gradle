@@ -8,6 +8,7 @@ sourceSets.test.java.srcDirs = ["/test"]
 
 dependencies {
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
 
     testCompile "junit:junit:4.12"
     testCompile "org.mockito:mockito-core:2.2.7"

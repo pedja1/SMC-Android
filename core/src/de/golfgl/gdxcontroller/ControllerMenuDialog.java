@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
  */
 
 public class ControllerMenuDialog extends Dialog {
-    Array<Button> buttonsToAdd = new Array<>();
+    protected Array<Button> buttonsToAdd = new Array<>();
     protected Actor previousFocussedActor;
 
     public ControllerMenuDialog(String title, Skin skin) {

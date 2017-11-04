@@ -3,14 +3,9 @@ buildscript {
         jcenter()
         maven { url 'https://maven.fabric.io/public' }
     }
-    dependencies {
-        classpath 'com.google.gms:google-services:2.1.0'
-        classpath 'com.github.triplet.gradle:play-publisher:1.1.2'
-    }
 }
 
 apply plugin: "com.android.application"
-apply plugin: 'com.github.triplet.play'
 
 android {
     buildToolsVersion '25.0.2'
@@ -53,11 +48,6 @@ android {
 
 }
 
-play {
-    serviceAccountEmail = 'lightblocks@golfgl.de'
-    //pk12File = file('/home/pedja/Downloads/Google Play Android Developer-9a7c0e55d18d.p12')
-}
-
 configurations { natives }
 
 dependencies {
@@ -66,7 +56,8 @@ dependencies {
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
-    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI
@@ -122,4 +113,3 @@ task run(type: Exec) {
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'rs.pedjaapps.smc.android/rs.pedjaapps.smc.android.AndroidLauncher'
 }
-apply plugin: 'com.google.gms.google-services'

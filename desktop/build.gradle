@@ -5,11 +5,10 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 dependencies {
     compile project(":core")
-    //compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    //compile 'org.slf4j:slf4j-log4j12:1.7.12'
+    compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
 }
 
 project.ext.mainClassName = "rs.pedjaapps.smc.desktop.DesktopLauncher"

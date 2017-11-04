@@ -43,6 +43,7 @@ import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ChoseLevelView;
 import rs.pedjaapps.smc.view.ColorableTextButton;
+import rs.pedjaapps.smc.view.GamepadSettingsDialog;
 import rs.pedjaapps.smc.view.MusicButton;
 
 /**
@@ -279,7 +280,7 @@ public class MainMenuScreen extends AbstractScreen {
             }
         });
 
-        TextButton sound = new MusicButton(skin, audioOn) {
+        TextButton soundButton = new MusicButton(skin, audioOn) {
             @Override
             protected Music getMusic() {
                 return music;
@@ -289,9 +290,8 @@ public class MainMenuScreen extends AbstractScreen {
         startMenu.addActor(playButton);
         stage.addFocussableActor(playButton);
         playButton.setPosition(startMenu.getWidth() / 2, startMenu.getHeight() / 2 - 50, Align.center);
-        startMenu.addActor(sound);
-        stage.addFocussableActor(sound);
-        sound.setPosition(startMenu.getWidth() - 10, 10, Align.bottomRight);
+        startMenu.addActor(soundButton);
+        stage.addFocussableActor(soundButton);
 
         Image imGameLogo = createLogoImage(game);
         imGameLogo.setPosition(startMenu.getWidth() / 2, (startMenu.getHeight() + playButton.getY() + playButton
@@ -325,6 +325,19 @@ public class MainMenuScreen extends AbstractScreen {
         });
         startMenu.addActor(exitButton);
         stage.addFocussableActor(exitButton);
+
+        TextButton gamePadSettings = new ColorableTextButton(FontAwesome.DEVICE_GAMEPAD, skin, Assets.BUTTON_FA);
+        gamePadSettings.setPosition(startMenu.getWidth() - 10, 10, Align.bottomRight);
+        gamePadSettings.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                new GamepadSettingsDialog(skin).show(stage);
+            }
+        });
+        startMenu.addActor(gamePadSettings);
+        stage.addFocussableActor(gamePadSettings);
+
+        soundButton.setPosition(gamePadSettings.getX(), gamePadSettings.getY() + gamePadSettings.getHeight() + 20);
 
         focusOnMain();
     }
