@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.screen;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -30,6 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
@@ -69,6 +71,7 @@ public class MainMenuScreen extends AbstractScreen {
     private Group startMenu;
     private Skin skin;
     private TextButton playButton;
+    private TextButton exitButton;
 
     public MainMenuScreen(MaryoGame game) {
         super(game);
@@ -103,7 +106,7 @@ public class MainMenuScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        Gdx.input.setCatchBackKey(false);
+        Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(stage);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
         music.setLooping(true);
@@ -311,7 +314,24 @@ public class MainMenuScreen extends AbstractScreen {
         startMenu.addActor(gameVersion);
         stage.addFocussableActor(gameVersion);
 
+        exitButton = new ColorableTextButton(FontAwesome.CIRCLE_CROSS, skin, Assets.BUTTON_FA_FRAMELESS);
+        exitButton.setPosition(10, startMenu.getHeight() - 10, Align.topLeft);
+        exitButton.setVisible(Gdx.app.getType() != Application.ApplicationType.WebGL);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+        startMenu.addActor(exitButton);
+        stage.addFocussableActor(exitButton);
+
+        focusOnMain();
+    }
+
+    private void focusOnMain() {
         stage.setFocussedActor(playButton);
+        stage.setEscapeActor(exitButton);
     }
 
     private void showLevels() {
@@ -338,7 +358,7 @@ public class MainMenuScreen extends AbstractScreen {
                 DURATION_TRANSITION, Interpolation.circle),
                 Actions.removeActor()));
         startMenu.addAction(Actions.moveTo(0, 0, DURATION_TRANSITION, Interpolation.circle));
-        stage.setFocussedActor(playButton);
+        focusOnMain();
     }
 
 }

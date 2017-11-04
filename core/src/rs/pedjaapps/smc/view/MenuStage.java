@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import de.golfgl.gdxcontroller.ControllerMenuStage;
@@ -45,8 +47,17 @@ public class MenuStage extends ControllerMenuStage {
     protected void onFocusLost(Actor focussedActor) {
         focussedActor.removeAction(fadeAction);
         fadeAction = null;
-        focussedActor.addAction(Actions.color(oldColor, 1f));
+        focussedActor.setColor(oldColor);
         super.onFocusLost(focussedActor);
     }
 
+    @Override
+    protected boolean fireEventOnActor(Actor actor, InputEvent.Type type) {
+        // Die ScrollPane mag touchDown und touchUp Fakes nicht und soll die auch nicht kriegen
+        if ((type == InputEvent.Type.touchDown || type == InputEvent.Type.touchUp)
+                && actor != null && actor instanceof ScrollPane)
+            return false;
+
+        return super.fireEventOnActor(actor, type);
+    }
 }

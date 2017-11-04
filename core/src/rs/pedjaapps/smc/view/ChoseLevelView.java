@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -37,6 +36,7 @@ public class ChoseLevelView extends Group {
     private TextButton backButton;
     private LevelButton currentSelectedButton;
     private TextButton leaderBoardButton;
+    private Array<LevelButton> allLevelButtons;
 
     public ChoseLevelView(MainMenuScreen mainMenuScreen, Skin skin) {
         super();
@@ -52,6 +52,8 @@ public class ChoseLevelView extends Group {
         Label lblChoose = new Label("Choose challenge!", skin, Assets.LABEL_BORDER60);
         lblChoose.setFontScale(.6f);
         levelTable.add(lblChoose).minHeight(getHeight() * .35f);
+
+        allLevelButtons = new Array<>();
 
         int world = 1;
         for (final String levelId : Level.getLevelList()) {
@@ -69,7 +71,7 @@ public class ChoseLevelView extends Group {
                 @Override
                 protected void onChosen() {
                     if (!isMarked())
-                        levelButtonSelected(this);
+                        selectLevelButton(this);
                     else if (isUnlocked() || MaryoGame.GAME_DEVMODE)
                         ChoseLevelView.this.mainMenuScreen.game.setScreen(
                                 new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
@@ -79,6 +81,7 @@ public class ChoseLevelView extends Group {
             };
             levelButton.setLevel(level, GameSave.isUnlocked(levelId));
             levelTable.add(levelButton).fill().uniform().pad(15);
+            allLevelButtons.add(levelButton);
 
             if (levelButton.isUnlocked() && (level.number == 1 || level.currentScore == 0))
                 preselected = levelButton;
@@ -124,9 +127,48 @@ public class ChoseLevelView extends Group {
         levelScrollPane.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.DOWN)
-                    System.out.println("Next");
-                return super.keyDown(event, keycode);
+                int navigate = 0;
+                switch (keycode) {
+                    case Input.Keys.UP:
+                        navigate--;
+                        break;
+                    case Input.Keys.DOWN:
+                        navigate++;
+                        break;
+                    case Input.Keys.HOME:
+                        navigate -= 100;
+                        break;
+                    case Input.Keys.END:
+                        navigate += 100;
+                        break;
+                    case Input.Keys.PAGE_DOWN:
+                        navigate = navigate + 3;
+                        break;
+                    case Input.Keys.PAGE_UP:
+                        navigate = navigate - 3;
+                        break;
+                }
+
+                if (navigate != 0) {
+                    int goToLevel = currentSelectedButton.getLevel().number + navigate;
+
+                    if (goToLevel < 1)
+                        goToLevel = 1;
+                    else if (goToLevel > allLevelButtons.size)
+                        goToLevel = allLevelButtons.size;
+
+                    if (goToLevel != currentSelectedButton.getLevel().number)
+                        selectLevelButton(allLevelButtons.get(goToLevel - 1));
+                    return true;
+
+                }
+                if (keycode == Input.Keys.ENTER) {
+                    currentSelectedButton.getClickListener().clicked(event, 0, 0);
+                    return true;
+
+                } else {
+                    return super.keyDown(event, keycode);
+                }
             }
         });
         levelScrollPane.setScrollingDisabled(true, false);
@@ -175,7 +217,7 @@ public class ChoseLevelView extends Group {
 
         levelScrollPane.validate();
 
-        levelButtonSelected(preselected);
+        selectLevelButton(preselected);
 
         focussableActors.add(levelScrollPane);
         focussableActors.add(backButton);
@@ -185,7 +227,7 @@ public class ChoseLevelView extends Group {
         focussableActors.add(leaderBoardButton);
     }
 
-    private void levelButtonSelected(LevelButton levelButton) {
+    private void selectLevelButton(LevelButton levelButton) {
         if (currentSelectedButton != levelButton && currentSelectedButton != null)
             currentSelectedButton.setMarked(false);
 
@@ -263,5 +305,6 @@ public class ChoseLevelView extends Group {
         stage.setFocussedActor(levelScrollPane);
         if (currentSelectedButton != null)
             currentSelectedButton.scrollTo();
+        stage.setEscapeActor(backButton);
     }
 }

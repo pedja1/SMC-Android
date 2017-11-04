@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -32,12 +34,30 @@ public class LevelButton extends Button {
     private boolean marked;
     private Actor image;
     private Label title;
+    private ScrollPane scrollPane;
 
     public LevelButton(Skin skin, TextureAtlas dynAtlas) {
         super(skin, Assets.BUTTON_BORDER);
 
         this.dynAtlas = dynAtlas;
         this.skin = skin;
+    }
+
+    @Override
+    public void act(float delta) {
+        boolean hasFocus;
+
+        if (getStage() instanceof MenuStage && scrollPane != null)
+            // prüfen ob der Fokus auf der ScrollPane liegt
+            hasFocus = (((MenuStage) getStage()).getFocussedActor() == scrollPane);
+        else
+            //stimmt nicht ganz, aber Levelbutton ist eh immer in ScrollPane
+            hasFocus = true;
+
+        // Animationen nur wenn Fokus drauf ist
+        if (hasFocus)
+            super.act(delta);
+
     }
 
     public boolean isMarked() {
@@ -143,16 +163,37 @@ public class LevelButton extends Button {
     }
 
     public void scrollTo() {
-        Actor parentActor = getParent();
+        if (scrollPane != null) {
+            Vector2 localCoords = localToParentCoordinates(new Vector2(getWidth() / 2, getHeight() / 2));
+            scrollPane.setSmoothScrolling(false);
+            scrollPane.scrollTo(localCoords.x, localCoords.y, 1, 1, false, true);
+            scrollPane.setSmoothScrolling(true);
+        }
+    }
+
+    @Override
+    protected void setParent(Group parent) {
+        super.setParent(parent);
+
+        findScrollPane(parent);
+    }
+
+    private void findScrollPane(Group parent) {
+        Actor parentActor = parent;
 
         if (parentActor != null)
             parentActor = parentActor.getParent();
 
-        if (parentActor != null && parentActor instanceof ScrollPane) {
-            Vector2 localCoords = localToParentCoordinates(new Vector2(getWidth() / 2, getHeight() / 2));
-            ((ScrollPane) parentActor).setSmoothScrolling(false);
-            ((ScrollPane) parentActor).scrollTo(localCoords.x, localCoords.y, 1, 1, false, true);
-            ((ScrollPane) parentActor).setSmoothScrolling(true);
-        }
+        if (parentActor != null && parentActor instanceof ScrollPane)
+            scrollPane = (ScrollPane) parentActor;
+        else
+            scrollPane = null;
+    }
+
+    @Override
+    protected void setStage(Stage stage) {
+        super.setStage(stage);
+        findScrollPane(getParent());
+
     }
 }

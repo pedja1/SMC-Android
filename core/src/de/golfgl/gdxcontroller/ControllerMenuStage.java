@@ -17,9 +17,18 @@ public class ControllerMenuStage extends Stage {
     private Array<Actor> focussableActors = new Array<>();
     private boolean isPressed;
     private Actor focussedActor;
+    private Actor escapeActor;
 
     public ControllerMenuStage(Viewport viewport) {
         super(viewport);
+    }
+
+    public Actor getEscapeActor() {
+        return escapeActor;
+    }
+
+    public void setEscapeActor(Actor escapeActor) {
+        this.escapeActor = escapeActor;
     }
 
     public void addFocussableActor(Actor actor) {
@@ -137,6 +146,14 @@ public class ControllerMenuStage extends Stage {
                 handled = fireEventOnActor(focussedActor, InputEvent.Type.touchDown);
                 isPressed = handled;
                 break;
+            case Input.Keys.BACK:
+            case Input.Keys.BACKSPACE:
+            case Input.Keys.ESCAPE:
+                if (escapeActor != null) {
+                    handled = fireEventOnActor(escapeActor, InputEvent.Type.touchDown);
+                    isPressed = handled;
+                    break;
+                }
             default:
                 handled = false;
 
@@ -154,6 +171,15 @@ public class ControllerMenuStage extends Stage {
             case Input.Keys.ENTER:
                 isPressed = false;
                 handled = fireEventOnActor(focussedActor, InputEvent.Type.touchUp);
+                break;
+            case Input.Keys.BACK:
+            case Input.Keys.BACKSPACE:
+            case Input.Keys.ESCAPE:
+                if (escapeActor != null) {
+                    handled = fireEventOnActor(escapeActor, InputEvent.Type.touchUp);
+                    isPressed = handled;
+                    break;
+                }
             default:
                 handled = false;
         }
