@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -30,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import de.golfgl.gdxcontroller.ControllerMenuDialog;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
@@ -54,7 +54,7 @@ public class HUD {
     private final NATypeConverter<Integer> coins = new NATypeConverter<>();
     private final NAHudText<Integer> lives = new NAHudText<>(null, "x");
     private final HUDTimeText time = new HUDTimeText();
-    public Stage stage;
+    public MenuStage stage;
     public boolean updateTimer = true;
     public boolean jumpPressed;
     public boolean firePressed;
@@ -90,10 +90,11 @@ public class HUD {
     private TextureAtlas dynAtlas;
     private Label levelNamePaused;
     private Level gamescreenlevel;
+
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
         this.gameScreen = gameScreen;
-        stage = new Stage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
+        stage = new MenuStage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
     }
 
     public static RepeatAction getForeverFade() {
@@ -138,6 +139,7 @@ public class HUD {
             return;
 
         skin = world.screen.game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
+        stage.setEmphColor(skin.getColor(Assets.COLOR_EMPH2));
         float padX = stage.getWidth() * 0.03f;
         float ibSize = MaryoGame.NATIVE_WIDTH / 14;
 
@@ -249,7 +251,7 @@ public class HUD {
         readyLbl.addAction(getForeverFade());
         stage.addActor(readyLbl);
 
-        cancelButton = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
+        cancelButton = new ColorableTextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
         cancelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -258,8 +260,9 @@ public class HUD {
         });
         cancelButton.setPosition(10, stage.getHeight() - 10, Align.topLeft);
         stage.addActor(cancelButton);
+        stage.addFocussableActor(cancelButton);
 
-        playButton = new TextButton("RESUME", skin, Assets.BUTTON_BORDER);
+        playButton = new ColorableTextButton("RESUME", skin, Assets.BUTTON_BORDER);
         playButton.getLabel().setFontScale(.7f);
         playButton.setHeight(playButton.getPrefHeight());
         playButton.addListener(new ChangeListener() {
@@ -270,6 +273,7 @@ public class HUD {
         });
         playButton.setPosition(stage.getWidth() / 2, 10, Align.bottom);
         stage.addActor(playButton);
+        stage.addFocussableActor(playButton);
 
         gamescreenlevel = Level.getLevel(gameScreen.getMenuLevelname());
         levelNamePaused = getScaledLabel("LEVEL " + gamescreenlevel.number + " PAUSED", .8f);
@@ -291,6 +295,7 @@ public class HUD {
         };
         musicButton.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
         stage.addActor(musicButton);
+        stage.addFocussableActor(musicButton);
 
         imItemBox = new Image(skin, "game_itembox");
         imItemBox.setPosition(MaryoGame.NATIVE_WIDTH / 2 - ibSize, MaryoGame.NATIVE_HEIGHT - ibSize - ibSize / 5);
@@ -436,6 +441,11 @@ public class HUD {
 
         if (!isInGame && popupBox != null && popupBox.hasParent())
             popupBox.hide();
+
+        if (isPaused) {
+            stage.setFocussedActor(playButton);
+            stage.setEscapeActor(cancelButton);
+        }
     }
 
     public void showKeyboardHelp() {
@@ -510,8 +520,11 @@ public class HUD {
     }
 
     public void showLevelEndScreen() {
+        Actor newDefaultActor = null;
+        Actor newEscapeActor = null;
+
         // für gestorben, game over und level erfolgreich beendet
-        popupBox = new Dialog("", skin, Assets.WINDOW_SMALL);
+        popupBox = new ControllerMenuDialog("", skin, Assets.WINDOW_SMALL);
 
         Table table = popupBox.getContentTable();
 
@@ -521,7 +534,7 @@ public class HUD {
                 gameScreen.proceedFromPausedOrEnded();
             }
         };
-        TextButton abort = new TextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
+        TextButton abort = new ColorableTextButton(FontAwesome.MISC_CROSS, skin, Assets.BUTTON_FA);
         ChangeListener cancel = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -549,21 +562,25 @@ public class HUD {
 
             table.add(scoreTable).pad(30);
 
-            TextButton toMenu = new TextButton(FontAwesome.MENU_SANDWICH, skin, Assets.BUTTON_FA);
+            TextButton toMenu = new ColorableTextButton(FontAwesome.MENU_SANDWICH, skin, Assets.BUTTON_FA);
             toMenu.addListener(cancel);
-            popupBox.getButtonTable().add(toMenu);
-            TextButton nextLevel = new TextButton(FontAwesome.BIG_FORWARD, skin, Assets.BUTTON_FA);
+            popupBox.button(toMenu);
+            TextButton nextLevel = new ColorableTextButton(FontAwesome.BIG_FORWARD, skin, Assets.BUTTON_FA);
             nextLevel.addListener(proceed);
-            popupBox.getButtonTable().add(nextLevel);
+            popupBox.button(nextLevel);
+            newEscapeActor = toMenu;
+            newDefaultActor = nextLevel;
         } else if (gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DEAD
                 || gameScreen.getGameState() == GameScreen.GAME_STATE.PLAYER_DIED) {
             // gestorben - Game over wenn keine Leben mehr über
             table.add(getScaledLabel(GameSave.getLifes() > 0 ? "Retry level?" : "GAME OVER", .8f));
             if (GameSave.getLifes() > 0) {
-                TextButton retry = new TextButton(FontAwesome.ROTATE_RELOAD, skin, Assets.BUTTON_FA);
+                TextButton retry = new ColorableTextButton(FontAwesome.ROTATE_RELOAD, skin, Assets.BUTTON_FA);
                 retry.addListener(proceed);
-                popupBox.getButtonTable().add(retry);
-                popupBox.getButtonTable().add(abort);
+                popupBox.button(retry);
+                popupBox.button(abort);
+                newEscapeActor = abort;
+                newDefaultActor = retry;
             } else {
                 table.row();
                 table.add(new Label("Total score gained: " + GameSave.getTotalScore(),
@@ -575,7 +592,9 @@ public class HUD {
                     table.row();
                     table.add(new Label("Reload the game for new lifes.", skin, Assets.LABEL_SIMPLE25));
                 } else {
-                    popupBox.getButtonTable().add(abort);
+                    popupBox.button(abort);
+                    newEscapeActor = abort;
+                    newDefaultActor = abort;
                 }
             }
         }
@@ -585,6 +604,9 @@ public class HUD {
         popupBox.setPosition(stage.getWidth() + popupBox.getWidth(), stage.getHeight() / 2, Align.left);
         popupBox.show(stage, Actions.delay(.5f, Actions.moveToAligned(stage.getWidth() / 2, stage.getHeight() / 2,
                 Align.center, .5f, Interpolation.circle)));
+
+        stage.setFocussedActor(newDefaultActor);
+        stage.setEscapeActor(newEscapeActor);
     }
 
     public void showPopupBox(String text) {

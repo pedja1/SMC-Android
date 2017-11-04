@@ -22,6 +22,21 @@ public class GameScreenInput implements InputProcessor {
         this.world = world;
     }
 
+    public static boolean isGamePausedOrEnded(GameScreen.GAME_STATE gameState) {
+        boolean pausedOrEnded;
+        switch (gameState) {
+            case GAME_PAUSED:
+            case GAME_LEVEL_END:
+            case PLAYER_DIED:
+            case PLAYER_DEAD:
+                pausedOrEnded = true;
+                break;
+            default:
+                pausedOrEnded = false;
+        }
+        return pausedOrEnded;
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         boolean waitedForinput = touchDown(0, 0, 0, 0);
@@ -35,12 +50,8 @@ public class GameScreenInput implements InputProcessor {
 
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
 
-        if (isGamePausedOrEnded(gameState)) {
-            if (keycode == Input.Keys.ENTER)
-                gameScreen.proceedFromPausedOrEnded();
-            else
-                return false;
-        }
+        if (isGamePausedOrEnded(gameState))
+            return false;
 
         switch (keycode) {
             case Input.Keys.F1:
@@ -90,14 +101,10 @@ public class GameScreenInput implements InputProcessor {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
         boolean pausedOrEnded = isGamePausedOrEnded(gameState);
 
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) {
-            if (pausedOrEnded)
-                gameScreen.exitToMenu();
-            else
-                gameScreen.setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
+        if ((keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) && !pausedOrEnded) {
+            gameScreen.setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
             return true;
         }
-
         if (pausedOrEnded)
             return false;
 
@@ -135,21 +142,6 @@ public class GameScreenInput implements InputProcessor {
             gameScreen.setDebug(!gameScreen.isDebug());
 
         return true;
-    }
-
-    public static boolean isGamePausedOrEnded(GameScreen.GAME_STATE gameState) {
-        boolean pausedOrEnded;
-        switch (gameState) {
-            case GAME_PAUSED:
-            case GAME_LEVEL_END:
-            case PLAYER_DIED:
-            case PLAYER_DEAD:
-                pausedOrEnded = true;
-                break;
-            default:
-                pausedOrEnded = false;
-        }
-        return pausedOrEnded;
     }
 
     @Override

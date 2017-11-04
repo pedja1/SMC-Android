@@ -57,6 +57,8 @@ public class LevelButton extends Button {
         // Animationen nur wenn Fokus drauf ist
         if (hasFocus)
             super.act(delta);
+        else if (statusLabel != null)
+            statusLabel.getColor().a = 1;
 
     }
 
