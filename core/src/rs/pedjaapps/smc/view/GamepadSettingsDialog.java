@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
-import de.golfgl.gdxcontroller.ControllerMenuDialog;
+import de.golfgl.gdx.controllers.ControllerMenuDialog;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 

@@ -1,4 +1,4 @@
-package de.golfgl.gdxcontroller;
+package de.golfgl.gdx.controllers;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;

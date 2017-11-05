@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.golfgl.gdxcontroller.ControllerMenuDialog;
+import de.golfgl.gdx.controllers.ControllerMenuDialog;
 import rs.pedjaapps.smc.assets.Assets;
 
 /**

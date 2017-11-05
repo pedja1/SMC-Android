@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import de.golfgl.gdxcontroller.ControllerMenuStage;
+import de.golfgl.gdx.controllers.ControllerMenuStage;
 
 /**
  * Created by Benjamin Schulte on 03.11.2017.

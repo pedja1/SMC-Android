@@ -1,4 +1,4 @@
-package de.golfgl.gdxcontroller;
+package de.golfgl.gdx.controllers;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
