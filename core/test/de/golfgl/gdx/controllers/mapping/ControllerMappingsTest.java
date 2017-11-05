@@ -1,11 +1,17 @@
 package de.golfgl.gdx.controllers.mapping;
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector3;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertEquals;
@@ -15,6 +21,24 @@ import static org.junit.Assert.assertTrue;
  * Created by Benjamin Schulte on 05.11.2017.
  */
 public class ControllerMappingsTest {
+
+    @BeforeClass
+    public static void init() {
+        // Note that we don't need to implement any of the listener's methods
+        Gdx.app = new HeadlessApplication(new ApplicationListener() {
+            @Override public void create() {}
+            @Override public void resize(int width, int height) {}
+            @Override public void render() {}
+            @Override public void pause() {}
+            @Override public void resume() {}
+            @Override public void dispose() {}
+        });
+
+        // Use Mockito to mock the OpenGL methods since we are running headlessly
+        Gdx.gl20 = Mockito.mock(GL20.class);
+        Gdx.gl = Gdx.gl20;
+    }
+
     @Test
     public void testButtonMapping() {
         ControllerMappings mappings = new ControllerMappings();
@@ -55,6 +79,16 @@ public class ControllerMappingsTest {
         assertEquals(4, controllerAdapter.lastEventId);
         assertFalse(controllerAdapter.buttonDown(controller, 2));
         assertEquals(4, controllerAdapter.lastEventId);
+
+        MappedController mappedController = new MappedController(controller, mappings);
+        controller.pressedButton = 4;
+        assertTrue(mappedController.isButtonPressed(4));
+        controller.pressedButton = 108;
+        assertTrue(mappedController.isButtonPressed(2));
+        controller.pressedButton = 99;
+        assertFalse(mappedController.isButtonPressed(2));
+        assertFalse(mappedController.isButtonPressed(5));
+
     }
 
     public class TestControllerAdapter extends MappedControllerAdapter {

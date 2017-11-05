@@ -294,6 +294,16 @@ public class ControllerMappings {
             else
                 return null;
         }
+
+        /**
+         * returns the real button index from a configured virtual button
+         *
+         * @param configuredId configuration id
+         * @return the real button id
+         */
+        public int getButtonFromConfigured(int configuredId) {
+            return ((ControllerButton) mappingsByConfigured.get(configuredId).controllerInput).buttonIndex;
+        }
     }
 
     //TODO vordefinierte XBox und (S)NES Definitionen

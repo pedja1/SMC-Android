@@ -16,8 +16,6 @@ public class MappedControllerAdapter extends ControllerAdapter {
     }
 
     /**
-     * override this
-     *
      * @param controller the controller giving this event
      * @param buttonId   your configured button id
      * @return whether you handled the event
@@ -26,13 +24,21 @@ public class MappedControllerAdapter extends ControllerAdapter {
         return false;
     }
 
+    /**
+     * @param controller the controller giving this event
+     * @param buttonId   your configured button id
+     * @return whether you handled the event
+     */
+    public boolean configuredButtonUp(Controller controller, int buttonId) {
+        return false;
+    }
+
     public boolean configuredAxisMoved(Controller controller, int axisId, float value) {
         System.out.println("Axis moved: " + controller.getName() + ":" + axisId + " " + String.valueOf(value));
         return false;
     }
 
-    @Override
-    public boolean buttonDown(Controller controller, int buttonIndex) {
+    protected boolean buttonChange(Controller controller, int buttonIndex, boolean isDown) {
         boolean isReverse = false;
         ControllerMappings.MappedInputs mapping = mappings.getControllerMapping(controller);
 
@@ -51,21 +57,28 @@ public class MappedControllerAdapter extends ControllerAdapter {
 
         switch (configuredInput.inputType) {
             case button:
-                return configuredButtonDown(controller, configuredInput.inputId);
+                if (isDown)
+                    return configuredButtonDown(controller, configuredInput.inputId);
+                else
+                    return configuredButtonUp(controller, configuredInput.inputId);
             case axis:
             case axisDigital:
-                return configuredAxisMoved(controller, configuredInput.inputId, isReverse ? -1f : 1f);
+                return configuredAxisMoved(controller, configuredInput.inputId, !isDown ? 0 : isReverse ? -1f : 1f);
             default:
                 // axis analog may not happen
                 Gdx.app.log(ControllerMappings.LOG_TAG, "Button mapped to analog axis not allowed!");
                 return false;
         }
+    }
 
+    @Override
+    public boolean buttonDown(Controller controller, int buttonIndex) {
+        return buttonChange(controller, buttonIndex, true);
     }
 
     @Override
     public boolean buttonUp(Controller controller, int buttonIndex) {
-        return super.buttonUp(controller, buttonIndex);
+        return buttonChange(controller, buttonIndex, false);
     }
 
     @Override
