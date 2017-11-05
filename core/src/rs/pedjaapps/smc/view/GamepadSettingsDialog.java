@@ -1,5 +1,7 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
 import com.badlogic.gdx.controllers.Controllers;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 import de.golfgl.gdx.controllers.ControllerMenuDialog;
+import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 
@@ -27,9 +30,12 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
 
     private Button refreshButton;
     private RefreshListener controllerListener;
+    private ControllerMappings mappings;
 
-    public GamepadSettingsDialog(Skin skin) {
+    public GamepadSettingsDialog(Skin skin, ControllerMappings mappings) {
         super("", skin, Assets.WINDOW_SMALL);
+
+        this.mappings = mappings;
 
         getButtonTable().defaults().pad(20, 40, 0, 40);
         button(new ColorableTextButton("OK", skin, Assets.BUTTON_SMALL));
@@ -63,20 +69,46 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
 
         contentTable.add(new Label(controllers.size == 0 ? "No controllers found." : "Controllers found:",
                 getSkin(), Assets.LABEL_SIMPLE25)).padBottom(30);
+
+        Table controllerList = new Table();
+        controllerList.defaults().pad(10);
         for (int i = 0; i < controllers.size; i++) {
-            contentTable.row().pad(10);
-            String shownName = controllers.get(i).getName();
-            if (shownName.length() > 30)
-                shownName = shownName.substring(0, 30) + "...";
-            contentTable.add(new Label(shownName, getSkin(), Assets.LABEL_SIMPLE25)).left();
+            controllerList.row();
+            final Controller controller = controllers.get(i);
+            String shownName = controller.getName();
+            if (shownName.length() > 40)
+                shownName = shownName.substring(0, 40) + "...";
+            controllerList.add(new Label(shownName, getSkin(), Assets.LABEL_SIMPLE25)).left().expandX();
+            ColorableTextButton configureButton = new ColorableTextButton("Configure", getSkin(), Assets
+                    .BUTTON_SMALL_FRAMELESS);
+            configureButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    startControllerConfiguration(controller);
+                }
+            });
+            controllerList.add(configureButton);
+            buttonsToAdd.add(configureButton);
+            if (getStage() != null)
+                ((MenuStage) getStage()).addFocussableActor(configureButton);
         }
+        contentTable.row();
+        contentTable.add(controllerList);
 
         contentTable.row().padTop(30);
-        Label hint = new Label("If a connected controller does not show up, try pressing a button.",
-                getSkin(),  Assets.LABEL_SIMPLE25);
+        Label hint = new Label("If a connected controller does not show up,\ntry pressing a button.\n" +
+                (Gdx.app.getType() == Application.ApplicationType.WebGL ?
+                        "If you face problems, try using Mozilla Firefox." : ""),
+                getSkin(), Assets.LABEL_SIMPLE25);
         hint.setWrap(true);
         hint.setAlignment(Align.center);
         contentTable.add(hint).fill().minWidth(MaryoGame.NATIVE_WIDTH * .7f);
+    }
+
+    private void startControllerConfiguration(Controller controller) {
+        Dialog configurationDialog = new GamepadMappingDialog(getSkin(), controller, mappings);
+
+        configurationDialog.show(getStage());
     }
 
     @Override

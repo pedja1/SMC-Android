@@ -206,14 +206,21 @@ public class ControllerMappingsTest {
 
         assertEquals(ControllerMappings.RecordResult.need_second_button, mappings.recordMapping(controller, 5));
         //next call too fast
-        assertEquals(ControllerMappings.RecordResult.need_second_button, mappings.recordMapping(controller, 5));
+        assertEquals(ControllerMappings.RecordResult.not_added_need_button, mappings.recordMapping(controller, 5));
+        //now an axis is moved
+        controller.axisValues[1] = .5f;
+        controller.pressedButton = -1;
+        assertEquals(ControllerMappings.RecordResult.not_added_need_button, mappings.recordMapping(controller, 5));
         controller.pressedButton = 1;
+        controller.axisValues[1] = 0f;
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 5));
 
         // analog do not accept buttons
         controller.pressedButton = 2;
         assertEquals(ControllerMappings.RecordResult.nothing_done, mappings.recordMapping(controller, 6));
 
+        controller.pressedButton = 1;
+        assertEquals(ControllerMappings.RecordResult.not_added, mappings.recordMapping(controller, 7));
         controller.pressedButton = 3;
         assertEquals(ControllerMappings.RecordResult.need_second_button, mappings.recordMapping(controller, 7));
         controller.pressedButton = 4;

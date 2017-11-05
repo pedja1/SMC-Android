@@ -5,11 +5,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.GameSave;
+import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game
@@ -23,7 +25,9 @@ public class MaryoGame extends Game
 	public static final String GAME_WEBURL = "https://www.golfgl.de/smcplf/";
 	public static final String GAME_SOURCEURL = "https://www.golfgl.de/smcplf/smcsrc.zip";
 
-    public Assets assets;
+	public ControllerMappings controllerMappings;
+
+	public Assets assets;
 	private Event event;
 
 	public MaryoGame(Event event)
@@ -42,6 +46,8 @@ public class MaryoGame extends Game
 		GameSave.init();
         assets.manager.load(Assets.SKIN_HUD, Skin.class);
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
+
+		controllerMappings = new MyControllerMapping();
 	}
 
 	@Override

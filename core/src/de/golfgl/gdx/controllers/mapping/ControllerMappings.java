@@ -12,6 +12,10 @@ public class ControllerMappings {
     public static final String LOG_TAG = "CONTROLLERMAPPING";
     public float analogToDigitalTreshold = .5f;
     /**
+     * some Gamepads report analog axis from .997 to 1.03...
+     */
+    public float maxAcceptedAnalogValue = 1.1f;
+    /**
      * this holds all inputs defined by the game
      */
     private HashMap<Integer, ConfiguredInput> configuredInputs;
@@ -23,14 +27,15 @@ public class ControllerMappings {
     private int waitingForReverseButtonAxisId = -1;
     private int waitingForReverseButtonFirstIdx = -1;
 
-    private static int findHighAxisValue(Controller controller, float analogToDigitalTreshold) {
+    public static int findHighAxisValue(Controller controller, float analogToDigitalTreshold,
+                                        float maxAcceptedAnalogValue) {
         // Cycle through axis indexes to check if there is a high value
         float highestValue = 0;
         int axisWithHighestValue = -1;
 
         for (int i = 0; i <= 500; i++) {
             float abs = Math.abs(controller.getAxis(i));
-            if (abs > highestValue && abs >= analogToDigitalTreshold) {
+            if (abs > highestValue && abs >= analogToDigitalTreshold && abs <= maxAcceptedAnalogValue) {
                 highestValue = abs;
                 axisWithHighestValue = i;
             }
@@ -39,7 +44,7 @@ public class ControllerMappings {
         return axisWithHighestValue;
     }
 
-    private static int findPressedButton(Controller controller) {
+    public static int findPressedButton(Controller controller) {
         // Cycle through button indexes to check if a button is pressed
         // Some gamepads report buttons from 90 to 107, so we check up to index 500
         // this should be moved into controller implementation which knows it better
@@ -77,6 +82,13 @@ public class ControllerMappings {
         initialized = true;
     }
 
+    public void resetMappings(Controller controller) {
+        if (mappedInputs == null)
+            return;
+
+        mappedInputs.remove(controller.getName());
+    }
+
     /**
      * Record a mapping. Don't call this in every render call, although it should make no problems users won't be so
      * fast.
@@ -84,8 +96,10 @@ public class ControllerMappings {
      * @param controller        controller to listen to
      * @param configuredInputId configured button or axis to record
      * @return {@link RecordResult#nothing_done} if nothing was done, {@link RecordResult#not_added} if buttons were
-     * pressed but could not be added, {@link RecordResult#need_second_button} if next call must be for an axis
-     * reverse button, {@link RecordResult#recorded} if a button mapping was added
+     * pressed but could not be added, {@link RecordResult#need_second_button} if axis was mapped to button and next
+     * call must be for an axis is the reverse button, {@link RecordResult#not_added_need_button} if is waiting for
+     * the second button but no valid was pressed
+     * {@link RecordResult#recorded} if a button mapping was added
      */
     public RecordResult recordMapping(Controller controller, int configuredInputId) {
         if (!initialized)
@@ -129,20 +143,23 @@ public class ControllerMappings {
                             waitingForReverseButtonFirstIdx = -1;
                             return RecordResult.recorded;
                         } else
-                            return RecordResult.need_second_button;
-                    } else {
+                            return RecordResult.not_added_need_button;
+                    } else if (mappedInput.isButtonInMapping(foundButtonIndex))
+                        return RecordResult.not_added;
+                    else {
                         // this is the first button, so remember state for next call
                         waitingForReverseButtonAxisId = configuredInputId;
                         waitingForReverseButtonFirstIdx = foundButtonIndex;
                         return RecordResult.need_second_button;
                     }
                 } else if (waitingForReverseButtonAxisId == configuredInputId)
-                    return RecordResult.need_second_button;
+                    return RecordResult.not_added_need_button;
 
                 // TODO pov
 
+                // no break here on purpose!
             case axisAnalog:
-                int axisIndex = findHighAxisValue(controller, analogToDigitalTreshold);
+                int axisIndex = findHighAxisValue(controller, analogToDigitalTreshold, maxAcceptedAnalogValue);
 
                 if (axisIndex >= 0) {
                     boolean added = mappedInput.putMapping(new MappedInput(configuredInputId,
@@ -158,7 +175,7 @@ public class ControllerMappings {
 
     }
 
-    public enum RecordResult {recorded, nothing_done, not_added, need_second_button}
+    public enum RecordResult {recorded, nothing_done, not_added, need_second_button, not_added_need_button}
 
     public static abstract class ControllerInput {
         public static final char PREFIX_BUTTON = 'B';
@@ -397,6 +414,16 @@ public class ControllerMappings {
 
         public void load(String json) {
             //TODO
+        }
+
+        /**
+         * returns if a certain button is already in mapping
+         *
+         * @param buttonIndex
+         * @return
+         */
+        protected boolean isButtonInMapping(int buttonIndex) {
+            return mappingsByButton.containsKey(buttonIndex);
         }
 
         public ConfiguredInput getConfiguredFromButton(int buttonIndex) {

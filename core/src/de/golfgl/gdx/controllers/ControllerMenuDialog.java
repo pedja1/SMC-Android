@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 public class ControllerMenuDialog extends Dialog {
     protected Array<Button> buttonsToAdd = new Array<>();
     protected Actor previousFocussedActor;
+    protected Actor previousEscapeActor;
 
     public ControllerMenuDialog(String title, Skin skin) {
         super(title, skin);
@@ -54,11 +55,13 @@ public class ControllerMenuDialog extends Dialog {
     @Override
     public Dialog show(Stage stage, Action action) {
         previousFocussedActor = null;
+        previousEscapeActor = null;
 
         super.show(stage, action);
 
         if (stage instanceof ControllerMenuStage) {
             previousFocussedActor = ((ControllerMenuStage) stage).getFocussedActor();
+            previousEscapeActor = ((ControllerMenuStage) stage).getEscapeActor();
 
             if (buttonsToAdd.size >= 1)
                 ((ControllerMenuStage) stage).setFocussedActor(buttonsToAdd.get(0));
@@ -75,6 +78,10 @@ public class ControllerMenuDialog extends Dialog {
             if (previousFocussedActor != null && previousFocussedActor.getStage() == getStage()
                     && (currentFocussedActor == null || currentFocussedActor.isDescendantOf(this)))
                 ((ControllerMenuStage) getStage()).setFocussedActor(previousFocussedActor);
+            Actor currentEscapeActor = ((ControllerMenuStage) getStage()).getEscapeActor();
+            if (previousEscapeActor != null && previousEscapeActor.getStage() == getStage()
+                    && (currentEscapeActor == null || currentEscapeActor.isDescendantOf(this)))
+                ((ControllerMenuStage) getStage()).setEscapeActor(previousEscapeActor);
         }
 
         super.hide(action);

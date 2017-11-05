@@ -1,0 +1,156 @@
+package rs.pedjaapps.smc.view;
+
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+
+import de.golfgl.gdx.controllers.ControllerMenuDialog;
+import de.golfgl.gdx.controllers.mapping.ControllerMappings;
+import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.utility.MyControllerMapping;
+
+/**
+ * Created by Benjamin Schulte on 05.11.2017.
+ */
+
+public class GamepadMappingDialog extends ControllerMenuDialog {
+    private final Label instructionLabel;
+    private final ControllerMappings mappings;
+    private final Controller controller;
+    private final TextButton skipButton;
+    private int currentStep = 0;
+    private float timeSinceLastRecord = 0;
+    private int inputToRecord = -1;
+    private final Label axisLabel;
+    private final Label buttonLabel;
+
+    public GamepadMappingDialog(Skin skin, Controller controller, ControllerMappings mappings) {
+        super("", skin, Assets.WINDOW_SMALL);
+
+        this.mappings = mappings;
+        this.controller = controller;
+
+        instructionLabel = new Label("", skin, Assets.LABEL_SIMPLE25);
+        instructionLabel.setWrap(true);
+
+        buttonLabel = new Label("", skin, Assets.LABEL_SIMPLE25);
+        axisLabel = new Label("", skin, Assets.LABEL_SIMPLE25);
+
+        getContentTable().add(instructionLabel).fill().minWidth(MaryoGame.NATIVE_WIDTH * .7f)
+                .minHeight(MaryoGame.NATIVE_HEIGHT * .5f).colspan(2);
+        instructionLabel.setAlignment(Align.center);
+
+        if (MaryoGame.GAME_DEVMODE) {
+            getContentTable().row();
+            getContentTable().add(buttonLabel).minWidth(MaryoGame.NATIVE_WIDTH * .35f);
+            getContentTable().add(axisLabel).minWidth(MaryoGame.NATIVE_WIDTH * .35f);
+        }
+
+        getButtonTable().defaults().pad(20, 40, 0, 40);
+
+        skipButton = new ColorableTextButton("Skip", getSkin(), Assets.BUTTON_SMALL);
+        skipButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (inputToRecord >= 0) {
+                    currentStep = currentStep + 2 - (currentStep % 2);
+                    switchStep();
+                } else
+                    hide();
+            }
+        });
+
+        getButtonTable().add(skipButton);
+        buttonsToAdd.add(skipButton);
+
+        //button(new ColorableTextButton("Cancel", getSkin(), Assets.BUTTON_SMALL));
+
+        mappings.resetMappings(controller);
+
+        switchStep();
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        timeSinceLastRecord += delta;
+
+        if (timeSinceLastRecord > .25f && inputToRecord >= 0) {
+            timeSinceLastRecord = 0;
+            ControllerMappings.RecordResult recordResult = mappings.recordMapping(controller, inputToRecord);
+
+            if (MaryoGame.GAME_DEVMODE) {
+                int pressedButton = ControllerMappings.findPressedButton(controller);
+                buttonLabel.setText(pressedButton >= 0 ? "B" + String.valueOf(pressedButton) : "");
+                int movedAxis = ControllerMappings.findHighAxisValue(controller, mappings.analogToDigitalTreshold,
+                        mappings.maxAcceptedAnalogValue);
+                axisLabel.setText(movedAxis >= 0 ? "A" + String.valueOf(movedAxis) : "");
+            }
+
+            switch (recordResult) {
+                case need_second_button:
+                    currentStep++;
+                    switchStep();
+                    break;
+                case recorded:
+                    currentStep = currentStep + 2 - (currentStep % 2);
+                    switchStep();
+                    break;
+                default:
+                    //nix zu tun, wir warten ab
+            }
+        }
+    }
+
+    private void switchStep() {
+        switch (currentStep) {
+            case 0:
+                instructionLabel.setText("Press the button to move RIGHT");
+                inputToRecord = MyControllerMapping.AXIS_HORIZONTAL;
+                break;
+            case 1:
+                instructionLabel.setText("Press the button to move LEFT");
+                inputToRecord = MyControllerMapping.AXIS_HORIZONTAL;
+                break;
+            case 2:
+                instructionLabel.setText("Press the button to move DOWN");
+                inputToRecord = MyControllerMapping.AXIS_VERTICAL;
+                break;
+            case 3:
+                instructionLabel.setText("Press the button to move UP");
+                inputToRecord = MyControllerMapping.AXIS_VERTICAL;
+                break;
+            case 4:
+            case 5:
+                instructionLabel.setText("Press the button to JUMP");
+                inputToRecord = MyControllerMapping.BUTTON_JUMP;
+                break;
+            case 6:
+            case 7:
+                instructionLabel.setText("Press the button to FIRE");
+                inputToRecord = MyControllerMapping.BUTTON_FIRE;
+                break;
+            case 8:
+            case 9:
+                instructionLabel.setText("Press the button to ENTER menus and pause");
+                inputToRecord = MyControllerMapping.BUTTON_START;
+                break;
+            case 10:
+            case 11:
+                instructionLabel.setText("Press the button to ESCAPE menus");
+                inputToRecord = MyControllerMapping.BUTTON_CANCEL;
+                break;
+            default:
+                instructionLabel.setText("Finished");
+                skipButton.setText("OK");
+
+                inputToRecord = -1;
+        }
+    }
+}

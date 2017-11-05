@@ -331,7 +331,7 @@ public class MainMenuScreen extends AbstractScreen {
         gamePadSettings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new GamepadSettingsDialog(skin).show(stage);
+                new GamepadSettingsDialog(skin, game.controllerMappings).show(stage);
             }
         });
         startMenu.addActor(gamePadSettings);
