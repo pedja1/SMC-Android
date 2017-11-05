@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class ControllerMappings {
     public static final String LOG_TAG = "CONTROLLERMAPPING";
-
+    public float analogToDigitalTreshold = .5f;
     /**
      * this holds all inputs defined by the game
      */
@@ -20,6 +20,24 @@ public class ControllerMappings {
      */
     private HashMap<String, MappedInputs> mappedInputs;
     private boolean initialized;
+    private int waitingForReverseButtonAxisId = -1;
+    private int waitingForReverseButtonFirstIdx = -1;
+
+    private static int findHighAxisValue(Controller controller, float analogToDigitalTreshold) {
+        // Cycle through axis indexes to check if there is a high value
+        float highestValue = 0;
+        int axisWithHighestValue = -1;
+
+        for (int i = 0; i <= 500; i++) {
+            float abs = Math.abs(controller.getAxis(i));
+            if (abs > highestValue && abs >= analogToDigitalTreshold) {
+                highestValue = abs;
+                axisWithHighestValue = i;
+            }
+        }
+
+        return axisWithHighestValue;
+    }
 
     private static int findPressedButton(Controller controller) {
         // Cycle through button indexes to check if a button is pressed
@@ -59,7 +77,17 @@ public class ControllerMappings {
         initialized = true;
     }
 
-    public boolean recordMapping(Controller controller, int configuredInputId) {
+    /**
+     * Record a mapping. Don't call this in every render call, although it should make no problems users won't be so
+     * fast.
+     *
+     * @param controller        controller to listen to
+     * @param configuredInputId configured button or axis to record
+     * @return {@link RecordResult#nothing_done} if nothing was done, {@link RecordResult#not_added} if buttons were
+     * pressed but could not be added, {@link RecordResult#need_second_button} if next call must be for an axis
+     * reverse button, {@link RecordResult#recorded} if a button mapping was added
+     */
+    public RecordResult recordMapping(Controller controller, int configuredInputId) {
         if (!initialized)
             throw new IllegalStateException("Recording not allowed before commit() is called");
         ConfiguredInput configuredInput = configuredInputs.get(configuredInputId);
@@ -72,27 +100,65 @@ public class ControllerMappings {
         if (!mappedInputs.containsKey(controller.getName()))
             mappedInputs.put(controller.getName(), new MappedInputs(controller.getName()));
 
+        MappedInputs mappedInput = getControllerMapping(controller);
+
         switch (configuredInput.inputType) {
             case button:
                 int buttonIndex = findPressedButton(controller);
 
                 if (buttonIndex >= 0) {
                     // we found our button, hopefully
-                    MappedInputs mappedInput = getControllerMapping(controller);
                     boolean added = mappedInput.putMapping(new MappedInput(configuredInputId,
                             new ControllerButton(buttonIndex)));
 
-                    //TODO fire event when not added
-
-                    return added;
+                    return (added ? RecordResult.recorded : RecordResult.not_added);
                 } else
-                    return false;
+                    return RecordResult.nothing_done;
+            case axis:
+            case axisDigital:
+                // check if a button is already there, then we need to set the reverse button
+                int foundButtonIndex = findPressedButton(controller);
+                if (foundButtonIndex >= 0) {
+                    if (waitingForReverseButtonAxisId == configuredInputId) {
+                        //this is the reverse button
+                        boolean added = mappedInput.putMapping(new MappedInput(configuredInputId,
+                                new ControllerButton(waitingForReverseButtonFirstIdx),
+                                new ControllerButton(foundButtonIndex)));
+                        if (added) {
+                            waitingForReverseButtonAxisId = -1;
+                            waitingForReverseButtonFirstIdx = -1;
+                            return RecordResult.recorded;
+                        } else
+                            return RecordResult.need_second_button;
+                    } else {
+                        // this is the first button, so remember state for next call
+                        waitingForReverseButtonAxisId = configuredInputId;
+                        waitingForReverseButtonFirstIdx = foundButtonIndex;
+                        return RecordResult.need_second_button;
+                    }
+                } else if (waitingForReverseButtonAxisId == configuredInputId)
+                    return RecordResult.need_second_button;
+
+                // TODO pov
+
+            case axisAnalog:
+                int axisIndex = findHighAxisValue(controller, analogToDigitalTreshold);
+
+                if (axisIndex >= 0) {
+                    boolean added = mappedInput.putMapping(new MappedInput(configuredInputId,
+                            new ControllerAxis(axisIndex)));
+
+                    return (added ? RecordResult.recorded : RecordResult.not_added);
+                } else
+                    return RecordResult.nothing_done;
+
             default:
-                //TODO
-                return false;
+                return RecordResult.nothing_done;
         }
 
     }
+
+    public enum RecordResult {recorded, nothing_done, not_added, need_second_button}
 
     public static abstract class ControllerInput {
         public static final char PREFIX_BUTTON = 'B';
@@ -142,9 +208,12 @@ public class ControllerMappings {
     public static class ControllerAxis extends ControllerInput {
         public int axisIndex;
 
+        public ControllerAxis(int axisIndex) {
+            this.axisIndex = axisIndex;
+        }
+
         public static ControllerAxis deserialize(String serializedInput) {
-            ControllerAxis axis = new ControllerAxis();
-            axis.axisIndex = Integer.valueOf(serializedInput.substring(1));
+            ControllerAxis axis = new ControllerAxis(Integer.valueOf(serializedInput.substring(1)));
             return axis;
         }
 
@@ -183,7 +252,7 @@ public class ControllerMappings {
     /**
      * A single input mapping definition for one ConfiguredInput and one Controller
      */
-    private static class MappedInput {
+    protected class MappedInput {
         /**
          * the configured input this mapping is referring to
          */
@@ -196,21 +265,65 @@ public class ControllerMappings {
             this.configuredInputId = configuredInputId;
             this.controllerInput = controllerInput;
         }
+
+        public MappedInput(int configuredInputId, ControllerButton controllerInput, ControllerButton
+                reverseButton) {
+            this.configuredInputId = configuredInputId;
+            this.controllerInput = controllerInput;
+            this.secondButtonForAxis = reverseButton;
+        }
+
+        /**
+         * returns the real button index from a configured virtual button or axis
+         *
+         * @return the real button id, or -1 if this mapping is no button
+         */
+        public int getButtonIndex() {
+            if (controllerInput instanceof ControllerButton)
+                return ((ControllerButton) controllerInput).buttonIndex;
+
+            return -1;
+        }
+
+        /**
+         * returns the real axis from a configured axis.
+         *
+         * @return real axis id, or -1 if not available
+         */
+        public int getAxisIndex() {
+            if (controllerInput instanceof ControllerAxis)
+                return ((ControllerAxis) controllerInput).axisIndex;
+            return -1;
+        }
+
+        public ConfiguredInput.Type getConfiguredInputType() {
+            return configuredInputs.get(configuredInputId).inputType;
+        }
+
+        public int getReverseButtonIndex() {
+            if (secondButtonForAxis != null)
+                return secondButtonForAxis.buttonIndex;
+
+            return -1;
+        }
     }
 
     /**
-     * An input mappings for a single controller
+     * Input mappings for a single controller. Class is protected and not for accessing from outside.
+     * Mappings are constructed via {@link #recordMapping(Controller, int)}
      */
     protected class MappedInputs {
         private String controllerName;
         private boolean isComplete;
         private HashMap<Integer, MappedInput> mappingsByConfigured;
         private HashMap<Integer, MappedInput> mappingsByButton;
+        private HashMap<Integer, MappedInput> mappingsByAxis;
 
         private MappedInputs(String controllerName) {
             this.controllerName = controllerName;
             mappingsByConfigured = new HashMap<>(mappedInputs.size());
             mappingsByButton = new HashMap<>(mappedInputs.size());
+            mappingsByAxis = new HashMap<>(mappedInputs.size());
         }
 
         public boolean checkCompleted() {
@@ -241,13 +354,22 @@ public class ControllerMappings {
                         mappingsByButton.containsKey((mapping.secondButtonForAxis).buttonIndex))
                     return false;
 
+                // just in case reverse and first button are the same...
+                if (mapping.secondButtonForAxis != null &&
+                        controllerButton.buttonIndex == mapping.secondButtonForAxis.buttonIndex)
+                    return false;
+
                 mappingsByButton.put(controllerButton.buttonIndex, mapping);
                 if (mapping.secondButtonForAxis != null)
-                    mappingsByButton.put(controllerButton.buttonIndex, mapping);
+                    mappingsByButton.put(mapping.secondButtonForAxis.buttonIndex, mapping);
 
             } else if (mapping.controllerInput instanceof ControllerAxis) {
-                //TODO
-                return false;
+                ControllerAxis controllerAxis = (ControllerAxis) mapping.controllerInput;
+                if (mappingsByAxis.containsKey(controllerAxis.axisIndex))
+                    return false;
+
+                mappingsByAxis.put(controllerAxis.axisIndex, mapping);
+
             } else if (mapping.controllerInput instanceof ControllerPovButton) {
                 //TODO
                 return false;
@@ -296,13 +418,24 @@ public class ControllerMappings {
         }
 
         /**
-         * returns the real button index from a configured virtual button
+         * returns mapped input for a configuration id, if present
          *
          * @param configuredId configuration id
-         * @return the real button id
+         * @return MappedInput
+         * @throws Exception when no mapping set
          */
-        public int getButtonFromConfigured(int configuredId) {
-            return ((ControllerButton) mappingsByConfigured.get(configuredId).controllerInput).buttonIndex;
+        public MappedInput getMappedInput(int configuredId) {
+            return mappingsByConfigured.get(configuredId);
+        }
+
+        public ConfiguredInput getConfiguredFromAxis(int axisIndex) {
+            MappedInput mappedInput = mappingsByAxis.get(axisIndex);
+
+            // if hit, check if it is the reverse button
+            if (mappedInput != null)
+                return configuredInputs.get(mappedInput.configuredInputId);
+            else
+                return null;
         }
     }
 

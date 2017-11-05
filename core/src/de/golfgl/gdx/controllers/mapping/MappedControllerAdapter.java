@@ -10,9 +10,11 @@ import com.badlogic.gdx.controllers.PovDirection;
  */
 public class MappedControllerAdapter extends ControllerAdapter {
     ControllerMappings mappings;
+    private float analogToDigitalTreshold;
 
     public MappedControllerAdapter(ControllerMappings mappings) {
         this.mappings = mappings;
+        this.analogToDigitalTreshold = mappings.analogToDigitalTreshold;
     }
 
     /**
@@ -83,7 +85,30 @@ public class MappedControllerAdapter extends ControllerAdapter {
 
     @Override
     public boolean axisMoved(Controller controller, int axisIndex, float value) {
-        return super.axisMoved(controller, axisIndex, value);
+        //TODO axis fires very often, so cache last controller and last two axis
+
+        ControllerMappings.MappedInputs mapping = mappings.getControllerMapping(controller);
+
+        if (mapping == null)
+            return false;
+
+        ConfiguredInput configuredInput = mapping.getConfiguredFromAxis(axisIndex);
+
+        if (configuredInput == null)
+            return false;
+
+        switch (configuredInput.inputType) {
+            case axis:
+            case axisAnalog:
+                return configuredAxisMoved(controller, configuredInput.inputId, value);
+            case axisDigital:
+                return configuredAxisMoved(controller, configuredInput.inputId,
+                        Math.abs(value) < analogToDigitalTreshold ? 0 : 1 * Math.signum(value));
+            default:
+                // button may not happen
+                Gdx.app.log(ControllerMappings.LOG_TAG, "Axis mapped to button not allowed!");
+                return false;
+        }
     }
 
     @Override
