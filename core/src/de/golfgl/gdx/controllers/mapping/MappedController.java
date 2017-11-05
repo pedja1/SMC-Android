@@ -1,5 +1,6 @@
 package de.golfgl.gdx.controllers.mapping;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 
 /**
@@ -15,6 +16,9 @@ public class MappedController {
         this.controller = controller;
         this.controllerMapping = mappings.getControllerMapping(controller);
         this.analogToDigitalTreshold = mappings.analogToDigitalTreshold;
+
+        if (!controllerMapping.checkCompleted())
+            Gdx.app.log(ControllerMappings.LOG_TAG, "MappedController created with incomplete configuration");
     }
 
     /**
@@ -56,7 +60,6 @@ public class MappedController {
         if (mappedInput == null)
             return 0;
 
-        //TODO checken ob axis, digitalaxis, analogaxis und dann manches sonst skippen
         ConfiguredInput.Type configuredInputType = mappedInput.getConfiguredInputType();
 
         // first check if a real axis is mapped

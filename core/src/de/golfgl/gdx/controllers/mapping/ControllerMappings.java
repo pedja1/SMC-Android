@@ -327,8 +327,11 @@ public class ControllerMappings {
         }
 
         public boolean checkCompleted() {
-            //TODO check of mappingsByConfigured contains all configuredInputs
-            return false;
+            boolean completed = true;
+            for (Integer configureId : configuredInputs.keySet())
+                completed = completed && mappingsByConfigured.containsKey(configureId);
+
+            return completed;
         }
 
         public String getControllerName() {
@@ -384,6 +387,7 @@ public class ControllerMappings {
         public void reset() {
             mappingsByButton.clear();
             mappingsByConfigured.clear();
+            mappingsByAxis.clear();
         }
 
         public String save() {

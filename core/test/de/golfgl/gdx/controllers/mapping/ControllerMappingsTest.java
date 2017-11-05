@@ -85,9 +85,11 @@ public class ControllerMappingsTest {
         controller.pressedButton = 1;
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 3));
         //TODO add assertion for check if record is complete
+        assertFalse(mappings.getControllerMapping(controller).checkCompleted());
         controller.pressedButton = 4;
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 4));
         controller.pressedButton = -1;
+        assertTrue(mappings.getControllerMapping(controller).checkCompleted());
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -151,7 +153,8 @@ public class ControllerMappingsTest {
         controller.axisValues[1] = .5f;
         controller.axisValues[2] = -1;
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
-        //TODO add assertion for check if record is complete
+
+        assertTrue(mappings.getControllerMapping(controller).checkCompleted());
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -216,7 +219,7 @@ public class ControllerMappingsTest {
         controller.pressedButton = 4;
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
 
-        //TODO add assertion for check if record is complete
+        assertFalse(mappings.getControllerMapping(controller).checkCompleted());
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
