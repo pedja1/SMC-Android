@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.view;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -59,5 +60,25 @@ public class MenuStage extends ControllerMenuStage {
             return false;
 
         return super.fireEventOnActor(actor, type);
+    }
+
+    @Override
+    public boolean keyDown(int keyCode) {
+        // für HUD den Sprungknopf auch als Enter-Knopf nehmen
+
+        if (keyCode == Input.Keys.SPACE)
+            keyCode = Input.Keys.ENTER;
+
+        return super.keyDown(keyCode);
+    }
+
+    @Override
+    public boolean keyUp(int keyCode) {
+        // für HUD den Sprungknopf auch als Enter-Knopf nehmen
+
+        if (keyCode == Input.Keys.SPACE)
+            keyCode = Input.Keys.ENTER;
+
+        return super.keyUp(keyCode);
     }
 }

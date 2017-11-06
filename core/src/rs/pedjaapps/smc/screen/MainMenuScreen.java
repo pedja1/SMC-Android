@@ -4,6 +4,8 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -43,6 +45,7 @@ import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ChoseLevelView;
 import rs.pedjaapps.smc.view.ColorableTextButton;
+import rs.pedjaapps.smc.view.GamepadMappingDialog;
 import rs.pedjaapps.smc.view.GamepadSettingsDialog;
 import rs.pedjaapps.smc.view.MusicButton;
 
@@ -109,6 +112,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void show() {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setInputProcessor(stage);
+        game.controllerMappings.setInputProcessor(stage);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
         music.setLooping(true);
         MusicManager.play(music);
@@ -180,6 +184,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
         Gdx.input.setInputProcessor(null);
+        game.controllerMappings.setInputProcessor(null);
         game.assets.dispose();
         background.dispose();
         backgroundColor.dispose();
@@ -242,6 +247,11 @@ public class MainMenuScreen extends AbstractScreen {
         maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
         maryo.setPosition(100, 378);
         stage.addActor(maryo);
+
+        // für FireTV: falls direkt bei Start schon Controller da, dann gleich in Konfig springen
+        if (Controllers.getControllers().size >= 1)
+            new GamepadMappingDialog(skin, Controllers.getControllers().get(0), game.controllerMappings).show(stage);
+
     }
 
     private void initStartMenu() {

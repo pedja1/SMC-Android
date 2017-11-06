@@ -77,7 +77,7 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
             final Controller controller = controllers.get(i);
             String shownName = controller.getName();
             if (shownName.length() > 40)
-                shownName = shownName.substring(0, 40) + "...";
+                shownName = shownName.substring(0, 38) + "...";
             controllerList.add(new Label(shownName, getSkin(), Assets.LABEL_SIMPLE25)).left().expandX();
             ColorableTextButton configureButton = new ColorableTextButton("Configure", getSkin(), Assets
                     .BUTTON_SMALL_FRAMELESS);
@@ -124,7 +124,14 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
 
     @Override
     public void hide(Action action) {
-        Controllers.removeListener(controllerListener);
+        // removeListener darf erst im nächsten Call passieren, da es eine Exception gibt wenn diese Aktion
+        // aus einem Controller-Aufruf heraus passiert
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Controllers.removeListener(controllerListener);
+            }
+        });
         super.hide(action);
     }
 

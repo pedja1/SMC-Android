@@ -90,6 +90,7 @@ public class HUD {
     private TextureAtlas dynAtlas;
     private Label levelNamePaused;
     private Level gamescreenlevel;
+    private TextButton gamePadSettings;
 
     public HUD(World world, GameScreen gameScreen) {
         this.world = world;
@@ -264,20 +265,20 @@ public class HUD {
 
         playButton = new ColorableTextButton("RESUME", skin, Assets.BUTTON_BORDER);
         playButton.getLabel().setFontScale(.7f);
-        playButton.setHeight(playButton.getPrefHeight());
+        playButton.setSize(playButton.getPrefWidth(), playButton.getPrefHeight());
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             }
         });
-        playButton.setPosition(stage.getWidth() / 2, 10, Align.bottom);
+        playButton.setPosition(stage.getWidth() / 2, stage.getHeight() / 4, Align.center);
         stage.addActor(playButton);
         stage.addFocussableActor(playButton);
 
         gamescreenlevel = Level.getLevel(gameScreen.getMenuLevelname());
         levelNamePaused = getScaledLabel("LEVEL " + gamescreenlevel.number + " PAUSED", .8f);
-        levelNamePaused.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.center);
+        levelNamePaused.setPosition(stage.getWidth() / 2, stage.getHeight() / 2, Align.bottom);
         levelNamePaused.addAction(HUD.getForeverFade());
         stage.addActor(levelNamePaused);
 
@@ -286,6 +287,16 @@ public class HUD {
         imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10, Align.top);
         stage.addActor(imGameLogo);
 
+        gamePadSettings = new ColorableTextButton(FontAwesome.DEVICE_GAMEPAD, skin, Assets.BUTTON_FA);
+        gamePadSettings.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
+        gamePadSettings.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                new GamepadSettingsDialog(skin, gameScreen.game.controllerMappings).show(stage);
+            }
+        });
+        stage.addActor(gamePadSettings);
+        stage.addFocussableActor(gamePadSettings);
 
         musicButton = new MusicButton(skin, world.screen.game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class)) {
             @Override
@@ -293,7 +304,7 @@ public class HUD {
                 return gameScreen.getMusic();
             }
         };
-        musicButton.setPosition(stage.getWidth() - 10, 10, Align.bottomRight);
+        musicButton.setPosition(gamePadSettings.getX() - 10, 10, Align.bottomRight);
         stage.addActor(musicButton);
         stage.addFocussableActor(musicButton);
 
@@ -432,6 +443,7 @@ public class HUD {
         playButton.setVisible(isPaused);
         levelNamePaused.setVisible(isPaused);
         musicButton.setVisible(isPaused);
+        gamePadSettings.setVisible(isPaused);
         cancelButton.setVisible(isPaused);
         imGameLogo.setVisible(isPaused);
         pauseButton.setVisible(isInGame && !isDead);

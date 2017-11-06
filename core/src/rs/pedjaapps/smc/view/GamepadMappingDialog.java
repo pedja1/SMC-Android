@@ -1,6 +1,7 @@
 package rs.pedjaapps.smc.view;
 
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -41,6 +42,13 @@ public class GamepadMappingDialog extends ControllerMenuDialog {
         buttonLabel = new Label("", skin, Assets.LABEL_SIMPLE25);
         axisLabel = new Label("", skin, Assets.LABEL_SIMPLE25);
 
+        String name = controller.getName();
+        if (name.length() > 50)
+            name = name.substring(0, 48) + "...";
+
+        getContentTable().add(new Label("Configure " + name, skin, Assets.LABEL_SIMPLE25)).colspan(2);
+        getContentTable().row();
+
         getContentTable().add(instructionLabel).fill().minWidth(MaryoGame.NATIVE_WIDTH * .7f)
                 .minHeight(MaryoGame.NATIVE_HEIGHT * .5f).colspan(2);
         instructionLabel.setAlignment(Align.center);
@@ -68,9 +76,17 @@ public class GamepadMappingDialog extends ControllerMenuDialog {
         getButtonTable().add(skipButton);
         buttonsToAdd.add(skipButton);
 
-        //button(new ColorableTextButton("Cancel", getSkin(), Assets.BUTTON_SMALL));
+        TextButton restartButton = new ColorableTextButton("Restart", getSkin(), Assets.BUTTON_SMALL);
+        restartButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                currentStep = 0;
+                switchStep();
+            }
+        });
 
-        mappings.resetMappings(controller);
+        getButtonTable().add(restartButton);
+        buttonsToAdd.add(restartButton);
 
         switchStep();
     }
@@ -91,6 +107,8 @@ public class GamepadMappingDialog extends ControllerMenuDialog {
                 int movedAxis = ControllerMappings.findHighAxisValue(controller, mappings.analogToDigitalTreshold,
                         mappings.maxAcceptedAnalogValue);
                 axisLabel.setText(movedAxis >= 0 ? "A" + String.valueOf(movedAxis) : "");
+                if (controller.getPov(0) != PovDirection.center)
+                    axisLabel.setText("P0");
             }
 
             switch (recordResult) {
@@ -111,6 +129,7 @@ public class GamepadMappingDialog extends ControllerMenuDialog {
     private void switchStep() {
         switch (currentStep) {
             case 0:
+                mappings.resetMappings(controller);
                 instructionLabel.setText("Press the button to move RIGHT");
                 inputToRecord = MyControllerMapping.AXIS_HORIZONTAL;
                 break;

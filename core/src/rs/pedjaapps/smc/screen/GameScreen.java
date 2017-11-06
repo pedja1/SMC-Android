@@ -177,6 +177,7 @@ public class GameScreen extends AbstractScreen {
         inputprocessor.addProcessor(hud.stage);
 
         Gdx.input.setInputProcessor(inputprocessor);
+        game.controllerMappings.setInputProcessor(inputprocessor);
         if (!resumed) {
             game.levelStart(levelName);
         }

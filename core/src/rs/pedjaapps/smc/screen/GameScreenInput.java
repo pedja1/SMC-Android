@@ -54,6 +54,10 @@ public class GameScreenInput implements InputProcessor {
             return false;
 
         switch (keycode) {
+            case Input.Keys.ENTER:
+                gameScreen.setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
+                break;
+
             case Input.Keys.F1:
                 gameScreen.hud.showKeyboardHelp();
                 break;
@@ -101,7 +105,8 @@ public class GameScreenInput implements InputProcessor {
         GameScreen.GAME_STATE gameState = gameScreen.getGameState();
         boolean pausedOrEnded = isGamePausedOrEnded(gameState);
 
-        if ((keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE) && !pausedOrEnded) {
+        if ((keycode == Input.Keys.BACK || keycode == Input.Keys.ESCAPE)
+                && !pausedOrEnded) {
             gameScreen.setGameState(GameScreen.GAME_STATE.GAME_PAUSED);
             return true;
         }

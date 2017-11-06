@@ -3,6 +3,7 @@ package rs.pedjaapps.smc;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.golfgl.gdx.controllers.mapping.ControllerMappings;
@@ -25,7 +26,7 @@ public class MaryoGame extends Game
 	public static final String GAME_WEBURL = "https://www.golfgl.de/smcplf/";
 	public static final String GAME_SOURCEURL = "https://www.golfgl.de/smcplf/smcsrc.zip";
 
-	public ControllerMappings controllerMappings;
+	public MyControllerMapping controllerMappings;
 
 	public Assets assets;
 	private Event event;
@@ -48,6 +49,7 @@ public class MaryoGame extends Game
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 
 		controllerMappings = new MyControllerMapping();
+		Controllers.addListener(controllerMappings.controllerToInputAdapter);
 	}
 
 	@Override
