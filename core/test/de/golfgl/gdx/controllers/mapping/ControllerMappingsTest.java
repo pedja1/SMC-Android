@@ -264,7 +264,82 @@ public class ControllerMappingsTest {
 
     @Test
     public void testPovToAxisMapping() {
-        //TODO
+        ControllerMappings mappings = new ControllerMappings();
+
+        // We test 3 axis
+        ConfiguredInput axis1 = new ConfiguredInput(ConfiguredInput.Type.axis, 5);
+        ConfiguredInput axis2 = new ConfiguredInput(ConfiguredInput.Type.axisAnalog, 6);
+        ConfiguredInput axis3 = new ConfiguredInput(ConfiguredInput.Type.axisDigital, 7);
+
+        mappings.addConfiguredInput(axis1);
+        mappings.addConfiguredInput(axis2);
+        mappings.addConfiguredInput(axis3);
+
+        // ok, configuration done...
+        mappings.commit();
+
+        // now we connect a Controller... and map
+        MockedController controller = new MockedController();
+        controller.axisValues = new float[3];
+        controller.povDirection = PovDirection.east;
+
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 5));
+        //next call too fast
+        assertEquals(ControllerMappings.RecordResult.not_added, mappings.recordMapping(controller, 7));
+        //not two directions
+        controller.povDirection = PovDirection.northWest;
+        assertEquals(ControllerMappings.RecordResult.not_added, mappings.recordMapping(controller, 7));
+
+        //not same direction on different configurations
+        controller.povDirection = PovDirection.west;
+        assertEquals(ControllerMappings.RecordResult.not_added, mappings.recordMapping(controller, 7));
+
+        //not for analog axis
+        controller.povDirection = PovDirection.north;
+        assertEquals(ControllerMappings.RecordResult.nothing_done, mappings.recordMapping(controller, 6));
+
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
+
+        assertFalse(mappings.getControllerMapping(controller).checkCompleted());
+
+        // now check
+        TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
+
+        assertFalse(controllerAdapter.povMoved(controller, 1, PovDirection.center));
+
+        // the digital
+        assertTrue(controllerAdapter.povMoved(controller, 0, PovDirection.center));
+        assertTrue(controllerAdapter.lastEventId == 5 || controllerAdapter.lastEventId == 7);
+
+        assertTrue(controllerAdapter.povMoved(controller, 0, PovDirection.east));
+        assertTrue(controllerAdapter.lastEventId == 5 || controllerAdapter.lastEventId == 7);
+
+        assertTrue(controllerAdapter.povMoved(controller, 0, PovDirection.southEast));
+        assertTrue(controllerAdapter.lastEventId == 5 || controllerAdapter.lastEventId == 7);
+
+        assertTrue(controllerAdapter.povMoved(controller, 0, PovDirection.west));
+        assertTrue(controllerAdapter.lastEventId == 5 || controllerAdapter.lastEventId == 7);
+
+        MappedController mappedController = new MappedController(controller, mappings);
+        controller.povDirection = PovDirection.center;
+        assertEquals(0, mappedController.getConfiguredAxisValue(5), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(6), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(7), .01f);
+
+        controller.povDirection = PovDirection.north;
+        assertEquals(0, mappedController.getConfiguredAxisValue(5), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(6), .01f);
+        assertEquals(-1, mappedController.getConfiguredAxisValue(7), .01f);
+
+        controller.povDirection = PovDirection.east;
+        assertEquals(1, mappedController.getConfiguredAxisValue(5), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(6), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(7), .01f);
+
+        controller.povDirection = PovDirection.southWest;
+        assertEquals(-1, mappedController.getConfiguredAxisValue(5), .01f);
+        assertEquals(0, mappedController.getConfiguredAxisValue(6), .01f);
+        assertEquals(1, mappedController.getConfiguredAxisValue(7), .01f);
     }
 
     public class TestControllerAdapter extends MappedControllerAdapter {
@@ -293,6 +368,7 @@ public class ControllerMappingsTest {
 
         public int pressedButton = -1;
         public float[] axisValues;
+        public PovDirection povDirection;
 
         @Override
         public boolean getButton(int buttonCode) {
@@ -308,7 +384,7 @@ public class ControllerMappingsTest {
 
         @Override
         public PovDirection getPov(int povCode) {
-            return null;
+            return (povCode != 0 ? PovDirection.center : povDirection);
         }
 
         @Override

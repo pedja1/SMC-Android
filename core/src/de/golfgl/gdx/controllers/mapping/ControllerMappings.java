@@ -4,6 +4,8 @@ import com.badlogic.gdx.controllers.Controller;
 
 import java.util.HashMap;
 
+import rs.pedjaapps.smc.view.MenuStage;
+
 /**
  * Created by Benjamin Schulte on 04.11.2017.
  */
@@ -56,7 +58,10 @@ public class ControllerMappings {
     }
 
     protected MappedInputs getControllerMapping(Controller controller) {
-        MappedInputs retVal = mappedInputs.get(controller.getName());
+        MappedInputs retVal = null;
+
+        if (mappedInputs != null)
+            retVal = mappedInputs.get(controller.getName());
 
         if (retVal == null) {
             //TODO fire event and initialize with default values
@@ -65,7 +70,7 @@ public class ControllerMappings {
         return retVal;
     }
 
-    public void addConfiguredInput(ConfiguredInput configuredInput) {
+    public ControllerMappings addConfiguredInput(ConfiguredInput configuredInput) {
         if (initialized)
             throw new IllegalStateException("Changing config not allowed after commit() is called");
 
@@ -73,6 +78,8 @@ public class ControllerMappings {
             configuredInputs = new HashMap<>();
 
         configuredInputs.put(configuredInput.inputId, configuredInput);
+
+        return this;
     }
 
     /**
@@ -87,6 +94,9 @@ public class ControllerMappings {
             return;
 
         mappedInputs.remove(controller.getName());
+
+        waitingForReverseButtonFirstIdx = -1;
+        waitingForReverseButtonAxisId = -1;
     }
 
     /**
@@ -155,7 +165,23 @@ public class ControllerMappings {
                 } else if (waitingForReverseButtonAxisId == configuredInputId)
                     return RecordResult.not_added_need_button;
 
-                // TODO pov
+                // TODO support more than one pov
+                switch (controller.getPov(0)) {
+                    case east:
+                    case west:
+                        return (mappedInput.putMapping(new MappedInput(configuredInputId,
+                                new ControllerPovButton(0, false))) ? RecordResult.recorded : RecordResult.not_added);
+                    case north:
+                    case south:
+                        return (mappedInput.putMapping(new MappedInput(configuredInputId,
+                                new ControllerPovButton(0, true))) ? RecordResult.recorded : RecordResult.not_added);
+                    case northEast:
+                    case northWest:
+                    case southEast:
+                    case southWest:
+                        // two directions not supported
+                        return RecordResult.not_added;
+                }
 
                 // no break here on purpose!
             case axisAnalog:
@@ -249,15 +275,23 @@ public class ControllerMappings {
         public int povIndex;
         public boolean povDirectionVertical;
 
+        public ControllerPovButton(int povIndex, boolean isVerticalDirection) {
+            this.povDirectionVertical = isVerticalDirection;
+            this.povIndex = povIndex;
+        }
+
         public static ControllerPovButton deserialize(String serializedInput) {
-            ControllerPovButton pov = new ControllerPovButton();
-            pov.povIndex = Integer.valueOf(serializedInput.substring(2));
-            pov.povDirectionVertical = (serializedInput.substring(1, 1).equals(VERTICAL));
+            ControllerPovButton pov = new ControllerPovButton(Integer.valueOf(serializedInput.substring(2)),
+                    serializedInput.substring(1, 1).equals(VERTICAL));
             return pov;
         }
 
         public static String serializePov(boolean povDirectionVertical, int povIndex) {
             return PREFIX_POV + (povDirectionVertical ? VERTICAL : "H") + String.valueOf(povIndex);
+        }
+
+        public int getKey() {
+            return povIndex * 10 + (povDirectionVertical ? 1 : 0);
         }
 
         @Override
@@ -313,6 +347,21 @@ public class ControllerMappings {
             return -1;
         }
 
+        /**
+         * @return the pov index from a configured pov.
+         */
+        public int getPovIndex() {
+            if (controllerInput instanceof ControllerPovButton)
+                return ((ControllerPovButton) controllerInput).povIndex;
+            return -1;
+        }
+
+        public boolean getPovVertical() {
+            if (controllerInput instanceof ControllerPovButton)
+                return ((ControllerPovButton) controllerInput).povDirectionVertical;
+            return false;
+        }
+
         public ConfiguredInput.Type getConfiguredInputType() {
             return configuredInputs.get(configuredInputId).inputType;
         }
@@ -335,12 +384,14 @@ public class ControllerMappings {
         private HashMap<Integer, MappedInput> mappingsByConfigured;
         private HashMap<Integer, MappedInput> mappingsByButton;
         private HashMap<Integer, MappedInput> mappingsByAxis;
+        private HashMap<Integer, MappedInput> mappingsByPov;
 
         private MappedInputs(String controllerName) {
             this.controllerName = controllerName;
             mappingsByConfigured = new HashMap<>(mappedInputs.size());
             mappingsByButton = new HashMap<>(mappedInputs.size());
             mappingsByAxis = new HashMap<>(mappedInputs.size());
+            mappingsByPov = new HashMap<>(2);
         }
 
         public boolean checkCompleted() {
@@ -391,8 +442,12 @@ public class ControllerMappings {
                 mappingsByAxis.put(controllerAxis.axisIndex, mapping);
 
             } else if (mapping.controllerInput instanceof ControllerPovButton) {
-                //TODO
-                return false;
+                ControllerPovButton controllerPov = (ControllerPovButton) mapping.controllerInput;
+                if (mappingsByPov.containsKey(controllerPov.getKey()))
+                    return false;
+
+                mappingsByPov.put(controllerPov.getKey(), mapping);
+
             } else
                 return false;
 
@@ -405,6 +460,7 @@ public class ControllerMappings {
             mappingsByButton.clear();
             mappingsByConfigured.clear();
             mappingsByAxis.clear();
+            mappingsByPov.clear();
         }
 
         public String save() {
@@ -462,7 +518,15 @@ public class ControllerMappings {
         public ConfiguredInput getConfiguredFromAxis(int axisIndex) {
             MappedInput mappedInput = mappingsByAxis.get(axisIndex);
 
-            // if hit, check if it is the reverse button
+            if (mappedInput != null)
+                return configuredInputs.get(mappedInput.configuredInputId);
+            else
+                return null;
+        }
+
+        public ConfiguredInput getConfiguredFromPov(int povIndex, boolean vertical) {
+            MappedInput mappedInput = mappingsByPov.get(povIndex * 10 + (vertical ? 1 : 0));
+
             if (mappedInput != null)
                 return configuredInputs.get(mappedInput.configuredInputId);
             else

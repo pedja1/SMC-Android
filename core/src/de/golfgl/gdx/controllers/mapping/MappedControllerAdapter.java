@@ -113,6 +113,51 @@ public class MappedControllerAdapter extends ControllerAdapter {
 
     @Override
     public boolean povMoved(Controller controller, int povIndex, PovDirection value) {
-        return super.povMoved(controller, povIndex, value);
+        ControllerMappings.MappedInputs mapping = mappings.getControllerMapping(controller);
+
+        if (mapping == null)
+            return false;
+
+        ConfiguredInput configuredInputV = mapping.getConfiguredFromPov(povIndex, true);
+        ConfiguredInput configuredInputH = mapping.getConfiguredFromPov(povIndex, false);
+
+        float valueH = 0;
+        float valueV = 0;
+        boolean handledH = false;
+        boolean handledV = false;
+
+        switch (value) {
+            case east:
+                valueH = 1f;
+                break;
+            case northEast:
+                valueH = 1f;
+            case north:
+                valueV = -1f;
+                break;
+            case northWest:
+                valueV = -1f;
+            case west:
+                valueH = -1f;
+                break;
+            case southEast:
+                valueH = 1f;
+            case south:
+                valueV = 1f;
+                break;
+            case southWest:
+                valueV = 1f;
+                valueH = -1f;
+                break;
+        }
+
+        if (configuredInputH != null)
+            handledH = configuredAxisMoved(controller, configuredInputH.inputId, valueH);
+
+        if (configuredInputV != null)
+            handledV = configuredAxisMoved(controller, configuredInputV.inputId, valueV);
+
+        return handledH || handledV;
+
     }
 }
