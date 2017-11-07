@@ -188,6 +188,14 @@ public class GameSave {
         maryoState = Maryo.MaryoState.toInt(newState);
     }
 
+    public static Maryo.MaryoState getPersistentMaryoState() {
+        return Maryo.MaryoState.fromInt(persistentMaryoState);
+    }
+
+    public static int getPersistentItem() {
+        return persistentItem;
+    }
+
     public static int getLifes() {
         return lifes;
     }

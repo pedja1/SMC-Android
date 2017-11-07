@@ -138,11 +138,6 @@ public class Background
 			renderer.dispose();
 			renderer = null;
 		}
-		if(texture != null)
-		{
-			texture.dispose();
-			texture = null;
-		}
 	}
 
 	private Texture.TextureWrap getHorizontalWrap()

@@ -2,15 +2,14 @@ package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,7 +36,6 @@ import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.World;
-import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -54,6 +52,7 @@ import rs.pedjaapps.smc.view.MusicButton;
  */
 public class MainMenuScreen extends AbstractScreen {
     public static final float DURATION_TRANSITION = .5f;
+    private static boolean firstStartDone;
     public MaryoGame game;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
@@ -70,7 +69,6 @@ public class MainMenuScreen extends AbstractScreen {
     private ChoseLevelView choseLevelView;
     private Viewport viewPort;
     private Image shadeBackground;
-
     private Image maryo;
     private Group startMenu;
     private Skin skin;
@@ -111,6 +109,7 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void show() {
         Gdx.input.setCatchBackKey(true);
+        Gdx.input.setCatchMenuKey(true);
         Gdx.input.setInputProcessor(stage);
         game.controllerMappings.setInputProcessor(stage);
         music = world.screen.game.assets.manager.get(loader.level.music.first());
@@ -242,16 +241,21 @@ public class MainMenuScreen extends AbstractScreen {
         choseLevelView.setSize(stage.getWidth(), stage.getHeight());
         choseLevelView.inflateWidgets(dynAtlas, stage.getFocussableActors());
 
-        maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getMaryoState().toString()
+        maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getPersistentMaryoState().toString()
                 + "_" + GameObject.TKey.stand_right.toString()));
         maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
         maryo.setPosition(100, 378);
         stage.addActor(maryo);
 
         // für FireTV: falls direkt bei Start schon Controller da, dann gleich in Konfig springen
-        if (Controllers.getControllers().size >= 1)
+        if (Gdx.app.getType() == Application.ApplicationType.Android &&
+                !Gdx.input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen)
+                && !Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)
+                && !firstStartDone
+                && Controllers.getControllers().size >= 1)
             new GamepadMappingDialog(skin, Controllers.getControllers().get(0), game.controllerMappings).show(stage);
 
+        firstStartDone = true;
     }
 
     private void initStartMenu() {

@@ -70,10 +70,12 @@ public class GameScreenInput implements InputProcessor {
                 break;
 
             case Input.Keys.SPACE:
+            case Input.Keys.MEDIA_FAST_FORWARD:
                 world.maryo.jumpPressed();
                 break;
 
             case Input.Keys.ALT_LEFT:
+            case Input.Keys.MENU:
             case Input.Keys.X:
                 world.maryo.firePressed();
                 break;
@@ -126,10 +128,12 @@ public class GameScreenInput implements InputProcessor {
                 break;
 
             case Input.Keys.SPACE:
+            case Input.Keys.MEDIA_FAST_FORWARD:
                 world.maryo.jumpReleased();
                 break;
 
             case Input.Keys.ALT_LEFT:
+            case Input.Keys.MENU:
             case Input.Keys.X:
                 world.maryo.fireReleased();
                 break;

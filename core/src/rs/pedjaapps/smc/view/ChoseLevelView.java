@@ -180,8 +180,8 @@ public class ChoseLevelView extends Group {
         // Statusinfos zu Maryo
         statusgroup = new Group();
 
-        if (GameSave.getItem() != 0) {
-            Image imItem = new Image(dynAtlas.findRegion(Item.getSavedItemTextureName(GameSave.getItem())));
+        if (GameSave.getPersistentItem() != 0) {
+            Image imItem = new Image(dynAtlas.findRegion(Item.getSavedItemTextureName(GameSave.getPersistentItem())));
             imItem.setScale(.7f);
             imItem.setPosition(165, 380);
             statusgroup.addActor(imItem);

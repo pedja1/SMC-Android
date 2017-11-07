@@ -147,6 +147,7 @@ public class ControllerMenuStage extends Stage {
             case Input.Keys.RIGHT:
                 handled = moveFocusByDirection(MoveFocusDirection.east);
                 break;
+            case Input.Keys.CENTER:
             case Input.Keys.ENTER:
                 handled = fireEventOnActor(focussedActor, InputEvent.Type.touchDown);
                 isPressed = handled;

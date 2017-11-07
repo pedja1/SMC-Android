@@ -262,15 +262,15 @@ public class GameScreen extends AbstractScreen {
     }
 
     public void endLevel() {
-        String currentLevel = getMenuLevelname();
+        levelName = getMenuLevelname();
 
         if (parent != null) {
             parent.dispose();
             parent = null;
         }
 
-        world.screen.game.levelEnd(currentLevel, true);
-        GameSave.levelCleared(currentLevel);
+        world.screen.game.levelEnd(levelName, true);
+        GameSave.levelCleared(levelName);
         Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
         SoundManager.play(clear);
         setGameState(GAME_STATE.GAME_LEVEL_END);
