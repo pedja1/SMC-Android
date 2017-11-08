@@ -31,6 +31,7 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
     private Button refreshButton;
     private RefreshListener controllerListener;
     private ControllerMappings mappings;
+    private final ColorableTextButton closeButton;
 
     public GamepadSettingsDialog(Skin skin, ControllerMappings mappings) {
         super("", skin, Assets.WINDOW_SMALL);
@@ -38,7 +39,8 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
         this.mappings = mappings;
 
         getButtonTable().defaults().pad(20, 40, 0, 40);
-        button(new ColorableTextButton("OK", skin, Assets.BUTTON_SMALL));
+        closeButton = new ColorableTextButton("Close", skin, Assets.BUTTON_SMALL);
+        button(closeButton);
 
         refreshButton = new ColorableTextButton("Refresh", getSkin(), Assets.BUTTON_SMALL);
         refreshButton.addListener(new ChangeListener() {
@@ -117,6 +119,9 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
         fillContentTable();
 
         super.show(stage, action);
+
+        if (stage instanceof MenuStage)
+            ((MenuStage) stage).setEscapeActor(closeButton);
 
         Controllers.addListener(controllerListener);
         return this;

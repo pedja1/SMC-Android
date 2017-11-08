@@ -65,6 +65,9 @@ public class ControllerMenuDialog extends Dialog {
 
             if (buttonsToAdd.size >= 1)
                 ((ControllerMenuStage) stage).setFocussedActor(buttonsToAdd.get(0));
+
+            if (buttonsToAdd.size == 1)
+                ((ControllerMenuStage) stage).setEscapeActor(buttonsToAdd.get(0));
         }
 
         return this;
