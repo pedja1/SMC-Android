@@ -63,22 +63,7 @@ public class MenuStage extends ControllerMenuStage {
     }
 
     @Override
-    public boolean keyDown(int keyCode) {
-        // für HUD den Sprungknopf auch als Enter-Knopf nehmen
-
-        if (keyCode == Input.Keys.SPACE)
-            keyCode = Input.Keys.ENTER;
-
-        return super.keyDown(keyCode);
-    }
-
-    @Override
-    public boolean keyUp(int keyCode) {
-        // für HUD den Sprungknopf auch als Enter-Knopf nehmen
-
-        if (keyCode == Input.Keys.SPACE)
-            keyCode = Input.Keys.ENTER;
-
-        return super.keyUp(keyCode);
+    public boolean isDefaultActionKeyCode(int keyCode) {
+        return super.isDefaultActionKeyCode(keyCode) || keyCode == Input.Keys.SPACE;
     }
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -134,36 +133,24 @@ public class ControllerMenuStage extends Stage {
     @Override
     public boolean keyDown(int keyCode) {
         boolean handled;
-        switch (keyCode) {
-            case Input.Keys.DOWN:
-                handled = moveFocusByDirection(MoveFocusDirection.south);
-                break;
-            case Input.Keys.UP:
-                handled = moveFocusByDirection(MoveFocusDirection.north);
-                break;
-            case Input.Keys.LEFT:
-                handled = moveFocusByDirection(MoveFocusDirection.west);
-                break;
-            case Input.Keys.RIGHT:
-                handled = moveFocusByDirection(MoveFocusDirection.east);
-                break;
-            case Input.Keys.CENTER:
-            case Input.Keys.ENTER:
-                handled = fireEventOnActor(focussedActor, InputEvent.Type.touchDown);
-                isPressed = handled;
-                break;
-            case Input.Keys.BACK:
-            case Input.Keys.BACKSPACE:
-            case Input.Keys.ESCAPE:
-                if (escapeActor != null) {
-                    handled = fireEventOnActor(escapeActor, InputEvent.Type.touchDown);
-                    isPressed = handled;
-                    break;
-                }
-            default:
-                handled = false;
 
-        }
+        if (isGoDownKeyCode(keyCode))
+            handled = moveFocusByDirection(MoveFocusDirection.south);
+        else if (isGoUpKeyCode(keyCode))
+            handled = moveFocusByDirection(MoveFocusDirection.north);
+        else if (isGoLeftKeyCode(keyCode))
+            handled = moveFocusByDirection(MoveFocusDirection.west);
+        else if (isGoRightKeyCode(keyCode))
+            handled = moveFocusByDirection(MoveFocusDirection.east);
+        else if (isDefaultActionKeyCode(keyCode)) {
+            handled = fireEventOnActor(focussedActor, InputEvent.Type.touchDown);
+            isPressed = handled;
+        } else if (isEscapeActionKeyCode(keyCode) && escapeActor != null) {
+            handled = fireEventOnActor(escapeActor, InputEvent.Type.touchDown);
+            isPressed = handled;
+        } else
+            handled = false;
+
         if (!handled)
             handled = super.keyDown(keyCode);
 
@@ -173,26 +160,75 @@ public class ControllerMenuStage extends Stage {
     @Override
     public boolean keyUp(int keyCode) {
         boolean handled;
-        switch (keyCode) {
-            case Input.Keys.ENTER:
-                isPressed = false;
-                handled = fireEventOnActor(focussedActor, InputEvent.Type.touchUp);
-                break;
-            case Input.Keys.BACK:
-            case Input.Keys.BACKSPACE:
-            case Input.Keys.ESCAPE:
-                if (escapeActor != null) {
-                    handled = fireEventOnActor(escapeActor, InputEvent.Type.touchUp);
-                    isPressed = handled;
-                    break;
-                }
-            default:
-                handled = false;
-        }
+        if (isDefaultActionKeyCode(keyCode)) {
+            isPressed = false;
+            handled = fireEventOnActor(focussedActor, InputEvent.Type.touchUp);
+        } else if (isEscapeActionKeyCode(keyCode) && escapeActor != null) {
+            handled = fireEventOnActor(escapeActor, InputEvent.Type.touchUp);
+            isPressed = handled;
+        } else
+            handled = false;
+
         if (!handled)
             handled = super.keyUp(keyCode);
 
         return handled;
+    }
+
+    /**
+     * returns true if the given keyCode is a DefaultAction key/button. You can override this.
+     */
+
+    public boolean isDefaultActionKeyCode(int keyCode) {
+        switch (keyCode) {
+            case Input.Keys.CENTER:
+            case Input.Keys.ENTER:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * returns true if the given keyCode is a EscapeAction key/button. You can override this.
+     */
+    public boolean isEscapeActionKeyCode(int keyCode) {
+        switch (keyCode) {
+            case Input.Keys.BACK:
+            case Input.Keys.BACKSPACE:
+            case Input.Keys.ESCAPE:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * returns true if the given keyCode is a GoRight key/button. You can override this.
+     */
+    public boolean isGoRightKeyCode(int keyCode) {
+        return (keyCode == Input.Keys.RIGHT);
+    }
+
+    /**
+     * returns true if the given keyCode is a GoLeft key/button. You can override this.
+     */
+    public boolean isGoLeftKeyCode(int keyCode) {
+        return (keyCode == Input.Keys.LEFT);
+    }
+
+    /**
+     * returns true if the given keyCode is a GoUp key/button. You can override this.
+     */
+    public boolean isGoUpKeyCode(int keyCode) {
+        return (keyCode == Input.Keys.UP);
+    }
+
+    /**
+     * returns true if the given keyCode is a GoDown key/button. You can override this.
+     */
+    public boolean isGoDownKeyCode(int keyCode) {
+        return (keyCode == Input.Keys.DOWN);
     }
 
     protected boolean fireEventOnActor(Actor actor, InputEvent.Type type) {
