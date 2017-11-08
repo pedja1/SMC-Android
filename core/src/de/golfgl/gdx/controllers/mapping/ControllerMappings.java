@@ -1,6 +1,7 @@
 package de.golfgl.gdx.controllers.mapping;
 
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.HashMap;
 
@@ -55,9 +56,64 @@ public class ControllerMappings {
         return -1;
     }
 
+    /**
+     * @return all mappings as a json value
+     */
+    public JsonValue toJson() {
+        JsonValue json = new JsonValue(JsonValue.ValueType.array);
+        if (mappedInputs != null)
+            for (MappedInputs controllerMapping : mappedInputs.values())
+                if (controllerMapping.isRecorded) {
+                    JsonValue controllerJson = new JsonValue(JsonValue.ValueType.object);
+                    controllerJson.addChild("name", new JsonValue(controllerMapping.getControllerName()));
+                    controllerJson.addChild("mapping", controllerMapping.toJson());
+                    json.addChild(controllerJson);
+                }
+
+        return json;
+    }
+
+    public boolean fillFromJson(JsonValue json) {
+        // initialize mapping map and controller information if not already present
+        if (mappedInputs == null)
+            mappedInputs = new HashMap<>();
+
+        for (JsonValue controllerJson = json.child; controllerJson != null; controllerJson = controllerJson.next) {
+            String controllerName = controllerJson.getString("name");
+
+            if (mappedInputs.containsKey(controllerName))
+                mappedInputs.remove(controllerName);
+
+            MappedInputs newMapping = new MappedInputs(controllerName);
+            mappedInputs.put(controllerName, newMapping);
+
+            newMapping.isRecorded = true;
+
+            for (JsonValue mappingsJson = controllerJson.get("mapping").child; mappingsJson != null;
+                 mappingsJson = mappingsJson.next) {
+
+                int confId = mappingsJson.getInt("confId");
+
+                if (mappingsJson.has("axis")) {
+                    newMapping.putMapping(new MappedInput(confId, new ControllerAxis(mappingsJson.getInt("axis"))));
+                } else if (mappingsJson.has("pov")) {
+                    newMapping.putMapping(new MappedInput(confId, new ControllerPovButton(mappingsJson.getInt("pov"),
+                            mappingsJson.getBoolean("vertical"))));
+                } else if (mappingsJson.has("buttonR")) {
+                    newMapping.putMapping(new MappedInput(confId, new ControllerButton(mappingsJson.getInt("button")),
+                            new ControllerButton(mappingsJson.getInt("buttonR"))));
+                } else if (mappingsJson.has("button")) {
+                    newMapping.putMapping(new MappedInput(confId, new ControllerButton(mappingsJson.getInt("button"))));
+                }
+            }
+        }
+
+        return true;
+    }
+
     protected MappedInputs getControllerMapping(Controller controller) {
         if (!initialized)
-            return null;
+            throw new IllegalStateException("Call commitConfig() before creating Controller Listeners");
 
         MappedInputs retVal = null;
 
@@ -94,7 +150,7 @@ public class ControllerMappings {
 
     public ControllerMappings addConfiguredInput(ConfiguredInput configuredInput) {
         if (initialized)
-            throw new IllegalStateException("Changing config not allowed after commit() is called");
+            throw new IllegalStateException("Changing config not allowed after commitConfig() is called");
 
         if (configuredInputs == null)
             configuredInputs = new HashMap<>();
@@ -107,10 +163,18 @@ public class ControllerMappings {
     /**
      * call this when configuration is done
      */
-    public void commit() {
+    public void commitConfig() {
         initialized = true;
     }
 
+    /**
+     * resets mapping for the given controller. Warning: already instantiated {@link MappedController} will still hold
+     * a reference to the old mapping, so be sure to refresh such references with its
+     * {@link MappedController#refreshMappingCache()}.
+     * {@link MappedControllerAdapter} is not concerned.
+     *
+     * @param controller
+     */
     public void resetMappings(Controller controller) {
         if (mappedInputs == null)
             return;
@@ -135,7 +199,7 @@ public class ControllerMappings {
      */
     public RecordResult recordMapping(Controller controller, int configuredInputId) {
         if (!initialized)
-            throw new IllegalStateException("Recording not allowed before commit() is called");
+            throw new IllegalStateException("Recording not allowed before commitConfig() is called");
         ConfiguredInput configuredInput = configuredInputs.get(configuredInputId);
 
         // initialize mapping map and controller information if not already present
@@ -146,6 +210,7 @@ public class ControllerMappings {
             mappedInputs.put(controller.getName(), new MappedInputs(controller));
 
         MappedInputs mappedInput = getControllerMapping(controller);
+        mappedInput.isRecorded = true;
 
         switch (configuredInput.inputType) {
             case button:
@@ -228,23 +293,6 @@ public class ControllerMappings {
         public static final char PREFIX_BUTTON = 'B';
         public static final char PREFIX_AXIS = 'A';
         public static final char PREFIX_POV = 'P';
-
-        public static ControllerInput deserialize(String serializedInput) {
-            char p = serializedInput.charAt(0);
-
-            switch (p) {
-                case PREFIX_BUTTON:
-                    return ControllerButton.deserialize(serializedInput);
-                case PREFIX_AXIS:
-                    return ControllerAxis.deserialize(serializedInput);
-                case PREFIX_POV:
-                    return ControllerPovButton.deserialize(serializedInput);
-                default:
-                    throw new IllegalArgumentException("Unknown prefix " + p);
-            }
-        }
-
-        public abstract String serialize();
     }
 
     public static class ControllerButton extends ControllerInput {
@@ -253,20 +301,6 @@ public class ControllerMappings {
         public ControllerButton(int buttonIndex) {
             this.buttonIndex = buttonIndex;
         }
-
-        public static ControllerButton deserialize(String serializedInput) {
-            ControllerButton button = new ControllerButton(Integer.valueOf(serializedInput.substring(1)));
-            return button;
-        }
-
-        public static String serializeButton(int buttonIndex) {
-            return PREFIX_BUTTON + String.valueOf(buttonIndex);
-        }
-
-        @Override
-        public String serialize() {
-            return serializeButton(buttonIndex);
-        }
     }
 
     public static class ControllerAxis extends ControllerInput {
@@ -274,20 +308,6 @@ public class ControllerMappings {
 
         public ControllerAxis(int axisIndex) {
             this.axisIndex = axisIndex;
-        }
-
-        public static ControllerAxis deserialize(String serializedInput) {
-            ControllerAxis axis = new ControllerAxis(Integer.valueOf(serializedInput.substring(1)));
-            return axis;
-        }
-
-        public static String serializeAxis(int axisIndex) {
-            return PREFIX_AXIS + String.valueOf(axisIndex);
-        }
-
-        @Override
-        public String serialize() {
-            return serializeAxis(axisIndex);
         }
     }
 
@@ -301,23 +321,8 @@ public class ControllerMappings {
             this.povIndex = povIndex;
         }
 
-        public static ControllerPovButton deserialize(String serializedInput) {
-            ControllerPovButton pov = new ControllerPovButton(Integer.valueOf(serializedInput.substring(2)),
-                    serializedInput.substring(1, 1).equals(VERTICAL));
-            return pov;
-        }
-
-        public static String serializePov(boolean povDirectionVertical, int povIndex) {
-            return PREFIX_POV + (povDirectionVertical ? VERTICAL : "H") + String.valueOf(povIndex);
-        }
-
         public int getKey() {
             return povIndex * 10 + (povDirectionVertical ? 1 : 0);
-        }
-
-        @Override
-        public String serialize() {
-            return serializePov(povDirectionVertical, povIndex);
         }
     }
 
@@ -400,15 +405,19 @@ public class ControllerMappings {
      * Mappings are constructed via {@link #recordMapping(Controller, int)}
      */
     protected class MappedInputs {
+        public boolean isRecorded;
         private String controllerName;
-        private boolean isComplete;
         private HashMap<Integer, MappedInput> mappingsByConfigured;
         private HashMap<Integer, MappedInput> mappingsByButton;
         private HashMap<Integer, MappedInput> mappingsByAxis;
         private HashMap<Integer, MappedInput> mappingsByPov;
 
         private MappedInputs(Controller controller) {
-            this.controllerName = controller.getName();
+            this(controller.getName());
+        }
+
+        private MappedInputs(String controllerName) {
+            this.controllerName = controllerName;
             mappingsByConfigured = new HashMap<>(mappedInputs.size());
             mappingsByButton = new HashMap<>(mappedInputs.size());
             mappingsByAxis = new HashMap<>(mappedInputs.size());
@@ -477,20 +486,31 @@ public class ControllerMappings {
             return true;
         }
 
-        public void reset() {
-            mappingsByButton.clear();
-            mappingsByConfigured.clear();
-            mappingsByAxis.clear();
-            mappingsByPov.clear();
-        }
-
-        public String save() {
-            //TODO
-            return null;
-        }
-
-        public void load(String json) {
-            //TODO
+        /**
+         * Save mapping for this controller instance
+         *
+         * @return
+         */
+        public JsonValue toJson() {
+            JsonValue json = new JsonValue(JsonValue.ValueType.array);
+            for (MappedInput mapping : mappingsByConfigured.values()) {
+                JsonValue jsonmaping = new JsonValue(JsonValue.ValueType.object);
+                jsonmaping.addChild("confId", new JsonValue(mapping.configuredInputId));
+                if (mapping.controllerInput instanceof ControllerAxis)
+                    jsonmaping.addChild("axis", new JsonValue(((ControllerAxis) mapping.controllerInput).axisIndex));
+                else if (mapping.controllerInput instanceof ControllerButton) {
+                    jsonmaping.addChild("button",
+                            new JsonValue(((ControllerButton) mapping.controllerInput).buttonIndex));
+                    if (mapping.secondButtonForAxis != null)
+                        jsonmaping.addChild("buttonR", new JsonValue((mapping.secondButtonForAxis.buttonIndex)));
+                } else if (mapping.controllerInput instanceof ControllerPovButton) {
+                    jsonmaping.addChild("pov", new JsonValue(((ControllerPovButton) mapping.controllerInput).povIndex));
+                    jsonmaping.addChild("vertical",
+                            new JsonValue(((ControllerPovButton) mapping.controllerInput).povDirectionVertical));
+                }
+                json.addChild(jsonmaping);
+            }
+            return json;
         }
 
         /**

@@ -31,6 +31,15 @@ public class PrefsManager {
         flush();
     }
 
+    public static String loadControllerMappings() {
+        return prefs.getString("controllerMappings", "");
+    }
+
+    public static void saveControllerMappings(String json) {
+        prefs.putString("controllerMappings", json);
+        flush();
+    }
+
     public static String getSaveGame() {
         String savedState = prefs.getString(PrefsKey.sg.toString(), null);
         if (savedState != null)

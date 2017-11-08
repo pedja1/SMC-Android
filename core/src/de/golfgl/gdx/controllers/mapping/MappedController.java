@@ -9,15 +9,26 @@ import com.badlogic.gdx.controllers.Controller;
 
 public class MappedController {
     private Controller controller;
+    private ControllerMappings mappings;
     private ControllerMappings.MappedInputs controllerMapping;
     private float analogToDigitalTreshold;
 
     public MappedController(Controller controller, ControllerMappings mappings) {
         this.controller = controller;
-        this.controllerMapping = mappings.getControllerMapping(controller);
+        this.mappings = mappings;
         this.analogToDigitalTreshold = mappings.analogToDigitalTreshold;
 
-        if (!controllerMapping.checkCompleted())
+        refreshMappingCache();
+    }
+
+    /**
+     * refreshes the cached mapping from the ControllerMappings. Call this after you resetted mappings or filled from
+     * json
+     */
+    public void refreshMappingCache() {
+        controllerMapping = mappings.getControllerMapping(controller);
+
+        if (controllerMapping == null || !controllerMapping.checkCompleted())
             Gdx.app.log(ControllerMappings.LOG_TAG, "MappedController created with incomplete configuration");
     }
 
@@ -31,6 +42,9 @@ public class MappedController {
      * of type button
      */
     public boolean isButtonPressed(int configuredId) {
+        if (controllerMapping == null)
+            return false;
+
         ControllerMappings.MappedInput mappedInput = controllerMapping.getMappedInput(configuredId);
 
         // not configured or not recorded
@@ -54,6 +68,9 @@ public class MappedController {
      * @return current value
      */
     public float getConfiguredAxisValue(int configuredId) {
+        if (controllerMapping == null)
+            return 0;
+
         ControllerMappings.MappedInput mappedInput = controllerMapping.getMappedInput(configuredId);
 
         // not configured or not recorded

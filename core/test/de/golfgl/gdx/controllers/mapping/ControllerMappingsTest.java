@@ -8,6 +8,8 @@ import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.PovDirection;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,7 +74,7 @@ public class ControllerMappingsTest {
         mappings.addConfiguredInput(button4);
 
         // ok, configuration done...
-        mappings.commit();
+        mappings.commitConfig();
 
         // now we connect a Controller... and map
         MockedController controller = new MockedController();
@@ -90,6 +92,8 @@ public class ControllerMappingsTest {
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 4));
         controller.pressedButton = -1;
         assertTrue(mappings.getControllerMapping(controller).checkCompleted());
+
+        System.out.println(mappings.toJson().toJson(JsonWriter.OutputType.json));
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -126,7 +130,7 @@ public class ControllerMappingsTest {
         mappings.addConfiguredInput(axis3);
 
         // ok, configuration done...
-        mappings.commit();
+        mappings.commitConfig();
 
         // now we connect a Controller... and map
         MockedController controller = new MockedController();
@@ -155,6 +159,8 @@ public class ControllerMappingsTest {
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
 
         assertTrue(mappings.getControllerMapping(controller).checkCompleted());
+
+        System.out.println(mappings.toJson().toJson(JsonWriter.OutputType.json));
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -197,7 +203,7 @@ public class ControllerMappingsTest {
         mappings.addConfiguredInput(axis3);
 
         // ok, configuration done...
-        mappings.commit();
+        mappings.commitConfig();
 
         // now we connect a Controller... and map
         MockedController controller = new MockedController();
@@ -227,6 +233,8 @@ public class ControllerMappingsTest {
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
 
         assertFalse(mappings.getControllerMapping(controller).checkCompleted());
+
+        System.out.println(mappings.toJson().toJson(JsonWriter.OutputType.json));
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -276,7 +284,7 @@ public class ControllerMappingsTest {
         mappings.addConfiguredInput(axis3);
 
         // ok, configuration done...
-        mappings.commit();
+        mappings.commitConfig();
 
         // now we connect a Controller... and map
         MockedController controller = new MockedController();
@@ -301,6 +309,8 @@ public class ControllerMappingsTest {
         assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 7));
 
         assertFalse(mappings.getControllerMapping(controller).checkCompleted());
+
+        System.out.println(mappings.toJson().toJson(JsonWriter.OutputType.json));
 
         // now check
         TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
@@ -360,7 +370,7 @@ public class ControllerMappingsTest {
         mappings.addConfiguredInput(button);
 
         // ok, configuration done...
-        mappings.commit();
+        mappings.commitConfig();
 
         // now check
         MockedController controller = new MockedController();
@@ -378,6 +388,54 @@ public class ControllerMappingsTest {
         assertTrue(controllerAdapter.axisMoved(controller, 5, .5f));
         assertEquals(0, controllerAdapter.lastEventId);
 
+        // serialize gives only recorded mappings
+        assertEquals("[]", mappings.toJson().toJson(JsonWriter.OutputType.json));
+    }
+
+    @Test
+    public void testJsonSaveLoad() {
+        ControllerMappings mappings = new ControllerMappings();
+
+        mappings.addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.button, 1));
+        mappings.addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axis, 2));
+        mappings.addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axis, 3));
+        mappings.addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axis, 4));
+
+        mappings.commitConfig();
+
+        // now we connect a Controller... and map
+        MockedController controller = new MockedController();
+        controller.axisValues = new float[3];
+        controller.povDirection = PovDirection.center;
+        controller.axisValues[0] = 1f;
+        controller.pressedButton = -1;
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 2));
+        controller.pressedButton = 2;
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 1));
+        controller.pressedButton = 1;
+        assertEquals(ControllerMappings.RecordResult.need_second_button, mappings.recordMapping(controller, 3));
+        controller.pressedButton = 0;
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 3));
+        controller.pressedButton = -1;
+        controller.povDirection = PovDirection.east;
+        assertEquals(ControllerMappings.RecordResult.recorded, mappings.recordMapping(controller, 4));
+
+        JsonValue json = mappings.toJson();
+        System.out.println(json.toJson(JsonWriter.OutputType.json));
+        MappedController mappedController = new MappedController(controller, mappings);
+        mappings.resetMappings(controller);
+
+        mappedController.refreshMappingCache();
+        assertEquals(0, mappedController.getConfiguredAxisValue(4), 0.1f);
+
+        mappings.fillFromJson(json);
+        mappedController.refreshMappingCache();
+
+        assertEquals(1, mappedController.getConfiguredAxisValue(4), 0.1f);
+        controller.pressedButton = 2;
+        assertTrue(mappedController.isButtonPressed(1));
+        controller.pressedButton = 1;
+        assertEquals(1, mappedController.getConfiguredAxisValue(3), 0.1f);
     }
 
     public class TestControllerAdapter extends MappedControllerAdapter {

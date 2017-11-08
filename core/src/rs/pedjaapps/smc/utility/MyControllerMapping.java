@@ -1,8 +1,10 @@
 package rs.pedjaapps.smc.utility;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import de.golfgl.gdx.controllers.mapping.ConfiguredInput;
 import de.golfgl.gdx.controllers.mapping.ControllerMappings;
@@ -32,7 +34,15 @@ public class MyControllerMapping extends ControllerMappings {
         addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axisDigital, AXIS_VERTICAL));
         addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axisDigital, AXIS_HORIZONTAL));
 
-        commit();
+        commitConfig();
+
+        try {
+            String json = PrefsManager.loadControllerMappings();
+            JsonValue jsonValue = new JsonReader().parse(json);
+            fillFromJson(jsonValue);
+        } catch (Throwable t) {
+            Gdx.app.error("Prefs", "Error reading saved controller mappings", t);
+        }
 
         controllerToInputAdapter = new ControllerToInputAdapter(this);
 

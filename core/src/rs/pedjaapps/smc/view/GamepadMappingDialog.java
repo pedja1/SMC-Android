@@ -8,27 +8,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import de.golfgl.gdx.controllers.ControllerMenuDialog;
 import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.utility.MyControllerMapping;
+import rs.pedjaapps.smc.utility.PrefsManager;
 
 /**
  * Created by Benjamin Schulte on 05.11.2017.
  */
 
 public class GamepadMappingDialog extends ControllerMenuDialog {
+    private static final String PRESS_THE_BUTTON_TO = "Hold the button to ";
     private final Label instructionLabel;
     private final ControllerMappings mappings;
     private final Controller controller;
     private final TextButton skipButton;
+    private final Label axisLabel;
+    private final Label buttonLabel;
     private int currentStep = 0;
     private float timeSinceLastRecord = 0;
     private int inputToRecord = -1;
-    private final Label axisLabel;
-    private final Label buttonLabel;
 
     public GamepadMappingDialog(Skin skin, Controller controller, ControllerMappings mappings) {
         super("", skin, Assets.WINDOW_SMALL);
@@ -130,43 +133,44 @@ public class GamepadMappingDialog extends ControllerMenuDialog {
         switch (currentStep) {
             case 0:
                 mappings.resetMappings(controller);
-                instructionLabel.setText("Press the button to move RIGHT");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "move RIGHT");
                 inputToRecord = MyControllerMapping.AXIS_HORIZONTAL;
                 break;
             case 1:
-                instructionLabel.setText("Press the button to move LEFT");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "move LEFT");
                 inputToRecord = MyControllerMapping.AXIS_HORIZONTAL;
                 break;
             case 2:
-                instructionLabel.setText("Press the button to move DOWN");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "move DOWN");
                 inputToRecord = MyControllerMapping.AXIS_VERTICAL;
                 break;
             case 3:
-                instructionLabel.setText("Press the button to move UP");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "move UP");
                 inputToRecord = MyControllerMapping.AXIS_VERTICAL;
                 break;
             case 4:
             case 5:
-                instructionLabel.setText("Press the button to JUMP");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "JUMP");
                 inputToRecord = MyControllerMapping.BUTTON_JUMP;
                 break;
             case 6:
             case 7:
-                instructionLabel.setText("Press the button to FIRE");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "FIRE");
                 inputToRecord = MyControllerMapping.BUTTON_FIRE;
                 break;
             case 8:
             case 9:
-                instructionLabel.setText("Press the button to ENTER menus and pause");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "ENTER menus and pause");
                 inputToRecord = MyControllerMapping.BUTTON_START;
                 break;
             case 10:
             case 11:
-                instructionLabel.setText("Press the button to ESCAPE menus");
+                instructionLabel.setText(PRESS_THE_BUTTON_TO + "ESCAPE menus");
                 inputToRecord = MyControllerMapping.BUTTON_CANCEL;
                 break;
             default:
                 instructionLabel.setText("Finished");
+                PrefsManager.saveControllerMappings(mappings.toJson().toJson(JsonWriter.OutputType.json));
                 skipButton.setText("OK");
 
                 inputToRecord = -1;
