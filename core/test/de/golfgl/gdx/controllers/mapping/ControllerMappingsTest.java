@@ -131,7 +131,7 @@ public class ControllerMappingsTest {
         // now we connect a Controller... and map
         MockedController controller = new MockedController();
         controller.axisValues = new float[3];
-
+        controller.povDirection = PovDirection.center;
         controller.axisValues[0] = .2f;
         controller.axisValues[1] = .6f;
         controller.axisValues[2] = -.2f;
@@ -340,6 +340,44 @@ public class ControllerMappingsTest {
         assertEquals(-1, mappedController.getConfiguredAxisValue(5), .01f);
         assertEquals(0, mappedController.getConfiguredAxisValue(6), .01f);
         assertEquals(1, mappedController.getConfiguredAxisValue(7), .01f);
+    }
+
+    @Test
+    public void testDefaultMapping() {
+        ControllerMappings mappings = new ControllerMappings() {
+            @Override
+            public boolean getDefaultMapping(MappedInputs defaultMapping) {
+                defaultMapping.putMapping(new MappedInput(0, new ControllerAxis(5)));
+                defaultMapping.putMapping(new MappedInput(1, new ControllerButton(2)));
+                return true;
+            }
+        };
+
+        ConfiguredInput axis = new ConfiguredInput(ConfiguredInput.Type.axis, 0);
+        ConfiguredInput button = new ConfiguredInput(ConfiguredInput.Type.button, 1);
+
+        mappings.addConfiguredInput(axis);
+        mappings.addConfiguredInput(button);
+
+        // ok, configuration done...
+        mappings.commit();
+
+        // now check
+        MockedController controller = new MockedController();
+
+
+        MappedController mappedController = new MappedController(controller, mappings);
+        controller.pressedButton = 2;
+        assertTrue(mappedController.isButtonPressed(1));
+        controller.pressedButton = 1;
+        assertFalse(mappedController.isButtonPressed(1));
+
+        TestControllerAdapter controllerAdapter = new TestControllerAdapter(mappings);
+        assertTrue(controllerAdapter.buttonDown(controller, 2));
+        assertEquals(1, controllerAdapter.lastEventId);
+        assertTrue(controllerAdapter.axisMoved(controller, 5, .5f));
+        assertEquals(0, controllerAdapter.lastEventId);
+
     }
 
     public class TestControllerAdapter extends MappedControllerAdapter {

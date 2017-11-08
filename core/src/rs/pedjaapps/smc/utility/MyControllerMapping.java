@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.controllers.Controller;
 
 import de.golfgl.gdx.controllers.mapping.ConfiguredInput;
 import de.golfgl.gdx.controllers.mapping.ControllerMappings;
@@ -47,4 +48,14 @@ public class MyControllerMapping extends ControllerMappings {
         controllerToInputAdapter.setInputProcessor(input);
     }
 
+    @Override
+    public boolean getDefaultMapping(MappedInputs defaultMapping) {
+        defaultMapping.putMapping(new MappedInput(AXIS_VERTICAL, new ControllerAxis(1)));
+        defaultMapping.putMapping(new MappedInput(AXIS_HORIZONTAL, new ControllerAxis(0)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_JUMP, new ControllerButton(0)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_START, new ControllerButton(9)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_CANCEL, new ControllerButton(8)));
+
+        return true;
+    }
 }

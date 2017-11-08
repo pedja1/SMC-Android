@@ -4,8 +4,6 @@ import com.badlogic.gdx.controllers.Controller;
 
 import java.util.HashMap;
 
-import rs.pedjaapps.smc.view.MenuStage;
-
 /**
  * Created by Benjamin Schulte on 04.11.2017.
  */
@@ -58,16 +56,40 @@ public class ControllerMappings {
     }
 
     protected MappedInputs getControllerMapping(Controller controller) {
+        if (!initialized)
+            return null;
+
         MappedInputs retVal = null;
 
-        if (mappedInputs != null)
-            retVal = mappedInputs.get(controller.getName());
+        // initialize mapping map and controller information if not already present
+        if (mappedInputs == null)
+            mappedInputs = new HashMap<>();
 
+
+        retVal = mappedInputs.get(controller.getName());
+
+        // in case the controller is not recorded or loaded already, initialize it
         if (retVal == null) {
-            //TODO fire event and initialize with default values
+            MappedInputs defaultMapping = new MappedInputs(controller);
+            if (getDefaultMapping(defaultMapping)) {
+                retVal = defaultMapping;
+                mappedInputs.put(retVal.controllerName, retVal);
+            }
         }
 
         return retVal;
+    }
+
+    /**
+     * use this method to define a default mapping for your controllers. You can check for the controller's name
+     * by calling {@link MappedInputs#getControllerName()}
+     *
+     * @param defaultMapping Use {@link MappedInputs#putMapping(MappedInput)} on this to define default mappings
+     * @return true if default mappings were defined and should be used
+     */
+    public boolean getDefaultMapping(MappedInputs defaultMapping) {
+        //nothing - just override it for your desires
+        return false;
     }
 
     public ControllerMappings addConfiguredInput(ConfiguredInput configuredInput) {
@@ -116,13 +138,12 @@ public class ControllerMappings {
             throw new IllegalStateException("Recording not allowed before commit() is called");
         ConfiguredInput configuredInput = configuredInputs.get(configuredInputId);
 
-
         // initialize mapping map and controller information if not already present
         if (mappedInputs == null)
             mappedInputs = new HashMap<>();
 
         if (!mappedInputs.containsKey(controller.getName()))
-            mappedInputs.put(controller.getName(), new MappedInputs(controller.getName()));
+            mappedInputs.put(controller.getName(), new MappedInputs(controller));
 
         MappedInputs mappedInput = getControllerMapping(controller);
 
@@ -386,8 +407,8 @@ public class ControllerMappings {
         private HashMap<Integer, MappedInput> mappingsByAxis;
         private HashMap<Integer, MappedInput> mappingsByPov;
 
-        private MappedInputs(String controllerName) {
-            this.controllerName = controllerName;
+        private MappedInputs(Controller controller) {
+            this.controllerName = controller.getName();
             mappingsByConfigured = new HashMap<>(mappedInputs.size());
             mappingsByButton = new HashMap<>(mappedInputs.size());
             mappingsByAxis = new HashMap<>(mappedInputs.size());
