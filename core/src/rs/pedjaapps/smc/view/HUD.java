@@ -525,8 +525,9 @@ public class HUD {
         int savedItem = GameSave.getItem();
         imItemInBox.setVisible(savedItem != 0 && imItemBox.isVisible());
         if (savedItem != shownItemInBox) {
-            imItemInBox.setDrawable(new TextureRegionDrawable(
-                    dynAtlas.findRegion(Item.getSavedItemTextureName(savedItem))));
+            if (savedItem != 0)
+                imItemInBox.setDrawable(new TextureRegionDrawable(
+                        dynAtlas.findRegion(Item.getSavedItemTextureName(savedItem))));
             shownItemInBox = savedItem;
         }
     }

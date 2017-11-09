@@ -28,10 +28,10 @@ import rs.pedjaapps.smc.assets.Assets;
 
 public class GamepadSettingsDialog extends ControllerMenuDialog {
 
+    private final ColorableTextButton closeButton;
     private Button refreshButton;
     private RefreshListener controllerListener;
     private ControllerMappings mappings;
-    private final ColorableTextButton closeButton;
 
     public GamepadSettingsDialog(Skin skin, ControllerMappings mappings) {
         super("", skin, Assets.WINDOW_SMALL);
@@ -100,8 +100,10 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
         contentTable.row().padTop(30);
         Label hint = new Label("If a connected controller does not show up,\ntry pressing a button.\n" +
                 (Gdx.app.getType() == Application.ApplicationType.WebGL ?
-                        "If you face problems, try using Mozilla Firefox." : ""),
+                        "If you face problems with controllers on Chrome, press a button, reload the game, try again.\n" +
+                                "If that does not help, try Mozilla Firefox." : ""),
                 getSkin(), Assets.LABEL_SIMPLE25);
+        hint.setFontScale(.7f);
         hint.setWrap(true);
         hint.setAlignment(Align.center);
         contentTable.add(hint).fill().minWidth(MaryoGame.NATIVE_WIDTH * .7f);

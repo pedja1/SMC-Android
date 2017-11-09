@@ -39,7 +39,8 @@ public class MyControllerMapping extends ControllerMappings {
         try {
             String json = PrefsManager.loadControllerMappings();
             JsonValue jsonValue = new JsonReader().parse(json);
-            fillFromJson(jsonValue);
+            if (jsonValue != null)
+                fillFromJson(jsonValue);
         } catch (Throwable t) {
             Gdx.app.error("Prefs", "Error reading saved controller mappings", t);
         }
