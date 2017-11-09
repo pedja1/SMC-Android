@@ -123,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen {
         if (delta <= 0)
             return;
 
-        Gdx.gl20.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl20.glClearColor(0f, 0f, 0f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         viewPort.apply();
