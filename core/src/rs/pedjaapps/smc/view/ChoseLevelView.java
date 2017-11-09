@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
+import de.golfgl.gdx.controllers.ControllerMenuStage;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
@@ -165,7 +166,11 @@ public class ChoseLevelView extends Group {
                     return true;
 
                 }
-                if (keycode == Input.Keys.ENTER) {
+
+                //Keycode kann bei Controller oder FireTV anders als Enter sein
+                if (keycode == Input.Keys.ENTER || getStage() != null
+                        && getStage() instanceof ControllerMenuStage
+                        && ((ControllerMenuStage) getStage()).isDefaultActionKeyCode(keycode)) {
                     currentSelectedButton.getClickListener().clicked(event, 0, 0);
                     return true;
 
