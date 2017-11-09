@@ -66,9 +66,6 @@ public class Level {
 
                     levelIds.add(curlevel.levelId);
                     levels.put(curlevel.levelId, curlevel);
-
-                    if (numLevel == 1)
-                        GameSave.unlockLevel(curlevel.levelId);
                 }
             }
         }

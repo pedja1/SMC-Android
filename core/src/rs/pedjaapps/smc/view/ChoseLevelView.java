@@ -48,6 +48,7 @@ public class ChoseLevelView extends Group {
     public void inflateWidgets(TextureAtlas dynAtlas, Array<Actor> focussableActors) {
         Table levelTable = new Table();
         LevelButton preselected = null;
+        boolean beforeWasCleared = true;
 
         Label lblChoose = new Label("Choose challenge!", skin, Assets.LABEL_BORDER60);
         lblChoose.setFontScale(.6f);
@@ -79,12 +80,14 @@ public class ChoseLevelView extends Group {
 
                 }
             };
-            levelButton.setLevel(level, GameSave.isUnlocked(levelId));
+            levelButton.setLevel(level, beforeWasCleared || level.bestScore > 0);
             levelTable.add(levelButton).fill().uniform().pad(15);
             allLevelButtons.add(levelButton);
 
             if (levelButton.isUnlocked() && (level.number == 1 || level.currentScore == 0))
                 preselected = levelButton;
+
+            beforeWasCleared = level.bestScore > 0;
         }
 
         levelTable.row();

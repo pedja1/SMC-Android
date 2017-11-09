@@ -24,7 +24,6 @@ public class GameSave {
     private static int persistentMaryoState;
     private static int lifes;
     private static long totalPlaytime;
-    private static Set<String> unlockedLevels;
     private static int coins;
     private static int item;
     private static int persistentItem;
@@ -42,8 +41,6 @@ public class GameSave {
     }
 
     public static void init() {
-        unlockedLevels = new HashSet<>();
-
         // gibt es bereits einen gespeicherten Stand?
         boolean didRead = false;
         try {
@@ -72,15 +69,12 @@ public class GameSave {
         bestTotal = savegame.getInt("bestTotal", 0);
 
         JsonValue levelList = savegame.get("levels");
-        unlockedLevels.clear();
         for (JsonValue jsonlevel = levelList.child; jsonlevel != null; jsonlevel = jsonlevel.next) {
             String levelId = jsonlevel.getString("id");
             Level level = Level.getLevel(levelId);
             if (level != null) {
                 level.currentScore = jsonlevel.getInt("score");
                 level.bestScore = Math.max(level.bestScore, jsonlevel.getInt("best"));
-                if (jsonlevel.getBoolean("unlocked", false) || level.bestScore > 0)
-                    unlockedLevels.add(levelId);
             }
         }
 
@@ -104,12 +98,11 @@ public class GameSave {
         for (String levelId : Level.getLevelList()) {
             Level level = Level.getLevel(levelId);
 
-            if (level.bestScore > 0 || isUnlocked(levelId)) {
+            if (level.bestScore > 0) {
                 JsonValue levelJson = new JsonValue(JsonValue.ValueType.object);
                 levelJson.addChild("id", new JsonValue(levelId));
                 levelJson.addChild("score", new JsonValue(level.currentScore));
                 levelJson.addChild("best", new JsonValue(level.bestScore));
-                levelJson.addChild("unlocked", new JsonValue(isUnlocked(levelId)));
                 levelArray.addChild(levelJson);
             }
         }
@@ -139,22 +132,6 @@ public class GameSave {
     private static void save() {
         JsonValue json = toJson();
         PrefsManager.setSaveGame(json.toJson(JsonWriter.OutputType.json));
-    }
-
-    public static boolean isUnlocked(String levelName) {
-        return unlockedLevels.contains(levelName);
-        //return true;
-    }
-
-    public static void unlockLevel(String levelName) {
-        if (levelName != null && !unlockedLevels.contains(levelName)) {
-            unlockedLevels.add(levelName);
-
-            //das erste unlocked level ist level 1, das muss nicht gespeichert werden
-            //um unnötiges save während init zu vermeiden
-            if (unlockedLevels.size() > 1)
-                save();
-        }
     }
 
     public static void addCoins(AbstractScreen screen, int addCoins) {
@@ -236,7 +213,6 @@ public class GameSave {
      * Level erfolgreich beendet => Punkte etc übernehmen
      */
     public static void levelCleared(String levelName) {
-        GameSave.unlockLevel(Level.getNextLevel(levelName));
         persistentItem = item;
         persistentMaryoState = maryoState;
         lifes++;
