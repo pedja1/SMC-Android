@@ -37,7 +37,9 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener() {
-        return new MaryoGame(null);
+        MaryoGame maryoGame = new MaryoGame(null);
+        maryoGame.isRunningOn = Window.Navigator.getUserAgent();
+        return maryoGame;
     }
 
     @Override

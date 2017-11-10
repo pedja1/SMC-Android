@@ -2,6 +2,7 @@ package rs.pedjaapps.smc.view;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -116,8 +117,16 @@ public class HUD {
             return;
 
         if (hasKeyboardOrController && !keyboardF1HintShown) {
-            if (PrefsManager.showKeyboardHint())
-                showHint("Hold F1 key to see an overview of keys to control the game", 10f);
+            if (PrefsManager.showKeyboardHint()) {
+                String hint = "You can configure game controller buttons when paused.";
+                //on FireTV?
+                if (gameScreen.game.isRunningOn.startsWith("AFT"))
+                    hint = "Use FF to JUMP, MENU to FIRE, BACK for PAUSE on your remote.\n" + hint;
+                else if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard))
+                    hint = "Hold F1 key on keyboard to see how to control the game.\n" + hint;
+
+                showHint(hint, 10f);
+            }
             keyboardF1HintShown = true;
         }
 
@@ -292,7 +301,8 @@ public class HUD {
         gamePadSettings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new GamepadSettingsDialog(skin, gameScreen.game.controllerMappings).show(stage);
+                new GamepadSettingsDialog(skin, gameScreen.game.controllerMappings,
+                        gameScreen.game.isRunningOn).show(stage);
             }
         });
         stage.addActor(gamePadSettings);

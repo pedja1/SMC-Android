@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.android;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -27,6 +28,8 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
 
         MaryoGame game = new MaryoGame(this);
         initialize(game, config);
+
+        game.isRunningOn = Build.MODEL;
     }
 
     @Override

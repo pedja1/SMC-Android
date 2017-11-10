@@ -27,6 +27,7 @@ public class MaryoGame extends Game
 	public static final String GAME_SOURCEURL = "https://www.golfgl.de/smcplf/smcsrc.zip";
 
 	public MyControllerMapping controllerMappings;
+	public String isRunningOn = "";
 
 	public Assets assets;
 	private Event event;

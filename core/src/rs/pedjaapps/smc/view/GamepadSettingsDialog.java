@@ -32,8 +32,9 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
     private Button refreshButton;
     private RefreshListener controllerListener;
     private ControllerMappings mappings;
+    private boolean runsOnChrome;
 
-    public GamepadSettingsDialog(Skin skin, ControllerMappings mappings) {
+    public GamepadSettingsDialog(Skin skin, ControllerMappings mappings, String isRunningOn) {
         super("", skin, Assets.WINDOW_SMALL);
 
         this.mappings = mappings;
@@ -54,6 +55,8 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
         buttonsToAdd.add(refreshButton);
 
         controllerListener = new RefreshListener();
+
+        runsOnChrome = (isRunningOn != null && isRunningOn.toLowerCase().contains("chrome/"));
     }
 
     private void refreshShownControllers() {
@@ -99,11 +102,11 @@ public class GamepadSettingsDialog extends ControllerMenuDialog {
 
         contentTable.row().padTop(30);
         Label hint = new Label("If a connected controller does not show up,\ntry pressing a button.\n" +
-                (Gdx.app.getType() == Application.ApplicationType.WebGL ?
+                (Gdx.app.getType() == Application.ApplicationType.WebGL && runsOnChrome ?
                         "If you face problems with controllers on Chrome, press a button, reload the game, try again.\n" +
                                 "If that does not help, try Mozilla Firefox." : ""),
                 getSkin(), Assets.LABEL_SIMPLE25);
-        hint.setFontScale(.7f);
+        hint.setFontScale(.8f);
         hint.setWrap(true);
         hint.setAlignment(Align.center);
         contentTable.add(hint).fill().minWidth(MaryoGame.NATIVE_WIDTH * .7f);
