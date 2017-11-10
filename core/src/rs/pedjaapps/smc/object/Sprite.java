@@ -140,7 +140,8 @@ public class Sprite extends GameObject
     private float getOriginY()
     {
         float originY = 0;
-        if (mDrawRect.width == mDrawRect.height)
+        // Workaround for HTML float
+        if (mDrawRect.width == mDrawRect.height || Math.abs(mDrawRect.width - mDrawRect.height) < 0.0000001f)
         {
             originY = mOrigDrawRect.height / 2;
         }
