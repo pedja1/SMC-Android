@@ -271,6 +271,7 @@ public class GameScreen extends AbstractScreen {
 
         world.screen.game.levelEnd(levelName, true);
         GameSave.levelCleared(levelName);
+        MusicManager.stop(true);
         Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
         SoundManager.play(clear);
         setGameState(GAME_STATE.GAME_LEVEL_END);

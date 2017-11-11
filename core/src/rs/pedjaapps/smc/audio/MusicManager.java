@@ -33,7 +33,7 @@ public class MusicManager {
         if (!isPaused)
             return;
 
-        if (wasPlayingBeforePause != null)
+        if (wasPlayingBeforePause != null && PrefsManager.isPlayMusic())
             wasPlayingBeforePause.play();
 
         isPaused = false;
