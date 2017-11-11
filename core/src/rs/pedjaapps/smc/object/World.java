@@ -28,6 +28,7 @@ public class World
      * A world has a level through which Mario needs to go through *
      */
     public Level level;
+    public Array<String> visitedSubLevels = new Array<>();
     private Array<GameObject> visibleObjects = new Array<>(50);
     private Rectangle worldBounds = new Rectangle();
 

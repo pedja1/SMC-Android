@@ -1065,6 +1065,7 @@ public class Maryo extends DynamicObject
                         parent.dispose();
                     }
                     parent = gameScreen;
+                    world.visitedSubLevels.add(nextLevelName);
                     newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
                     newScreen.entryName = exit.entry;
                 }
@@ -1496,6 +1497,10 @@ public class Maryo extends DynamicObject
 
     public void exitLevel(LevelExit exit)
     {
+        // already visited sublevels are not allowed
+        if (exit.levelName != null && world.visitedSubLevels.contains(exit.levelName, false))
+            return;
+
         switch (exit.type)
         {
             case LEVEL_EXIT_BEAM:
