@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
@@ -25,10 +24,16 @@ import rs.pedjaapps.smc.assets.FontAwesome;
 
 public class AboutDialog extends ScrollDialog {
     public final Label.LabelStyle simpleLabel = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+    private final ColorableTextButton scrollDownButton;
+    private final ColorableTextButton scrollUpButton;
     private Stage stage;
+    private float sinceLastScroll;
 
     public AboutDialog(Skin skin) {
         super(skin, .8f, .5f);
+
+        // Als allererstes um dieses als Defaulbutton zu setzen
+        button(new ColorableTextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
 
         Runnable gpl3runnable = getLicenseBoxRunnable("data/about/license_gpl3.txt");
         Runnable apache2runnable = getLicenseBoxRunnable("data/about/license_ap2.txt");
@@ -42,9 +47,8 @@ public class AboutDialog extends ScrollDialog {
         aboutTable.row();
         aboutTable.add(new Label("brought to you by Benjamin Schulte", skin, Assets.LABEL_SIMPLE25));
         aboutTable.row().padBottom(40);
-        aboutTable.add(getButtonsTable(new String[] {"Website", "Google Play", "License"},
-                new Runnable[] {getWebRunnable(MaryoGame.GAME_WEBURL),
-                        getWebRunnable(MaryoGame.GAME_STOREURL),
+        aboutTable.add(getButtonsTable(new String[]{"Website", "License"},
+                new Runnable[]{getWebRunnable(MaryoGame.GAME_WEBURL),
                         gpl3runnable}, Assets.BUTTON_SMALL));
 
         aboutTable.row();
@@ -54,34 +58,40 @@ public class AboutDialog extends ScrollDialog {
         aboutTable.add(getCenteredSmallLabel("Graphics, levels, sounds:\nSecret Maryo Chronicles by Florian Richter " +
                 "and others")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
-                new Runnable[] {getWebRunnable("http://www.secretmaryo.org/"),
+        aboutTable.add(getButtonsTable(new String[]{"Website", "License"},
+                new Runnable[]{getWebRunnable("http://www.secretmaryo.org/"),
                         gpl3runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Source code:\nSMC-Android by Predrag Cokulov")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
-                new Runnable[] {getWebRunnable("https://github.com/pedja1/SMC-Android"), gpl3runnable}));
+        aboutTable.add(getButtonsTable(new String[]{"Website", "License"},
+                new Runnable[]{getWebRunnable("https://github.com/pedja1/SMC-Android"), gpl3runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Source code:\nlibGDX game development framework")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
-                new Runnable[] {getWebRunnable("http://libgdx.badlogicgames.com/"), apache2runnable}));
+        aboutTable.add(getButtonsTable(new String[]{"Website", "License"},
+                new Runnable[]{getWebRunnable("http://libgdx.badlogicgames.com/"), apache2runnable}));
 
         aboutTable.row().padTop(40);
         aboutTable.add(getCenteredSmallLabel("Game service connection:\ngdx-gamesvcs by Benjamin Schulte")).fill();
         aboutTable.row();
-        aboutTable.add(getButtonsTable(new String[] {"Website", "License"},
-                new Runnable[] {getWebRunnable("https://github.com/MrStahlfelge/gdx-gamesvcs"), apache2runnable}));
+        aboutTable.add(getButtonsTable(new String[]{"Website", "License"},
+                new Runnable[]{getWebRunnable("https://github.com/MrStahlfelge/gdx-gamesvcs"), apache2runnable}));
 
         aboutTable.row();
-        aboutTable.add(getButtonsTable(new String[] {"Source code"},
-                new Runnable[] {getWebRunnable(MaryoGame.GAME_SOURCEURL)}));
+        aboutTable.add(getButtonsTable(new String[]{"Source code"},
+                new Runnable[]{getWebRunnable(MaryoGame.GAME_SOURCEURL)}));
 
         scrollActor = aboutTable;
-        button(new ColorableTextButton(FontAwesome.CIRCLE_CHECK, skin, Assets.BUTTON_FA_FRAMELESS));
+
+        scrollDownButton = new ColorableTextButton(FontAwesome.CIRCLE_DOWN, skin, Assets.BUTTON_FA_FRAMELESS);
+        scrollUpButton = new ColorableTextButton(FontAwesome.CIRCLE_UP, skin, Assets.BUTTON_FA_FRAMELESS);
+        getButtonTable().add(scrollDownButton);
+        buttonsToAdd.add(scrollDownButton);
+        getButtonTable().add(scrollUpButton);
+        buttonsToAdd.add(scrollUpButton);
     }
 
     private Runnable getLicenseBoxRunnable(final String file) {
@@ -127,7 +137,7 @@ public class AboutDialog extends ScrollDialog {
 
                 });
             storebuttons.add(actor).uniform().fill().pad(5);
-
+            buttonsToAdd.add(actor);
         }
         return storebuttons;
     }
@@ -137,6 +147,21 @@ public class AboutDialog extends ScrollDialog {
         smLabel.setWrap(true);
         smLabel.setAlignment(Align.center);
         return smLabel;
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        sinceLastScroll -= delta;
+        sinceLastScroll = Math.max(-1, sinceLastScroll);
+        int forceScroll = (scrollDownButton.isPressed() ? 1 : scrollUpButton.isPressed() ? -1 : 0);
+
+        if (forceScroll != 0 && sinceLastScroll <= 0) {
+            getStage().setScrollFocus(scrollPane);
+            getStage().scrolled(forceScroll);
+            sinceLastScroll=.1f;
+        }
     }
 
     @Override

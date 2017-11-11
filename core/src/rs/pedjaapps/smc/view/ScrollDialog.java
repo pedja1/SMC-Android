@@ -19,6 +19,7 @@ public class ScrollDialog extends ControllerMenuDialog {
     protected float percentHeight;
     protected float percentWidth;
     protected Actor scrollActor;
+    protected ScrollPane scrollPane;
 
     public ScrollDialog(Skin skin, float percentWidth, float percentHeight) {
         super("", skin, Assets.WINDOW_SMALL);
@@ -46,7 +47,7 @@ public class ScrollDialog extends ControllerMenuDialog {
 
     @Override
     public Dialog show(Stage stage) {
-        ScrollPane scrollPane = addScrollWidget(stage);
+        scrollPane = addScrollWidget(stage);
         Dialog dialog = super.show(stage);
         stage.setScrollFocus(scrollPane);
         return dialog;
