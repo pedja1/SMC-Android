@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -140,8 +141,7 @@ public class Sprite extends GameObject
     private float getOriginY()
     {
         float originY = 0;
-        // Workaround for HTML float
-        if (mDrawRect.width == mDrawRect.height || Math.abs(mDrawRect.width - mDrawRect.height) < 0.0000001f)
+        if (MathUtils.isEqual(mDrawRect.width, mDrawRect.height))
         {
             originY = mOrigDrawRect.height / 2;
         }

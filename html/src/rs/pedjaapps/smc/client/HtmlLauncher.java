@@ -76,14 +76,12 @@ public class HtmlLauncher extends GwtApplication {
     class ResizeListner implements ResizeHandler {
         @Override
         public void onResize(ResizeEvent event) {
-            int width = event.getWidth();
-            int height = event.getHeight();
+            int width = event.getWidth() - 20;
+            int height = event.getHeight() - 20;
+            getRootPanel().setWidth("" + width + "px");
+            getRootPanel().setHeight("" + height + "px");
             getApplicationListener().resize(width, height);
             Gdx.graphics.setWindowedMode(width, height);
-            Gdx.gl.glViewport(0, 0, width, height);
-
-            Window.scrollTo((cfg.width - width) / 2, (cfg.height - height) / 2);
-
         }
     }
 }
