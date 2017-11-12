@@ -6,7 +6,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -49,14 +48,20 @@ public class MaryoGame extends Game
         assets.manager.load(Assets.SKIN_HUD, Skin.class);
 		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 
-		controllerMappings = new MyControllerMapping();
-		Controllers.addListener(controllerMappings.controllerToInputAdapter);
+		try {
+			controllerMappings = new MyControllerMapping();
+			Controllers.addListener(controllerMappings.controllerToInputAdapter);
+		} catch (Throwable t) {
+			Gdx.app.error("Application", "Controllers not instantiated", t);
+		}
 	}
 
 	@Override
 	public void pause()	{
 		super.pause();
-		PrefsManager.flush();
+		// kann null sein wenn preloader versteckt wird
+		if (Gdx.app != null)
+			PrefsManager.flush();
 	}
 
     @Override
