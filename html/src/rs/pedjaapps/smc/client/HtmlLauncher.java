@@ -20,17 +20,18 @@ import rs.pedjaapps.smc.MaryoGame;
 
 public class HtmlLauncher extends GwtApplication {
 
+    // padding is to avoid scrolling in iframes, set to 20 if you have problems
+    private static final int PADDING = 0;
     private GwtApplicationConfiguration cfg;
 
     @Override
     public GwtApplicationConfiguration getConfig() {
-        // reduce by 20 to avoid scrolling in iframes
-        int w = Window.getClientWidth() - 20;
-        int h = Window.getClientHeight() - 20;
+        int w = Window.getClientWidth() - PADDING;
+        int h = Window.getClientHeight() - PADDING;
         cfg = new GwtApplicationConfiguration(w, h);
         Window.enableScrolling(false);
         Window.setMargin("0");
-        Window.addResizeHandler(new ResizeListner());
+        Window.addResizeHandler(new ResizeListener());
         cfg.preferFlash = false;
         return cfg;
     }
@@ -73,11 +74,11 @@ public class HtmlLauncher extends GwtApplication {
         };
     }
 
-    class ResizeListner implements ResizeHandler {
+    class ResizeListener implements ResizeHandler {
         @Override
         public void onResize(ResizeEvent event) {
-            int width = event.getWidth() - 20;
-            int height = event.getHeight() - 20;
+            int width = event.getWidth() - PADDING;
+            int height = event.getHeight() - PADDING;
             getRootPanel().setWidth("" + width + "px");
             getRootPanel().setHeight("" + height + "px");
             getApplicationListener().resize(width, height);
