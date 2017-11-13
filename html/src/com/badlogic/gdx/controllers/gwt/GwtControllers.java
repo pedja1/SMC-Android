@@ -62,6 +62,7 @@ public class GwtControllers implements ControllerManager, GamepadSupportListener
 					for (GwtControllerEvent event : eventQueue) {
 						switch (event.type) {
 						case GwtControllerEvent.CONNECTED:
+							controllers.add(event.controller);
 							for (ControllerListener listener : listeners) {
 								listener.connected(event.controller);
 							}
