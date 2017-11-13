@@ -3,6 +3,7 @@
 <module rename-to="html">
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name="com.badlogic.gdx.controllers.controllers-gwt"/>
+	<inherits name="de.golfgl.gdxgamesvcs.gdx_gamesvcs_gwt" />
 
 	<inherits name='MaryoGame' />
 	<entry-point class='rs.pedjaapps.smc.client.HtmlLauncher' />

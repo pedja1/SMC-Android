@@ -76,4 +76,7 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion:sources"
     compile "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
+    compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcsVersion:sources"
+    compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-kong:$gamesvcsVersion"
+    compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-kong:$gamesvcsVersion:sources"
 }

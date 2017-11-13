@@ -16,12 +16,13 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.golfgl.gdxgamesvcs.KongClient;
 import rs.pedjaapps.smc.MaryoGame;
 
 public class HtmlLauncher extends GwtApplication {
 
     // padding is to avoid scrolling in iframes, set to 20 if you have problems
-    private static final int PADDING = 0;
+    private static final int PADDING = 20;
     private GwtApplicationConfiguration cfg;
 
     @Override
@@ -40,6 +41,7 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener createApplicationListener() {
         MaryoGame maryoGame = new MaryoGame(null);
         maryoGame.isRunningOn = Window.Navigator.getUserAgent();
+        maryoGame.gsClient = new KongClient();
         return maryoGame;
     }
 
