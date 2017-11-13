@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.NoGameServiceClient;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.LoadingScreen;
 import rs.pedjaapps.smc.screen.MainMenuScreen;
@@ -27,7 +29,7 @@ public class MaryoGame extends Game
 
 	public MyControllerMapping controllerMappings;
 	public String isRunningOn = "";
-
+	public IGameServiceClient gsClient;
 	public Assets assets;
 	private Event event;
 
@@ -54,17 +56,32 @@ public class MaryoGame extends Game
 		} catch (Throwable t) {
 			Gdx.app.error("Application", "Controllers not instantiated", t);
 		}
+
+		if (gsClient == null)
+			gsClient = new NoGameServiceClient();
+
+		gsClient.resumeSession();
 	}
 
 	@Override
 	public void pause()	{
 		super.pause();
 		// kann null sein wenn preloader versteckt wird
-		if (Gdx.app != null)
+		if (Gdx.app != null) {
 			PrefsManager.flush();
+			gsClient.pauseSession();
+		}
 	}
 
-    @Override
+	@Override
+	public void resume() {
+		super.resume();
+
+		if (gsClient != null)
+			gsClient.resumeSession();
+	}
+
+	@Override
     public void dispose()
     {
         super.dispose();

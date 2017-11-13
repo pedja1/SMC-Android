@@ -16,6 +16,10 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.AbstractScreen;
 
 public class GameSave {
+    public static final String LEADERBOARD_TOTAL = "TOTAL_SCORE";
+    public static final String EVENT_LEVEL_STARTED = "EVENT_LEVEL_STARTED";
+    public static final String EVENT_LEVEL_CLEARED = "EVENT_LEVEL_CLEARED";
+
     // der aktuelle Stand, der gerade gespielt wird
     private static int levelScore;
     private static long levelPlaytime;

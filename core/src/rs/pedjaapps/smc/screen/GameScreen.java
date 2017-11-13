@@ -113,7 +113,10 @@ public class GameScreen extends AbstractScreen {
 
         spriteBatch = new SpriteBatch();
 
-        if (fromMenu) GameSave.startLevelFresh();
+        if (fromMenu) {
+            GameSave.startLevelFresh();
+            game.gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
+        }
 
         loader = new LevelLoader(levelName);
     }
@@ -271,6 +274,8 @@ public class GameScreen extends AbstractScreen {
 
         world.screen.game.levelEnd(levelName, true);
         GameSave.levelCleared(levelName);
+        game.gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
+        game.gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
         MusicManager.stop(true);
         Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
         SoundManager.play(clear);
