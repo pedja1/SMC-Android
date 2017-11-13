@@ -21,6 +21,7 @@ import rs.pedjaapps.smc.utility.Utility;
 public class Flyon extends Enemy
 {
     private static final float STAY_BOTTOM_TIME = 2.5f;
+    public static final float POSITION_Z = 0.06f;
     public String direction;
     public float maxDistance;
     public float speed;
@@ -54,6 +55,7 @@ public class Flyon extends Enemy
         mDrawRect.y = mColRect.y = position.y = position.y - .1f;
         mOriginPosition = new Vector3(position);
         ppEnabled = false;
+        position.z = POSITION_Z;
     }
 
     @Override
