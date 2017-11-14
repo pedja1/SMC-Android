@@ -24,7 +24,7 @@ public class MaryoGame extends Game
 	public static final String GAME_VERSION = "2.1.1710";
     public static final boolean GAME_DEVMODE = true;
 	public static final String GAME_STOREURL = "https://play.google.com/store/apps/details?id=de.golfgl.smc.android";
-	public static final String GAME_WEBURL = "https://www.golfgl.de/smcplf/";
+	public static final String GAME_WEBURL = "https://www.golfgl.de/sccplf/";
 	public static final String GAME_SOURCEURL = "https://www.golfgl.de/smcplf/smcsrc.zip";
 
 	public MyControllerMapping controllerMappings;
