@@ -51,6 +51,7 @@ public class LoadingScreen extends AbstractScreen {
 
         Label loading = new Label("Loading...", skin, "outline");
         loading.setFontScale(.8f);
+        loading.setAlignment(Align.center);
         loading.setPosition(stage.getWidth() / 2, progressBar.getY() + progressBar.getHeight() + 10, Align.bottom);
         loading.addAction(HUD.getForeverFade());
         stage.addActor(loading);
