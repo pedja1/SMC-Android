@@ -2,7 +2,10 @@ package rs.pedjaapps.smc.android;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.View;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
@@ -30,6 +33,17 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
         initialize(game, config);
 
         game.isRunningOn = Build.MODEL;
+
+        input.addKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == Input.Keys.MEDIA_FAST_FORWARD) {
+                    input.onKey(v, Input.Keys.SPACE, event);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
