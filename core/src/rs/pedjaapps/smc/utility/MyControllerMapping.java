@@ -23,6 +23,7 @@ public class MyControllerMapping extends ControllerMappings {
     public static final int BUTTON_START = 4;
     public static final int BUTTON_CANCEL = 5;
     public ControllerToInputAdapter controllerToInputAdapter;
+    public boolean loadedSavedSettings;
 
     public MyControllerMapping() {
         super();
@@ -35,12 +36,13 @@ public class MyControllerMapping extends ControllerMappings {
         addConfiguredInput(new ConfiguredInput(ConfiguredInput.Type.axisDigital, AXIS_HORIZONTAL));
 
         commitConfig();
+        loadedSavedSettings = false;
 
         try {
             String json = PrefsManager.loadControllerMappings();
             JsonValue jsonValue = new JsonReader().parse(json);
             if (jsonValue != null)
-                fillFromJson(jsonValue);
+                loadedSavedSettings = fillFromJson(jsonValue);
         } catch (Throwable t) {
             Gdx.app.error("Prefs", "Error reading saved controller mappings", t);
         }

@@ -139,6 +139,8 @@ public class ControllerMappings {
     /**
      * use this method to define a default mapping for your controllers. You can check for the controller's name
      * by calling {@link MappedInputs#getControllerName()}
+     * <p>
+     * The method is only called if mapping for the controller is needed, but not found
      *
      * @param defaultMapping Use {@link MappedInputs#putMapping(MappedInput)} on this to define default mappings
      * @return true if default mappings were defined and should be used

@@ -252,7 +252,8 @@ public class MainMenuScreen extends AbstractScreen {
                 !Gdx.input.isPeripheralAvailable(Input.Peripheral.MultitouchScreen)
                 && !Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)
                 && !firstStartDone
-                && Controllers.getControllers().size >= 1)
+                && Controllers.getControllers().size >= 1
+                && !game.controllerMappings.loadedSavedSettings)
             new GamepadMappingDialog(skin, Controllers.getControllers().get(0), game.controllerMappings).show(stage);
 
         firstStartDone = true;
