@@ -16,7 +16,10 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.golfgl.gdxgamesvcs.GpgsClient;
+import de.golfgl.gdxgamesvcs.IGameServiceIdMapper;
 import de.golfgl.gdxgamesvcs.KongClient;
+import de.golfgl.smc.gpgs.GpgsMapper;
 import rs.pedjaapps.smc.MaryoGame;
 
 public class HtmlLauncher extends GwtApplication {
@@ -42,6 +45,22 @@ public class HtmlLauncher extends GwtApplication {
         MaryoGame maryoGame = new MaryoGame(null);
         maryoGame.isRunningOn = Window.Navigator.getUserAgent();
         maryoGame.gsClient = new KongClient();
+
+        IGameServiceIdMapper<String> gpgsMapper = new GpgsMapper();
+
+        maryoGame.gpgsClient = new GpgsClient() {
+            @Override
+            public boolean submitEvent(String eventId, int increment) {
+                eventId = gpgsMapper.mapToGsId(eventId);
+
+                if (eventId != null)
+                    return super.submitEvent(eventId, increment);
+                else
+                    return false;
+            }
+        }.setGpgsAchievementIdMapper(gpgsMapper)
+                .setGpgsLeaderboardIdMapper(gpgsMapper)
+                .initialize(GpgsMapper.CLIENT_ID, true);
         return maryoGame;
     }
 

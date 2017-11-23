@@ -7,6 +7,7 @@ import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.IGameServiceListener;
 import de.golfgl.gdxgamesvcs.NoGameServiceClient;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.screen.LoadingScreen;
@@ -16,8 +17,7 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
-public class MaryoGame extends Game
-{
+public class MaryoGame extends Game implements IGameServiceListener {
 	public static final int NATIVE_WIDTH = 1024;
 	public static final int NATIVE_HEIGHT = 576;
 
@@ -63,8 +63,12 @@ public class MaryoGame extends Game
 
 		if (gsClient == null)
 			gsClient = new NoGameServiceClient();
-
 		gsClient.resumeSession();
+
+		if (gpgsClient != null) {
+			gpgsClient.setListener(this);
+			gpgsClient.resumeSession();
+		}
 	}
 
 	@Override
@@ -74,6 +78,8 @@ public class MaryoGame extends Game
 		if (Gdx.app != null) {
 			PrefsManager.flush();
 			gsClient.pauseSession();
+			if (gpgsClient != null)
+				gpgsClient.pauseSession();
 		}
 	}
 
@@ -83,6 +89,8 @@ public class MaryoGame extends Game
 
 		if (gsClient != null)
 			gsClient.resumeSession();
+		if (gpgsClient != null)
+			gpgsClient.resumeSession();
 	}
 
 	@Override
@@ -111,6 +119,8 @@ public class MaryoGame extends Game
 			event.levelStart(levelName);
 
 		gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
+		if (gpgsClient != null)
+			gpgsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
 	}
 
 	public void levelEnd(String levelName, boolean success)
@@ -121,7 +131,28 @@ public class MaryoGame extends Game
 		if (success) {
 			gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
 			gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+			if (gpgsClient != null) {
+				gpgsClient.unlockAchievement(levelName + "_CLEAR");
+				gpgsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
+				gpgsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+			}
 		}
+	}
+
+	@Override
+	public void gsOnSessionActive() {
+
+	}
+
+	@Override
+	public void gsOnSessionInactive() {
+
+	}
+
+	@Override
+	public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+		// GPGS Error auf aktuellem Bildschirm oder in Log anzeigen
+		Gdx.app.error("GPGS", msg);
 	}
 
 	public interface Event

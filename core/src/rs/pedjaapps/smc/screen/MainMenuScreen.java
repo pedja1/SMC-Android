@@ -354,6 +354,36 @@ public class MainMenuScreen extends AbstractScreen {
 
         soundButton.setPosition(gamePadSettings.getX(), gamePadSettings.getY() + gamePadSettings.getHeight() + 20);
 
+        if (game.gpgsClient != null) {
+            TextButton gpgsLogin = new ColorableTextButton(FontAwesome.NET_CLOUDSAVE, skin, Assets.BUTTON_FA) {
+                private boolean isConnected = true;
+
+                @Override
+                public void act(float delta) {
+                    super.act(delta);
+                    if (game.gpgsClient.isSessionActive() != isConnected) {
+                        isConnected = !isConnected;
+                        getLabel().setColor(isConnected ? Color.WHITE : Color.LIGHT_GRAY);
+                    }
+                }
+            };
+            gpgsLogin.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    if (game.gpgsClient.isConnectionPending())
+                        return;
+
+                    if (!game.gpgsClient.isSessionActive())
+                        game.gpgsClient.logIn();
+                    else
+                        game.gpgsClient.logOff();
+                }
+            });
+            gpgsLogin.setPosition(10, 10, Align.bottomLeft);
+            startMenu.addActor(gpgsLogin);
+            stage.addFocussableActor(gpgsLogin);
+        }
+
         focusOnMain();
     }
 

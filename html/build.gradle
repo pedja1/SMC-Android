@@ -79,4 +79,6 @@ dependencies {
     compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcsVersion:sources"
     compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-kong:$gamesvcsVersion"
     compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-kong:$gamesvcsVersion:sources"
+    compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-gpgs:$gamesvcsVersion"
+    compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-html-gpgs:$gamesvcsVersion:sources"
 }
