@@ -1069,7 +1069,6 @@ public class Maryo extends DynamicObject
                     newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
                     newScreen.entryName = exit.entry;
                 }
-                world.screen.game.levelEnd(gameScreen.levelName, true);
                 world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
             }
         }

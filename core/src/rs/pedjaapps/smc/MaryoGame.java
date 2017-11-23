@@ -33,6 +33,7 @@ public class MaryoGame extends Game
 	public MyControllerMapping controllerMappings;
 	public String isRunningOn = "";
 	public IGameServiceClient gsClient;
+	public IGameServiceClient gpgsClient;
 	public Assets assets;
 	private Event event;
 
@@ -108,12 +109,19 @@ public class MaryoGame extends Game
 	{
 		if(event != null)
 			event.levelStart(levelName);
+
+		gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
 	}
 
 	public void levelEnd(String levelName, boolean success)
 	{
 		if(event != null)
 			event.levelEnd(levelName, success);
+
+		if (success) {
+			gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
+			gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+		}
 	}
 
 	public interface Event

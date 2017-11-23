@@ -115,7 +115,7 @@ public class GameScreen extends AbstractScreen {
 
         if (fromMenu) {
             GameSave.startLevelFresh();
-            game.gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
+            game.levelStart(levelName);
         }
 
         loader = new LevelLoader(levelName);
@@ -181,9 +181,6 @@ public class GameScreen extends AbstractScreen {
 
         Gdx.input.setInputProcessor(inputprocessor);
         game.controllerMappings.setInputProcessor(inputprocessor);
-        if (!resumed) {
-            game.levelStart(levelName);
-        }
         if (resumed) {
             cameraForceSnap = true;
         }
@@ -272,10 +269,8 @@ public class GameScreen extends AbstractScreen {
             parent = null;
         }
 
-        world.screen.game.levelEnd(levelName, true);
         GameSave.levelCleared(levelName);
-        game.gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
-        game.gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+        game.levelEnd(levelName, true);
         MusicManager.stop(true);
         Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
         SoundManager.play(clear);
