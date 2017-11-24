@@ -17,7 +17,7 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
-public class MaryoGame extends Game implements IGameServiceListener {
+public class MaryoGame extends Game {
 	public static final int NATIVE_WIDTH = 1024;
 	public static final int NATIVE_HEIGHT = 576;
 
@@ -66,8 +66,8 @@ public class MaryoGame extends Game implements IGameServiceListener {
 		gsClient.resumeSession();
 
 		if (gpgsClient != null) {
-			gpgsClient.setListener(this);
 			gpgsClient.resumeSession();
+            GameSave.gpgsClient = gpgsClient;
 		}
 	}
 
@@ -137,22 +137,6 @@ public class MaryoGame extends Game implements IGameServiceListener {
 				gpgsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
 			}
 		}
-	}
-
-	@Override
-	public void gsOnSessionActive() {
-
-	}
-
-	@Override
-	public void gsOnSessionInactive() {
-
-	}
-
-	@Override
-	public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
-		// GPGS Error auf aktuellem Bildschirm oder in Log anzeigen
-		Gdx.app.error("GPGS", msg);
 	}
 
 	public interface Event

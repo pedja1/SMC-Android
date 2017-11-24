@@ -3,13 +3,13 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.gamestate.ISaveGameStateResponseListener;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -19,7 +19,7 @@ public class GameSave {
     public static final String LEADERBOARD_TOTAL = "TOTAL_SCORE";
     public static final String EVENT_LEVEL_STARTED = "EVENT_LEVEL_STARTED";
     public static final String EVENT_LEVEL_CLEARED = "EVENT_LEVEL_CLEARED";
-
+    public static IGameServiceClient gpgsClient;
     // der aktuelle Stand, der gerade gespielt wird
     private static int levelScore;
     private static long levelPlaytime;
@@ -134,8 +134,18 @@ public class GameSave {
     }
 
     private static void save() {
+        save(null);
+    }
+
+    public static void save(ISaveGameStateResponseListener cloudResponseListener) {
         JsonValue json = toJson();
-        PrefsManager.setSaveGame(json.toJson(JsonWriter.OutputType.json));
+        String jsonString = json.toJson(JsonWriter.OutputType.json);
+        PrefsManager.setSaveGame(jsonString);
+
+        if (gpgsClient != null && gpgsClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage))
+            gpgsClient.saveGameState("gamestate",
+                    Base64Coder.encodeString(Utility.encode(jsonString, PrefsManager.SCCPLF)).getBytes(),
+                    levelStartedNum, cloudResponseListener);
     }
 
     public static void addCoins(AbstractScreen screen, int addCoins) {

@@ -581,6 +581,14 @@ public class HUD {
             scoreTable.add(getScaledLabel(String.valueOf(gamescreenlevel.bestScore), .6f))
                     .right();
 
+            if (gameScreen.game.gpgsClient != null && !gameScreen.game.gpgsClient.isSessionActive()) {
+                scoreTable.row();
+                Label cloudSaveHint = new Label("Activate cloud save in the main menu\nto never loose your progress.",
+                        skin, Assets.LABEL_SIMPLE25);
+                cloudSaveHint.setAlignment(Align.center);
+                scoreTable.add(cloudSaveHint).colspan(2).fill();
+            }
+
             //TODO Show Leaderboard
 
             table.add(scoreTable).pad(30);

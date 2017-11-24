@@ -45,6 +45,7 @@ import rs.pedjaapps.smc.view.ChoseLevelView;
 import rs.pedjaapps.smc.view.ColorableTextButton;
 import rs.pedjaapps.smc.view.GamepadMappingDialog;
 import rs.pedjaapps.smc.view.GamepadSettingsDialog;
+import rs.pedjaapps.smc.view.GpgsDialog;
 import rs.pedjaapps.smc.view.MusicButton;
 
 /**
@@ -363,20 +364,14 @@ public class MainMenuScreen extends AbstractScreen {
                     super.act(delta);
                     if (game.gpgsClient.isSessionActive() != isConnected) {
                         isConnected = !isConnected;
-                        getLabel().setColor(isConnected ? Color.WHITE : Color.LIGHT_GRAY);
+                        getLabel().setColor(isConnected ? Color.WHITE : Color.SALMON);
                     }
                 }
             };
             gpgsLogin.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if (game.gpgsClient.isConnectionPending())
-                        return;
-
-                    if (!game.gpgsClient.isSessionActive())
-                        game.gpgsClient.logIn();
-                    else
-                        game.gpgsClient.logOff();
+                    new GpgsDialog(skin, game).show(stage);
                 }
             });
             gpgsLogin.setPosition(10, 10, Align.bottomLeft);
