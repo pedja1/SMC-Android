@@ -3,13 +3,14 @@ package rs.pedjaapps.smc.utility;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
 import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.gamestate.ILoadGameStateResponseListener;
 import de.golfgl.gdxgamesvcs.gamestate.ISaveGameStateResponseListener;
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.maryo.Maryo;
@@ -19,6 +20,7 @@ public class GameSave {
     public static final String LEADERBOARD_TOTAL = "TOTAL_SCORE";
     public static final String EVENT_LEVEL_STARTED = "EVENT_LEVEL_STARTED";
     public static final String EVENT_LEVEL_CLEARED = "EVENT_LEVEL_CLEARED";
+    public static final String CLOUD_FILE_NAME = "gamestate";
     public static IGameServiceClient gpgsClient;
     // der aktuelle Stand, der gerade gespielt wird
     private static int levelScore;
@@ -34,6 +36,13 @@ public class GameSave {
     private static int totalScore;
     private static int bestTotal;
     private static int gameOverNum;
+    //cloud save
+    private static boolean loadedFromCloud;
+    private static boolean loadingFromCloud;
+
+    public static boolean isLoadingFromCloud() {
+        return loadingFromCloud || gpgsClient != null && gpgsClient.isConnectionPending();
+    }
 
     public static long getLevelPlaytime() {
         return levelPlaytime;
@@ -50,8 +59,7 @@ public class GameSave {
         try {
             String savedGame = PrefsManager.getSaveGame();
             if (savedGame != null) {
-                JsonValue savegame = new JsonReader().parse(savedGame);
-                readFromJson(savegame);
+                readFromJson(savedGame);
                 didRead = true;
             }
         } catch (Throwable t) {
@@ -62,29 +70,49 @@ public class GameSave {
             resetGameOver();
     }
 
-    private static void readFromJson(JsonValue savegame) {
-        lifes = savegame.getInt("lifes");
-        coins = savegame.getInt("coins");
-        persistentItem = savegame.getInt("item");
-        persistentMaryoState = savegame.getInt("state");
-        totalPlaytime = savegame.getLong("playtime");
-        levelStartedNum = savegame.getInt("levelstarts", 0);
-        gameOverNum = savegame.getInt("gameovers", 1);
-        bestTotal = savegame.getInt("bestTotal", 0);
+    /**
+     * read saved game, if gameovernum and levelstarts are greater than current state
+     *
+     * @param savedgame json
+     * @return true if savegame was read, false otherwise
+     */
+    private static boolean readFromJson(String savedgame) {
+        JsonValue savegame = new JsonReader().parse(savedgame);
+        int readLevelStartedNum = savegame.getInt("levelstarts", 0);
+        int readGameOverNum = savegame.getInt("gameovers", 1);
+
+        boolean readStateIsNewer = (readGameOverNum > gameOverNum
+                || readGameOverNum == gameOverNum && readLevelStartedNum > levelStartedNum);
+
+        if (readStateIsNewer) {
+            lifes = savegame.getInt("lifes");
+            coins = savegame.getInt("coins");
+            persistentItem = savegame.getInt("item");
+            persistentMaryoState = savegame.getInt("state");
+            totalPlaytime = savegame.getLong("playtime");
+            levelStartedNum = readLevelStartedNum;
+            gameOverNum = readGameOverNum;
+            item = persistentItem;
+            maryoState = persistentMaryoState;
+        }
+
+        // following
+        bestTotal = Math.max(bestTotal, savegame.getInt("bestTotal", 0));
 
         JsonValue levelList = savegame.get("levels");
         for (JsonValue jsonlevel = levelList.child; jsonlevel != null; jsonlevel = jsonlevel.next) {
             String levelId = jsonlevel.getString("id");
             Level level = Level.getLevel(levelId);
             if (level != null) {
-                level.currentScore = jsonlevel.getInt("score");
+                if (readStateIsNewer)
+                    level.currentScore = jsonlevel.getInt("score");
                 level.bestScore = Math.max(level.bestScore, jsonlevel.getInt("best"));
             }
         }
 
-        item = persistentItem;
-        maryoState = persistentMaryoState;
         recalcTotalScore();
+
+        return readStateIsNewer;
     }
 
     private static JsonValue toJson() {
@@ -142,9 +170,9 @@ public class GameSave {
         String jsonString = json.toJson(JsonWriter.OutputType.json);
         PrefsManager.setSaveGame(jsonString);
 
-        if (gpgsClient != null && gpgsClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage))
-            gpgsClient.saveGameState("gamestate",
-                    Base64Coder.encodeString(Utility.encode(jsonString, PrefsManager.SCCPLF)).getBytes(),
+        if (gpgsClient != null && loadedFromCloud)
+            gpgsClient.saveGameState(CLOUD_FILE_NAME,
+                    Utility.encode(jsonString, PrefsManager.SCCPLF).getBytes(),
                     levelStartedNum, cloudResponseListener);
     }
 
@@ -251,5 +279,45 @@ public class GameSave {
 
         if (totalScore > bestTotal)
             bestTotal = totalScore;
+    }
+
+    public static void loadFromCloudIfApplicable(final MaryoGame game) {
+        if (!loadedFromCloud && !loadingFromCloud && gpgsClient != null && gpgsClient.isSessionActive()
+                && gpgsClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage)) {
+            loadingFromCloud = true;
+            gpgsClient.loadGameState(GameSave.CLOUD_FILE_NAME, new ILoadGameStateResponseListener() {
+                @Override
+                public void gsGameStateLoaded(final byte[] gameState) {
+                    Gdx.app.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            // wenn abgebrochen wurde, dann nicht mehr laden
+                            if (loadedFromCloud)
+                                return;
+
+                            loadingFromCloud = false;
+                            loadedFromCloud = true;
+
+                            try {
+                                String json = Utility.decode(new String(gameState), PrefsManager.SCCPLF);
+                                boolean madeChanges = false;
+                                if (json != null)
+                                    madeChanges = readFromJson(json);
+
+                                if (madeChanges)
+                                    game.onChangedStateFromCloud();
+                            } catch (Throwable t) {
+                                // eat
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public static void resetLoadedFromCloud() {
+        loadingFromCloud = false;
+        loadedFromCloud = false;
     }
 }

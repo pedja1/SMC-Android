@@ -43,6 +43,7 @@ import rs.pedjaapps.smc.view.AboutDialog;
 import rs.pedjaapps.smc.view.Background;
 import rs.pedjaapps.smc.view.ChoseLevelView;
 import rs.pedjaapps.smc.view.ColorableTextButton;
+import rs.pedjaapps.smc.view.ErrorDialog;
 import rs.pedjaapps.smc.view.GamepadMappingDialog;
 import rs.pedjaapps.smc.view.GamepadSettingsDialog;
 import rs.pedjaapps.smc.view.GpgsDialog;
@@ -99,6 +100,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         if (GameSave.getLifes() <= 0)
             GameSave.resetGameOver();
+        GameSave.loadFromCloudIfApplicable(game);
     }
 
     public static Image createLogoImage(MaryoGame game) {
@@ -414,4 +416,15 @@ public class MainMenuScreen extends AbstractScreen {
         focusOnMain();
     }
 
+    public void onChangedStateFromCloud() {
+        ErrorDialog dialog = new ErrorDialog("Found and synced a newer gamestate from your cloud save.", skin, .8f, .4f) {
+
+            @Override
+            protected void result(Object object) {
+                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+            }
+        };
+
+        dialog.show(stage);
+    }
 }

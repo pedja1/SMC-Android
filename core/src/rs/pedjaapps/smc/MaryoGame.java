@@ -17,7 +17,7 @@ import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
-public class MaryoGame extends Game {
+public class MaryoGame extends Game implements IGameServiceListener {
 	public static final int NATIVE_WIDTH = 1024;
 	public static final int NATIVE_HEIGHT = 576;
 
@@ -52,7 +52,6 @@ public class MaryoGame extends Game {
 		Shader.init();
 		GameSave.init();
         assets.manager.load(Assets.SKIN_HUD, Skin.class);
-		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 
 		try {
 			controllerMappings = new MyControllerMapping();
@@ -66,9 +65,12 @@ public class MaryoGame extends Game {
 		gsClient.resumeSession();
 
 		if (gpgsClient != null) {
+			gpgsClient.setListener(this);
 			gpgsClient.resumeSession();
             GameSave.gpgsClient = gpgsClient;
 		}
+
+		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
 	}
 
 	@Override
@@ -137,6 +139,29 @@ public class MaryoGame extends Game {
 				gpgsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
 			}
 		}
+	}
+
+	@Override
+	public void gsOnSessionActive() {
+		GameSave.loadFromCloudIfApplicable(this);
+	}
+
+	@Override
+	public void gsOnSessionInactive() {
+
+	}
+
+	@Override
+	public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+		Gdx.app.error("GS", msg, t);
+	}
+
+	public void onChangedStateFromCloud() {
+		// aus der Cloud wurde ein Spielstand geladen, der abweichend war. Wenn noch im Ladebildschirm, dann ist eh
+		// alles super. Wenn schon auf Menü, dann benachrichtigen
+
+		if (getScreen() instanceof MainMenuScreen)
+			((MainMenuScreen) getScreen()).onChangedStateFromCloud();
 	}
 
 	public interface Event

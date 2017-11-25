@@ -74,11 +74,17 @@ public class ChoseLevelView extends Group {
                 protected void onChosen() {
                     if (!isMarked())
                         selectLevelButton(this);
-                    else if (isUnlocked() || MaryoGame.GAME_DEVMODE)
-                        ChoseLevelView.this.mainMenuScreen.game.setScreen(
-                                new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
-                                        getLevel().levelId), false));
-
+                    else if (isUnlocked() || MaryoGame.GAME_DEVMODE) {
+                        if (GameSave.isLoadingFromCloud())
+                            new ErrorDialog("Cannot start game, still loading gamestate from cloud...\n" +
+                                    "If this problem remains, log out from cloud service to cancel.",
+                                    getSkin(), .8f, .5f);
+                        else {
+                            ChoseLevelView.this.mainMenuScreen.game.setScreen(
+                                    new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
+                                            getLevel().levelId), false));
+                        }
+                    }
                 }
             };
             levelButton.setLevel(level, beforeWasCleared || level.bestScore > 0);

@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import de.golfgl.gdx.controllers.ControllerMenuDialog;
+import de.golfgl.gdxgamesvcs.GameServiceRenderThreadListener;
 import de.golfgl.gdxgamesvcs.IGameServiceListener;
 import de.golfgl.gdxgamesvcs.gamestate.ISaveGameStateResponseListener;
 import rs.pedjaapps.smc.MaryoGame;
@@ -27,6 +27,7 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
     private final ColorableTextButton saveNowButton;
     protected MaryoGame game;
     boolean alreadySaved;
+    private float timeSinceRefresh;
 
     public GpgsDialog(Skin skin, MaryoGame game) {
         super("", skin, Assets.WINDOW_SMALL);
@@ -87,11 +88,25 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
         refreshState();
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        timeSinceRefresh = timeSinceRefresh + delta;
+
+        if (timeSinceRefresh >= 2f)
+            refreshState();
+    }
+
     private void refreshState() {
         if (game.gpgsClient.isSessionActive()) {
             String playerDisplayName = game.gpgsClient.getPlayerDisplayName();
-            loginButton.setText("Sign out to deactivate cloud save" +
-                    (playerDisplayName == null ? "" : "\n" + playerDisplayName));
+
+            if (GameSave.isLoadingFromCloud())
+                loginButton.setText("Loading gamestate, sign out to cancel...");
+            else
+                loginButton.setText("Sign out to deactivate cloud save" +
+                        (playerDisplayName == null ? "" : "\n" + playerDisplayName));
 
         } else if (game.gpgsClient.isConnectionPending())
             loginButton.setText("Signing in, please wait...");
@@ -99,6 +114,8 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
             loginButton.setText("Sign in and activate cloud save");
 
         saveNowButton.setVisible(game.gpgsClient.isSessionActive());
+
+        timeSinceRefresh = 0;
     }
 
     private void logInOurOut() {
@@ -107,13 +124,16 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
 
         if (!game.gpgsClient.isSessionActive())
             game.gpgsClient.logIn();
-        else
+        else {
+            GameSave.resetLoadedFromCloud();
             game.gpgsClient.logOff();
+        }
     }
 
     @Override
     public void gsOnSessionActive() {
         refreshState();
+        GameSave.loadFromCloudIfApplicable(game);
     }
 
     @Override
@@ -124,18 +144,18 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
     @Override
     public void gsShowErrorToUser(IGameServiceListener.GsErrorType et, String msg, Throwable t) {
         // GPGS Error auf aktuellem Bildschirm oder in Log anzeigen
-        Gdx.app.error("GPGS", msg);
+        new ErrorDialog(msg, getSkin(), .8f, .4f);
     }
 
     @Override
     public Dialog show(Stage stage, Action action) {
-        game.gpgsClient.setListener(this);
+        game.gpgsClient.setListener(new GameServiceRenderThreadListener(this));
         return super.show(stage, action);
     }
 
     @Override
     public boolean remove() {
-        game.gpgsClient.setListener(null);
+        game.gpgsClient.setListener(game);
         return super.remove();
     }
 }
