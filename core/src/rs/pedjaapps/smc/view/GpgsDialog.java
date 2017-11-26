@@ -103,7 +103,7 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
             String playerDisplayName = game.gpgsClient.getPlayerDisplayName();
 
             if (GameSave.isLoadingFromCloud())
-                loginButton.setText("Loading gamestate, sign out to cancel...");
+                loginButton.setText("Loading gamestate... Click to cancel");
             else
                 loginButton.setText("Sign out to deactivate cloud save" +
                         (playerDisplayName == null ? "" : "\n" + playerDisplayName));
