@@ -144,7 +144,12 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
     @Override
     public void gsShowErrorToUser(IGameServiceListener.GsErrorType et, String msg, Throwable t) {
         // GPGS Error auf aktuellem Bildschirm oder in Log anzeigen
-        new ErrorDialog(msg, getSkin(), .8f, .4f);
+        String errorMsg = "Could not log in to Google.";
+
+        if (msg != null)
+            errorMsg = errorMsg + "\n\nFailure message:\n" + msg;
+
+        new ErrorDialog(errorMsg, getSkin(), .8f, .4f).show(getStage());
     }
 
     @Override
