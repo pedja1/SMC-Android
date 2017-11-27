@@ -1,5 +1,6 @@
 package rs.pedjaapps.smc.utility;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -63,11 +64,15 @@ public class MyControllerMapping extends ControllerMappings {
 
     @Override
     public boolean getDefaultMapping(MappedInputs defaultMapping) {
+        // see https://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_BUTTON_A
+        boolean onAndroid = Gdx.app.getType() == Application.ApplicationType.Android;
+
         defaultMapping.putMapping(new MappedInput(AXIS_VERTICAL, new ControllerAxis(1)));
         defaultMapping.putMapping(new MappedInput(AXIS_HORIZONTAL, new ControllerAxis(0)));
-        defaultMapping.putMapping(new MappedInput(BUTTON_JUMP, new ControllerButton(0)));
-        defaultMapping.putMapping(new MappedInput(BUTTON_START, new ControllerButton(9)));
-        defaultMapping.putMapping(new MappedInput(BUTTON_CANCEL, new ControllerButton(8)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_JUMP, new ControllerButton(onAndroid ? 96 : 0)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_FIRE, new ControllerButton(onAndroid ? 97 : 1)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_START, new ControllerButton(onAndroid ? 108 : 9)));
+        defaultMapping.putMapping(new MappedInput(BUTTON_CANCEL, new ControllerButton(onAndroid ? 4 : 8)));
 
         return true;
     }
