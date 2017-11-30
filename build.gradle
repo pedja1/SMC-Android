@@ -18,7 +18,8 @@ allprojects {
         appName = 'SMC-Android'
         gdxVersion = '1.9.6'
         roboVMVersion = '1.14.0'
-        gamesvcsVersion = '0.2.1-SNAPSHOT'
+        gamesvcsVersion = '0.2.1'
+        cuVersion = '0.1.0'
     }
 
     repositories {
