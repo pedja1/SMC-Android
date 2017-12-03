@@ -581,7 +581,7 @@ public class HUD {
             scoreTable.add(getScaledLabel(String.valueOf(gamescreenlevel.bestScore), .6f))
                     .right();
 
-            if (gameScreen.game.gpgsClient != null && !gameScreen.game.gpgsClient.isSessionActive()) {
+            if (GameSave.cloudSaveClient != null && !GameSave.cloudSaveClient.isSessionActive()) {
                 scoreTable.row();
                 Label cloudSaveHint = new Label("Activate cloud save in the main menu\nto never loose your progress.",
                         skin, Assets.LABEL_SIMPLE25);

@@ -21,7 +21,7 @@ public class GameSave {
     public static final String EVENT_LEVEL_STARTED = "EVENT_LEVEL_STARTED";
     public static final String EVENT_LEVEL_CLEARED = "EVENT_LEVEL_CLEARED";
     public static final String CLOUD_FILE_NAME = "gamestate";
-    public static IGameServiceClient gpgsClient;
+    public static IGameServiceClient cloudSaveClient;
     // der aktuelle Stand, der gerade gespielt wird
     private static int levelScore;
     private static long levelPlaytime;
@@ -41,7 +41,7 @@ public class GameSave {
     private static boolean loadingFromCloud;
 
     public static boolean isLoadingFromCloud() {
-        return loadingFromCloud || gpgsClient != null && gpgsClient.isConnectionPending();
+        return loadingFromCloud || cloudSaveClient != null && cloudSaveClient.isConnectionPending();
     }
 
     public static long getLevelPlaytime() {
@@ -170,8 +170,8 @@ public class GameSave {
         String jsonString = json.toJson(JsonWriter.OutputType.json);
         PrefsManager.setSaveGame(jsonString);
 
-        if (gpgsClient != null && loadedFromCloud)
-            gpgsClient.saveGameState(CLOUD_FILE_NAME,
+        if (cloudSaveClient != null && loadedFromCloud)
+            cloudSaveClient.saveGameState(CLOUD_FILE_NAME,
                     Utility.encode(jsonString, PrefsManager.SCCPLF).getBytes(),
                     levelStartedNum, cloudResponseListener);
     }
@@ -282,10 +282,10 @@ public class GameSave {
     }
 
     public static void loadFromCloudIfApplicable(final MaryoGame game) {
-        if (!loadedFromCloud && !loadingFromCloud && gpgsClient != null && gpgsClient.isSessionActive()
-                && gpgsClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage)) {
+        if (!loadedFromCloud && !loadingFromCloud && cloudSaveClient != null && cloudSaveClient.isSessionActive()
+                && cloudSaveClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage)) {
             loadingFromCloud = true;
-            gpgsClient.loadGameState(GameSave.CLOUD_FILE_NAME, new ILoadGameStateResponseListener() {
+            cloudSaveClient.loadGameState(GameSave.CLOUD_FILE_NAME, new ILoadGameStateResponseListener() {
                 @Override
                 public void gsGameStateLoaded(final byte[] gameState) {
                     Gdx.app.postRunnable(new Runnable() {
