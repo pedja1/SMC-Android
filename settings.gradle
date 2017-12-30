@@ -1,2 +1,2 @@
-include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser', ':server', ':terminal_client'
+include 'desktop', 'android', 'ios', /*'html',*/ 'core', 'smc-level-parser', ':server', ':terminal_client'
 

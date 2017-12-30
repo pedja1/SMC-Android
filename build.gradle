@@ -1,15 +1,19 @@
 buildscript {
     repositories {
-        mavenCentral()
         mavenLocal()
         jcenter()
+        google()
         //maven { url 'https://github.com/steffenschaefer/gwt-gradle-plugin/raw/maven-repo/' }
     }
     dependencies {
             classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath 'org.robovm:robovm-gradle-plugin:1.14.0'
     }
+}
+
+plugins {
+    id "org.sonarqube" version "2.6"
 }
 
 allprojects {
