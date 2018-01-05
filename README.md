@@ -2,6 +2,10 @@
 Secret Maryo Chronicles for Android
 ===========
 [![Build Status](http://teamcity.android-forever.com/teamcity/app/rest/builds/buildType:(id:Pedjaapps_Smc_Build)/statusIcon)](http://teamcity.android-forever.com/teamcity/project.html?projectId=Pedjaapps_Smc&tab=projectOverview)
+[![Quality Gate](http://skynetsoftware.org:9000/api/badges/gate?key=SMC-Android)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
+[![Quality Gate](http://skynetsoftware.org:9000/api/badges/measure?key=SMC-Android&metric=ncloc)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
+[![Quality Gate](http://skynetsoftware.org:9000/api/badges/measure?key=SMC-Android&metric=vulnerabilities)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
+[![Quality Gate](http://skynetsoftware.org:9000/api/badges/measure?key=SMC-Android&metric=bugs)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
 
 This is an Android port of PC platformer game [Secret Maryo Chronicles](https://github.com/FluXy/SMC)
 
