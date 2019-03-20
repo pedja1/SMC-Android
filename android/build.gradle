@@ -30,8 +30,17 @@ android {
         }
 
     }
+    signingConfigs {
+        release {
+            storeFile = file("/home/pedja/keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PWD")
+            keyAlias = System.getenv("KEYSTORE_ALIAS")
+            keyPassword = System.getenv("KEYSTORE_ALIAS_PWD")
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
