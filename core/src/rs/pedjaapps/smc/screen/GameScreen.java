@@ -81,6 +81,7 @@ public class GameScreen extends AbstractScreen {
     private float timeSinceUpdObjRefresh = FREQ_OTU_REFRESH;
     private int objRefreshSize;
     private InputMultiplexer inputprocessor;
+    private GLProfiler profiler;
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
         this(game, fromMenu, levelName, null);
@@ -88,6 +89,7 @@ public class GameScreen extends AbstractScreen {
 
     public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent) {
         super(game);
+        this.profiler = new GLProfiler(Gdx.graphics);
         this.parent = parent;
         this.levelName = levelName;
         gameState = GAME_STATE.GAME_READY;
@@ -157,9 +159,9 @@ public class GameScreen extends AbstractScreen {
     public void setDebug(boolean debug) {
         this.debug = debug;
         if (debug)
-            GLProfiler.enable();
+            profiler.enable();
         else
-            GLProfiler.disable();
+            profiler.disable();
     }
 
     @Override
@@ -258,7 +260,7 @@ public class GameScreen extends AbstractScreen {
                 cameraEditModeTranslate.y -= 0.2f;
             }
         }
-        if (debug) GLProfiler.reset();
+        if (debug) profiler.reset();
     }
 
     public void endLevel() {
@@ -432,8 +434,8 @@ public class GameScreen extends AbstractScreen {
                 + "\n" + "World Camera: x=" + cam.position.x + ", y=" + cam.position.y
                 + "\n" + "JavaHeap: " + Gdx.app.getJavaHeap() / 1000000 + "MB"
                 + "\n" + "NativeHeap: " + Gdx.app.getNativeHeap() / 1000000 + "MB"
-                + "\n" + "OGL Draw Calls: " + GLProfiler.drawCalls
-                + "\n" + "OGL TextureBindings: " + GLProfiler.textureBindings
+                + "\n" + "OGL Draw Calls: " + profiler.getDrawCalls()
+                + "\n" + "OGL TextureBindings: " + profiler.getTextureBindings()
                 + "\n" + "Screen w=" + width + "h=" + height
                 + "\n" + "FPS: " + Gdx.graphics.getFramesPerSecond();
     }
@@ -496,7 +498,7 @@ public class GameScreen extends AbstractScreen {
         if (globalEffect != null) {
             globalEffect.dispose();
         }
-        if (debug) GLProfiler.disable();
+        if (debug) profiler.disable();
     }
 
     @Override

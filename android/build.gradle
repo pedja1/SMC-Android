@@ -1,22 +1,22 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
+        google()
     }
 }
 
 apply plugin: "com.android.application"
 
 android {
-    buildToolsVersion '25.0.2'
-    compileSdkVersion 25
+    buildToolsVersion '28.0.3'
+    compileSdkVersion 28
     defaultConfig {
         applicationId "rs.pedjaapps.smc.android"
         versionCode 20160527
         versionName "1.0.1"
 
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 28
     }
     sourceSets {
         main {
@@ -29,7 +29,6 @@ android {
             jniLibs.srcDirs = ['libs']
         }
 
-        instrumentTest.setRoot('tests')
     }
     buildTypes {
         release {
@@ -51,13 +50,15 @@ android {
 configurations { natives }
 
 dependencies {
-    compile project(":core")
-    compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
+    implementation project(":core")
+    implementation "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
     natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
-    compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
+    natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
+    implementation "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
 }
 
 // needed to add JNI shared libraries to APK when compiling on CLI
@@ -69,11 +70,11 @@ dependencies {
 // the natives configuration, and extracts them to the proper libs/ folders
 // so they get packed with the APK.
 task copyAndroidNatives() {
-    file("libs/armeabi/").mkdirs();
-    file("libs/armeabi-v7a/").mkdirs();
-    file("libs/arm64-v8a/").mkdirs();
-    file("libs/x86_64/").mkdirs();
-    file("libs/x86/").mkdirs();
+    file("libs/armeabi/").mkdirs()
+    file("libs/armeabi-v7a/").mkdirs()
+    file("libs/arm64-v8a/").mkdirs()
+    file("libs/x86_64/").mkdirs()
+    file("libs/x86/").mkdirs()
 
     configurations.natives.files.each { jar ->
         def outputDir = null
