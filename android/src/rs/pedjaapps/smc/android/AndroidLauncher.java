@@ -52,15 +52,6 @@ public class AndroidLauncher extends AndroidApplication implements MaryoGame.Eve
     }
 
     @Override
-    public void showInterestitialAd() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-    }
-
-    @Override
     public void levelStart(String levelName) {
     }
 

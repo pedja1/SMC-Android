@@ -18,155 +18,142 @@ import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game implements IGameServiceListener {
-	public static final int NATIVE_WIDTH = 1024;
-	public static final int NATIVE_HEIGHT = 576;
+    public static final int NATIVE_WIDTH = 1024;
+    public static final int NATIVE_HEIGHT = 576;
 
-	public static final String GAME_VERSION = "2.1.1710";
+    public static final String GAME_VERSION = "2.1.1710";
     public static final boolean GAME_DEVMODE = true;
-	public static final String GAME_STOREURL = "https://play.google.com/store/apps/details?id=de.golfgl.smc.android";
-	public static final String GAME_WEBURL = "https://www.golfgl.de/sccplf/";
+    public static final String GAME_STOREURL = "https://play.google.com/store/apps/details?id=de.golfgl.smc.android";
+    public static final String GAME_WEBURL = "https://www.golfgl.de/sccplf/";
 
-	public static final String GAME_SOURCEURL = "https://www.golfgl.de/sccplf/sccsrc.zip";
+    public static final String GAME_SOURCEURL = "https://www.golfgl.de/sccplf/sccsrc.zip";
 
 
-	public MyControllerMapping controllerMappings;
-	public String isRunningOn = "";
-	public IGameServiceClient gsClient;
-	public IGameServiceClient gpgsClient;
-	public Assets assets;
-	private Event event;
+    public MyControllerMapping controllerMappings;
+    public String isRunningOn = "";
+    public IGameServiceClient gsClient;
+    public IGameServiceClient gpgsClient;
+    public Assets assets;
+    private Event event;
 
-	public MaryoGame(Event event)
-	{
-		this.event = event;
-	}
+    public MaryoGame(Event event) {
+        this.event = event;
+    }
 
-	@Override
-	public void create()
-	{
+    @Override
+    public void create() {
         if (!GAME_DEVMODE)
             Gdx.app.setLogLevel(Application.LOG_ERROR);
 
-		assets = new Assets();
-		Shader.init();
-		GameSave.init();
+        assets = new Assets();
+        Shader.init();
+        GameSave.init();
         assets.manager.load(Assets.SKIN_HUD, Skin.class);
 
-		try {
-			controllerMappings = new MyControllerMapping();
-			Controllers.addListener(controllerMappings.controllerToInputAdapter);
-		} catch (Throwable t) {
-			Gdx.app.error("Application", "Controllers not instantiated", t);
-		}
+        try {
+            controllerMappings = new MyControllerMapping();
+            Controllers.addListener(controllerMappings.controllerToInputAdapter);
+        } catch (Throwable t) {
+            Gdx.app.error("Application", "Controllers not instantiated", t);
+        }
 
-		if (gsClient == null)
-			gsClient = new NoGameServiceClient();
-		gsClient.resumeSession();
+        if (gsClient == null)
+            gsClient = new NoGameServiceClient();
+        gsClient.resumeSession();
 
-		if (gpgsClient != null) {
-			gpgsClient.setListener(this);
-			gpgsClient.resumeSession();
+        if (gpgsClient != null) {
+            gpgsClient.setListener(this);
+            gpgsClient.resumeSession();
             GameSave.cloudSaveClient = gpgsClient;
-		}
+        }
 
-		setScreen(new LoadingScreen(new MainMenuScreen(this), false));
-	}
-
-	@Override
-	public void pause()	{
-		super.pause();
-		// kann null sein wenn preloader versteckt wird
-		if (Gdx.app != null) {
-			PrefsManager.flush();
-			gsClient.pauseSession();
-			if (gpgsClient != null)
-				gpgsClient.pauseSession();
-		}
-	}
-
-	@Override
-	public void resume() {
-		super.resume();
-
-		if (gsClient != null)
-			gsClient.resumeSession();
-		if (gpgsClient != null)
-			gpgsClient.resumeSession();
-	}
-
-	@Override
-    public void dispose()
-    {
-        super.dispose();
-        assets.dispose();
-		assets = null;
-		Shader.dispose();
+        setScreen(new LoadingScreen(new MainMenuScreen(this), false));
     }
 
-    public void exit()
-    {
+    @Override
+    public void pause() {
+        super.pause();
+        // kann null sein wenn preloader versteckt wird
+        if (Gdx.app != null) {
+            PrefsManager.flush();
+            gsClient.pauseSession();
+            if (gpgsClient != null)
+                gpgsClient.pauseSession();
+        }
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+
+        if (gsClient != null)
+            gsClient.resumeSession();
+        if (gpgsClient != null)
+            gpgsClient.resumeSession();
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        assets.dispose();
+        assets = null;
+        Shader.dispose();
+    }
+
+    public void exit() {
         Gdx.app.exit();
     }
 
-	public void showAd()
-	{
-		if(event != null)
-			event.showInterestitialAd();
-	}
+    public void levelStart(String levelName) {
+        if (event != null)
+            event.levelStart(levelName);
 
-	public void levelStart(String levelName)
-	{
-		if(event != null)
-			event.levelStart(levelName);
+        gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
+        if (gpgsClient != null)
+            gpgsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
+    }
 
-		gsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
-		if (gpgsClient != null)
-			gpgsClient.submitEvent(GameSave.EVENT_LEVEL_STARTED, 1);
-	}
+    public void levelEnd(String levelName, boolean success) {
+        if (event != null)
+            event.levelEnd(levelName, success);
 
-	public void levelEnd(String levelName, boolean success)
-	{
-		if(event != null)
-			event.levelEnd(levelName, success);
+        if (success) {
+            gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
+            gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+            if (gpgsClient != null) {
+                gpgsClient.unlockAchievement(levelName + "_CLEAR");
+                gpgsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
+                gpgsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
+            }
+        }
+    }
 
-		if (success) {
-			gsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
-			gsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
-			if (gpgsClient != null) {
-				gpgsClient.unlockAchievement(levelName + "_CLEAR");
-				gpgsClient.submitEvent(GameSave.EVENT_LEVEL_CLEARED, 1);
-				gpgsClient.submitToLeaderboard(GameSave.LEADERBOARD_TOTAL, GameSave.getTotalScore(), null);
-			}
-		}
-	}
+    @Override
+    public void gsOnSessionActive() {
+        GameSave.loadFromCloudIfApplicable(this);
+    }
 
-	@Override
-	public void gsOnSessionActive() {
-		GameSave.loadFromCloudIfApplicable(this);
-	}
+    @Override
+    public void gsOnSessionInactive() {
 
-	@Override
-	public void gsOnSessionInactive() {
+    }
 
-	}
+    @Override
+    public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+        Gdx.app.error("GS", msg, t);
+    }
 
-	@Override
-	public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
-		Gdx.app.error("GS", msg, t);
-	}
+    public void onChangedStateFromCloud() {
+        // aus der Cloud wurde ein Spielstand geladen, der abweichend war. Wenn noch im Ladebildschirm, dann ist eh
+        // alles super. Wenn schon auf Menü, dann benachrichtigen
 
-	public void onChangedStateFromCloud() {
-		// aus der Cloud wurde ein Spielstand geladen, der abweichend war. Wenn noch im Ladebildschirm, dann ist eh
-		// alles super. Wenn schon auf Menü, dann benachrichtigen
+        if (getScreen() instanceof MainMenuScreen)
+            ((MainMenuScreen) getScreen()).onChangedStateFromCloud();
+    }
 
-		if (getScreen() instanceof MainMenuScreen)
-			((MainMenuScreen) getScreen()).onChangedStateFromCloud();
-	}
+    public interface Event {
+        void levelStart(String levelName);
 
-	public interface Event
-	{
-		void showInterestitialAd();
-		void levelStart(String levelName);
-		void levelEnd(String levelName, boolean success);
-	}
+        void levelEnd(String levelName, boolean success);
+    }
 }
