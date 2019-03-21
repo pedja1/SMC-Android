@@ -1,7 +1,7 @@
 ![smc logo](https://raw.githubusercontent.com/pedja1/SMC-Android/master/android/assets/data/game/logo/smc_big_1.png)  
 Secret Maryo Chronicles for Android
 ===========
-[![Build Status](http://teamcity.android-forever.com/teamcity/app/rest/builds/buildType:(id:Pedjaapps_Smc_Build)/statusIcon)](http://teamcity.android-forever.com/teamcity/project.html?projectId=Pedjaapps_Smc&tab=projectOverview)
+[![Build Status](http://skynetsoftware.org:8111/app/rest/builds/buildType:(id:ss_SmcAndroid_Build)/statusIcon)](http://skynetsoftware.org:8111/project.html?projectId=ss_SmcAndroid&tab=projectOverview)
 [![Quality Gate](http://skynetsoftware.org:9000/api/badges/gate?key=SMC-Android)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
 [![Quality Gate](http://skynetsoftware.org:9000/api/badges/measure?key=SMC-Android&metric=ncloc)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
 [![Quality Gate](http://skynetsoftware.org:9000/api/badges/measure?key=SMC-Android&metric=vulnerabilities)](http://skynetsoftware.org:9000/dashboard/index/SMC-Android)
