@@ -13,6 +13,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "org.sonarqube" version "2.6"
+}
+
 allprojects {
     version = '1.0'
     ext {
