@@ -1,6 +1,5 @@
 package rs.pedjaapps.smc.object.items;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -9,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.shader.Shader;
 import rs.pedjaapps.smc.utility.Constants;
@@ -26,8 +25,7 @@ import rs.pedjaapps.smc.utility.Utility;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public class Star extends Item
-{
+public class Star extends Item {
     public static final float GLIM_COLOR_START_ALPHA = 0f;
     public static final float GLIM_COLOR_MAX_ALPHA = 0.95f;
     public static final float POSITION_Z = 0.053f;
@@ -45,9 +43,8 @@ public class Star extends Item
     private boolean glimMode = true;
     ParticleEffect trail;
 
-    public Star(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+    public Star(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         position.z = POSITION_Z;
         textureName = "game_items_star";
     }
@@ -58,77 +55,65 @@ public class Star extends Item
     }
 
     @Override
-    public void initAssets()
-    {
-        texture = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
+    public void initAssets() {
+        texture = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class)
                 .findRegion(textureName);
-        trail = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/star_trail.p", ParticleEffect.class));
+        trail = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/star_trail.p", ParticleEffect.class));
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
-    {
+    public void render(SpriteBatch spriteBatch) {
         if (!visible) return;
-        trail.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
+        trail.setPosition(colRect.x + colRect.width * 0.5f, colRect.y + colRect.height * 0.5f);
         trail.draw(spriteBatch);
         spriteBatch.setShader(Shader.NORMAL_BLEND_SHADER);
 
-        if (glimMode)
-        {
+        if (glimMode) {
             glimColor.a = glimCounter;
-            if (glimCounter > GLIM_COLOR_MAX_ALPHA)
-            {
+            if (glimCounter > GLIM_COLOR_MAX_ALPHA) {
                 glimMode = false;
                 glimCounter = GLIM_COLOR_MAX_ALPHA;
             }
-        }
-        else
-        {
+        } else {
             glimColor.a = glimCounter;
-            if (glimCounter < GLIM_COLOR_START_ALPHA)
-            {
+            if (glimCounter < GLIM_COLOR_START_ALPHA) {
                 glimMode = true;
                 glimCounter = GLIM_COLOR_START_ALPHA;
             }
         }
         spriteBatch.setColor(glimColor);
 
-        float width = Utility.getWidth(texture, mDrawRect.height);
+        float width = Utility.getWidth(texture, drawRect.height);
         float originX = width * 0.5f;
-        float originY = mDrawRect.height * 0.5f;
-        spriteBatch.draw(texture, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, mRotationZ);
+        float originY = drawRect.height * 0.5f;
+        spriteBatch.draw(texture, drawRect.x, drawRect.y, originX, originY, width, drawRect.height, 1, 1, rotationZ);
 
         spriteBatch.setShader(null);
         spriteBatch.setColor(Color.WHITE);
     }
 
     @Override
-    public void updateItem(float delta)
-    {
+    public void updateItem(float delta) {
         super.updateItem(delta);
-        if (popFromBox)
-        {
+        if (popFromBox) {
             // scale velocity to frame units
             velocity.scl(delta);
 
             // update position
             position.add(velocity);
-            mColRect.y = position.y;
+            colRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
             velocity.scl(1 / delta);
 
-            if (position.y >= popTargetPosY)
-            {
+            if (position.y >= popTargetPosY) {
                 isInBox = false;
                 popFromBox = false;
                 moving = true;
                 velocity.x = direction == Direction.right ? VELOCITY_X : -VELOCITY_X;
             }
-        }
-        else if (moving)
-        {
+        } else if (moving) {
             trail.update(delta);
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
@@ -141,8 +126,7 @@ public class Star extends Item
 
             checkCollisionWithBlocks(delta, true, true, false, false);
 
-            switch (direction)
-            {
+            switch (direction) {
                 case right:
                     velocity.x = VELOCITY_X;
                     break;
@@ -150,87 +134,63 @@ public class Star extends Item
                     velocity.x = -VELOCITY_X;
                     break;
             }
-            if (velY != -1)
-            {
+            if (velY != -1) {
                 velocity.y = velY;
                 velY = -1;
             }
         }
-        if (glimMode)
-        {
+        if (glimMode) {
             glimCounter += (delta * 3f);
-        }
-        else
-        {
+        } else {
             glimCounter -= (delta * 3f);
         }
         getRotation(delta);
     }
 
-    private void getRotation(float delta)
-    {
-        float circumference = (float) Math.PI * (mColRect.width);
+    private void getRotation(float delta) {
+        float circumference = (float) Math.PI * (colRect.width);
         float deltaVelocity = VELOCITY_X * delta;
         float step = (circumference / deltaVelocity);
         float frameRotation = 360 / step;//degrees
         frameRotation *= 0.5f;
 
-        if(velocity.y > 0.0f)
-        {
-            mRotationZ += frameRotation;
+        if (velocity.y > 0.0f) {
+            rotationZ += frameRotation;
         }
         // rotate back to 0 if falling
-        else
-        {
+        else {
             frameRotation *= 0.9f;
-            if(mRotationZ > 5.0f && mRotationZ <= 175.0f)
-            {
-                mRotationZ -= frameRotation;
-            }
-            else if(mRotationZ < 355 && mRotationZ > 185)
-            {
-                mRotationZ += frameRotation;
+            if (rotationZ > 5.0f && rotationZ <= 175.0f) {
+                rotationZ -= frameRotation;
+            } else if (rotationZ < 355 && rotationZ > 185) {
+                rotationZ += frameRotation;
             }
         }
-        if(mRotationZ > 360)
-        {
-            mRotationZ = mRotationZ - 360;
+        if (rotationZ > 360) {
+            rotationZ = rotationZ - 360;
         }
-        if(mRotationZ < -360)
-        {
-            mRotationZ = 0 - mRotationZ;
+        if (rotationZ < -360) {
+            rotationZ = 0 - rotationZ;
         }
     }
 
     @Override
-    protected boolean handleCollision(GameObject object, boolean vertical)
-    {
-        if (object instanceof Sprite)
-        {
-            if (((Sprite) object).type == Sprite.Type.massive)
-            {
-                if (vertical)
-                {
-                    velY = mColRect.y < object.mColRect.y ? 0 : VELOCITY_Y;
+    protected boolean handleCollision(GameObject object, boolean vertical) {
+        if (object instanceof Sprite) {
+            if (((Sprite) object).type == Sprite.Type.massive) {
+                if (vertical) {
+                    velY = colRect.y < object.colRect.y ? 0 : VELOCITY_Y;
                     return true;
-                }
-                else if (mColRect.y > groundY)
-                {
-                    if (velocity.x < 0)
-                    {
+                } else if (colRect.y > groundY) {
+                    if (velocity.x < 0) {
                         direction = Direction.right;
-                    }
-                    else
-                    {
+                    } else {
                         direction = Direction.left;
                     }
                     return true;
                 }
-            }
-            else if (((Sprite) object).type == Sprite.Type.halfmassive)
-            {
-                if (vertical && mColRect.y + mColRect.height > object.mColRect.y + object.mColRect.height)
-                {
+            } else if (((Sprite) object).type == Sprite.Type.halfmassive) {
+                if (vertical && colRect.y + colRect.height > object.colRect.y + object.colRect.height) {
                     velY = VELOCITY_Y;
                     return true;
                 }
@@ -241,32 +201,27 @@ public class Star extends Item
     }
 
     @Override
-    public float maxVelocity()
-    {
+    public float maxVelocity() {
         return VELOCITY_X;
     }
 
     @Override
-    public void hitPlayer()
-    {
+    public void hitPlayer() {
         if (isInBox) return;
         playerHit = true;
-        AssetManager manager = world.screen.game.assets.manager;
-        if(!manager.isLoaded(Assets.MUSIC_INVINCIBLE))
-        {
-            manager.load(Assets.MUSIC_INVINCIBLE, Music.class);
-            manager.finishLoading();
+        if (!MaryoGame.game.assets.isLoaded(Assets.MUSIC_INVINCIBLE)) {
+            MaryoGame.game.assets.load(Assets.MUSIC_INVINCIBLE, Music.class);
+            MaryoGame.game.assets.finishLoading();
         }
-        MusicManager.play(manager.get(Assets.MUSIC_INVINCIBLE, Music.class), false);
+        MusicManager.play(MaryoGame.game.assets.get(Assets.MUSIC_INVINCIBLE, Music.class), false);
         GameSave.addScore(1000);
-        ((GameScreen)world.screen).killPointsTextHandler.add(1000, position.x, position.y + mDrawRect.height);
-        world.maryo.starPicked();
-        world.trashObjects.add(this);
+        MaryoGame.game.addKillPoints(1000, position.x, position.y + drawRect.height);
+        MaryoGame.game.currentScreen.world.maryo.starPicked();
+        trashThisObject();
     }
 
     @Override
-    public void popOutFromBox(float popTargetPositionY)
-    {
+    public void popOutFromBox(float popTargetPositionY) {
         super.popOutFromBox(popTargetPositionY);
         visible = true;
         popFromBox = true;
@@ -275,8 +230,7 @@ public class Star extends Item
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         super.dispose();
         trail.dispose();
         trail = null;

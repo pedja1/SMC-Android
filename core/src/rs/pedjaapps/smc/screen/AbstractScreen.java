@@ -1,23 +1,22 @@
 package rs.pedjaapps.smc.screen;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.view.MenuStage;
 
 /**
  * @author Mats Svensson
  */
 public abstract class AbstractScreen implements Screen {
-    public MaryoGame game;
     protected MenuStage stage;
+    public World world;
 
-
-    public AbstractScreen(MaryoGame game) {
-        this.game = game;
+    public AbstractScreen() {
         stage = new MenuStage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
+        world = new World();
     }
 
     @Override
@@ -45,11 +44,11 @@ public abstract class AbstractScreen implements Screen {
 
     public void exitToMenu() {
         //TODO direkt in Levelauswahl springen bei Gamescreen
-        game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+        MaryoGame.game.changeScreen(new LoadingScreen(new MainMenuScreen(), false));
     }
 
     public void quit() {
-        game.exit();
+        MaryoGame.game.exit();
     }
 
     /**

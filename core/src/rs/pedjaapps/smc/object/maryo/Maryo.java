@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -18,7 +17,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import rs.pedjaapps.smc.MaryoGame;
+import rs.pedjaapps.smc.assets.AnimationKey;
 import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.assets.TextureKey;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.Box;
@@ -28,7 +30,7 @@ import rs.pedjaapps.smc.object.LevelEntry;
 import rs.pedjaapps.smc.object.LevelExit;
 import rs.pedjaapps.smc.object.MovingPlatform;
 import rs.pedjaapps.smc.object.Sprite;
-import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.object.WorldState;
 import rs.pedjaapps.smc.object.enemy.Enemy;
 import rs.pedjaapps.smc.object.items.Item;
 import rs.pedjaapps.smc.screen.GameScreen;
@@ -42,12 +44,9 @@ import rs.pedjaapps.smc.utility.TextUtils;
 import static rs.pedjaapps.smc.object.LevelExit.LEVEL_EXIT_BEAM;
 import static rs.pedjaapps.smc.object.Sprite.GROUND_ICE;
 
-public class Maryo extends DynamicObject
-{
+public class Maryo extends DynamicObject {
 
-
-    private enum Keys
-    {
+    private enum Keys {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }
 
@@ -55,7 +54,8 @@ public class Maryo extends DynamicObject
 
     private static final float MAX_JUMP_SPEED = 10f;
     private static final float POWER_MAX_JUMP_SPEED = 12f;
-    private float mMaxJumpSpeed = MAX_JUMP_SPEED;
+
+    private float maxJumpSpeed = MAX_JUMP_SPEED;
 
     public boolean jumpPeakReached;
 
@@ -63,25 +63,32 @@ public class Maryo extends DynamicObject
 
     private Set<Keys> keys = new HashSet<>(Keys.values().length);
 
-    public enum MaryoState
-    {
+    public enum MaryoState {
         small, big, fire, ice;
 
         public static int toInt(MaryoState ms) {
             switch (ms) {
-                case big: return 1;
-                case fire: return 2;
-                case ice: return 3;
-                default: return 0;
+                case big:
+                    return 1;
+                case fire:
+                    return 2;
+                case ice:
+                    return 3;
+                default:
+                    return 0;
             }
         }
 
         public static MaryoState fromInt(int i) {
             switch (i) {
-                case 1: return big;
-                case 2: return fire;
-                case 3: return ice;
-                default: return small;
+                case 1:
+                    return big;
+                case 2:
+                    return fire;
+                case 3:
+                    return ice;
+                default:
+                    return small;
             }
         }
     }
@@ -200,230 +207,183 @@ public class Maryo extends DynamicObject
 
     private float velocityDumpOrig;
 
-    public Maryo(World world, Vector3 position, Vector2 size)
-    {
-        super(world, size, position);
+    public Maryo(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         maryoState = GameSave.getMaryoState();
         setupBoundingBox();
 
-        position.y = mColRect.y = mDrawRect.y += 0.5f;
-        world.screen.game.assets.manager.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+        position.y = colRect.y = drawRect.y += 0.5f;
+        MaryoGame.game.assets.load("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
         velocityDumpOrig = velocityDump;
     }
 
-    private void setupBoundingBox()
-    {
-        float centerX = position.x + mColRect.width / 2;
-        switch (maryoState)
-        {
+    private void setupBoundingBox() {
+        float centerX = position.x + colRect.width / 2;
+        switch (maryoState) {
             case small:
-                mDrawRect.width = 0.9f;
-                mDrawRect.height = 0.9f;
+                drawRect.width = 0.9f;
+                drawRect.height = 0.9f;
                 break;
             case big:
             case fire:
             case ice:
-                mDrawRect.height = 1.09f;
-                mDrawRect.width = 1.09f;
+                drawRect.height = 1.09f;
+                drawRect.width = 1.09f;
                 break;
         }
-        mColRect.x = mDrawRect.x + mDrawRect.width / 4;
-        mColRect.width = mDrawRect.width / 2;
-        position.x = mColRect.x;
+        colRect.x = drawRect.x + drawRect.width / 4;
+        colRect.width = drawRect.width / 2;
+        position.x = colRect.x;
 
-        if (worldState == WorldState.DUCKING)
-        {
-            mColRect.height = mDrawRect.height / 2;
-        }
-        else
-        {
-            mColRect.height = mDrawRect.height * 0.9f;
+        if (worldState == WorldState.DUCKING) {
+            colRect.height = drawRect.height / 2;
+        } else {
+            colRect.height = drawRect.height * 0.9f;
         }
 
-        position.x = mColRect.x = centerX - mColRect.width / 2;
+        position.x = colRect.x = centerX - colRect.width / 2;
     }
 
     @Override
-    public void updateBounds()
-    {
-        mDrawRect.x = mColRect.x - mDrawRect.width / 4;
-        mDrawRect.y = mColRect.y;
+    public void updateBounds() {
+        drawRect.x = colRect.x - drawRect.width / 4;
+        drawRect.y = colRect.y;
     }
 
-    public void initAssets()
-    {
+    public void initAssets() {
         MaryoState[] states = new MaryoState[]{MaryoState.small, MaryoState.big, MaryoState.fire, MaryoState.ice};
-        for (MaryoState ms : states)
-        {
+        for (MaryoState ms : states) {
             loadTextures(ms);
         }
         setJumpSound();
-        powerJumpEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
-        starEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
+        powerJumpEffect = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/maryo_power_jump_emitter.p", ParticleEffect.class));
+        starEffect = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/maryo_star.p", ParticleEffect.class));
 
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         //we dont actually ahve to do anything here, since maryo is always present, and no new reources are created
     }
 
-    private void loadTextures(MaryoState state)
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    private void loadTextures(MaryoState state) {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
         String prefix = "maryo_" + state + "_";
 
         TextureRegion tmpStandRight;
-        tMap[tIndex(state, TKey.stand_right)] = tmpStandRight = atlas.findRegion(prefix + TKey.stand_right.toString());
+        tMap[tIndex(state, TextureKey.stand_right)] = tmpStandRight = atlas.findRegion(prefix + TextureKey.stand_right.toString());
 
         TextureRegion[] walkFrames = new TextureRegion[4];
         walkFrames[0] = tmpStandRight;
         walkFrames[1] = atlas.findRegion(prefix + "walk_right_1");
         walkFrames[2] = atlas.findRegion(prefix + "walk_right_2");
         walkFrames[3] = walkFrames[1];
-        aMap[aIndex(state, AKey.walk)] = new Animation<>(RUNNING_FRAME_DURATION, walkFrames);
+        aMap[aIndex(state, AnimationKey.walk)] = new Animation<>(RUNNING_FRAME_DURATION, walkFrames);
 
         TextureRegion[] climbFrames = new TextureRegion[2];
-        climbFrames[0] = atlas.findRegion(prefix + TKey.climb_left + "");
-        climbFrames[1] = atlas.findRegion(prefix + TKey.climb_right + "");
-        aMap[aIndex(state, AKey.climb)] = new Animation<>(CLIMB_FRAME_DURATION, climbFrames);
+        climbFrames[0] = atlas.findRegion(prefix + TextureKey.climb_left + "");
+        climbFrames[1] = atlas.findRegion(prefix + TextureKey.climb_right + "");
+        aMap[aIndex(state, AnimationKey.climb)] = new Animation<>(CLIMB_FRAME_DURATION, climbFrames);
 
-        if (state == MaryoState.ice || state == MaryoState.fire)
-        {
+        if (state == MaryoState.ice || state == MaryoState.fire) {
             TextureRegion[] throwFrames = new TextureRegion[2];
             throwFrames[0] = atlas.findRegion(prefix + "throw_right_1");
             throwFrames[1] = atlas.findRegion(prefix + "throw_right_2");
-            aMap[aIndex(state, AKey._throw)] = new Animation<>(THROW_FRAME_DURATION, throwFrames);
+            aMap[aIndex(state, AnimationKey._throw)] = new Animation<>(THROW_FRAME_DURATION, throwFrames);
         }
 
-        tMap[tIndex(state, TKey.jump_right)] = atlas.findRegion(prefix + TKey.jump_right.toString());
-        tMap[tIndex(state, TKey.fall_right)] = atlas.findRegion(prefix + TKey.fall_right.toString());
+        tMap[tIndex(state, TextureKey.jump_right)] = atlas.findRegion(prefix + TextureKey.jump_right.toString());
+        tMap[tIndex(state, TextureKey.fall_right)] = atlas.findRegion(prefix + TextureKey.fall_right.toString());
 
-        if (MaryoState.small == state)
-        {
-            tMap[tIndex(state, TKey.dead_right)] = atlas.findRegion(prefix + TKey.dead_right.toString());
+        if (MaryoState.small == state) {
+            tMap[tIndex(state, TextureKey.dead_right)] = atlas.findRegion(prefix + TextureKey.dead_right.toString());
         }
 
-        tMap[tIndex(state, TKey.duck_right)] = atlas.findRegion(prefix + TKey.duck_right.toString());
+        tMap[tIndex(state, TextureKey.duck_right)] = atlas.findRegion(prefix + TextureKey.duck_right.toString());
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
-    {
+    public void render(SpriteBatch spriteBatch) {
         TextureRegion marioFrame;
-        if (exiting || entering)
-        {
-            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
+        if (exiting || entering) {
+            marioFrame = tMap[tIndex(maryoState, TextureKey.stand_right)];
 
-            float originX = mDrawRect.width * 0.5f;
-            float originY = mDrawRect.height * 0.5f;
-            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, originX, originY, mDrawRect.width, mDrawRect.height, 1, 1, rotation);
+            float originX = drawRect.width * 0.5f;
+            float originY = drawRect.height * 0.5f;
+            spriteBatch.draw(marioFrame, drawRect.x, drawRect.y, originX, originY, drawRect.width, drawRect.height, 1, 1, rotation);
 
             return;
         }
-        if (resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION)
-        {
-            if (newState == MaryoState.small)
-            {
+        if (resizingAnimation != null && stateTime > resizeAnimStartTime + RESIZE_ANIMATION_DURATION) {
+            if (newState == MaryoState.small) {
                 godMode = true;
                 godModeActivatedTime = System.currentTimeMillis();
 
                 dropSavedItem();
-            }
-            else
-            {
+            } else {
                 godMode = false;
             }
             resizeAnimStartTime = 0;
             resizingAnimation = null;
             maryoState = newState;
-            ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
+            MaryoGame.game.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
             newState = null;
             oldState = null;
             setupBoundingBox();
             GameSave.setMaryoState(maryoState);
         }
-        if (resizingAnimation != null)
-        {
+        if (resizingAnimation != null) {
             int index = resizingAnimation.getKeyFrameIndex(stateTime);
             marioFrame = resizingAnimation.getKeyFrame(stateTime);
-            if (index == 0)
-            {
+            if (index == 0) {
                 maryoState = oldState;
                 setupBoundingBox();
-            }
-            else
-            {
+            } else {
                 maryoState = newState;
                 setupBoundingBox();
             }
-        }
-        else if (fire && (hasFireAbility()))
-        {
-            Animation<TextureRegion> animation = aMap[aIndex(maryoState, AKey._throw)];
+        } else if (fire && (hasFireAbility())) {
+            Animation<TextureRegion> animation = aMap[aIndex(maryoState, AnimationKey._throw)];
             marioFrame = animation.getKeyFrame(fireAnimationStateTime, false);
-            if (animation.isAnimationFinished(fireAnimationStateTime))
-            {
+            if (animation.isAnimationFinished(fireAnimationStateTime)) {
                 fire = false;
                 fireAnimationStateTime = 0;
                 //doFire();
             }
-        }
-        else if (worldState.equals(WorldState.WALKING))
-        {
-            marioFrame = aMap[aIndex(maryoState, AKey.walk)].getKeyFrame(stateTime, true);
-        }
-        else if (worldState == WorldState.DUCKING)
-        {
-            marioFrame = tMap[tIndex(maryoState, TKey.duck_right)];
-        }
-        else if (getWorldState().equals(WorldState.JUMPING))
-        {
-            if (velocity.y > 0)
-            {
-                marioFrame = tMap[tIndex(maryoState, TKey.jump_right)];
+        } else if (worldState.equals(WorldState.WALKING)) {
+            marioFrame = aMap[aIndex(maryoState, AnimationKey.walk)].getKeyFrame(stateTime, true);
+        } else if (worldState == WorldState.DUCKING) {
+            marioFrame = tMap[tIndex(maryoState, TextureKey.duck_right)];
+        } else if (getWorldState().equals(WorldState.JUMPING)) {
+            if (velocity.y > 0) {
+                marioFrame = tMap[tIndex(maryoState, TextureKey.jump_right)];
+            } else {
+                marioFrame = tMap[tIndex(maryoState, TextureKey.fall_right)];
             }
-            else
-            {
-                marioFrame = tMap[tIndex(maryoState, TKey.fall_right)];
-            }
-        }
-        else if (worldState == WorldState.DYING)
-        {
-            marioFrame = tMap[tIndex(MaryoState.small, TKey.dead_right)];
-        }
-        else if (worldState == WorldState.CLIMBING)
-        {
-            TextureRegion[] frames = aMap[aIndex(maryoState, AKey.climb)].getKeyFrames();
+        } else if (worldState == WorldState.DYING) {
+            marioFrame = tMap[tIndex(MaryoState.small, TextureKey.dead_right)];
+        } else if (worldState == WorldState.CLIMBING) {
+            TextureRegion[] frames = aMap[aIndex(maryoState, AnimationKey.climb)].getKeyFrames();
             float distance = position.y - exitEnterStartPosition.y;
             marioFrame = frames[Math.floor(distance / 0.3f) % 2 == 0 ? 0 : 1];
-        }
-        else
-        {
-            marioFrame = tMap[tIndex(maryoState, TKey.stand_right)];
+        } else {
+            marioFrame = tMap[tIndex(maryoState, TextureKey.stand_right)];
         }
 
-        if (mInvincibleStar)
-        {
-            starEffect.setPosition(mColRect.x + mColRect.width * 0.5f, mColRect.y + mColRect.height * 0.5f);
+        if (mInvincibleStar) {
+            starEffect.setPosition(colRect.x + colRect.width * 0.5f, colRect.y + colRect.height * 0.5f);
             starEffect.draw(spriteBatch);
             spriteBatch.setShader(Shader.NORMAL_BLEND_SHADER);
 
-            if (glimMode)
-            {
+            if (glimMode) {
                 glimColor.a = Math.max(glimCounter, 0);
-                if (glimCounter > GLIM_COLOR_MAX_ALPHA)
-                {
+                if (glimCounter > GLIM_COLOR_MAX_ALPHA) {
                     glimMode = false;
                     glimCounter = GLIM_COLOR_MAX_ALPHA;
                 }
-            }
-            else
-            {
+            } else {
                 glimColor.a = Math.max(glimCounter, 0);
-                if (glimCounter < GLIM_COLOR_START_ALPHA)
-                {
+                if (glimCounter < GLIM_COLOR_START_ALPHA) {
                     glimMode = true;
                     glimCounter = GLIM_COLOR_START_ALPHA;
                 }
@@ -434,26 +394,22 @@ public class Maryo extends DynamicObject
 
         marioFrame.flip(facingLeft, false);
         //if god mode, make player half-transparent
-        if (godMode)
-        {
+        if (godMode) {
             Color color = spriteBatch.getColor();
             float oldA = color.a;
 
             color.a = 0.5f;
             spriteBatch.setColor(color);
 
-            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
+            spriteBatch.draw(marioFrame, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
 
             color.a = oldA;
             spriteBatch.setColor(color);
-        }
-        else
-        {
-            spriteBatch.draw(marioFrame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
+        } else {
+            spriteBatch.draw(marioFrame, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
         }
         marioFrame.flip(facingLeft, false);
-        if (worldState == WorldState.DUCKING && powerJump)
-        {
+        if (worldState == WorldState.DUCKING && powerJump) {
             powerJumpEffect.setPosition(position.x, position.y + 0.05f);
             if (powerJumpEffect.isComplete())
                 powerJumpEffect.reset();
@@ -468,33 +424,27 @@ public class Maryo extends DynamicObject
     }
 
     private void dropSavedItem() {
-        if(GameSave.getItem() == 0)
+        if (GameSave.getItem() == 0)
             return;
         //drop item
 
         int itemType = GameSave.getItem();
 
-        OrthographicCamera cam = ((GameScreen) world.screen).cam;
+        OrthographicCamera cam = ((GameScreen) MaryoGame.game.currentScreen).cam;
 
-        Vector3 newPos = new Vector3(cam.position.x, cam.position.y + cam.viewportHeight * 0.5f - 1.5f, 0);
-
-        Item item = Item.createObject(world, world.screen.game.assets, itemType, Item.getClassFromItemType(itemType)
-                , null, newPos);
+        Item item = Item.createObject(itemType, Item.getClassFromItemType(itemType), cam.position.x, cam.position.y + cam.viewportHeight * 0.5f - 1.5f, 0, 0, 0);
         item.initAssets();
-        world.level.gameObjects.add(item);
-        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_GET);
+        MaryoGame.game.addObject(item);
+        Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ITEMBOX_GET);
         SoundManager.play(sound);
         item.drop();
         GameSave.setItem(0);
     }
 
-    private int tIndex(MaryoState state, TKey tkey)
-    {
-        switch (tkey)
-        {
+    private int tIndex(MaryoState state, TextureKey tkey) {
+        switch (tkey) {
             case stand_right:
-                switch (state)
-                {
+                switch (state) {
                     case small:
                         return T_KEY_STAND_RIGHT_SMALL;
                     case big:
@@ -506,8 +456,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case jump_right:
-                switch (state)
-                {
+                switch (state) {
                     case small:
                         return T_KEY_JUMP_RIGHT_SMALL;
                     case big:
@@ -519,8 +468,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case fall_right:
-                switch (state)
-                {
+                switch (state) {
                     case small:
                         return T_KEY_FALL_RIGHT_SMALL;
                     case big:
@@ -532,8 +480,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case dead_right:
-                switch (state)
-                {
+                switch (state) {
                     case small:
                         return T_KEY_DEAD_RIGHT_SMALL;
                     case big:
@@ -545,8 +492,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case duck_right:
-                switch (state)
-                {
+                switch (state) {
                     case small:
                         return T_KEY_DUCK_RIGHT_SMALL;
                     case big:
@@ -561,13 +507,10 @@ public class Maryo extends DynamicObject
         throw new IllegalArgumentException("Unknown texture key '" + tkey + "' or maryoState '" + maryoState + "'");
     }
 
-    private int aIndex(MaryoState state, AKey akey)
-    {
-        switch (state)
-        {
+    private int aIndex(MaryoState state, AnimationKey akey) {
+        switch (state) {
             case small:
-                switch (akey)
-                {
+                switch (akey) {
                     case walk:
                         return A_KEY_WALKING_SMALL;
                     case climb:
@@ -575,8 +518,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case big:
-                switch (akey)
-                {
+                switch (akey) {
                     case walk:
                         return A_KEY_WALKING_BIG;
                     case climb:
@@ -584,8 +526,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case fire:
-                switch (akey)
-                {
+                switch (akey) {
                     case walk:
                         return A_KEY_WALKING_FIRE;
                     case climb:
@@ -595,8 +536,7 @@ public class Maryo extends DynamicObject
                 }
                 break;
             case ice:
-                switch (akey)
-                {
+                switch (akey) {
                     case walk:
                         return A_KEY_WALKING_ICE;
                     case climb:
@@ -610,268 +550,182 @@ public class Maryo extends DynamicObject
     }
 
     @Override
-    public void _update(float delta)
-    {
-        if (((GameScreen) world.screen).getGameState() == GameScreen.GAME_STATE.GAME_RUNNING)
-        {
-            if (downPressTime > POWER_JUMP_DELTA)
-            {
-                mMaxJumpSpeed = POWER_MAX_JUMP_SPEED;
+    public void update(float delta) {
+        if (MaryoGame.game.getGameState() == GameScreen.GAME_STATE.GAME_RUNNING) {
+            if (downPressTime > POWER_JUMP_DELTA) {
+                maxJumpSpeed = POWER_MAX_JUMP_SPEED;
                 powerJump = true;
-            }
-            else
-            {
-                mMaxJumpSpeed = MAX_JUMP_SPEED;
+            } else {
+                maxJumpSpeed = MAX_JUMP_SPEED;
                 powerJump = false;
             }
             grounded = position.y - groundY < 0.1f;
-            if (!grounded && getWorldState() != GameObject.WorldState.CLIMBING)
-            {
-                setWorldState(Maryo.WorldState.JUMPING);
+            if (!grounded && getWorldState() != WorldState.CLIMBING) {
+                setWorldState(WorldState.JUMPING);
             }
             boolean resetDownPressedTime = true;
-            if (keys.contains(Keys.JUMP))
-            {
-                if (!jumpPeakReached && velocity.y < mMaxJumpSpeed)
-                {
+            if (keys.contains(Keys.JUMP)) {
+                if (!jumpPeakReached && velocity.y < maxJumpSpeed) {
                     float jumpTime = 0.1f;
-                    float acceleration = mMaxJumpSpeed / (jumpTime / delta);
-                    if (velocity.y + acceleration > mMaxJumpSpeed)
-                    {
-                        velocity.y = mMaxJumpSpeed;
+                    float acceleration = maxJumpSpeed / (jumpTime / delta);
+                    if (velocity.y + acceleration > maxJumpSpeed) {
+                        velocity.y = maxJumpSpeed;
                         jumpPeakReached = true;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.add(0, acceleration, 0);
                     }
 
                     resetDownPressedTime = false;
-                }
-                else
-                {
+                } else {
                     jumpPeakReached = true;
                 }
             }
-            if (getWorldState() == GameObject.WorldState.CLIMBING)
-            {
-                if (keys.contains(Keys.LEFT))
-                {
+            if (getWorldState() == WorldState.CLIMBING) {
+                if (keys.contains(Keys.LEFT)) {
                     // left is pressed
                     position.x -= 1.2f * delta;
-                }
-                else if (keys.contains(Keys.RIGHT))
-                {
+                } else if (keys.contains(Keys.RIGHT)) {
                     // right is pressed
                     position.x += 1.2f * delta;
                 }
-                if (keys.contains(Keys.UP))
-                {
+                if (keys.contains(Keys.UP)) {
                     position.y += 1.8f * delta;
-                }
-                else if (keys.contains(Keys.DOWN))
-                {
+                } else if (keys.contains(Keys.DOWN)) {
                     position.y -= 1.8f * delta;
                 }
-            }
-            else
-            {
+            } else {
                 float speedFactor = (mInvincibleStar ? STAR_EFFECT_SPEEDFACTOR : 1f);
-                if (keys.contains(Keys.LEFT))
-                {
+                if (keys.contains(Keys.LEFT)) {
                     // left is pressed
                     facingLeft = true;
-                    if (getWorldState() != Maryo.WorldState.JUMPING)
-                    {
-                        setWorldState(Maryo.WorldState.WALKING);
+                    if (getWorldState() != WorldState.JUMPING) {
+                        setWorldState(WorldState.WALKING);
                     }
                     velocity.set(velocity.x = -4.5f * speedFactor, velocity.y, velocity.z);
-                }
-                else if (keys.contains(Keys.RIGHT))
-                {
+                } else if (keys.contains(Keys.RIGHT)) {
                     // right is pressed
                     facingLeft = false;
-                    if (getWorldState() != Maryo.WorldState.JUMPING)
-                    {
-                        setWorldState(Maryo.WorldState.WALKING);
+                    if (getWorldState() != WorldState.JUMPING) {
+                        setWorldState(WorldState.WALKING);
                     }
                     velocity.set(velocity.x = +4.5f * speedFactor, velocity.y, velocity.z);
-                }
-                else if (keys.contains(Keys.DOWN))
-                {
+                } else if (keys.contains(Keys.DOWN)) {
                     downPressTime += delta;
                     resetDownPressedTime = resetDownPressedTime & !grounded;
-                    if (getWorldState() != Maryo.WorldState.JUMPING)
-                    {
-                        setWorldState(Maryo.WorldState.DUCKING);
+                    if (getWorldState() != WorldState.JUMPING) {
+                        setWorldState(WorldState.DUCKING);
                     }
-                }
-                else
-                {
-                    if (getWorldState() != Maryo.WorldState.JUMPING)
-                    {
-                        setWorldState(Maryo.WorldState.IDLE);
+                } else {
+                    if (getWorldState() != WorldState.JUMPING) {
+                        setWorldState(WorldState.IDLE);
                     }
                     //slowly decrease linear velocity on x axes
                     //velocity.set(velocity.x * 0.7f, /*vel.y > 0 ? vel.y * 0.7f : */velocity.y, velocity.z);
                 }
             }
-            if (resetDownPressedTime)
-            {
+            if (resetDownPressedTime) {
                 downPressTime = 0;
                 powerJumpEffect.allowCompletion();
             }
-            if (grounded && getWorldState().equals(Maryo.WorldState.JUMPING))
-            {
-                setWorldState(Maryo.WorldState.IDLE);
+            if (grounded && getWorldState().equals(WorldState.JUMPING)) {
+                setWorldState(WorldState.IDLE);
             }
         }
-        if (exiting)
-        {
+        if (exiting) {
             boolean isDone = false;
             float velDelta = exitEnterVelocity * delta;
-            if ("up".equals(exit.direction))
-            {
-                if (position.y >= exitEnterStartPosition.y + mDrawRect.height)
-                {
+            if ("up".equals(exit.direction)) {
+                if (position.y >= exitEnterStartPosition.y + drawRect.height) {
                     isDone = true;
+                } else {
+                    colRect.y = position.y += drawRect.height * velDelta;
                 }
-                else
-                {
-                    mColRect.y = position.y += mDrawRect.height * velDelta;
-                }
-            }
-            else if ("down".equals(exit.direction))
-            {
-                if (position.y <= exitEnterStartPosition.y - mDrawRect.height)
-                {
+            } else if ("down".equals(exit.direction)) {
+                if (position.y <= exitEnterStartPosition.y - drawRect.height) {
                     isDone = true;
+                } else {
+                    colRect.y = position.y -= drawRect.height * velDelta;
                 }
-                else
-                {
-                    mColRect.y = position.y -= mDrawRect.height * velDelta;
-                }
-            }
-            else if ("right".equals(exit.direction))
-            {
-                if (position.x >= exitEnterStartPosition.x + mDrawRect.width)
-                {
+            } else if ("right".equals(exit.direction)) {
+                if (position.x >= exitEnterStartPosition.x + drawRect.width) {
                     isDone = true;
-                }
-                else
-                {
+                } else {
                     rotation = -90;
-                    mColRect.x = position.x += mDrawRect.width * velDelta;
+                    colRect.x = position.x += drawRect.width * velDelta;
                 }
-            }
-            else if ("left".equals(exit.direction))
-            {
-                if (exitEnterStartPosition.x - position.x >= mDrawRect.width)
-                {
+            } else if ("left".equals(exit.direction)) {
+                if (exitEnterStartPosition.x - position.x >= drawRect.width) {
                     isDone = true;
-                }
-                else
-                {
+                } else {
                     rotation = 90;
-                    mColRect.x = position.x -= mDrawRect.width * velDelta;
+                    colRect.x = position.x -= drawRect.width * velDelta;
                 }
             }
-            if (isDone)
-            {
+            if (isDone) {
                 exiting = false;
                 //((GameScreen)world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
 
                 doExit();
-            }
-            else
-            {
+            } else {
                 updateBounds();
             }
             return;
         }
-        if (entering)
-        {
+        if (entering) {
             enterStartTime += delta;
-            if (enterStartTime < 1)
-            {
+            if (enterStartTime < 1) {
                 return;
             }
             boolean isDone = false;
             float velDelta = exitEnterVelocity * delta;
             float offset = 0.1f;
-            if ("up".equals(entry.direction))
-            {
-                if (position.y - offset > entry.mColRect.y + entry.mColRect.height)
-                {
+            if ("up".equals(entry.direction)) {
+                if (position.y - offset > entry.colRect.y + entry.colRect.height) {
                     isDone = true;
+                } else {
+                    colRect.y = position.y += drawRect.height * velDelta;
                 }
-                else
-                {
-                    mColRect.y = position.y += mDrawRect.height * velDelta;
-                }
-            }
-            else if ("down".equals(entry.direction))
-            {
-                if (position.y + mDrawRect.height + offset < entry.mColRect.y)
-                {
+            } else if ("down".equals(entry.direction)) {
+                if (position.y + drawRect.height + offset < entry.colRect.y) {
                     isDone = true;
+                } else {
+                    colRect.y = position.y -= drawRect.height * velDelta;
                 }
-                else
-                {
-                    mColRect.y = position.y -= mDrawRect.height * velDelta;
-                }
-            }
-            else if ("right".equals(entry.direction))
-            {
-                if (position.x + offset > entry.mColRect.x + entry.mColRect.width)
-                {
+            } else if ("right".equals(entry.direction)) {
+                if (position.x + offset > entry.colRect.x + entry.colRect.width) {
                     isDone = true;
-                }
-                else
-                {
+                } else {
                     rotation = -90;
-                    mColRect.x = position.x += mDrawRect.width * velDelta;
+                    colRect.x = position.x += drawRect.width * velDelta;
                 }
-            }
-            else if ("left".equals(entry.direction))
-            {
-                if (position.x + mDrawRect.width + offset < entry.mColRect.x)
-                {
+            } else if ("left".equals(entry.direction)) {
+                if (position.x + drawRect.width + offset < entry.colRect.x) {
                     isDone = true;
-                }
-                else
-                {
+                } else {
                     rotation = 90;
-                    mColRect.x = position.x -= mDrawRect.width * velDelta;
+                    colRect.x = position.x -= drawRect.width * velDelta;
                 }
             }
-            if (isDone)
-            {
+            if (isDone) {
                 position.z = POSITION_Z;
-                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+                MaryoGame.game.sortLevel();
                 entering = false;
-                ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
-            }
-            else
-            {
+                MaryoGame.game.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
+            } else {
                 updateBounds();
             }
             return;
         }
-        if (fire)
-        {
+        if (fire) {
             fireAnimationStateTime += delta;
         }
         //disable godmod after timeot
-        if (godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT)
-        {
+        if (godMode && System.currentTimeMillis() - godModeActivatedTime > GOD_MOD_TIMEOUT) {
             godMode = false;
         }
-        if (worldState == WorldState.DYING)
-        {
+        if (worldState == WorldState.DYING) {
             stateTime += delta;
-            if (dyingAnim.update(delta))
-            {
+            if (dyingAnim.update(delta)) {
                 acceleration.y = Constants.GRAVITY;
                 acceleration.scl(delta);
 
@@ -881,113 +735,85 @@ public class Maryo extends DynamicObject
 
                 stateTime += delta;
             }
-        }
-        else if (resizingAnimation != null)
-        {
+        } else if (resizingAnimation != null) {
             stateTime += delta;
-        }
-        else
-        {
-            if (worldState == WorldState.CLIMBING)
-            {
+        } else {
+            if (worldState == WorldState.CLIMBING) {
                 checkCollisionWithBlocks(delta);
                 boolean climbing = false;
-                Array<GameObject> vo = world.getVisibleObjects();
-                for (int i = 0, size = vo.size; i < size; i++)
-                {
+                Array<GameObject> vo = MaryoGame.game.currentScreen.world.getVisibleObjects();
+                for (int i = 0, size = vo.size; i < size; i++) {
                     GameObject go = vo.get(i);
-                    if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect))
-                    {
+                    if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.colRect.overlaps(colRect)) {
                         climbing = true;
                         break;
                     }
                 }
                 if (!climbing) setWorldState(WorldState.JUMPING);
                 stateTime += delta;
-            }
-            else
-            {
-                if (closestObject instanceof Sprite)
-                {
+            } else {
+                if (closestObject instanceof Sprite) {
                     float groundMod = 1.0f;
 
                     // ground type
-                    switch (((Sprite) closestObject).groundType)
-                    {
-                        case GROUND_ICE:
-                        {
+                    switch (((Sprite) closestObject).groundType) {
+                        case GROUND_ICE: {
                             groundMod = 1.220f;
                             break;
                         }
                     }
                     velocityDump = velocityDump * groundMod;
                 }
-                super._update(delta);
+                super.update(delta);
                 velocityDump = velocityDumpOrig;
 
-                if (closestObject != null)
-                {
-                    debugRayRect.set(position.x, closestObject.mDrawRect.y + closestObject.mDrawRect.height, mColRect.width, position.y - (closestObject.mDrawRect.y + closestObject.mDrawRect.height));
-                }
-                else
-                {
-                    debugRayRect.set(position.x, 0, mColRect.width, position.y);
+                if (closestObject != null) {
+                    debugRayRect.set(position.x, closestObject.drawRect.y + closestObject.drawRect.height, colRect.width, position.y - (closestObject.drawRect.y + closestObject.drawRect.height));
+                } else {
+                    debugRayRect.set(position.x, 0, colRect.width, position.y);
                 }
 
                 if (closestObject != null
                         && closestObject instanceof Sprite
                         && ((Sprite) closestObject).type == Sprite.Type.halfmassive
-                        && worldState == WorldState.DUCKING)
-                {
+                        && worldState == WorldState.DUCKING) {
                     position.y -= 0.1f;
                 }
-                if (position.y - groundY < 0.1f && closestObject instanceof MovingPlatform && ((MovingPlatform) closestObject).canAttachTo)
-                {
-                    if (attachedTo != closestObject)
-                    {
+                if (position.y - groundY < 0.1f && closestObject instanceof MovingPlatform && ((MovingPlatform) closestObject).canAttachTo) {
+                    if (attachedTo != closestObject) {
                         attachedTo = (MovingPlatform) closestObject;
                         attachedTo.platformState = MovingPlatform.MOVING_PLATFORM_TOUCHED;
                         attachedTo.touched = true;
                         distanceOnPlatform = position.x - attachedTo.position.x;
                     }
-                }
-                else
-                {
+                } else {
                     attachedTo = null;
                     distanceOnPlatform = 0;
                     prevPos.x = 0;
                 }
-                if (attachedTo != null)
-                {
+                if (attachedTo != null) {
                     if (prevPos.x != 0) distanceOnPlatform += position.x - prevPos.x;
-                    mColRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
-                    if (velocity.y <= 0)
-                    {
-                        mColRect.y = position.y = attachedTo.position.y + attachedTo.mColRect.height;
+                    colRect.x = position.x = attachedTo.position.x + distanceOnPlatform;
+                    if (velocity.y <= 0) {
+                        colRect.y = position.y = attachedTo.position.y + attachedTo.colRect.height;
                     }
                     updateBounds();
                     prevPos.set(position);
                 }
             }
         }
-        if (!powerJumpEffect.isComplete() )
-        {
+        if (!powerJumpEffect.isComplete()) {
             powerJumpEffect.update(delta);
         }
-        if (mInvincibleStar)
-        {
+        if (mInvincibleStar) {
             starEffect.update(delta);
         }
         bulletShotTime += delta;
-        if (mInvincibleStar)
-        {
+        if (mInvincibleStar) {
             starEffectTime += delta;
-            if (glimMode)
-            {
+            if (glimMode) {
                 glimCounter += (delta * 8f);
-            }
-            else
-            {
+            } else {
                 glimCounter -= (delta * 6f);
             }
             // Musik 1 Sekunde vor Ablauf beenden und blinken ebenfalls
@@ -1008,30 +834,26 @@ public class Maryo extends DynamicObject
             leftGhostTime -= delta;
             if (leftGhostTime < 0) {
                 ghostmode = false;
-                SoundManager.play(world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_GHOSTEND, Sound.class));
+                SoundManager.play(MaryoGame.game.assets.get(Assets.SOUND_PLAYER_GHOSTEND, Sound.class));
             }
         }
     }
 
-    private void doExit()
-    {
+    private void doExit() {
         //just change level
         String nextLevelName;
         //next level in list
-        GameScreen gameScreen = (GameScreen) world.screen;
+        GameScreen gameScreen = (GameScreen) MaryoGame.game.currentScreen;
         if (TextUtils.isEmpty(exit.levelName) && TextUtils.isEmpty(exit.entry))
             gameScreen.endLevel();
 
-        //go to sublevel
-        else
-        {
+            //go to sublevel
+        else {
             //same level
-            if (TextUtils.isEmpty(exit.levelName))
-            {
-                LevelEntry entry = world.level.findEntryOrThrow(exit.entry);
+            if (TextUtils.isEmpty(exit.levelName)) {
+                LevelEntry entry = MaryoGame.game.currentScreen.world.level.findEntryOrThrow(exit.entry);
                 enterLevel(entry);
-            }
-            else//another level
+            } else//another level
             {
                 /*if (TextUtils.isEmpty(exit.entry))
                 {
@@ -1043,8 +865,7 @@ public class Maryo extends DynamicObject
                 boolean resume = false;
                 GameScreen newScreen;
                 //we are exiting sublevel
-                if (parent != null && parent.levelName.equals(nextLevelName))
-                {
+                if (parent != null && parent.levelName.equals(nextLevelName)) {
                     newScreen = parent;
                     newScreen.entryName = exit.entry;
                     newScreen.forceCheckEnter = true;
@@ -1058,77 +879,55 @@ public class Maryo extends DynamicObject
                     resume = true;
                 }
                 //new level or sublevel
-                else
-                {
-                    if (parent != null)
-                    {
+                else {
+                    if (parent != null) {
                         parent.dispose();
                     }
                     parent = gameScreen;
-                    world.visitedSubLevels.add(nextLevelName);
-                    newScreen = new GameScreen(world.screen.game, false, nextLevelName, parent);
+                    MaryoGame.game.currentScreen.world.visitedSubLevels.add(nextLevelName);
+                    newScreen = new GameScreen(false, nextLevelName, parent);
                     newScreen.entryName = exit.entry;
                 }
-                world.screen.game.setScreen(new LoadingScreen(newScreen, resume));
+                MaryoGame.game.changeScreen(new LoadingScreen(newScreen, resume));
             }
         }
     }
 
     @Override
-    protected boolean handleCollision(GameObject object, boolean vertical)
-    {
+    protected boolean handleCollision(GameObject object, boolean vertical) {
         if (!handleCollision) return false;
         super.handleCollision(object, vertical);
-        if (object instanceof Item)
-        {
+        if (object instanceof Item) {
             Item item = (Item) object;
             if (!item.playerHit) item.hitPlayer();
             //world.trashObjects.add(item);
-        }
-        else if (object instanceof Enemy && ((Enemy) object).handleCollision)
-        {
-                boolean deadAnyway = isDeadByJumpingOnTopOfEnemy((Enemy) object);
-                if (mInvincibleStar)
-                {
-                    if (worldState != WorldState.IDLE && worldState != WorldState.DUCKING)
-                    {
-                        if (((Enemy) object).canBeKilledByStar())
-                        {
-                            ((Enemy) object).downgradeOrDie(this, true, true);
-                            GameSave.addScore(((Enemy) object).mKillPoints);
-                        }
-                        else
-                        {
-                            hitEnemy((Enemy) object, vertical);
-                        }
+        } else if (object instanceof Enemy && ((Enemy) object).handleCollision) {
+            boolean deadAnyway = isDeadByJumpingOnTopOfEnemy((Enemy) object);
+            if (mInvincibleStar) {
+                if (worldState != WorldState.IDLE && worldState != WorldState.DUCKING) {
+                    if (((Enemy) object).canBeKilledByStar()) {
+                        ((Enemy) object).downgradeOrDie(this, true, true);
+                        GameSave.addScore(((Enemy) object).mKillPoints);
+                    } else {
+                        hitEnemy((Enemy) object, vertical);
                     }
-                    else
-                    {
-                        ((Enemy) object).turn();
-                    }
+                } else {
+                    ((Enemy) object).turn();
                 }
-                else if (((Enemy) object).frozen)
-                {
-                    ((Enemy) object).downgradeOrDie(this, true, false);
-                    GameSave.addScore(((Enemy) object).mKillPoints);
-                }
-                else if (deadAnyway)
-                {
-                    if (!godMode)
-                        downgradeOrDie(false);
-                }
-                else
-                {
-                    hitEnemy((Enemy) object, vertical);
+            } else if (((Enemy) object).frozen) {
+                ((Enemy) object).downgradeOrDie(this, true, false);
+                GameSave.addScore(((Enemy) object).mKillPoints);
+            } else if (deadAnyway) {
+                if (!godMode)
+                    downgradeOrDie(false);
+            } else {
+                hitEnemy((Enemy) object, vertical);
 
 
             }
-        }
-        else if (object instanceof Box && position.y + mColRect.height <= object.position.y)
-        {
+        } else if (object instanceof Box && position.y + colRect.height <= object.position.y) {
             ((Box) object).activate();
-        }
-        else if (object instanceof LevelExit && !exiting) {
+        } else if (object instanceof LevelExit && !exiting) {
             if (keys.contains(Keys.LEFT))
                 checkLeave("left");
             else if (keys.contains(Keys.RIGHT))
@@ -1140,21 +939,16 @@ public class Maryo extends DynamicObject
         return false;
     }
 
-    private void hitEnemy(Enemy enemy, boolean vertical)
-    {
+    private void hitEnemy(Enemy enemy, boolean vertical) {
         boolean doBounce = false;
         int resolution = enemy.hitByPlayer(this, vertical);
-        if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED)
-        {
+        if (resolution == Enemy.HIT_RESOLUTION_ENEMY_DIED) {
             doBounce = true;
             GameSave.addScore(enemy.mKillPoints);
-        }
-        else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED)
-        {
+        } else if (resolution == Enemy.HIT_RESOLUTION_PLAYER_DIED) {
             if (!godMode)
                 downgradeOrDie(false);
-        }
-        else if (vertical)
+        } else if (vertical)
             doBounce = true;
 
         if (doBounce) {
@@ -1166,30 +960,23 @@ public class Maryo extends DynamicObject
         }
     }
 
-    private boolean isDeadByJumpingOnTopOfEnemy(Enemy enemy)
-    {
+    private boolean isDeadByJumpingOnTopOfEnemy(Enemy enemy) {
         return !enemy.canBeKilledByJumpingOnTop();
     }
 
-    public WorldState getWorldState()
-    {
+    public WorldState getWorldState() {
         return worldState;
     }
 
-    public void setWorldState(WorldState newWorldState)
-    {
+    public void setWorldState(WorldState newWorldState) {
         if (worldState == WorldState.DYING) return;
         this.worldState = newWorldState;
-        if (worldState == WorldState.DUCKING)
-        {
-            mColRect.height = mDrawRect.height / 2;
+        if (worldState == WorldState.DUCKING) {
+            colRect.height = drawRect.height / 2;
+        } else {
+            colRect.height = drawRect.height * 0.9f;
         }
-        else
-        {
-            mColRect.height = mDrawRect.height * 0.9f;
-        }
-        if (worldState == WorldState.CLIMBING)
-        {
+        if (worldState == WorldState.CLIMBING) {
             exitEnterStartPosition.set(position);
             velocity.x = 0;
             velocity.y = 0;
@@ -1204,10 +991,8 @@ public class Maryo extends DynamicObject
             return MAX_VEL;
     }
 
-    public void downgradeOrDie(boolean forceDie)
-    {
-        if (maryoState == MaryoState.small || forceDie)
-        {
+    public void downgradeOrDie(boolean forceDie) {
+        if (maryoState == MaryoState.small || forceDie) {
             if (mInvincibleStar)
                 MusicManager.stop(false);
 
@@ -1217,29 +1002,23 @@ public class Maryo extends DynamicObject
             updateBounds();
             GameSave.setItem(0);
             dyingAnim.start();
-        }
-        else
-        {
-            SoundManager.play(world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_POWERDOWN, Sound.class));
+        } else {
+            SoundManager.play(MaryoGame.game.assets.get(Assets.SOUND_PLAYER_POWERDOWN, Sound.class));
             upgrade(MaryoState.small, null, true);
         }
     }
 
     /*
-    * Level up*/
-    public void upgrade(MaryoState newState, Item item, boolean downgrade)
-    {
+     * Level up*/
+    public void upgrade(MaryoState newState, Item item, boolean downgrade) {
         //cant upgrade from ice/fire to big
         if (!downgrade && (maryoState == newState && (newState == MaryoState.big || newState == MaryoState.ice || newState == MaryoState.fire))
-                || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire)))
-        {
-            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEMBOX_SET);
+                || (newState == MaryoState.big && (maryoState == MaryoState.ice || maryoState == MaryoState.fire))) {
+            Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ITEMBOX_SET);
             SoundManager.play(sound);
             GameSave.setItem(item.getType());
             return;
-        }
-        else if (maryoState == newState)
-        {
+        } else if (maryoState == newState) {
             return;
         }
         this.newState = newState;
@@ -1250,7 +1029,7 @@ public class Maryo extends DynamicObject
         resizeAnimStartTime = stateTime;
         godMode = true;
 
-        ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+        MaryoGame.game.setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
 
         //play new state sound
         Sound sound = upgradeSound(newState, downgrade);
@@ -1258,100 +1037,79 @@ public class Maryo extends DynamicObject
         fire = false;
     }
 
-    private Sound upgradeSound(MaryoState newState, boolean downgrade)
-    {
-        switch (newState)
-        {
+    private Sound upgradeSound(MaryoState newState, boolean downgrade) {
+        switch (newState) {
             case big:
-                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MUSHROOM);
+                return MaryoGame.game.assets.get(Assets.SOUND_ITEM_MUSHROOM);
             case fire:
-                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREPLANT);
+                return MaryoGame.game.assets.get(Assets.SOUND_ITEM_FIREPLANT);
             case ice:
-                return world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MUSHROOM_BLUE);
+                return MaryoGame.game.assets.get(Assets.SOUND_ITEM_MUSHROOM_BLUE);
         }
         return null;
     }
 
-    private Array<TextureRegion> generateResizeAnimationFrames(MaryoState stateFrom, MaryoState stateTo)
-    {
+    private Array<TextureRegion> generateResizeAnimationFrames(MaryoState stateFrom, MaryoState stateTo) {
         Array<TextureRegion> regions = new Array<>();
-        if (worldState.equals(WorldState.WALKING))
-        {
-            regions.add(aMap[aIndex(stateFrom, AKey.walk)].getKeyFrame(stateTime, true));
-            regions.add(aMap[aIndex(stateTo, AKey.walk)].getKeyFrame(stateTime, true));
-        }
-        else if (worldState == WorldState.DUCKING)
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.duck_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.duck_right)]);
-        }
-        else if (getWorldState().equals(WorldState.JUMPING))
-        {
-            if (velocity.y > 0)
-            {
-                regions.add(tMap[tIndex(stateFrom, TKey.jump_right)]);
-                regions.add(tMap[tIndex(stateTo, TKey.jump_right)]);
+        if (worldState.equals(WorldState.WALKING)) {
+            regions.add(aMap[aIndex(stateFrom, AnimationKey.walk)].getKeyFrame(stateTime, true));
+            regions.add(aMap[aIndex(stateTo, AnimationKey.walk)].getKeyFrame(stateTime, true));
+        } else if (worldState == WorldState.DUCKING) {
+            regions.add(tMap[tIndex(stateFrom, TextureKey.duck_right)]);
+            regions.add(tMap[tIndex(stateTo, TextureKey.duck_right)]);
+        } else if (getWorldState().equals(WorldState.JUMPING)) {
+            if (velocity.y > 0) {
+                regions.add(tMap[tIndex(stateFrom, TextureKey.jump_right)]);
+                regions.add(tMap[tIndex(stateTo, TextureKey.jump_right)]);
+            } else {
+                regions.add(tMap[tIndex(stateFrom, TextureKey.fall_right)]);
+                regions.add(tMap[tIndex(stateTo, TextureKey.fall_right)]);
             }
-            else
-            {
-                regions.add(tMap[tIndex(stateFrom, TKey.fall_right)]);
-                regions.add(tMap[tIndex(stateTo, TKey.fall_right)]);
-            }
-        }
-        else if (worldState == WorldState.DYING)
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.dead_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.dead_right)]);
-        }
-        else
-        {
-            regions.add(tMap[tIndex(stateFrom, TKey.stand_right)]);
-            regions.add(tMap[tIndex(stateTo, TKey.stand_right)]);
+        } else if (worldState == WorldState.DYING) {
+            regions.add(tMap[tIndex(stateFrom, TextureKey.dead_right)]);
+            regions.add(tMap[tIndex(stateTo, TextureKey.dead_right)]);
+        } else {
+            regions.add(tMap[tIndex(stateFrom, TextureKey.stand_right)]);
+            regions.add(tMap[tIndex(stateTo, TextureKey.stand_right)]);
         }
         return regions;
     }
 
-    public class DyingAnimation
-    {
+    public class DyingAnimation {
         private float diedTime;
         boolean upAnimFinished, dyedReset, firstDelayFinished;
         Vector3 diedPosition;
         boolean upBoost;
 
-        public void start()
-        {
+        public void start() {
             diedTime = stateTime;
             MusicManager.stop(true);
             handleCollision = false;
             diedPosition = new Vector3(position);
-            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_PLAYER_DEAD);
+            Sound sound = MaryoGame.game.assets.get(Assets.SOUND_PLAYER_DEAD);
             SoundManager.play(sound);
-            ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
+            MaryoGame.game.setGameState(GameScreen.GAME_STATE.PLAYER_DEAD);
         }
 
-        public boolean update(float delta)
-        {
+        public boolean update(float delta) {
             velocity.x = 0;
             position.x = diedPosition.x;
-            if (mDrawRect.y + mDrawRect.height < 0)//first check if player is visible
+            if (drawRect.y + drawRect.height < 0)//first check if player is visible
             {
                 GameSave.setMaryoState(MaryoState.small);
-                ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_DIED);
-                world.trashObjects.add(Maryo.this);
+                MaryoGame.game.setGameState(GameScreen.GAME_STATE.PLAYER_DIED);
+                trashThisObject();
                 return false;
             }
 
             if (!firstDelayFinished && stateTime - diedTime < 0.5f)//delay 500ms
             {
                 return false;
-            }
-            else
-            {
+            } else {
                 firstDelayFinished = true;
             }
 
-            if (!upBoost)
-            {
+            if (!upBoost) {
                 //animate player up a bit
                 velocity.y = 8f;
                 upBoost = true;
@@ -1362,146 +1120,116 @@ public class Maryo extends DynamicObject
     }
 
     @Override
-    protected boolean handleDroppedBelowWorld()
-    {
-        if (!canWalkOnAir)
-        {
-            if (worldState != WorldState.DYING)
-            {
+    protected boolean handleDroppedBelowWorld() {
+        if (!canWalkOnAir) {
+            if (worldState != WorldState.DYING) {
                 downgradeOrDie(true);
             }
             return true;
-        }
-        else
-        {
+        } else {
             return super.handleDroppedBelowWorld();
         }
     }
 
-    private void setJumpSound()
-    {
-        switch (maryoState)
-        {
+    private void setJumpSound() {
+        switch (maryoState) {
             case small:
-                if (powerJump)
-                {
-                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_SMALL_POWER);
-                }
-                else
-                {
-                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_SMALL);
+                if (powerJump) {
+                    jumpSound = MaryoGame.game.assets.get(Assets.SOUND_JUMP_SMALL_POWER);
+                } else {
+                    jumpSound = MaryoGame.game.assets.get(Assets.SOUND_JUMP_SMALL);
                 }
                 break;
             case big:
             case fire:
             case ice:
-                if (powerJump)
-                {
-                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_BIG_POWER);
-                }
-                else
-                {
-                    jumpSound = world.screen.game.assets.manager.get(Assets.SOUND_JUMP_BIG);
+                if (powerJump) {
+                    jumpSound = MaryoGame.game.assets.get(Assets.SOUND_JUMP_BIG_POWER);
+                } else {
+                    jumpSound = MaryoGame.game.assets.get(Assets.SOUND_JUMP_BIG);
                 }
                 break;
         }
     }
 
-    public MaryoState getMarioState()
-    {
+    public MaryoState getMarioState() {
         return maryoState;
     }
 
-    public void setMarioState(MaryoState marioState)
-    {
+    public void setMarioState(MaryoState marioState) {
         this.maryoState = marioState;
         setJumpSound();
     }
 
-    public void checkLevelEnter(String entry_)
-    {
-        LevelEntry entry = world.level.findEntry(entry_);
-        if (entry != null)
-        {
-            if (entry.type == LEVEL_EXIT_BEAM)
-            {
-                float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
-                position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
-                position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
+    public void checkLevelEnter(String entry_) {
+        LevelEntry entry = MaryoGame.game.currentScreen.world.level.findEntry(entry_);
+        if (entry != null) {
+            if (entry.type == LEVEL_EXIT_BEAM) {
+                float entryCenter = entry.colRect.x + entry.colRect.width * 0.5f;
+                position.x = colRect.x = entryCenter - colRect.width * 0.5f;
+                position.y = colRect.y = entry.colRect.y + entry.colRect.height + colRect.height;
                 updateBounds();
-            }
-            else
-            {
+            } else {
                 enterLevel(entry);
             }
         }
     }
 
-    public void enterLevel(LevelEntry entry)
-    {
-        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENTER_PIPE);
+    public void enterLevel(LevelEntry entry) {
+        Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ENTER_PIPE);
         SoundManager.play(sound);
-        ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+        MaryoGame.game.setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
         entering = true;
         this.entry = entry;
-        if (entry.type == LevelExit.LEVEL_EXIT_WARP)
-        {
+        if (entry.type == LevelExit.LEVEL_EXIT_WARP) {
             // left
-            if ("left".equals(entry.direction))
-            {
-                position.x = mColRect.x = entry.mColRect.x + entry.mColRect.width;
+            if ("left".equals(entry.direction)) {
+                position.x = colRect.x = entry.colRect.x + entry.colRect.width;
 
-                float entryCenter = entry.mColRect.y + entry.mColRect.height * 0.5f;
-                position.y = mColRect.y = entryCenter - mColRect.height * 0.5f;
+                float entryCenter = entry.colRect.y + entry.colRect.height * 0.5f;
+                position.y = colRect.y = entryCenter - colRect.height * 0.5f;
             }
             // right
-            else if ("right".equals(entry.direction))
-            {
-                position.x = mColRect.x = entry.mColRect.x - mColRect.width;
+            else if ("right".equals(entry.direction)) {
+                position.x = colRect.x = entry.colRect.x - colRect.width;
 
 
-                float entryCenter = entry.mColRect.y + entry.mColRect.height * 0.5f;
-                position.y = mColRect.y = entryCenter - mColRect.height * 0.5f;
+                float entryCenter = entry.colRect.y + entry.colRect.height * 0.5f;
+                position.y = colRect.y = entryCenter - colRect.height * 0.5f;
             }
             //up
-            else if ("up".equals(entry.direction))
-            {
-                position.y = mColRect.y = entry.mColRect.y - mColRect.height;
+            else if ("up".equals(entry.direction)) {
+                position.y = colRect.y = entry.colRect.y - colRect.height;
 
-                float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
-                position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
+                float entryCenter = entry.colRect.x + entry.colRect.width * 0.5f;
+                position.x = colRect.x = entryCenter - colRect.width * 0.5f;
             }
             // down
-            else if ("down".equals(entry.direction))
-            {
-                position.y = mColRect.y = entry.mColRect.y;
+            else if ("down".equals(entry.direction)) {
+                position.y = colRect.y = entry.colRect.y;
 
-                float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
-                position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
+                float entryCenter = entry.colRect.x + entry.colRect.width * 0.5f;
+                position.x = colRect.x = entryCenter - colRect.width * 0.5f;
             }
-        }
-        else if (entry.type == LEVEL_EXIT_BEAM)
-        {
-            float entryCenter = entry.mColRect.x + entry.mColRect.width * 0.5f;
-            position.x = mColRect.x = entryCenter - mColRect.width * 0.5f;
-            position.y = mColRect.y = entry.mColRect.y + entry.mColRect.height + mColRect.height;
+        } else if (entry.type == LEVEL_EXIT_BEAM) {
+            float entryCenter = entry.colRect.x + entry.colRect.width * 0.5f;
+            position.x = colRect.x = entryCenter - colRect.width * 0.5f;
+            position.y = colRect.y = entry.colRect.y + entry.colRect.height + colRect.height;
         }
         updateBounds();
         exitEnterStartPosition.set(position);
         position.z = LevelLoader.m_pos_z_passive_start;
-        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+        Collections.sort(MaryoGame.game.currentScreen.world.level.gameObjects, new LevelLoader.ZSpriteComparator());
 
         //todo sound
     }
 
-    public void exitLevel(LevelExit exit)
-    {
+    public void exitLevel(LevelExit exit) {
         // already visited sublevels are not allowed
-        if (exit.levelName != null && world.visitedSubLevels.contains(exit.levelName, false))
+        if (exit.levelName != null && MaryoGame.game.currentScreen.world.visitedSubLevels.contains(exit.levelName, false))
             return;
 
-        switch (exit.type)
-        {
+        switch (exit.type) {
             case LEVEL_EXIT_BEAM:
                 if (exiting) return;
                 exiting = true;
@@ -1510,33 +1238,29 @@ public class Maryo extends DynamicObject
                 break;
             case LevelExit.LEVEL_EXIT_WARP:
                 if (exiting) return;
-                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_LEAVE_PIPE);
+                Sound sound = MaryoGame.game.assets.get(Assets.SOUND_LEAVE_PIPE);
                 SoundManager.play(sound);
-                ((GameScreen) world.screen).setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
+                MaryoGame.game.setGameState(GameScreen.GAME_STATE.PLAYER_UPDATING);
                 exiting = true;
                 this.exit = exit;
-                if ("up".equals(exit.direction) || "down".equals(exit.direction))
-                {
-                    float exitCenter = exit.mColRect.x + exit.mColRect.width * 0.5f;
-                    position.x = mColRect.x = exitCenter - mColRect.width * 0.5f;
-                }
-                else
-                {
-                    float exitCenter = exit.mColRect.y + exit.mColRect.height * 0.5f;
-                    position.y = mColRect.y = exitCenter - mColRect.height * 0.5f;
+                if ("up".equals(exit.direction) || "down".equals(exit.direction)) {
+                    float exitCenter = exit.colRect.x + exit.colRect.width * 0.5f;
+                    position.x = colRect.x = exitCenter - colRect.width * 0.5f;
+                } else {
+                    float exitCenter = exit.colRect.y + exit.colRect.height * 0.5f;
+                    position.y = colRect.y = exitCenter - colRect.height * 0.5f;
                 }
                 updateBounds();
                 exitEnterStartPosition.set(position);
                 position.z = LevelLoader.m_pos_z_passive_start;
-                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+                MaryoGame.game.sortLevel();
 
                 //todo sound
                 break;
         }
     }
 
-    public void fire()
-    {
+    public void fire() {
         if (worldState == WorldState.DUCKING || !hasFireAbility())
             return;
         if (bulletShotTime < BULLET_COOLDOWN)
@@ -1549,61 +1273,52 @@ public class Maryo extends DynamicObject
         return maryoState == MaryoState.fire || maryoState == MaryoState.ice;
     }
 
-    private void doFire()
-    {
+    private void doFire() {
         Sound sound = null;
-        if (maryoState == MaryoState.fire)
-        {
+        if (maryoState == MaryoState.fire) {
             addFireball(0f);
-            if (mInvincibleStar)
-            {
+            if (mInvincibleStar) {
                 addFireball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
-            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL);
-        }
-        else if (maryoState == MaryoState.ice)
-        {
+            sound = MaryoGame.game.assets.get(Assets.SOUND_ITEM_FIREBALL);
+        } else if (maryoState == MaryoState.ice) {
             addIceball(0f);
-            if (mInvincibleStar)
-            {
+            if (mInvincibleStar) {
                 addIceball(Fireball.VELOCITY_Y * 0.5f);
             }
             bulletShotTime = 0;
-            sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_FIREBALL);
+            sound = MaryoGame.game.assets.get(Assets.SOUND_ITEM_FIREBALL);
         }
 
         SoundManager.play(sound);
     }
 
-    private void addIceball(float velY)
-    {
-        Iceball iceball = world.ICEBALL_POOL.obtain();
-        iceball.mColRect.x = iceball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-        iceball.mColRect.y = iceball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+    private void addIceball(float velY) {
+        Iceball iceball = MaryoGame.ICEBALL_POOL.obtain();
+        iceball.colRect.x = iceball.position.x = drawRect.x + drawRect.width * 0.5f;
+        iceball.colRect.y = iceball.position.y = drawRect.y + drawRect.height * 0.5f;
         iceball.updateBounds();
         iceball.reset();
         iceball.direction = facingLeft ? Direction.left : Direction.right;
         iceball.velocity.y = velY;
-        world.level.gameObjects.add(iceball);
-        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+        MaryoGame.game.addObject(iceball);
+        MaryoGame.game.sortLevel();
     }
 
-    private void addFireball(float velY)
-    {
-        Fireball fireball = world.FIREBALL_POOL.obtain();
-        fireball.mColRect.x = fireball.position.x = mDrawRect.x + mDrawRect.width * 0.5f;
-        fireball.mColRect.y = fireball.position.y = mDrawRect.y + mDrawRect.height * 0.5f;
+    private void addFireball(float velY) {
+        Fireball fireball = MaryoGame.FIREBALL_POOL.obtain();
+        fireball.colRect.x = fireball.position.x = drawRect.x + drawRect.width * 0.5f;
+        fireball.colRect.y = fireball.position.y = drawRect.y + drawRect.height * 0.5f;
         fireball.updateBounds();
         fireball.reset();
         fireball.direction = facingLeft ? Direction.left : Direction.right;
         fireball.velocity.y = velY;
-        world.level.gameObjects.add(fireball);
-        Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
+        MaryoGame.game.addObject(fireball);
+        MaryoGame.game.sortLevel();
     }
 
-    public void starPicked()
-    {
+    public void starPicked() {
         starEffectTime = 0;
         mInvincibleStar = true;
     }
@@ -1613,48 +1328,42 @@ public class Maryo extends DynamicObject
         ghostmode = true;
     }
 
-    public void leftPressed()
-    {
+    public void leftPressed() {
         keys.add(Keys.LEFT);
         //checkLeave("left");
     }
 
-    public void rightPressed()
-    {
+    public void rightPressed() {
         keys.add(Keys.RIGHT);
         //checkLeave("right");
     }
 
-    public void upPressed()
-    {
+    public void upPressed() {
         keys.add(Keys.UP);
         boolean climbing = false;
         //checkLeave("up");
         //!exiting ist wahrscheinlich unnötig, aber vorher kam dieser Fall hier auch nur vor wenn kein Leave da war
-        if (!exiting && getWorldState() != GameObject.WorldState.CLIMBING) {
-            Array<GameObject> vo = world.getVisibleObjects();
+        if (!exiting && getWorldState() != WorldState.CLIMBING) {
+            Array<GameObject> vo = MaryoGame.game.currentScreen.world.getVisibleObjects();
             for (int i = 0, size = vo.size; i < size; i++) {
                 GameObject go = vo.get(i);
-                if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.mColRect.overlaps(mColRect)) {
+                if (go instanceof Sprite && ((Sprite) go).type == Sprite.Type.climbable && go.colRect.overlaps(colRect)) {
                     climbing = true;
                     break;
                 }
             }
-            if (climbing) setWorldState(GameObject.WorldState.CLIMBING);
+            if (climbing) setWorldState(WorldState.CLIMBING);
         }
     }
 
-    private void checkLeave(String dir)
-    {
-        Array<GameObject> vo = world.getVisibleObjects();
+    private void checkLeave(String dir) {
+        Array<GameObject> vo = MaryoGame.game.currentScreen.world.getVisibleObjects();
         //for(GameObject go : world.getVisibleObjects())
-        for (int i = 0, size = vo.size; i < size; i++)
-        {
+        for (int i = 0, size = vo.size; i < size; i++) {
             GameObject go = vo.get(i);
             if (go instanceof LevelExit
-                    && go.mColRect.overlaps(mColRect)
-                    && (((LevelExit) go).type == LEVEL_EXIT_BEAM || (((LevelExit) go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit) go).direction))))
-            {
+                    && go.colRect.overlaps(colRect)
+                    && (((LevelExit) go).type == LEVEL_EXIT_BEAM || (((LevelExit) go).type == LevelExit.LEVEL_EXIT_WARP && dir.equals(((LevelExit) go).direction)))) {
                 /*String nextLevelName = Level.levels[++GameSaveUtility.getInstance().save.currentLevel];
                 world.screen.game.setScreen(new LoadingScreen(new GameScreen(world.screen.game, false, nextLevelName), false));*/
                 exitLevel((LevelExit) go);
@@ -1663,18 +1372,15 @@ public class Maryo extends DynamicObject
         }
     }
 
-    public void downPressed()
-    {
+    public void downPressed() {
         keys.add(Keys.DOWN);
         checkLeave("down");
     }
 
-    public void jumpPressed()
-    {
+    public void jumpPressed() {
         keys.add(Keys.JUMP);
-        if (grounded || getWorldState() == GameObject.WorldState.CLIMBING)
-        {
-            setWorldState(GameObject.WorldState.JUMPING);
+        if (grounded || getWorldState() == WorldState.CLIMBING) {
+            setWorldState(WorldState.JUMPING);
             jumpPeakReached = false;
 
             setJumpSound();
@@ -1684,39 +1390,32 @@ public class Maryo extends DynamicObject
             jumpPeakReached = true;
     }
 
-    public void firePressed()
-    {
+    public void firePressed() {
         keys.add(Keys.FIRE);
         fire();
     }
 
-    public void leftReleased()
-    {
+    public void leftReleased() {
         keys.remove(Keys.LEFT);
     }
 
-    public void rightReleased()
-    {
+    public void rightReleased() {
         keys.remove(Keys.RIGHT);
     }
 
-    public void upReleased()
-    {
+    public void upReleased() {
         keys.remove(Keys.UP);
     }
 
-    public void downReleased()
-    {
+    public void downReleased() {
         keys.remove(Keys.DOWN);
     }
 
-    public void jumpReleased()
-    {
+    public void jumpReleased() {
         keys.remove(Keys.JUMP);
     }
 
-    public void fireReleased()
-    {
+    public void fireReleased() {
         keys.remove(Keys.FIRE);
     }
 }

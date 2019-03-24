@@ -3,7 +3,7 @@ package rs.pedjaapps.smc.object.items.mushroom;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import rs.pedjaapps.smc.assets.Assets;
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.GameSave;
@@ -14,14 +14,12 @@ import rs.pedjaapps.smc.utility.GameSave;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public class MushroomDefault extends Mushroom
-{
+public class MushroomDefault extends Mushroom {
 
     public static final String TEXTURE_NAME = "game_items_mushroom_red";
 
-    public MushroomDefault(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+    public MushroomDefault(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         textureName = TEXTURE_NAME;
         mPickPoints = 500;
     }
@@ -32,11 +30,10 @@ public class MushroomDefault extends Mushroom
     }
 
     @Override
-    protected void performCollisionAction()
-    {
+    protected void performCollisionAction() {
         playerHit = true;
-        world.maryo.upgrade(Maryo.MaryoState.big, this, false);
-        world.trashObjects.add(this);
+        MaryoGame.game.currentScreen.world.maryo.upgrade(Maryo.MaryoState.big, this, false);
+        trashThisObject();
         GameSave.addScore(mPickPoints);
     }
 }

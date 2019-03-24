@@ -10,13 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
@@ -39,8 +38,7 @@ import rs.pedjaapps.smc.utility.Utility;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class Furball extends Enemy
-{
+public class Furball extends Enemy {
     public static final int STATE_STAYING = 0;
     public static final int STATE_WALKING = 1;
     public static final int STATE_RUNNING = 2;
@@ -51,8 +49,7 @@ public class Furball extends Enemy
     private int downgradeCount;
     private int maxDowngradeCount = 5;
 
-    enum Type
-    {
+    enum Type {
         brown, blue, boss
     }
 
@@ -66,14 +63,13 @@ public class Furball extends Enemy
     private float mRunningCounter, mHitCounter;
     private float rotation;
 
-    public Furball(World world, Vector2 size, Vector3 position, int maxDowngradeCount, String color)
-    {
-        super(world, size, position);
+    public Furball(float x, float y, float z, float width, float height, int maxDowngradeCount, String color) {
+        super(x, y, POS_Z, width, height);
         setupBoundingBox();
         this.maxDowngradeCount = maxDowngradeCount;
         state = STATE_WALKING;
-        world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT_FAILED, Sound.class);
-        world.screen.game.assets.manager.load(Assets.SOUND_BOSS_FURBALL_HIT, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_BOSS_FURBALL_HIT_FAILED, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_BOSS_FURBALL_HIT, Sound.class);
 
         if (color.equals("blue")) {
             type = Type.blue;
@@ -97,15 +93,13 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
         String textureNamePrefix = "enemy_furball_" + type.toString() + "_";
 
         Array<TextureRegion> walkFrames = new Array<TextureRegion>();
 
-        for (int i = 1; i < 9; i++)
-        {
+        for (int i = 1; i < 9; i++) {
             TextureRegion region = atlas.findRegion(textureNamePrefix + "walk_" + String.valueOf(i));
             walkFrames.add(region);
         }
@@ -120,8 +114,7 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         walkAnimation = null;
         tTurn = null;
         tHit = null;
@@ -129,56 +122,47 @@ public class Furball extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
-    {
+    public void _render(SpriteBatch spriteBatch) {
         TextureRegion frame;
-        if (!dying)
-        {
-            if (state == STATE_STAYING)
-            {
-                if (mHitCounterColor % 4 < 2)
-                {
+        if (!dying) {
+            if (state == STATE_STAYING) {
+                if (mHitCounterColor % 4 < 2) {
                     spriteBatch.setColor(1, 0.98f - mHitCounter * 0.176f, 0.98f - mHitCounter * 0.176f, 1);
                 }
             }
             frame = state == STATE_STAYING ? tHit : (turn ? tTurn : walkAnimation.getKeyFrame(stateTime, true));
             frame.flip(direction == Direction.left, false);
 
-            float width = Utility.getWidth(frame, mDrawRect.height);
+            float width = Utility.getWidth(frame, drawRect.height);
             float originX = width * 0.5f;
-            float originY = mDrawRect.height * 0.5f;
+            float originY = drawRect.height * 0.5f;
 
-            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
+            spriteBatch.draw(frame, drawRect.x, drawRect.y, originX, originY, width, drawRect.height, 1, 1, rotation);
 
             frame.flip(direction == Direction.left, false);
             spriteBatch.setColor(Color.WHITE);
-        }
-        else
-        {
+        } else {
             frame = tDead;
             frame.flip(direction == Direction.left, false);
-            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, mDrawRect.width, mDrawRect.height);
+            spriteBatch.draw(frame, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
             frame.flip(direction == Direction.left, false);
         }
     }
 
     @Override
-    public boolean canBeKilledByJumpingOnTop()
-    {
+    public boolean canBeKilledByJumpingOnTop() {
         return true;
     }
 
     @Override
-    public void update(float deltaTime)
-    {
+    public void _update(float deltaTime) {
         stateTime += deltaTime;
-        if (dying)
-        {
+        if (dying) {
             //resize it by state time
-            mDrawRect.height -= 1.26f * deltaTime;
-            mDrawRect.width -= 0.63f * deltaTime;
-            if (mDrawRect.height < 0)
-                world.trashObjects.add(this);
+            drawRect.height -= 1.26f * deltaTime;
+            drawRect.width -= 0.63f * deltaTime;
+            if (drawRect.height < 0)
+                MaryoGame.game.trashObject(this);
             return;
         }
 
@@ -193,19 +177,16 @@ public class Furball extends Enemy
 
         checkCollisionWithBlocks(deltaTime, !deadByBullet, !deadByBullet);
 
-        if (stateTime - turnStartTime > 0.15f)
-        {
+        if (stateTime - turnStartTime > 0.15f) {
             turnStartTime = 0;
             turn = false;
         }
 
-        if (state == STATE_STAYING)
-        {
+        if (state == STATE_STAYING) {
             mHitCounterColor++;
             velocityX = 0;
             mHitCounter += deltaTime;
-            if (mHitCounter >= 2)
-            {
+            if (mHitCounter >= 2) {
                 state = STATE_RUNNING;
                 mHitCounter = 0;
                 velocity.y = 2;
@@ -214,53 +195,37 @@ public class Furball extends Enemy
                 rotation -= (3.75f * deltaTime);
             else
                 rotation += (3.75f * deltaTime);
-        }
-        else if (state == STATE_WALKING)
-        {
-            if (type == Type.brown)
-            {
+        } else if (state == STATE_WALKING) {
+            if (type == Type.brown) {
                 velocityX = 1.5f;
-            }
-            else if (type == Type.blue)
-            {
+            } else if (type == Type.blue) {
                 velocityX = 2.5f;
-            }
-            else if (type == Type.boss)
-            {
+            } else if (type == Type.boss) {
                 velocityX = 2.2f + downgradeCount;
             }
-        }
-        else //if(state == STATE_RUNNING)
+        } else //if(state == STATE_RUNNING)
         {
             mRunningCounter += deltaTime;
             if (direction == Direction.left)
                 rotation += (3.75f * deltaTime);
             else
                 rotation -= (3.75f * deltaTime);
-            if (mRunningCounter >= 4)
-            {
+            if (mRunningCounter >= 4) {
                 mRunningCounter = 0;
                 state = STATE_WALKING;
                 rotation = 0;
             }
-            if (type == Type.brown)
-            {
+            if (type == Type.brown) {
                 velocityX = 2.2f;
-            }
-            else if (type == Type.blue)
-            {
+            } else if (type == Type.blue) {
                 velocityX = 3.7f;
-            }
-            else if (type == Type.boss)
-            {
+            } else if (type == Type.boss) {
                 velocityX = 3.3f + downgradeCount * 1.4f;
             }
         }
 
-        if (!deadByBullet)
-        {
-            switch (direction)
-            {
+        if (!deadByBullet) {
+            switch (direction) {
                 case right:
                     velocity.x = -(turn ? velocityX * 0.5f : velocityX);
                     break;
@@ -273,100 +238,84 @@ public class Furball extends Enemy
     }
 
     @Override
-    protected boolean handleCollision(GameObject object, boolean vertical)
-    {
+    protected boolean handleCollision(GameObject object, boolean vertical) {
         super.handleCollision(object, vertical);
-        if (!vertical)
-        {
+        if (!vertical) {
             if (((object instanceof Sprite && ((Sprite) object).type == Sprite.Type.massive
-                    && object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
+                    && object.colRect.y + object.colRect.height > colRect.y + 0.1f)
                     || object instanceof EnemyStopper
                     || (object instanceof Enemy && this != object && !(object instanceof Flyon)))
-                    && !turned)
-            {
+                    && !turned) {
                 //CollisionManager.resolve_objects(this, object, true);
-                handleCollision(Enemy.ContactType.stopper);
+                handleCollision(ContactType.stopper);
             }
         }
         return false;
     }
 
     @Override
-    public void handleCollision(Enemy.ContactType contactType)
-    {
-        switch (contactType)
-        {
+    public void handleCollision(ContactType contactType) {
+        switch (contactType) {
             case stopper:
                 turn();
                 break;
         }
     }
 
-    private void setupBoundingBox()
-    {
-        mColRect.height = mColRect.height - 0.2f;
+    private void setupBoundingBox() {
+        colRect.height = colRect.height - 0.2f;
     }
 
     @Override
-    public void updateBounds()
-    {
-        mDrawRect.height = mColRect.height + 0.2f;
+    public void updateBounds() {
+        drawRect.height = colRect.height + 0.2f;
         super.updateBounds();
     }
 
     @Override
-    public int hitByPlayer(Maryo maryo, boolean vertical)
-    {
-        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
+    public int hitByPlayer(Maryo maryo, boolean vertical) {
+        if (maryo.velocity.y < 0 && vertical && maryo.colRect.y > colRect.y)//enemy death from above
         {
-            if (state == STATE_STAYING || state == STATE_RUNNING)
-            {
-                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_BOSS_FURBALL_HIT_FAILED);
+            if (state == STATE_STAYING || state == STATE_RUNNING) {
+                Sound sound = MaryoGame.game.assets.get(Assets.SOUND_BOSS_FURBALL_HIT_FAILED);
                 SoundManager.play(sound);
                 return HIT_RESOLUTION_CUSTOM;
             }
-            if (downgradeCount < maxDowngradeCount)
-            {
-                Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_BOSS_FURBALL_HIT);
+            if (downgradeCount < maxDowngradeCount) {
+                Sound sound = MaryoGame.game.assets.get(Assets.SOUND_BOSS_FURBALL_HIT);
                 SoundManager.play(sound);
                 downgradeCount++;
                 state = STATE_STAYING;
                 return HIT_RESOLUTION_CUSTOM;
             }
-            ((GameScreen) world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+            MaryoGame.game.addKillPoints(mKillPoints, position.x, position.y + drawRect.height);
             stateTime = 0;
             handleCollision = false;
             dying = true;
-            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENEMY_DIE_FURBALL);
+            Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ENEMY_DIE_FURBALL);
             SoundManager.play(sound);
-            if(type == Type.boss)
-            {
-                ((GameScreen)world.screen).endLevel();
+            if (type == Type.boss) {
+                MaryoGame.game.endLevel();
             }
             return HIT_RESOLUTION_ENEMY_DIED;
-        }
-        else
-        {
+        } else {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
+    protected TextureRegion getDeadTextureRegion() {
         return tDead;
     }
 
     @Override
-    public boolean canBeKilledByStar()
-    {
+    public boolean canBeKilledByStar() {
         return type != Type.boss;
     }
 
     @Override
-    public void turn()
-    {
-        if(turned)return;
+    public void turn() {
+        if (turned) return;
         super.turn();
         rotation = -rotation;
     }

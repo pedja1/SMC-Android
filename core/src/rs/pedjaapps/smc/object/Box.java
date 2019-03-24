@@ -14,8 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.JsonValue;
 
-import java.util.Collections;
-
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.items.Coin;
@@ -33,11 +32,9 @@ import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
-import rs.pedjaapps.smc.utility.LevelLoader;
 import rs.pedjaapps.smc.utility.Utility;
 
-public class Box extends Sprite
-{
+public class Box extends Sprite {
     //visibility type
     public static final int
             // always visible
@@ -74,33 +71,29 @@ public class Box extends Sprite
 
     private ParticleEffect itemEffect;
 
-    public Box(World world, Vector2 size, Vector3 position, Rectangle rectangle)
-    {
-        super(world, size, position, rectangle);
+    public Box(float x, float y, float z, float width, float height, Rectangle rectangle) {
+        super(x, y, z, width, height, rectangle);
         type = Type.massive;
         originalPosY = position.y;
         position.z = POSITION_Z;
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_STATIC, TextureAtlas.class);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_STATIC, TextureAtlas.class);
         txDisabled = atlas.findRegion("game_box_brown1_1");
         if (textureName == null)
             textureName = "game_box_yellow_default";
 
         texture = atlas.findRegion(textureName);
 
-        if (animationName == null || "default".equalsIgnoreCase(animationName))
-        {
-            if(!"spin".equals(boxType))return;
+        if (animationName == null || "default".equalsIgnoreCase(animationName)) {
+            if (!"spin".equals(boxType)) return;
         }
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         float animSpeed = 0;
-        if ("bonus".equalsIgnoreCase(animationName))
-        {
+        if ("bonus".equalsIgnoreCase(animationName)) {
             frames.add(atlas.findRegion("game_box_yellow_bonus_1"));
             frames.add(atlas.findRegion("game_box_yellow_bonus_2"));
             frames.add(atlas.findRegion("game_box_yellow_bonus_3"));
@@ -109,16 +102,14 @@ public class Box extends Sprite
             frames.add(atlas.findRegion("game_box_yellow_bonus_6"));
             animSpeed = 0.09f;
         }
-        if ("power".equalsIgnoreCase(animationName))
-        {
+        if ("power".equalsIgnoreCase(animationName)) {
             frames.add(atlas.findRegion("game_box_yellow_power_1"));
             frames.add(atlas.findRegion("game_box_yellow_power_2"));
             frames.add(atlas.findRegion("game_box_yellow_power_3"));
             frames.add(atlas.findRegion("game_box_yellow_power_4"));
             animSpeed = 0.1f;
         }
-        if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName))
-        {
+        if ("spin".equalsIgnoreCase(boxType) || "spin".equalsIgnoreCase(animationName)) {
             animationName = "spin";
             frames.add(atlas.findRegion("game_box_yellow_default"));
             frames.add(atlas.findRegion("game_box_yellow_spin_1"));
@@ -129,52 +120,42 @@ public class Box extends Sprite
             txDisabled = atlas.findRegion("game_box_yellow_spin_6");
             animSpeed = 0.08f;
         }
-        if(frames.size == 0 && animationName != null)
+        if (frames.size == 0 && animationName != null)
             throw new GdxRuntimeException("No frames in animation. boxType=" + boxType + " animationName=" + animationName);
-          if (frames.size > 0)
+        if (frames.size > 0)
             animation = new Animation(animSpeed, frames);
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         txDisabled = null;
         texture = null;
         animation = null;
-        if(itemEffect != null)
-        {
+        if (itemEffect != null) {
             itemEffect.dispose();
             itemEffect = null;
         }
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
-    {
-        if (invisible > 0 && !world.maryo.ghostmode)
+    public void render(SpriteBatch spriteBatch) {
+        if (invisible > 0 && !MaryoGame.game.currentScreen.world.maryo.ghostmode)
             return;
         else if (invisible > 0)
             spriteBatch.setColor(1, 1, 1, .5f);
 
-        if(itemEffect != null)
-        {
-            itemEffect.setPosition(position.x, position.y + mDrawRect.height);
+        if (itemEffect != null) {
+            itemEffect.setPosition(position.x, position.y + drawRect.height);
             itemEffect.draw(spriteBatch);
         }
 
-        if (usableCount == 0)
-        {
-            Utility.draw(spriteBatch, txDisabled, position.x, position.y, mDrawRect.height);
-        }
-        else
-        {
-            if("spin".equals(boxType))
-            {
-                if(spinning)
-                {
-                    if(spinningTime >= SPINNING_TIME)
-                    {
-                        if(!world.maryo.mColRect.overlaps(mColRect))//continue spinning as long as maryo is over the box
+        if (usableCount == 0) {
+            Utility.draw(spriteBatch, txDisabled, position.x, position.y, drawRect.height);
+        } else {
+            if ("spin".equals(boxType)) {
+                if (spinning) {
+                    if (spinningTime >= SPINNING_TIME) {
+                        if (!MaryoGame.game.currentScreen.world.maryo.colRect.overlaps(colRect))//continue spinning as long as maryo is over the box
                         {
                             spinning = false;
                             spinningTime = 0;
@@ -182,23 +163,17 @@ public class Box extends Sprite
                         }
                     }
                     TextureRegion frame = animation.getKeyFrame(stateTime, true);
-                    Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+                    Utility.draw(spriteBatch, frame, position.x, position.y, drawRect.height);
+                } else {
+                    Utility.draw(spriteBatch, texture, position.x, position.y, drawRect.height);
                 }
-                else
-                {
-                    Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
+            } else {
+                if (textureName != null) {
+                    Utility.draw(spriteBatch, texture, position.x, position.y, drawRect.height);
                 }
-            }
-            else
-            {
-                if (textureName != null)
-                {
-                    Utility.draw(spriteBatch, texture, position.x, position.y, mDrawRect.height);
-                }
-                if (animation != null && animationName != null && !"default".equalsIgnoreCase(animationName))
-                {
+                if (animation != null && animationName != null && !"default".equalsIgnoreCase(animationName)) {
                     TextureRegion frame = animation.getKeyFrame(stateTime, true);
-                    Utility.draw(spriteBatch, frame, position.x, position.y, mDrawRect.height);
+                    Utility.draw(spriteBatch, frame, position.x, position.y, drawRect.height);
                 }
             }
         }
@@ -207,12 +182,8 @@ public class Box extends Sprite
             spriteBatch.setColor(Color.WHITE);
     }
 
-    public static Box initBox(World world, JsonValue jBox, Assets assets)
-    {
-        Vector3 position = new Vector3((float) jBox.getDouble("posx"), (float) jBox.getDouble("posy"), 0);
-        Vector2 size = new Vector2(SIZE, SIZE);
-
-        Box box = new Box(world, size, position, null);
+    public static Box initBox(JsonValue jBox) {
+        Box box = new Box((float) jBox.getDouble("posx"), (float) jBox.getDouble("posy"), 0, SIZE, SIZE, null);
 
         box.goldColor = jBox.getString("gold_color", "");
         box.animationName = jBox.getString("animation", null);
@@ -225,126 +196,108 @@ public class Box extends Sprite
         box.item = jBox.getInt("item", 0);
 
         box.textureName = jBox.getString("texture_name", null);
-        addBoxItem(box, true, assets);
+        addBoxItem(box, true);
         //addBoxItem(box, loader.getLevel());
         return box;
     }
 
-    private static Item addBoxItem(Box box, boolean loadAssets, Assets assets)
-    {
+    private static Item addBoxItem(Box box, boolean loadAssets) {
         //create item contained in box
-        if (!box.forceBestItem && ( box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE ) &&
+        if (!box.forceBestItem && (box.item == Item.TYPE_FIREPLANT || box.item == Item.TYPE_MUSHROOM_BLUE) &&
                 (GameSave.getMaryoState() == Maryo.MaryoState.small
                         || ((GameSave.getMaryoState() == Maryo.MaryoState.fire
-                        || GameSave.getMaryoState() == Maryo.MaryoState.ice))))
-        {
+                        || GameSave.getMaryoState() == Maryo.MaryoState.ice)))) {
             int defBoxItem = box.item;
             box.item = Item.TYPE_MUSHROOM_DEFAULT;
-            Item item = createMushroom(box, loadAssets, assets);
-            if(loadAssets)
-            {
-                if(defBoxItem != box.item)
-                {
+            Item item = createMushroom(box, loadAssets);
+            if (loadAssets) {
+                if (defBoxItem != box.item) {
                     box.item = defBoxItem;
                     boolean tmpForceBestItem = box.forceBestItem;
                     box.forceBestItem = true;
-                    addBoxItem(box, true, assets);
+                    addBoxItem(box, true);
                     box.forceBestItem = tmpForceBestItem;
                 }
                 box.item = defBoxItem;
             }
             return item;
-        }
-        else if(box.item == Item.TYPE_GOLDPIECE)
-        {
-            if(!loadAssets)
+        } else if (box.item == Item.TYPE_GOLDPIECE) {
+            if (!loadAssets)
                 return createCoin(box);
-        }
-        else if(box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
+        } else if (box.item == Item.TYPE_MUSHROOM_DEFAULT || box.item == Item.TYPE_MUSHROOM_LIVE_1
                 || box.item == Item.TYPE_MUSHROOM_BLUE || box.item == Item.TYPE_MUSHROOM_POISON
-                || box.item == Item.TYPE_MUSHROOM_GHOST)
-        {
-            return createMushroom(box, loadAssets, assets);
-        }
-        else if(box.item == Item.TYPE_FIREPLANT)
-            return createFireplant(box, loadAssets, assets);
+                || box.item == Item.TYPE_MUSHROOM_GHOST) {
+            return createMushroom(box, loadAssets);
+        } else if (box.item == Item.TYPE_FIREPLANT)
+            return createFireplant(box, loadAssets);
 
-        else if(box.item == Item.TYPE_STAR)
-            return createStar(box, loadAssets, assets);
+        else if (box.item == Item.TYPE_STAR)
+            return createStar(box, loadAssets);
 
-        else if(box.item == Item.TYPE_MOON)
-            return createMoon(box, loadAssets, assets);
+        else if (box.item == Item.TYPE_MOON)
+            return createMoon(box, loadAssets);
 
         return null;
     }
 
-    private static Item createMushroom(Box box, boolean loadAssets, Assets assets)
-    {
-        return createMushroom(box.world, box.position, box.item, loadAssets, assets, true);
+    private static Item createMushroom(Box box, boolean loadAssets) {
+        return createMushroom(box.position.x, box.position.y, box.position.z, box.item, loadAssets, true);
     }
 
-    public static Item createMushroom(Assets assets, int mushroomType)
-    {
-        return createMushroom(null, null, mushroomType, true, assets, false);
+    public static Item createMushroom(int mushroomType) {
+        return createMushroom(0, 0, 0, mushroomType, true, false);
     }
 
-    public static Item createMushroom(World world, Vector3 position, int mushroomType, boolean loadAssets, Assets assets, boolean initAssets)
-    {
-        if(loadAssets)
-        {
-            switch (mushroomType)
-            {
+    public static Item createMushroom(float x, float y, float z, int mushroomType, boolean loadAssets, boolean initAssets) {
+        if (loadAssets) {
+            switch (mushroomType) {
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
-                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM, Sound.class);
+                    MaryoGame.game.assets.load(Assets.SOUND_ITEM_MUSHROOM, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
-                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_BLUE, Sound.class);
+                    MaryoGame.game.assets.load(Assets.SOUND_ITEM_MUSHROOM_BLUE, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_GHOST:
-                    assets.manager.load(Assets.SOUND_ITEM_MUSHROOM_GHOST, Sound.class);
-                    assets.manager.load(Assets.SOUND_PLAYER_GHOSTEND, Sound.class);
+                    MaryoGame.game.assets.load(Assets.SOUND_ITEM_MUSHROOM_GHOST, Sound.class);
+                    MaryoGame.game.assets.load(Assets.SOUND_PLAYER_GHOSTEND, Sound.class);
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
                     break;
             }
-            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
-        }
-        else
-        {
+            MaryoGame.game.assets.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        } else {
             Mushroom mushroom;
-            switch (mushroomType)
-            {
+            switch (mushroomType) {
                 case Item.TYPE_MUSHROOM_DEFAULT:
                 default:
-                    mushroom = new MushroomDefault(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    mushroom = new MushroomDefault(x, y, z, Mushroom.DEF_SIZE, Mushroom.DEF_SIZE);
                     break;
                 case Item.TYPE_MUSHROOM_LIVE_1:
-                    mushroom = new MushroomLive1(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    mushroom = new MushroomLive1(x, y, z, Mushroom.DEF_SIZE, Mushroom.DEF_SIZE);
                     break;
                 case Item.TYPE_MUSHROOM_BLUE:
-                    mushroom = new MushroomBlue(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    mushroom = new MushroomBlue(x, y, z, Mushroom.DEF_SIZE, Mushroom.DEF_SIZE);
                     break;
                 case Item.TYPE_MUSHROOM_POISON:
-                    mushroom = new MushroomPoison(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    mushroom = new MushroomPoison(x, y, z, Mushroom.DEF_SIZE, Mushroom.DEF_SIZE);
                     break;
                 case Item.TYPE_MUSHROOM_GHOST:
-                    mushroom = new MushroomGhost(world, new Vector2(Mushroom.DEF_SIZE, Mushroom.DEF_SIZE), new Vector3(position));
+                    mushroom = new MushroomGhost(x, y, z, Mushroom.DEF_SIZE, Mushroom.DEF_SIZE);
                     break;
             }
 
             mushroom.visible = false;
-            if(initAssets)mushroom.initAssets();
+            if (initAssets) mushroom.initAssets();
             return mushroom;
         }
         return null;
     }
 
-    private static Item createCoin(Box box)
-    {
-        Coin coin = new Coin(box.world, new Vector2(Coin.DEF_SIZE, Coin.DEF_SIZE), new Vector3(box.position),
+    private static Item createCoin(Box box) {
+        Coin coin = new Coin(box.position.x, box.position.y, box.position.z, Coin.DEF_SIZE, Coin.DEF_SIZE,
                 box.goldColor.equals("yellow") ? Coin.TYPE_YELLOW : Coin.TYPE_RED);
         coin.initAssets();
         coin.collectible = false;
@@ -353,32 +306,22 @@ public class Box extends Sprite
         return coin;
     }
 
-    public static Item createFireplant(World world, Vector3 position)
-    {
-        Vector2 size = new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE);
-        Vector3 pos = new Vector3(position);
-        return new Fireplant(world, size, pos);
+    public static Item createFireplant(float x, float y, float z) {
+        return new Fireplant(x, y, z, Fireplant.DEF_SIZE, Fireplant.DEF_SIZE);
     }
 
-    public static Item createFireplant(Assets assets)
-    {
-        return createFireplant(null, true, assets);
+    public static Item createFireplant() {
+        return createFireplant(null, true);
     }
 
-    private static Item createFireplant(Box box, boolean loadAssets, Assets assets)
-    {
-        if(loadAssets)
-        {
-            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
-            assets.manager.load(Assets.SOUND_ITEM_FIREPLANT, Sound.class);
-            assets.manager.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, assets.particleEffectParameter);
-        }
-        else
-        {
-            Vector2 size = new Vector2(Fireplant.DEF_SIZE, Fireplant.DEF_SIZE);
-            Vector3 pos = new Vector3(box.position);
-            pos.x = box.position.x + box.mDrawRect.width * 0.5f - size.x * 0.5f;
-            Fireplant fireplant = new Fireplant(box.world, size, pos);
+    private static Item createFireplant(Box box, boolean loadAssets) {
+        if (loadAssets) {
+            MaryoGame.game.assets.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+            MaryoGame.game.assets.load(Assets.SOUND_ITEM_FIREPLANT, Sound.class);
+            MaryoGame.game.assets.load("data/animation/particles/fireplant_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        } else {
+            float x = box.position.x + box.drawRect.width * 0.5f - Fireplant.DEF_SIZE * 0.5f;
+            Fireplant fireplant = new Fireplant(x, box.position.y, box.position.z, Fireplant.DEF_SIZE, Fireplant.DEF_SIZE);
             fireplant.initAssets();
             fireplant.visible = false;
             return fireplant;
@@ -386,27 +329,21 @@ public class Box extends Sprite
         return null;
     }
 
-    private static Item createMoon(Box box, boolean loadAssets, Assets assets)
-    {
-        return createMoon(box.world, box.position, loadAssets, assets, true);
+    private static Item createMoon(Box box, boolean loadAssets) {
+        return createMoon(box.position.x, box.position.y, box.position.z, loadAssets, true);
     }
 
-    public static Item createMoon(Assets assets)
-    {
-        return createMoon(null, null, true, assets, false);
+    public static Item createMoon() {
+        return createMoon(0, 0, 0, true, false);
     }
 
-    public static Item createMoon(World world, Vector3 position, boolean loadAssets, Assets assets, boolean initAssets)
-    {
-        if(loadAssets)
-        {
-            assets.manager.load("data/animation/particles/box_activated.p", ParticleEffect.class, assets.particleEffectParameter);
-            assets.manager.load(Assets.SOUND_ITEM_MOON, Sound.class);
-        }
-        else
-        {
-            Moon moon = new Moon(world, new Vector2(Moon.DEF_SIZE, Moon.DEF_SIZE), new Vector3(position));
-            if(initAssets)moon.initAssets();
+    public static Item createMoon(float x, float y, float z, boolean loadAssets, boolean initAssets) {
+        if (loadAssets) {
+            MaryoGame.game.assets.load("data/animation/particles/box_activated.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+            MaryoGame.game.assets.load(Assets.SOUND_ITEM_MOON, Sound.class);
+        } else {
+            Moon moon = new Moon(x, y, z, Moon.DEF_SIZE, Moon.DEF_SIZE);
+            if (initAssets) moon.initAssets();
             moon.visible = false;
             return moon;
         }
@@ -414,25 +351,21 @@ public class Box extends Sprite
         return null;
     }
 
-    private static Item createStar(Box box, boolean loadAssets, Assets assets)
-    {
-        return createStar(box.world, box.position, loadAssets, assets, true);
+    private static Item createStar(Box box, boolean loadAssets) {
+        return createStar(box.position.x, box.position.y, box.position.z, loadAssets, true);
     }
 
-    public static Item createStar(Assets assets)
-    {
-        return createStar(null, null, true, assets, false);
+    public static Item createStar() {
+        return createStar(0, 0, 0, true, false);
     }
 
-    public static Item createStar(World world, Vector3 position, boolean loadAssets, Assets assets, boolean initAssets)
-    {
-        if(loadAssets)
-            assets.manager.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, assets.particleEffectParameter);
+    public static Item createStar(float x, float y, float z, boolean loadAssets, boolean initAssets) {
+        if (loadAssets)
+            MaryoGame.game.assets.load(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
 
-        else
-        {
-            Star star = new Star(world, new Vector2(Star.DEF_SIZE, Star.DEF_SIZE), new Vector3(position));
-            if(initAssets)star.initAssets();
+        else {
+            Star star = new Star(x, y, z, Star.DEF_SIZE, Star.DEF_SIZE);
+            if (initAssets) star.initAssets();
             star.visible = false;
 
             return star;
@@ -440,83 +373,64 @@ public class Box extends Sprite
         return null;
     }
 
-    public void activate()
-    {
+    public void activate() {
         if (activated) return;
-		invisible = BOX_VISIBLE;
+        invisible = BOX_VISIBLE;
         Sound sound = null;
-        if("text".equals(boxType))
-        {
+        if ("text".equals(boxType)) {
             activated = true;
-            ((GameScreen)world.screen).showBoxText(this);
-        }
-        else if("spin".equals(boxType))
-        {
+            ((GameScreen) MaryoGame.game.currentScreen).showBoxText(this);
+        } else if ("spin".equals(boxType)) {
             spinning = true;
             activated = true;
             type = Type.passive;
-        }
-        else if ((usableCount == -1 || usableCount > 0))//is disabled(no more items)
+        } else if ((usableCount == -1 || usableCount > 0))//is disabled(no more items)
         {
             if (usableCount != -1) usableCount--;
             activated = true;
             velocity.y = 3f;
-            Item item = addBoxItem(this, false, world.screen.game.assets);
-            if (item != null)
-            {
+            Item item = addBoxItem(this, false);
+            if (item != null) {
                 item.isInBox = true;
-                world.level.gameObjects.add(item);
-                Collections.sort(world.level.gameObjects, new LevelLoader.ZSpriteComparator());
-                item.popOutFromBox(position.y + mDrawRect.height);
+                MaryoGame.game.addObject(item);
+                MaryoGame.game.sortLevel();
+                item.popOutFromBox(position.y + drawRect.height);
                 if (item instanceof Coin)
                     sound = ((Coin) item).getSound();
-                else if(item instanceof Mushroom)
-                {
+                else if (item instanceof Mushroom) {
                     createItemEffect();
-                    sound = world.screen.game.assets.manager.get(Assets.SOUND_SPROUT);
-                }
-                else if(item instanceof Moon)
-                {
+                    sound = MaryoGame.game.assets.get(Assets.SOUND_SPROUT);
+                } else if (item instanceof Moon) {
                     createItemEffect();
                 }//TODO sound effects
-                else if(item instanceof Fireplant)
-                {
+                else if (item instanceof Fireplant) {
                     createItemEffect();
-                }
-                else if(item instanceof Star)
-                {
+                } else if (item instanceof Star) {
                     createItemEffect();
                 }
             }
-        }
-        else
-        {
-            sound = world.screen.game.assets.manager.get(Assets.SOUND_WALL_HIT);
+        } else {
+            sound = MaryoGame.game.assets.get(Assets.SOUND_WALL_HIT);
         }
         SoundManager.play(sound);
     }
 
-    private void createItemEffect()
-    {
-        itemEffect = new ParticleEffect(world.screen.game.assets.manager.get(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class));
+    private void createItemEffect() {
+        itemEffect = new ParticleEffect(MaryoGame.game.assets.get(Assets.PARTICLES_BOX_ACTIVATED, ParticleEffect.class));
         itemEffect.start();
     }
 
     @Override
-    public void _update(float delta)
-    {
-        if(itemEffect != null)
-        {
+    public void update(float delta) {
+        if (itemEffect != null) {
             itemEffect.update(delta);
         }
 
-        if(spinning)
-        {
+        if (spinning) {
             spinningTime += delta;
         }
 
-        if (activated)
-        {
+        if (activated) {
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
 
@@ -531,17 +445,16 @@ public class Box extends Sprite
 
             // update position
             position.add(velocity);
-            mColRect.y = position.y;
+            colRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
             velocity.scl(1 / delta);
 
-            if (position.y <= originalPosY)
-            {
+            if (position.y <= originalPosY) {
                 activated = false;
                 position.y = originalPosY;
-                mColRect.y = position.y;
+                colRect.y = position.y;
                 updateBounds();
             }
         }

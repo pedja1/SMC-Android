@@ -4,24 +4,20 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public class Krush extends Enemy
-{
+public class Krush extends Enemy {
     private static final float VELOCITY_SMALL = 2.75f;
     private static final float VELOCITY_BIG = 1.5f;
     private static final int KP_SMALL = 20;
@@ -35,25 +31,23 @@ public class Krush extends Enemy
     private Animation<TextureRegion> aBig, aSmall;
     private TextureRegion tDead;
 
-    public Krush(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+    public Krush(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         setupBoundingBox();
         position.z = POS_Z;
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
 
         Array<TextureRegion> smallFrames = new Array<>();
         Array<TextureRegion> bigFrames = new Array<>();
 
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= 4; i++)
             bigFrames.add(atlas.findRegion("enemy_krush_big_" + String.valueOf(i)));
 
-        for (int i = 1; i <=4; i++)
+        for (int i = 1; i <= 4; i++)
             smallFrames.add(atlas.findRegion("enemy_krush_small_" + String.valueOf(i)));
 
         aSmall = new Animation(0.07f, smallFrames);
@@ -63,49 +57,43 @@ public class Krush extends Enemy
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         aBig = null;
         aSmall = null;
         tDead = null;
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
-    {
+    public void _render(SpriteBatch spriteBatch) {
         TextureRegion frame;
-        if (!dying)
-        {
+        if (!dying) {
             frame = isSmall ? aSmall.getKeyFrame(stateTime, true) : aBig.getKeyFrame(stateTime, true);
             frame.flip(direction == Direction.left, false);
-            Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            Utility.draw(spriteBatch, frame, drawRect.x, drawRect.y, drawRect.height);
             frame.flip(direction == Direction.left, false);
-        }
-        else
-        {
+        } else {
             frame = aSmall.getKeyFrame(0);
             frame.flip(direction == Direction.left, false);
-            spriteBatch.draw(frame, mDrawRect.x , mDrawRect.y , mDrawRect.width, mDrawRect.height);
+            spriteBatch.draw(frame, drawRect.x, drawRect.y, drawRect.width, drawRect.height);
             frame.flip(direction == Direction.left, false);
         }
     }
 
     @Override
-    public boolean canBeKilledByJumpingOnTop()
-    {
+    public boolean canBeKilledByJumpingOnTop() {
         return true;
     }
 
     @Override
-    public void update(float deltaTime)
-    {
+    public void _update(float deltaTime) {
         stateTime += deltaTime;
-        if(dying)
-        {
+        if (dying) {
             //resize it by state time
-            mDrawRect.height -= 1.26f * deltaTime;
-            mDrawRect.width -= 0.63f * deltaTime;
-            if(mDrawRect.height < 0)world.trashObjects.add(this);
+            drawRect.height -= 1.26f * deltaTime;
+            drawRect.width -= 0.63f * deltaTime;
+            if (drawRect.height < 0) {
+                MaryoGame.game.trashObject(this);
+            }
             return;
         }
 
@@ -120,10 +108,8 @@ public class Krush extends Enemy
 
         checkCollisionWithBlocks(deltaTime, !deadByBullet, !deadByBullet);
 
-        if (!deadByBullet)
-        {
-            switch(direction)
-            {
+        if (!deadByBullet) {
+            switch (direction) {
                 case right:
                     velocity.set(velocity.x = -(isSmall ? VELOCITY_SMALL : VELOCITY_BIG), velocity.y, velocity.z);
                     break;
@@ -135,28 +121,23 @@ public class Krush extends Enemy
     }
 
     @Override
-    protected boolean handleCollision(GameObject object, boolean vertical)
-    {
+    protected boolean handleCollision(GameObject object, boolean vertical) {
         super.handleCollision(object, vertical);
-        if(!vertical)
-        {
-            if(((object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive
-                    && object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
+        if (!vertical) {
+            if (((object instanceof Sprite && ((Sprite) object).type == Sprite.Type.massive
+                    && object.colRect.y + object.colRect.height > colRect.y + 0.1f)
                     || object instanceof EnemyStopper
-                    || (object instanceof Enemy && this != object && !(object instanceof Flyon))))
-            {
+                    || (object instanceof Enemy && this != object && !(object instanceof Flyon)))) {
                 //CollisionManager.resolve_objects(this, object, true);
-                handleCollision(Enemy.ContactType.stopper);
+                handleCollision(ContactType.stopper);
             }
         }
         return false;
     }
 
     @Override
-    public void handleCollision(Enemy.ContactType contactType)
-    {
-        switch(contactType)
-        {
+    public void handleCollision(ContactType contactType) {
+        switch (contactType) {
             case stopper:
                 turn();
                 break;
@@ -164,68 +145,57 @@ public class Krush extends Enemy
     }
 
     @Override
-    public void turn()
-    {
-        if(turned)return;
+    public void turn() {
+        if (turned) return;
         direction = direction == Direction.right ? Direction.left : Direction.right;
         velocity.x = velocity.x > 0 ? -velocity.x : Math.abs(velocity.x);
         turned = true;
     }
 
-    private void setupBoundingBox()
-    {
-        mColRect.height = mColRect.height - 0.2f;
+    private void setupBoundingBox() {
+        colRect.height = colRect.height - 0.2f;
     }
 
     @Override
-    public void updateBounds()
-    {
-        mDrawRect.height = mColRect.height + 0.2f;
+    public void updateBounds() {
+        drawRect.height = colRect.height + 0.2f;
         super.updateBounds();
     }
 
     @Override
-    public int hitByPlayer(Maryo maryo, boolean vertical)
-    {
-        if (maryo.velocity.y < 0 && vertical && maryo.mColRect.y > mColRect.y)//enemy death from above
+    public int hitByPlayer(Maryo maryo, boolean vertical) {
+        if (maryo.velocity.y < 0 && vertical && maryo.colRect.y > colRect.y)//enemy death from above
         {
-            if(isSmall)
-            {
-                ((GameScreen) world.screen).killPointsTextHandler.add(isSmall ? KP_SMALL : KP_BIG, position.x, position.y + mDrawRect.height);
+            if (isSmall) {
+                //TODO should get points even if big
+                MaryoGame.game.addKillPoints(isSmall ? KP_SMALL : KP_BIG, position.x, position.y + drawRect.height);
                 stateTime = 0;
                 handleCollision = false;
                 dying = true;
                 playDeadSound(maryo.mInvincibleStar);
                 return HIT_RESOLUTION_ENEMY_DIED;
-            }
-            else
-            {
+            } else {
                 isSmall = true;
                 return HIT_RESOLUTION_CUSTOM;
             }
-        }
-        else
-        {
+        } else {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
+    protected TextureRegion getDeadTextureRegion() {
         return tDead;
     }
 
     @Override
-    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill, boolean isStarKill)
-    {
+    public void downgradeOrDie(GameObject killedBy, boolean forceBulletKill, boolean isStarKill) {
         mKillPoints = isSmall ? KP_SMALL : KP_BIG;
         super.downgradeOrDie(killedBy, forceBulletKill, isStarKill);
     }
 
     @Override
-    protected String getDeadSound()
-    {
+    protected String getDeadSound() {
         return Assets.SOUND_ENEMY_DIE_KRUSH;
     }
 }

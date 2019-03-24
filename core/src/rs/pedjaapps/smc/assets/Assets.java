@@ -1,6 +1,8 @@
 package rs.pedjaapps.smc.assets;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
@@ -90,22 +92,24 @@ public class Assets {
     public static final String ATLAS_STATIC = "data/static.pack";
     public static final String ATLAS_DYNAMIC = "data/dynamic.pack";
 
-    public AssetManager manager;
-    public TextureLoader.TextureParameter textureParameter;
-    public ParticleEffectLoader.ParticleEffectParameter particleEffectParameter;
+    private AssetManager manager;
+    public static TextureLoader.TextureParameter TEXTURE_PARAMETER;
+    public static ParticleEffectLoader.ParticleEffectParameter PARTICLE_EFFECT_PARAMETER;
+
+    static {
+        TEXTURE_PARAMETER = new TextureLoader.TextureParameter();
+        //textureParameter.genMipMaps = true;
+        TEXTURE_PARAMETER.magFilter = Texture.TextureFilter.Linear;
+        TEXTURE_PARAMETER.minFilter = Texture.TextureFilter.Linear;
+
+        PARTICLE_EFFECT_PARAMETER = new ParticleEffectLoader.ParticleEffectParameter();
+        PARTICLE_EFFECT_PARAMETER.atlasFile = Assets.ATLAS_DYNAMIC;
+        PARTICLE_EFFECT_PARAMETER.atlasPrefix = "particles_";
+        PARTICLE_EFFECT_PARAMETER.imagesDir = Gdx.files.internal("data/animation/particles");
+    }
 
     public Assets() {
-        textureParameter = new TextureLoader.TextureParameter();
-        //textureParameter.genMipMaps = true;
-        textureParameter.magFilter = Texture.TextureFilter.Linear;
-        textureParameter.minFilter = Texture.TextureFilter.Linear;
-
         manager = new AssetManager();
-
-        particleEffectParameter = new ParticleEffectLoader.ParticleEffectParameter();
-        particleEffectParameter.atlasFile = Assets.ATLAS_DYNAMIC;
-        particleEffectParameter.atlasPrefix = "particles_";
-        particleEffectParameter.imagesDir = Gdx.files.internal("data/animation/particles");
 
         // set the loaders for the generator and the fonts themselves
         manager.setLoader(ParticleEffect.class, ".p", new ParticleEffectLoader(new InternalFileHandleResolver()));
@@ -114,9 +118,54 @@ public class Assets {
     }
 
     public void dispose() {
-        //do not clear. This is just annoying because it needs to be loaded again
-        //TODO: große Klopper müssen wieder weggemacht werden (Background, Musik)
-        //manager.clear();
+        manager.clear();
     }
 
+    public <T> void load(String fileName, Class<T> type) {
+        manager.load(fileName, type);
+    }
+
+    public <T> void load(String fileName, Class<T> type, AssetLoaderParameters<T> parameter) {
+        manager.load(fileName, type, parameter);
+    }
+
+    public void load(AssetDescriptor desc) {
+        manager.load(desc);
+    }
+
+    public <T> T get(String fileName) {
+        return manager.get(fileName);
+    }
+
+    public <T> T get(String fileName, Class<T> type) {
+        return manager.get(fileName, type);
+    }
+
+    public boolean isLoaded(String fileName) {
+        return manager.isLoaded(fileName);
+    }
+
+    public boolean isLoaded(String fileName, Class type) {
+        return manager.isLoaded(fileName, type);
+    }
+
+    public void finishLoading() {
+        manager.finishLoading();
+    }
+
+    public void finishLoadingAsset(String fileName) {
+        manager.finishLoadingAsset(fileName);
+    }
+
+    public boolean update() {
+        return manager.update();
+    }
+
+    public boolean update(int millis) {
+        return manager.update(millis);
+    }
+
+    public float getProgress() {
+        return manager.getProgress();
+    }
 }

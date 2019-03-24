@@ -6,16 +6,14 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 /**
  * Created by pedja on 28.8.15..
  */
-public class Shader
-{
+public class Shader {
     public static ShaderProgram FREEZE_SHADER;
     public static ShaderProgram SHAKE_SHADER;
     public static ShaderProgram NORMAL_BLEND_SHADER;
     public static ShaderProgram GLOW_SHADER;
     public static ShaderProgram GS_SHADER; //Grayscale!
 
-    public static void init()
-    {
+    public static void init() {
         ShaderProgram.pedantic = false;
         FREEZE_SHADER = new ShaderProgram(Gdx.files.internal("data/shaders/freeze.vert"), Gdx.files.internal("data/shaders/freeze.frag"));
         SHAKE_SHADER = new ShaderProgram(Gdx.files.internal("data/shaders/shake.vert"), Gdx.files.internal("data/shaders/shake.frag"));
@@ -24,8 +22,7 @@ public class Shader
         NORMAL_BLEND_SHADER = new ShaderProgram(Gdx.files.internal("data/shaders/normal_blend.vert"), Gdx.files.internal("data/shaders/normal_blend.frag"));
     }
 
-    public static void dispose()
-    {
+    public static void dispose() {
         FREEZE_SHADER.dispose();
         NORMAL_BLEND_SHADER.dispose();
         GLOW_SHADER.dispose();

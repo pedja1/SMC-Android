@@ -58,7 +58,6 @@ public class GameScreen extends AbstractScreen {
     public boolean resumed, forceCheckEnter;
     protected Vector3 cameraEditModeTranslate = new Vector3();
     private boolean debug;
-    private World world;
     private OrthographicCamera pCamera;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
     /**
@@ -83,19 +82,17 @@ public class GameScreen extends AbstractScreen {
     private InputMultiplexer inputprocessor;
     private GLProfiler profiler;
 
-    public GameScreen(MaryoGame game, boolean fromMenu, String levelName) {
-        this(game, fromMenu, levelName, null);
+    public GameScreen(boolean fromMenu, String levelName) {
+        this(fromMenu, levelName, null);
     }
 
-    public GameScreen(MaryoGame game, boolean fromMenu, String levelName, GameScreen parent) {
-        super(game);
+    public GameScreen(boolean fromMenu, String levelName, GameScreen parent) {
         this.profiler = new GLProfiler(Gdx.graphics);
         this.parent = parent;
         this.levelName = levelName;
         gameState = GAME_STATE.GAME_READY;
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
-        world = new World(this);
         hud = new HUD(world, this);
         if (parent != null)
             hud.setHasKeyboardOrController(parent.hud.isHasKeyboardOrController(), true);
@@ -117,7 +114,7 @@ public class GameScreen extends AbstractScreen {
 
         if (fromMenu) {
             GameSave.startLevelFresh();
-            game.levelStart(levelName);
+            MaryoGame.game.levelStart(levelName);
         }
 
         loader = new LevelLoader(levelName);
@@ -166,7 +163,7 @@ public class GameScreen extends AbstractScreen {
 
     @Override
     public void show() {
-        music = game.assets.manager.get(loader.level.music.first());
+        music = MaryoGame.game.assets.get(loader.level.music.first());
         if (!resumed)
             music.setPosition(0);
         music.setLooping(true);
@@ -182,7 +179,7 @@ public class GameScreen extends AbstractScreen {
         inputprocessor.addProcessor(hud.stage);
 
         Gdx.input.setInputProcessor(inputprocessor);
-        game.controllerMappings.setInputProcessor(inputprocessor);
+        MaryoGame.game.controllerMappings.setInputProcessor(inputprocessor);
         if (resumed) {
             cameraForceSnap = true;
         }
@@ -272,9 +269,9 @@ public class GameScreen extends AbstractScreen {
         }
 
         GameSave.levelCleared(levelName);
-        game.levelEnd(levelName, true);
+        MaryoGame.game.levelEnd(levelName, true);
         MusicManager.stop(true);
-        Sound clear = game.assets.manager.get(Assets.MUSIC_COURSECLEAR);
+        Sound clear = MaryoGame.game.assets.get(Assets.MUSIC_COURSECLEAR);
         SoundManager.play(clear);
         setGameState(GAME_STATE.GAME_LEVEL_END);
         hud.showLevelEndScreen();
@@ -352,20 +349,20 @@ public class GameScreen extends AbstractScreen {
                 world.createMaryoRectWithOffset(maryoBWO, 8);
                 for (int i = 0, size = world.level.gameObjects.size(); i < size; i++) {
                     GameObject go = world.level.gameObjects.get(i);
-                    if (maryoBWO.overlaps(go.mColRect) || (go instanceof Fireball) || (go instanceof Iceball)) {
+                    if (maryoBWO.overlaps(go.colRect) || (go instanceof Fireball) || (go instanceof Iceball)) {
                         objectsToUpdate.add(go);
-                        go._update(delta);
+                        go.update(delta);
                     }
                 }
             } else {
                 for (int i = 0; i < objectsToUpdate.size; i++) {
                     GameObject go = objectsToUpdate.get(i);
-                    go._update(delta);
+                    go.update(delta);
                 }
             }
 
         } else if (gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_UPDATING)
-            world.maryo._update(delta);
+            world.maryo.update(delta);
     }
 
     private void drawObjects() {
@@ -378,8 +375,8 @@ public class GameScreen extends AbstractScreen {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (int i = 0; i < world.getVisibleObjects().size; i++) {
             GameObject go = world.getVisibleObjects().get(i);
-            Rectangle colRect = go.mColRect;
-            Rectangle drawRect = go.mDrawRect;
+            Rectangle colRect = go.colRect;
+            Rectangle drawRect = go.drawRect;
             shapeRenderer.setColor(0, 1, 0, 1);
             shapeRenderer.rect(colRect.x, colRect.y, colRect.width, colRect.height);
             shapeRenderer.setColor(1, 0, 0, 1);
@@ -387,8 +384,8 @@ public class GameScreen extends AbstractScreen {
         }
         // render maryo
         Maryo maryo = world.maryo;
-        Rectangle body = maryo.mColRect;
-        Rectangle bounds = maryo.mDrawRect;
+        Rectangle body = maryo.colRect;
+        Rectangle bounds = maryo.drawRect;
         world.createMaryoRectWithOffset(maryoBWO, 8);
         shapeRenderer.setColor(0, 1, 0, 1);
         shapeRenderer.rect(body.x, body.y, body.width, body.height);
@@ -407,13 +404,13 @@ public class GameScreen extends AbstractScreen {
         debugGlyph.setText(debugFont, debugMessage);
         debugFont.draw(spriteBatch, debugMessage, 20, height - 20);
 
-        Vector2 point = World.VECTOR2_POOL.obtain();
+        Vector2 point = MaryoGame.VECTOR2_POOL.obtain();
         float x = Gdx.input.getX();
         float y = invertY(Gdx.input.getY());
         Utility.guiPositionToGamePosition(x, y, this, point);
 
         for (GameObject gameObject : world.level.gameObjects) {
-            if (gameObject.mDrawRect.contains(point)) {
+            if (gameObject.drawRect.contains(point)) {
                 String objectDebugText = gameObject.toString();
                 float tWidth = width * 0.4f;
                 debugGlyph.setText(debugObjectFont, objectDebugText, Color.BLACK, tWidth, Align.left, true);
@@ -423,7 +420,7 @@ public class GameScreen extends AbstractScreen {
             }
         }
 
-        World.VECTOR2_POOL.free(point);
+        MaryoGame.VECTOR2_POOL.free(point);
     }
 
     private String generateDebugMessage() {
@@ -493,7 +490,6 @@ public class GameScreen extends AbstractScreen {
         music.stop();
         hud.dispose();
         inputprocessor.clear();
-        game.assets.dispose();
         world.dispose();
         if (globalEffect != null) {
             globalEffect.dispose();
@@ -504,47 +500,41 @@ public class GameScreen extends AbstractScreen {
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
-        game.assets.manager.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, game.assets
-                .particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, game
-                .assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, game.assets
-                .particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, game
-                .assets.particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/star_trail.p", ParticleEffect.class, game.assets
-                .particleEffectParameter);
-        game.assets.manager.load("data/animation/particles/maryo_star.p", ParticleEffect.class, game.assets
-                .particleEffectParameter);
+        MaryoGame.game.assets.load("data/animation/particles/fireball_emitter_2.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load("data/animation/particles/fireball_explosion_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load("data/animation/particles/iceball_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load("data/animation/particles/iceball_explosion_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load("data/animation/particles/star_trail.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load("data/animation/particles/maryo_star.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
         hud.loadAssets();
 
         //audio
-        game.assets.manager.load(Assets.SOUND_AUDIO_ON, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_GOLDPIECE1, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_GOLDPIECE_RED, Sound.class);
-        game.assets.manager.load(Assets.SOUND_PLAYER_DEAD, Sound.class);
-        game.assets.manager.load(Assets.SOUND_JUMP_BIG, Sound.class);
-        game.assets.manager.load(Assets.SOUND_JUMP_BIG_POWER, Sound.class);
-        game.assets.manager.load(Assets.SOUND_JUMP_SMALL, Sound.class);
-        game.assets.manager.load(Assets.SOUND_JUMP_SMALL_POWER, Sound.class);
-        game.assets.manager.load(Assets.SOUND_PLAYER_POWERDOWN, Sound.class);
-        game.assets.manager.load(Assets.SOUND_WALL_HIT, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEMBOX_SET, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEMBOX_GET, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_AUDIO_ON, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_GOLDPIECE1, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_GOLDPIECE_RED, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_PLAYER_DEAD, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_JUMP_BIG, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_JUMP_BIG_POWER, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_JUMP_SMALL, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_JUMP_SMALL_POWER, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_PLAYER_POWERDOWN, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_WALL_HIT, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_FIREBALL, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_LIVE_UP, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEMBOX_SET, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEMBOX_GET, Sound.class);
 
-        game.assets.manager.load(Assets.SOUND_SPROUT, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_STAR_KILL, Sound.class);
-        game.assets.manager.load(Assets.SOUND_LEAVE_PIPE, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ENTER_PIPE, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_SPROUT, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_STAR_KILL, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_LEAVE_PIPE, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ENTER_PIPE, Sound.class);
 
-        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_REPELLED, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_FIREBALL_REPELLED, Sound.class);
 
-        game.assets.manager.load(Assets.SOUND_ITEM_ICEBALL_HIT, Sound.class);
-        game.assets.manager.load(Assets.SOUND_ITEM_FIREBALL_EXPLOSION, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_ICEBALL_HIT, Sound.class);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_FIREBALL_EXPLOSION, Sound.class);
 
-        game.assets.manager.load(Assets.MUSIC_COURSECLEAR, Sound.class);
+        MaryoGame.game.assets.load(Assets.MUSIC_COURSECLEAR, Sound.class);
 
     }
 
@@ -563,15 +553,15 @@ public class GameScreen extends AbstractScreen {
             go.initAssets();
         }
 
-        BitmapFont pointsFont = game.assets.manager.get(Assets.SKIN_HUD, Skin.class).getFont(Assets.FONT_SIMPLE25);
+        BitmapFont pointsFont = MaryoGame.game.assets.get(Assets.SKIN_HUD, Skin.class).getFont(Assets.FONT_SIMPLE25);
         pointsFont.setColor(1, 1, 1, 1);
         killPointsTextHandler = new KillPointsTextHandler(pointsFont);
         for (Background background : world.level.backgrounds) {
-            background.onAssetsLoaded(cam, game.assets);
+            background.onAssetsLoaded(cam);
         }
 
         if (!TextUtils.isEmpty(world.level.particleEffect)) {
-            globalEffect = new ParticleEffect(game.assets.manager.get(world.level.particleEffect, ParticleEffect
+            globalEffect = new ParticleEffect(MaryoGame.game.assets.get(world.level.particleEffect, ParticleEffect
                     .class));
             globalEffect.start();
         }
@@ -618,17 +608,17 @@ public class GameScreen extends AbstractScreen {
             // nächstes Level
             String nextLevel = Level.getNextLevel(getMenuLevelname());
             if (nextLevel != null)
-                game.setScreen(new LoadingScreen(new GameScreen(game, true, nextLevel), false));
+                MaryoGame.game.changeScreen(new LoadingScreen(new GameScreen(true, nextLevel), false));
             else
                 exitToMenu();
 
         } else if (gameState == GAME_STATE.PLAYER_DEAD || gameState == GAME_STATE.PLAYER_DIED) {
             if (GameSave.getLifes() > 0)
-                game.setScreen(new LoadingScreen(new GameScreen(game, true, getMenuLevelname()), false));
+                MaryoGame.game.changeScreen(new LoadingScreen(new GameScreen(true, getMenuLevelname()), false));
             else
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+                MaryoGame.game.setScreen(new LoadingScreen(new MainMenuScreen(), false));
 
-            game.levelEnd(levelName, false);
+            MaryoGame.game.levelEnd(levelName, false);
         }
     }
 

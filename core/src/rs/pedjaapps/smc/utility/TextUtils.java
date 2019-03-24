@@ -19,15 +19,12 @@ package rs.pedjaapps.smc.utility;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class TextUtils
-{
-    private TextUtils()
-    {
+public class TextUtils {
+    private TextUtils() {
 
     }
 
-    public static boolean isEmpty(CharSequence text)
-    {
+    public static boolean isEmpty(CharSequence text) {
         return text == null || text.length() == 0;
     }
 }

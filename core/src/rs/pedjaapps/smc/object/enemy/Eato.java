@@ -8,67 +8,51 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public class Eato extends Enemy
-{
+public class Eato extends Enemy {
     public static final float POSITION_Z = 0.087f;
     private String direction;
     private Animation<TextureRegion> animation;
     private TextureRegion tdead;
     private String color;
 
-    public Eato(World world, Vector2 size, Vector3 position, String direction, String color)
-    {
-        super(world, size, position);
+    public Eato(float x, float y, float z, float width, float height, String direction, String color) {
+        super(x, y, z, width, height);
         this.direction = direction;
         this.color = color;
         position.z = POSITION_Z;
         mFireResistant = 1;
         mKillPoints = 150;
 
-        if("top_left".equals(direction))
-        {
+        if ("top_left".equals(direction)) {
             mRotationY = 180f;
-        }
-        else if("left_top".equals(direction))
-        {
+        } else if ("left_top".equals(direction)) {
             mRotationZ = 90f;
             mRotationX = 180f;
-        }
-        else if("left_bottom".equals(direction))
-        {
+        } else if ("left_bottom".equals(direction)) {
             mRotationZ = 90f;
-        }
-        else if("right_top".equals(direction))
-        {
+        } else if ("right_top".equals(direction)) {
             mRotationZ = 90f;
-        }
-        else if("right_bottom".equals(direction))
-        {
+        } else if ("right_bottom".equals(direction)) {
             mRotationZ = 270f;
             mRotationX = 180f;
-        }
-        else if("bottom_left".equals(direction))
-        {
+        } else if ("bottom_left".equals(direction)) {
             mRotationX = 180f;
-        }
-        else if("bottom_right".equals(direction))
-        {
+        } else if ("bottom_right".equals(direction)) {
             mRotationZ = 180f;
         }
         ppEnabled = false;
     }
 
     @Override
-    protected String getDeadSound()
-    {
+    protected String getDeadSound() {
         return Assets.SOUND_ENEMY_DIE_EATO;
     }
 
@@ -78,9 +62,8 @@ public class Eato extends Enemy
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
 
         Array<TextureRegion> frames = new Array<>(3);
         for (int i = 1; i < 4; i++)
@@ -92,41 +75,36 @@ public class Eato extends Enemy
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         animation = null;
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
-    {
+    public void _render(SpriteBatch spriteBatch) {
         TextureRegion frame = animation.getKeyFrame(stateTime, true);
 
-        float width = Utility.getWidth(frame, mDrawRect.height);
+        float width = Utility.getWidth(frame, drawRect.height);
         float originX = width * 0.5f;
-        float originY = /*0;//*/mDrawRect.height * 0.5f;
+        float originY = /*0;//*/drawRect.height * 0.5f;
         float rotation = mRotationZ;
         boolean flipX = mRotationY == 180;
         boolean flipY = mRotationX == 180;
 
         frame.flip(flipX, flipY);//flip it
-        spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, originX, originY, width, mDrawRect.height, 1, 1, rotation);
+        spriteBatch.draw(frame, drawRect.x, drawRect.y, originX, originY, width, drawRect.height, 1, 1, rotation);
         frame.flip(flipX, flipY);//return it to original
 
     }
 
     @Override
-    public boolean canBeKilledByJumpingOnTop()
-    {
+    public boolean canBeKilledByJumpingOnTop() {
         return false;
     }
 
     @Override
-	public void update(float delta)
-	{
-		super.update(delta);
-        if(deadByBullet)
-        {
+    public void _update(float delta) {
+        super._update(delta);
+        if (deadByBullet) {
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
 
@@ -138,5 +116,5 @@ public class Eato extends Enemy
 
             checkCollisionWithBlocks(delta, false, false);
         }
-	}
+    }
 }

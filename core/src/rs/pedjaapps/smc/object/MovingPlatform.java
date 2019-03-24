@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.shader.Shader;
 
 /**
  * Created by pedja on 19.9.15..
  */
-public class MovingPlatform extends Sprite
-{
+public class MovingPlatform extends Sprite {
     private Vector3 mOriginPosition;
     public float max_distance;//max distance until it starts going back
     public float speed;//moving speed
@@ -45,46 +45,37 @@ public class MovingPlatform extends Sprite
     public static final int MOVING_PLATFORM_FALL = 3;
     public Path path;
 
-    public MovingPlatform(World world, Vector2 size, Vector3 position, Rectangle colRect)
-    {
-        super(world, size, position, colRect);
+    public MovingPlatform(float x, float y, float z, float width, float height, Rectangle colRect) {
+        super(x, y, z, width, height, colRect);
         mOriginPosition = new Vector3(position);
     }
 
     @Override
-    public void initAssets()
-    {
-        if (textureAtlas != null && !textureAtlas.trim().isEmpty())
-        {
-            TextureAtlas atlas = world.screen.game.assets.manager.get(textureAtlas);
+    public void initAssets() {
+        if (textureAtlas != null && !textureAtlas.trim().isEmpty()) {
+            TextureAtlas atlas = MaryoGame.game.assets.get(textureAtlas);
             rLeft = atlas.findRegion(image_top_left);
             rMiddle = atlas.findRegion(image_top_middle);
             rRight = atlas.findRegion(image_top_right);
-            if(rLeft == null)
+            if (rLeft == null)
                 throw new GdxRuntimeException(image_top_left + " not found in atlas: " + textureAtlas);
-            if(rMiddle == null)
+            if (rMiddle == null)
                 throw new GdxRuntimeException(image_top_middle + " not found in atlas: " + textureAtlas);
-            if(rRight == null)
+            if (rRight == null)
                 throw new GdxRuntimeException(image_top_right + " not found in atlas: " + textureAtlas);
+        } else {
+            rLeft = new TextureRegion(MaryoGame.game.assets.get(image_top_left, Texture.class));
+            rMiddle = new TextureRegion(MaryoGame.game.assets.get(image_top_middle, Texture.class));
+            rRight = new TextureRegion(MaryoGame.game.assets.get(image_top_right, Texture.class));
         }
-        else
-        {
-            rLeft = new TextureRegion(world.screen.game.assets.manager.get(image_top_left, Texture.class));
-            rMiddle = new TextureRegion(world.screen.game.assets.manager.get(image_top_middle, Texture.class));
-            rRight = new TextureRegion(world.screen.game.assets.manager.get(image_top_right, Texture.class));
-        }
-        if (platformState == -1)
-        {
+        if (platformState == -1) {
             speed /= 2.5f;
-            if (touch_move_time > 0)
-            {
+            if (touch_move_time > 0) {
                 platformState = MOVING_PLATFORM_STAY;
-            }
-            else
-            {
+            } else {
                 platformState = MOVING_PLATFORM_TOUCHED;
             }
-            if(type == Type.halfmassive)
+            if (type == Type.halfmassive)
                 type = Type.massive;
             canFall = touch_time > 0;
         }
@@ -92,170 +83,117 @@ public class MovingPlatform extends Sprite
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
-    {
-        if(platformState == MOVING_PLATFORM_SHAKE)
-        {
+    public void render(SpriteBatch spriteBatch) {
+        if (platformState == MOVING_PLATFORM_SHAKE) {
             spriteBatch.setShader(Shader.SHAKE_SHADER);
             spriteBatch.getShader().setUniformf("u_distort", MathUtils.random(.05f), MathUtils.random(.05f), 0);
         }
 
-        float singlePeaceWidth = mDrawRect.width / (2 + middle_img_count);
+        float singlePeaceWidth = drawRect.width / (2 + middle_img_count);
 
         float originX = singlePeaceWidth * 0.5f;
-        float originY = mDrawRect.height * 0.5f;
-        spriteBatch.draw(rLeft, mDrawRect.x, mDrawRect.y, originX, originY, singlePeaceWidth, mDrawRect.height, 1, 1, fallingRotation);
+        float originY = drawRect.height * 0.5f;
+        spriteBatch.draw(rLeft, drawRect.x, drawRect.y, originX, originY, singlePeaceWidth, drawRect.height, 1, 1, fallingRotation);
 
-        for (int i = 0; i < middle_img_count; i++)
-        {
-            spriteBatch.draw(rMiddle, mDrawRect.x + singlePeaceWidth * (i + 1), mDrawRect.y, originX, originY, singlePeaceWidth, mDrawRect.height, 1, 1, fallingRotation);
+        for (int i = 0; i < middle_img_count; i++) {
+            spriteBatch.draw(rMiddle, drawRect.x + singlePeaceWidth * (i + 1), drawRect.y, originX, originY, singlePeaceWidth, drawRect.height, 1, 1, fallingRotation);
         }
 
-        spriteBatch.draw(rRight, mDrawRect.x + singlePeaceWidth * (middle_img_count + 1), mDrawRect.y, originX, originY, singlePeaceWidth, mDrawRect.height, 1, 1, fallingRotation);
+        spriteBatch.draw(rRight, drawRect.x + singlePeaceWidth * (middle_img_count + 1), drawRect.y, originX, originY, singlePeaceWidth, drawRect.height, 1, 1, fallingRotation);
 
-        if(platformState == MOVING_PLATFORM_SHAKE)
+        if (platformState == MOVING_PLATFORM_SHAKE)
             spriteBatch.setShader(null);
     }
 
     @Override
-    public void _update(float delta)
-    {
-        if (platformState == MOVING_PLATFORM_TOUCHED)
-        {
-            if(touch_move_time <= 0)
-            {
-                if (move_type == MOVING_PLATFORM_TYPE_LINE)
-                {
+    public void update(float delta) {
+        if (platformState == MOVING_PLATFORM_TOUCHED) {
+            if (touch_move_time <= 0) {
+                if (move_type == MOVING_PLATFORM_TYPE_LINE) {
                     if ("right".equals(direction))//right
                     {
                         float remainingDistance = (mOriginPosition.x + max_distance) - position.x;
-                        if (forward)
-                        {
-                            if (remainingDistance <= 0)
-                            {
+                        if (forward) {
+                            if (remainingDistance <= 0) {
                                 forward = false;
                                 velocity.x = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.x = speed;
                             }
-                        }
-                        else
-                        {
-                            if (remainingDistance >= max_distance)
-                            {
+                        } else {
+                            if (remainingDistance >= max_distance) {
                                 forward = true;
                                 velocity.x = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.x = -speed;
                             }
                         }
-                    }
-                    else if ("left".equals(direction))//left
+                    } else if ("left".equals(direction))//left
                     {
                         float remainingDistance = position.x - (mOriginPosition.x - max_distance);
-                        if (forward)
-                        {
-                            if (remainingDistance <= 0)
-                            {
+                        if (forward) {
+                            if (remainingDistance <= 0) {
                                 forward = false;
                                 velocity.x = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.x = -speed;
                             }
-                        }
-                        else
-                        {
-                            if (remainingDistance >= max_distance)
-                            {
+                        } else {
+                            if (remainingDistance >= max_distance) {
                                 forward = true;
                                 velocity.x = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.x = speed;
                             }
                         }
-                    }
-                    else if ("up".equals(direction))//up
+                    } else if ("up".equals(direction))//up
                     {
                         float remainingDistance = mOriginPosition.y + max_distance - position.y;
-                        if (forward)
-                        {
-                            if (remainingDistance <= 0)
-                            {
+                        if (forward) {
+                            if (remainingDistance <= 0) {
                                 forward = false;
                                 velocity.y = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.y = speed;
                             }
-                        }
-                        else
-                        {
-                            if (remainingDistance >= max_distance)
-                            {
+                        } else {
+                            if (remainingDistance >= max_distance) {
                                 forward = true;
                                 velocity.y = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.y = -speed;
                             }
                         }
-                    }
-                    else//down
+                    } else//down
                     {
                         float remainingDistance = max_distance - (mOriginPosition.y - position.y);
-                        if (forward)
-                        {
-                            if (remainingDistance <= 0)
-                            {
+                        if (forward) {
+                            if (remainingDistance <= 0) {
                                 forward = false;
                                 velocity.y = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.y = -speed;
                             }
-                        }
-                        else
-                        {
-                            if (remainingDistance >= max_distance)
-                            {
+                        } else {
+                            if (remainingDistance >= max_distance) {
                                 forward = true;
                                 velocity.y = 0;
-                            }
-                            else
-                            {
+                            } else {
                                 velocity.y = speed;
                             }
                         }
                     }
-                }
-                else if (move_type == MOVING_PLATFORM_TYPE_CIRCLE)
-                {
-                    if ("right".equals(direction))
-                    {
+                } else if (move_type == MOVING_PLATFORM_TYPE_CIRCLE) {
+                    if ("right".equals(direction)) {
                         movingAngle += speed * delta;
 
-                        if (movingAngle > 360.0f)
-                        {
+                        if (movingAngle > 360.0f) {
                             movingAngle -= 360.0f;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         movingAngle -= speed * delta;
 
-                        if (movingAngle < 0.0f)
-                        {
+                        if (movingAngle < 0.0f) {
                             movingAngle += 360.0f;
                         }
                     }
@@ -263,14 +201,11 @@ public class MovingPlatform extends Sprite
                     velocity.y = position.y - (MathUtils.sinDeg(movingAngle) * (position.x - origin.x) + MathUtils.cosDeg(movingAngle) * (position.y - origin.y) + origin.y);
 
                     position.add(velocity);
-                    mColRect.x = position.x;
-                    mColRect.y = position.y;
+                    colRect.x = position.x;
+                    colRect.y = position.y;
                     updateBounds();
-                }
-                else if(move_type == MOVING_PLATFORM_TYPE_PATH)
-                {
-                    if(path.currentSegmentIndex < path.segments.size())
-                    {
+                } else if (move_type == MOVING_PLATFORM_TYPE_PATH) {
+                    if (path.currentSegmentIndex < path.segments.size()) {
                         Path.Segment segment = path.segments.get(path.currentSegmentIndex);
                         float targetX = path.posx + segment.end.x;
                         float targetY = path.posy + segment.end.y;
@@ -292,75 +227,51 @@ public class MovingPlatform extends Sprite
                         velocity.y = distanceY / time;
 
                         boolean x = false, y = false;
-                        if(directionX > 0)
-                        {
-                            if(position.x <= targetX)
-                            {
+                        if (directionX > 0) {
+                            if (position.x <= targetX) {
+                                x = true;
+                            }
+                        } else {
+                            if (position.x >= targetX) {
                                 x = true;
                             }
                         }
-                        else
-                        {
-                            if(position.x >= targetX)
-                            {
-                                x = true;
+                        if (directionY > 0) {
+                            if (position.y >= targetY) {
+                                y = true;
                             }
-                        }
-                        if(directionY > 0)
-                        {
-                            if(position.y >= targetY)
-                            {
+                        } else {
+                            if (position.y <= targetY) {
                                 y = true;
                             }
                         }
-                        else
-                        {
-                            if(position.y <= targetY)
-                            {
-                                y = true;
-                            }
-                        }
-                        if(x && y)
-                        {
+                        if (x && y) {
                             path.currentSegmentIndex++;
                         }
-                    }
-                    else if(path.rewind == 1)
-                    {
+                    } else if (path.rewind == 1) {
                         path.currentSegmentIndex = 0;
                         Collections.reverse(path.segments);
-                    }
-                    else
-                    {
+                    } else {
                         velocity.set(0, 0, 0);
                     }
                 }
-            }
-            else
-            {
+            } else {
                 touch_move_time -= delta;
             }
-            if (canFall && touched)
-            {
+            if (canFall && touched) {
                 touch_time -= delta;
-                if(touch_time <= 0)
-                {
+                if (touch_time <= 0) {
                     platformState = MOVING_PLATFORM_SHAKE;
                 }
             }
-        }
-        else if (platformState == MOVING_PLATFORM_SHAKE)
-        {
+        } else if (platformState == MOVING_PLATFORM_SHAKE) {
             shake_time -= delta;
-            if(shake_time <= 0)
-            {
+            if (shake_time <= 0) {
                 platformState = MOVING_PLATFORM_FALL;
                 type = Type.passive;
                 canAttachTo = false;
             }
-        }
-        else if (platformState == MOVING_PLATFORM_FALL)
-        {
+        } else if (platformState == MOVING_PLATFORM_FALL) {
             fallingRotation += 45 * delta;//20 deg per sec
             // Setting initial vertical acceleration
             acceleration.y = -30;
@@ -370,19 +281,17 @@ public class MovingPlatform extends Sprite
 
             // apply acceleration to change velocity
             velocity.add(acceleration);
-        }
-        else //if(platformState == MOVING_PLATFORM_STAY)
+        } else //if(platformState == MOVING_PLATFORM_STAY)
         {
             //do nothing
             velocity.set(0, 0, 0);
         }
-        if (move_type != MOVING_PLATFORM_TYPE_CIRCLE)
-        {
+        if (move_type != MOVING_PLATFORM_TYPE_CIRCLE) {
             velocity.scl(delta);
             // update position
             position.add(velocity);
-            mColRect.x = position.x;
-            mColRect.y = position.y;
+            colRect.x = position.x;
+            colRect.y = position.y;
             updateBounds();
 
             // un-scale velocity (not in frame time)
@@ -392,42 +301,41 @@ public class MovingPlatform extends Sprite
 
         /*if (velocity.x < 0)//moving left
         {
-            if (world.maryo.mColRect.overlaps(mColRect) && world.maryo.mColRect.x + world.maryo.mColRect.width > mColRect.x)
+            if (world.maryo.colRect.overlaps(colRect) && world.maryo.colRect.x + world.maryo.colRect.width > colRect.x)
             {
-                world.maryo.mColRect.x = world.maryo.position.x = mColRect.x - world.maryo.mColRect.width;
+                world.maryo.colRect.x = world.maryo.position.x = colRect.x - world.maryo.colRect.width;
                 world.maryo.updateBounds();
             }
         }
         else if (velocity.x > 0)//moving right
         {
-            if (world.maryo.mColRect.overlaps(mColRect) && mColRect.x + mColRect.width > world.maryo.mColRect.x)
+            if (world.maryo.colRect.overlaps(colRect) && colRect.x + colRect.width > world.maryo.colRect.x)
             {
-                world.maryo.mColRect.x = world.maryo.position.x = mColRect.x + mColRect.width;
+                world.maryo.colRect.x = world.maryo.position.x = colRect.x + colRect.width;
                 world.maryo.updateBounds();
             }
         }
         if (velocity.y < 0)//down
         {
-            if (world.maryo.mColRect.overlaps(mColRect) && world.maryo.mColRect.y + world.maryo.mColRect.height > mColRect.y)
+            if (world.maryo.colRect.overlaps(colRect) && world.maryo.colRect.y + world.maryo.colRect.height > colRect.y)
             {
-                world.maryo.mColRect.y = world.maryo.position.y = mColRect.y - world.maryo.mColRect.height;
+                world.maryo.colRect.y = world.maryo.position.y = colRect.y - world.maryo.colRect.height;
                 world.maryo.updateBounds();
             }
         }
-        else **/if (velocity.y > 0)//up
+        else **/
+        if (velocity.y > 0)//up
         {
-            if (world.maryo.mColRect.overlaps(mColRect) && world.maryo.mColRect.y < mColRect.x + mColRect.height)
-            {
-                world.maryo.mColRect.y = world.maryo.position.y = mColRect.y + mColRect.height;
-                world.maryo.updateBounds();
+            if (MaryoGame.game.currentScreen.world.maryo.colRect.overlaps(colRect) && MaryoGame.game.currentScreen.world.maryo.colRect.y < colRect.x + colRect.height) {
+                MaryoGame.game.currentScreen.world.maryo.colRect.y = MaryoGame.game.currentScreen.world.maryo.position.y = colRect.y + colRect.height;
+                MaryoGame.game.currentScreen.world.maryo.updateBounds();
             }
         }
 
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "MovingPlatform{" +
                 "max_distance=" + max_distance +
                 "\n speed=" + speed +
@@ -446,8 +354,7 @@ public class MovingPlatform extends Sprite
                 "}\n\n" + super.toString();
     }
 
-    public static class Path
-    {
+    public static class Path {
         public float posx, posy;
         public int rewind, currentSegmentIndex;
         public List<Segment> segments;
@@ -456,12 +363,10 @@ public class MovingPlatform extends Sprite
             segments = new ArrayList<>();
         }
 
-        public static class Segment
-        {
+        public static class Segment {
             public Vector2 start, end;
 
-            public Segment()
-            {
+            public Segment() {
                 start = new Vector2();
                 end = new Vector2();
             }

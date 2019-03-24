@@ -7,14 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.utility.Utility;
 
-public class Sprite extends GameObject
-{
+public class Sprite extends GameObject {
     public static final int GROUND_NORMAL = 0;
     public static final int GROUND_EARTH = 1;
     public static final int GROUND_ICE = 2;
@@ -31,36 +29,29 @@ public class Sprite extends GameObject
     private TextureRegion region = null;
     public int groundType = GROUND_NORMAL;
 
-    public Sprite(World world, Vector2 size, Vector3 position, Rectangle colRect)
-    {
-        super(world, size, position);
-        this.position = position;
-        mOrigDrawRect = new Rectangle(mDrawRect);
-        if (colRect != null)
-        {
-            mColRect.x = mDrawRect.x + Math.abs(colRect.x);
-            mColRect.y = mDrawRect.y + Math.abs(colRect.y);
-            mColRect.width = colRect.width;
-            mColRect.height = colRect.height;
+    public Sprite(float x, float y, float z, float width, float height, Rectangle colRect) {
+        super(x, y, z, width, height);
+        mOrigDrawRect = new Rectangle(drawRect);
+        if (colRect != null) {
+            this.colRect.x = drawRect.x + Math.abs(colRect.x);
+            this.colRect.y = drawRect.y + Math.abs(colRect.y);
+            this.colRect.width = colRect.width;
+            this.colRect.height = colRect.height;
         }
     }
 
     @Override
-    public void _render(SpriteBatch spriteBatch)
-    {
+    public void render(SpriteBatch spriteBatch) {
         float width = txt == null ? Utility.getWidth(region, mOrigDrawRect.height) : Utility.getWidth(txt, mOrigDrawRect.height);
         float originX = width * 0.5f;
         float originY = getOriginY();
-        float rotation = mRotationZ;
-        boolean flipX = mRotationY == 180;
-        boolean flipY = mRotationX == 180;
+        float rotation = rotationZ;
+        boolean flipX = rotationY == 180;
+        boolean flipY = rotationX == 180;
 
-        if (txt != null)
-        {
+        if (txt != null) {
             spriteBatch.draw(txt, mOrigDrawRect.x, mOrigDrawRect.y, originX, originY, width, mOrigDrawRect.height, 1, 1, rotation, 0, 0, txt.getWidth(), txt.getHeight(), flipX, flipY);
-        }
-        else
-        {
+        } else {
             region.flip(flipX, flipY);//flip it
             spriteBatch.draw(region, mOrigDrawRect.x, mOrigDrawRect.y, originX, originY, width, mOrigDrawRect.height, 1, 1, rotation);
             region.flip(flipX, flipY);//return it to original
@@ -68,42 +59,33 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void _update(float delta)
-    {
+    public void update(float delta) {
 
     }
 
     @Override
-    public void initAssets()
-    {
-        if (mRotationZ == 90 && mRotationX == 0 && mRotationY == 0)
-        {
-            mRotationY = 180;
-            mRotationX = 180;
+    public void initAssets() {
+        if (rotationZ == 90 && rotationX == 0 && rotationY == 0) {
+            rotationY = 180;
+            rotationX = 180;
         }
         //load all assets
         TextureAtlas atlas = null;
-        if (textureAtlas != null && textureAtlas.length() > 0)
-        {
-            atlas = world.screen.game.assets.manager.get(textureAtlas);
+        if (textureAtlas != null && textureAtlas.length() > 0) {
+            atlas = MaryoGame.game.assets.get(textureAtlas);
         }
 
-        if (atlas != null)
-        {
+        if (atlas != null) {
             region = atlas.findRegion(textureName.split(":")[1]);
-        }
-        else
-        {
-            txt = world.screen.game.assets.manager.get(textureName);
+        } else {
+            txt = MaryoGame.game.assets.get(textureName);
         }
 
-        if (txt == null && region == null)
-        {
+        if (txt == null && region == null) {
             throw new GdxRuntimeException("both Texture and TextureRegion are null: " + textureName);
         }
 
-        if (!rotationAplied)
-        {
+        if (!rotationAplied) {
             applyRotation();
             rotationAplied = true;
         }
@@ -111,38 +93,31 @@ public class Sprite extends GameObject
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         txt = null;
         region = null;
     }
 
-    private void applyRotation()
-    {
+    private void applyRotation() {
         //apply rotation
-        if (mRotationX == 180.0)
-        {
-            mColRect.y = mDrawRect.y + ((mDrawRect.y + mDrawRect.height) - (mColRect.y + mColRect.height));
+        if (rotationX == 180.0) {
+            colRect.y = drawRect.y + ((drawRect.y + drawRect.height) - (colRect.y + colRect.height));
         }
 
-        if (mRotationY == 180.0)
-        {
-            mColRect.x = mDrawRect.x + ((mDrawRect.x + mDrawRect.width) - (mColRect.x + mColRect.width));
+        if (rotationY == 180.0) {
+            colRect.x = drawRect.x + ((drawRect.x + drawRect.width) - (colRect.x + colRect.width));
         }
 
-        if (mRotationZ != 0)
-        {
+        if (rotationZ != 0) {
             float originY = getOriginY();
-            rotate2(mOrigDrawRect, mDrawRect, mOrigDrawRect.width / 2, getOriginY(), mRotationZ);
-            rotate2(mColRect, mColRect, mColRect.width / 2, originY, mRotationZ);
+            rotate2(mOrigDrawRect, drawRect, mOrigDrawRect.width / 2, getOriginY(), rotationZ);
+            rotate2(colRect, colRect, colRect.width / 2, originY, rotationZ);
         }
     }
 
-    private float getOriginY()
-    {
+    private float getOriginY() {
         float originY = 0;
-        if (MathUtils.isEqual(mDrawRect.width, mDrawRect.height))
-        {
+        if (MathUtils.isEqual(drawRect.width, drawRect.height)) {
             originY = mOrigDrawRect.height / 2;
         }
         return originY;
@@ -151,8 +126,7 @@ public class Sprite extends GameObject
     /**
      * @param originX , originY, rotation point relative to self
      */
-    private void rotate2(Rectangle sourceRect, Rectangle destRect, float originX, float originY, float rotate)
-    {
+    private void rotate2(Rectangle sourceRect, Rectangle destRect, float originX, float originY, float rotate) {
         float x = sourceRect.x;
         float y = sourceRect.y;
         float centerX = sourceRect.x + originX;
@@ -178,14 +152,12 @@ public class Sprite extends GameObject
      * passive = player passes in front of it
      * front_passive = player passes behind it
      */
-    public enum Type
-    {
+    public enum Type {
         massive, passive, front_passive, halfmassive, climbable
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Sprite{" +
                 "\nrotationAplied=" + rotationAplied +
                 "\n textureAtlas='" + textureAtlas + '\'' +

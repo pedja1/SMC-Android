@@ -168,13 +168,13 @@ public class GameScreenInput implements InputProcessor {
             gameScreen.discardBoxText();
         else if (MaryoGame.GAME_DEVMODE &&
                 gameState == GameScreen.GAME_STATE.GAME_EDIT_MODE && x != 0 && y != 0) {
-            Vector2 point = World.VECTOR2_POOL.obtain();
+            Vector2 point = MaryoGame.VECTOR2_POOL.obtain();
             x = Gdx.input.getX();
             y = Gdx.graphics.getHeight() - Gdx.input.getY();
             Utility.guiPositionToGamePosition(x, y, gameScreen, point);
             gameScreen.getWorld().maryo.position.x = point.x;
             gameScreen.getWorld().maryo.position.y = point.y;
-            World.VECTOR2_POOL.free(point);
+            MaryoGame.VECTOR2_POOL.free(point);
             gameScreen.setGameState(GameScreen.GAME_STATE.GAME_RUNNING);
         } else
             return false;

@@ -120,7 +120,7 @@ public class HUD {
             if (PrefsManager.showKeyboardHint()) {
                 String hint = "You can configure game controller buttons when paused.";
                 //on FireTV?
-                if (gameScreen.game.isRunningOn.startsWith("AFT"))
+                if (MaryoGame.game.isRunningOn.startsWith("AFT"))
                     hint = "Use FF to JUMP, MENU to FIRE, BACK for PAUSE on your remote.\n" + hint;
                 else if (Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard))
                     hint = "Hold F1 key on keyboard to see how to control the game.\n" + hint;
@@ -138,9 +138,8 @@ public class HUD {
     }
 
     public void loadAssets() {
-        world.screen.game.assets.manager.load(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class);
-        world.screen.game.assets.manager.load("data/hud/help.png", Texture.class, world.screen.game.assets
-                .textureParameter);
+        MaryoGame.game.assets.load(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class);
+        MaryoGame.game.assets.load("data/hud/help.png", Texture.class, Assets.TEXTURE_PARAMETER);
     }
 
     public void initAssets() {
@@ -148,7 +147,7 @@ public class HUD {
         if (skin != null)
             return;
 
-        skin = world.screen.game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
+        skin = MaryoGame.game.assets.get(Assets.SKIN_HUD, Skin.class);
         stage.setEmphColor(skin.getColor(Assets.COLOR_EMPH2));
         float padX = stage.getWidth() * 0.03f;
         float ibSize = MaryoGame.NATIVE_WIDTH / 14;
@@ -253,7 +252,7 @@ public class HUD {
             }
         });
 
-        dynAtlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
+        dynAtlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
 
         readyLbl = new Label("LET'S GET GOING!", skin, Assets.LABEL_BORDER60);
         readyLbl.setAlignment(Align.center);
@@ -291,7 +290,7 @@ public class HUD {
         levelNamePaused.addAction(HUD.getForeverFade());
         stage.addActor(levelNamePaused);
 
-        imGameLogo = MainMenuScreen.createLogoImage(world.screen.game);
+        imGameLogo = MainMenuScreen.createLogoImage();
         imGameLogo.setSize(imGameLogo.getPrefWidth() * .6f, imGameLogo.getPrefHeight() * .6f);
         imGameLogo.setPosition(stage.getWidth() / 2, stage.getHeight() - 10, Align.top);
         stage.addActor(imGameLogo);
@@ -301,14 +300,14 @@ public class HUD {
         gamePadSettings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new GamepadSettingsDialog(skin, gameScreen.game.controllerMappings,
-                        gameScreen.game.isRunningOn).show(stage);
+                new GamepadSettingsDialog(skin, MaryoGame.game.controllerMappings,
+                        MaryoGame.game.isRunningOn).show(stage);
             }
         });
         stage.addActor(gamePadSettings);
         stage.addFocussableActor(gamePadSettings);
 
-        musicButton = new MusicButton(skin, world.screen.game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class)) {
+        musicButton = new MusicButton(skin, MaryoGame.game.assets.get(Assets.SOUND_AUDIO_ON, Sound.class)) {
             @Override
             protected Music getMusic() {
                 return gameScreen.getMusic();
@@ -403,7 +402,7 @@ public class HUD {
         hintLabel.setPosition(padX, imItemBox.getY() - padX - hintLabel.getHeight());
         stage.addActor(hintLabel);
 
-        Texture helpScreen = world.screen.game.assets.manager.get("data/hud/help.png", Texture.class);
+        Texture helpScreen = MaryoGame.game.assets.get("data/hud/help.png", Texture.class);
         helpScreen.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         imHelp = new Image(helpScreen);
         imHelp.setSize(imHelp.getWidth() * .8f, imHelp.getHeight() * .8f);

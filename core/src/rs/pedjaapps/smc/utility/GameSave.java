@@ -1,7 +1,6 @@
 package rs.pedjaapps.smc.utility;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -181,9 +180,8 @@ public class GameSave {
         if (coins >= 100) {
             coins -= 100;
             lifes++;
-            AssetManager manager = screen.game.assets.manager;
-            if (manager.isLoaded(Assets.SOUND_ITEM_LIVE_UP_2))
-                SoundManager.play(manager.get(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class));
+            if (MaryoGame.game.assets.isLoaded(Assets.SOUND_ITEM_LIVE_UP_2))
+                SoundManager.play(MaryoGame.game.assets.get(Assets.SOUND_ITEM_LIVE_UP_2, Sound.class));
         }
     }
 
@@ -281,7 +279,7 @@ public class GameSave {
             bestTotal = totalScore;
     }
 
-    public static void loadFromCloudIfApplicable(final MaryoGame game) {
+    public static void loadFromCloudIfApplicable() {
         if (!loadedFromCloud && !loadingFromCloud && cloudSaveClient != null && cloudSaveClient.isSessionActive()
                 && cloudSaveClient.isFeatureSupported(IGameServiceClient.GameServiceFeature.GameStateStorage)) {
             loadingFromCloud = true;
@@ -305,7 +303,7 @@ public class GameSave {
                                     madeChanges = readFromJson(json);
 
                                 if (madeChanges)
-                                    game.onChangedStateFromCloud();
+                                    MaryoGame.game.onChangedStateFromCloud();
                             } catch (Throwable t) {
                                 // eat
                             }

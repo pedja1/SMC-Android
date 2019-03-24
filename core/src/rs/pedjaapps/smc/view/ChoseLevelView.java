@@ -80,8 +80,8 @@ public class ChoseLevelView extends Group {
                                     "If this problem remains, log out from cloud service to cancel.",
                                     getSkin(), .8f, .5f);
                         else {
-                            ChoseLevelView.this.mainMenuScreen.game.setScreen(
-                                    new LoadingScreen(new GameScreen(ChoseLevelView.this.mainMenuScreen.game, true,
+                            MaryoGame.game.changeScreen(
+                                    new LoadingScreen(new GameScreen(true,
                                             getLevel().levelId), false));
                         }
                     }

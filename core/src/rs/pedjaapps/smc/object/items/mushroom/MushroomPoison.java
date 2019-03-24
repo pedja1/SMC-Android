@@ -1,9 +1,6 @@
 package rs.pedjaapps.smc.object.items.mushroom;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-
-import rs.pedjaapps.smc.object.World;
+import rs.pedjaapps.smc.MaryoGame;
 
 /**
  * Created by pedja on 29.3.15..
@@ -11,11 +8,9 @@ import rs.pedjaapps.smc.object.World;
  * This file is part of SMC-Android
  * Copyright Predrag Čokulov 2015
  */
-public class MushroomPoison extends Mushroom
-{
-    public MushroomPoison(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+public class MushroomPoison extends Mushroom {
+    public MushroomPoison(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         textureName = "game_items_mushroom_poison";
     }
 
@@ -25,11 +20,10 @@ public class MushroomPoison extends Mushroom
     }
 
     @Override
-    protected void performCollisionAction()
-    {
+    protected void performCollisionAction() {
         playerHit = true;
-        if (!world.maryo.mInvincibleStar)
-            world.maryo.downgradeOrDie(false);
-        world.trashObjects.add(this);
+        if (!MaryoGame.game.currentScreen.world.maryo.mInvincibleStar)
+            MaryoGame.game.currentScreen.world.maryo.downgradeOrDie(false);
+        trashThisObject();
     }
 }

@@ -8,14 +8,14 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
-public abstract class DynamicObject extends GameObject
-{
+public abstract class DynamicObject extends GameObject {
     protected static final float DEF_MAX_VEL = 4f;
     protected static final float DEF_VEL_DUMP = .8f;
 
@@ -46,26 +46,23 @@ public abstract class DynamicObject extends GameObject
         right, left
     }
 
-    public DynamicObject(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+    public DynamicObject(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
     }
 
-	protected void updatePosition(float deltaTime)
-	{
-		velocity.scl(deltaTime);
+    protected void updatePosition(float deltaTime) {
+        velocity.scl(deltaTime);
 
-		position.add(velocity);
-        mColRect.x = position.x;
-        mColRect.y = position.y;
+        position.add(velocity);
+        colRect.x = position.x;
+        colRect.y = position.y;
         updateBounds();
 
-		velocity.scl(1 / deltaTime);
-	}
+        velocity.scl(1 / deltaTime);
+    }
 
-	@Override
-    public void _update(float delta)
-    {
+    @Override
+    public void update(float delta) {
         // Setting initial vertical acceleration
         acceleration.y = Constants.GRAVITY;
 
@@ -96,65 +93,49 @@ public abstract class DynamicObject extends GameObject
         stateTime += delta;
     }
 
-    protected void checkCollisionWithBlocks(float delta)
-    {
+    protected void checkCollisionWithBlocks(float delta) {
         checkCollisionWithBlocks(delta, true, true);
     }
 
-    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY)
-    {
+    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY) {
         checkCollisionWithBlocks(delta, checkX, checkY, true, true);
     }
 
-    /** Collision checking **/
-    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides)
-    {
+    /**
+     * Collision checking
+     **/
+    protected void checkCollisionWithBlocks(float delta, boolean checkX, boolean checkY, boolean xFirst, boolean checkSecondIfFirstCollides) {
         refreshNeighbourList(delta);
         // scale velocity to frame units
         velocity.scl(delta);
 
-        if(xFirst)
-        {
+        if (xFirst) {
             boolean first = false;
-            if (checkX)
-            {
+            if (checkX) {
                 first = checkX();
             }
 
-            if (checkY)
-            {
-                if(!checkSecondIfFirstCollides)
-                {
-                    if(!first)
-                    {
+            if (checkY) {
+                if (!checkSecondIfFirstCollides) {
+                    if (!first) {
                         checkY();
                     }
-                }
-                else
-                {
+                } else {
                     checkY();
                 }
             }
-        }
-        else
-        {
+        } else {
             boolean first = false;
-            if (checkY)
-            {
+            if (checkY) {
                 first = checkY();
             }
 
-            if (checkX)
-            {
-                if(!checkSecondIfFirstCollides)
-                {
-                    if(!first)
-                    {
+            if (checkX) {
+                if (!checkSecondIfFirstCollides) {
+                    if (!first) {
                         checkX();
                     }
-                }
-                else
-                {
+                } else {
                     checkX();
                 }
             }
@@ -162,47 +143,43 @@ public abstract class DynamicObject extends GameObject
 
         // update position
         position.add(velocity);
-        mColRect.x = position.x;
-        mColRect.y = position.y;
+        colRect.x = position.x;
+        colRect.y = position.y;
         updateBounds();
 
         // un-scale velocity (not in frame time)
         velocity.scl(1 / delta);
 
-        if((checkX || checkY) && ppEnabled)
-        {
+        if ((checkX || checkY) && ppEnabled) {
             //List<GameObject> surroundingObjects = world.level.gameObjects;
             //noinspection ForLoopReplaceableByForEach
-            for (int i = 0, size = neighbours.size; i < size; i++)
-            {
+            for (int i = 0, size = neighbours.size; i < size; i++) {
                 GameObject object = neighbours.get(i);
-                if (object != null && mColRect.overlaps(object.mColRect) && object instanceof Sprite
-                        && ((Sprite) object).type == Sprite.Type.massive)
-                {
-                    float diffLeft = (mColRect.x + mColRect.width) - object.mColRect.x;
-                    float diffRight = (object.mColRect.x + object.mColRect.width) - mColRect.x;
-                    float diffTop = (object.mColRect.y + object.mColRect.height) - mColRect.y;
-                    float diffBottom = (mColRect.y + mColRect.height) - object.mColRect.y;
+                if (object != null && colRect.overlaps(object.colRect) && object instanceof Sprite
+                        && ((Sprite) object).type == Sprite.Type.massive) {
+                    float diffLeft = (colRect.x + colRect.width) - object.colRect.x;
+                    float diffRight = (object.colRect.x + object.colRect.width) - colRect.x;
+                    float diffTop = (object.colRect.y + object.colRect.height) - colRect.y;
+                    float diffBottom = (colRect.y + colRect.height) - object.colRect.y;
 
                     int smallestIdx = findSmallestDiffIndex(diffLeft, diffRight, diffTop, diffBottom);
 
-                    switch (smallestIdx)
-                    {
+                    switch (smallestIdx) {
                         case 0:
                             position.x -= diffLeft;
-                            mColRect.x = position.x;
+                            colRect.x = position.x;
                             break;
                         case 1:
                             position.x += diffRight;
-                            mColRect.x = position.x;
+                            colRect.x = position.x;
                             break;
                         case 2:
                             position.y += diffTop;
-                            mColRect.y = position.y;
+                            colRect.y = position.y;
                             break;
                         case 3:
                             position.y -= diffBottom;
-                            mColRect.y = position.y;
+                            colRect.y = position.y;
                             break;
                     }
                     updateBounds();
@@ -223,55 +200,48 @@ public abstract class DynamicObject extends GameObject
         if (neighboursArrayAge >= FREQ_REFRESH_NEIGHBOURLIST) {
             neighboursArrayAge = 0;
             neighbours.clear();
-            List<GameObject> surroundingObjects = world.level.gameObjects;
-            tmpRect.set(mColRect.x - THRESHOLD_NEIGHBOURS_X, mColRect.y - THRESHOLD_NEIGHBOURS_Y,
-                    mColRect.width + 2 * THRESHOLD_NEIGHBOURS_X, mColRect.height + 2 * THRESHOLD_NEIGHBOURS_Y);
+            List<GameObject> surroundingObjects = MaryoGame.game.currentScreen.world.level.gameObjects;
+            tmpRect.set(colRect.x - THRESHOLD_NEIGHBOURS_X, colRect.y - THRESHOLD_NEIGHBOURS_Y,
+                    colRect.width + 2 * THRESHOLD_NEIGHBOURS_X, colRect.height + 2 * THRESHOLD_NEIGHBOURS_Y);
             //noinspection ForLoopReplaceableByForEach
             for (int i = 0, size = surroundingObjects.size(); i < size; i++) {
                 GameObject go = surroundingObjects.get(i);
-                if (tmpRect.overlaps(go.mColRect)) {
+                if (tmpRect.overlaps(go.colRect)) {
                     neighbours.add(go);
                 }
             }
         }
     }
 
-    private int findSmallestDiffIndex(float diffLeft, float diffRight, float diffTop, float diffBottom)
-    {
+    private int findSmallestDiffIndex(float diffLeft, float diffRight, float diffTop, float diffBottom) {
         int index;
         float smallest;
-        if(diffLeft < diffRight)
-        {
+        if (diffLeft < diffRight) {
             smallest = diffLeft;
             index = 0;
-        }
-        else
-        {
+        } else {
             smallest = diffRight;
             index = 1;
         }
-        if(smallest > diffTop)
-        {
+        if (smallest > diffTop) {
             smallest = diffTop;
             index = 2;
         }
-        if(smallest > diffBottom)
-        {
+        if (smallest > diffBottom) {
             index = 3;
         }
         return index;
     }
 
-    protected boolean checkY()
-    {
+    protected boolean checkY() {
         boolean collides = false;
         // the same thing but on the vertical Y axis
-        tmpRect.set(mColRect.x, 0, mColRect.width, mColRect.y);
+        tmpRect.set(colRect.x, 0, colRect.width, colRect.y);
         float tmpGroundY = 0;
-        float distance = mColRect.y;
-        float oldY = mColRect.y;
+        float distance = colRect.y;
+        float oldY = colRect.y;
 
-        mColRect.y += velocity.y;
+        colRect.y += velocity.y;
 
         boolean found = false;
 
@@ -280,54 +250,48 @@ public abstract class DynamicObject extends GameObject
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = neighbours.get(i);
-            if (mColRect.overlaps(object.mColRect))
-            {
+            if (colRect.overlaps(object.colRect)) {
                 boolean tmp = handleCollision(object, true);
-                if(tmp)
+                if (tmp)
                     collides = true;
             }
 
             //checkGround
             if (object instanceof Sprite
                     && (((Sprite) object).type == Sprite.Type.massive || ((Sprite) object).type == Sprite.Type.halfmassive)
-                    && tmpRect.overlaps(object.mColRect))
-            {
-                if (((Sprite) object).type == Sprite.Type.halfmassive && oldY < object.mColRect.y + object.mColRect.height)
-                {
+                    && tmpRect.overlaps(object.colRect)) {
+                if (((Sprite) object).type == Sprite.Type.halfmassive && oldY < object.colRect.y + object.colRect.height) {
                     continue;
                 }
-                float tmpDistance = oldY - (object.mColRect.y + object.mColRect.height);
-                if (tmpDistance < distance)
-                {
+                float tmpDistance = oldY - (object.colRect.y + object.colRect.height);
+                if (tmpDistance < distance) {
                     distance = tmpDistance;
-                    tmpGroundY = object.mColRect.y + object.mColRect.height;
+                    tmpGroundY = object.colRect.y + object.colRect.height;
                     closestObject = object;
                     found = true;
                 }
             }
         }
-        if(!found)
+        if (!found)
             closestObject = null;
         groundY = tmpGroundY;
-        if (mColRect.y < 0)
-        {
+        if (colRect.y < 0) {
             boolean tmp = handleDroppedBelowWorld();
-            if(tmp)
+            if (tmp)
                 collides = true;
         }
 
         // reset the collision box's position on Y
-        mColRect.y = position.y;
+        colRect.y = position.y;
         return collides;
     }
 
-    protected boolean checkX()
-    {
+    protected boolean checkX() {
         boolean collides = false;
         // we first check the movement on the horizontal X axis
 
         // simulate maryos's movement on the X
-        mColRect.x += velocity.x;
+        colRect.x += velocity.x;
 
         //List<GameObject> surroundingObjects = world.level.gameObjects;//world.getSurroundingObjects(this, 1);
         // if m collides, make his horizontal velocity 0
@@ -336,83 +300,66 @@ public abstract class DynamicObject extends GameObject
         //for (GameObject object : surroundingObjects)
         {
             GameObject object = neighbours.get(i);
-            if (mColRect.overlaps(object.mColRect))
-            {
+            if (colRect.overlaps(object.colRect)) {
                 boolean tmp = handleCollision(object, false);
-                if(tmp)
+                if (tmp)
                     collides = true;
             }
         }
-        if (mColRect.x < 0 || mColRect.x + mColRect.width > world.level.width)
-        {
+        if (colRect.x < 0 || colRect.x + colRect.width > MaryoGame.game.currentScreen.world.level.width) {
             boolean tmp = handleLevelEdge();
-            if(tmp)
+            if (tmp)
                 collides = true;
         }
 
         // reset the x position of the collision box
-        mColRect.x = position.x;
+        colRect.x = position.x;
         return collides;
     }
 
-    protected boolean handleDroppedBelowWorld()
-    {
-        if (velocity.y < 0)
-        {
+    protected boolean handleDroppedBelowWorld() {
+        if (velocity.y < 0) {
             grounded = true;
         }
         velocity.y = 0;
         return false;
     }
 
-    protected boolean handleLevelEdge()
-    {
+    protected boolean handleLevelEdge() {
         velocity.x = 0;
         return false;
     }
 
-    protected boolean handleCollision(GameObject object, boolean vertical)
-	{
-		if(object instanceof Sprite && ((Sprite)object).type == Sprite.Type.massive)
-		{
-			if(vertical)
-			{
-                if(velocity.y > 0 && this instanceof Maryo)
-                {
-                    ((Maryo)this).jumpPeakReached = true;
-                    if(System.currentTimeMillis() - lasHitSoundPlayed > 200)
-                    {
-                        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_WALL_HIT);
-                        if (sound != null && PrefsManager.isPlaySounds())
-                        {
+    protected boolean handleCollision(GameObject object, boolean vertical) {
+        if (object instanceof Sprite && ((Sprite) object).type == Sprite.Type.massive) {
+            if (vertical) {
+                if (velocity.y > 0 && this instanceof Maryo) {
+                    ((Maryo) this).jumpPeakReached = true;
+                    if (System.currentTimeMillis() - lasHitSoundPlayed > 200) {
+                        Sound sound = MaryoGame.game.assets.get(Assets.SOUND_WALL_HIT);
+                        if (sound != null && PrefsManager.isPlaySounds()) {
                             SoundManager.play(sound);
                             lasHitSoundPlayed = System.currentTimeMillis();
                         }
                     }
                 }
-				if (velocity.y < 0)
-				{
-					grounded = true;
-				}
+                if (velocity.y < 0) {
+                    grounded = true;
+                }
                 velocity.y = 0;
-			}
-			else
-			{
-				velocity.x = 0;
-			}
+            } else {
+                velocity.x = 0;
+            }
             return true;
-		}
-		else if(object instanceof Sprite && ((Sprite)object).type == Sprite.Type.halfmassive)
-		{
-			if(velocity.y < 0 && position.y > object.position.y + object.mColRect.height)
-			{
-				grounded = true;
-				velocity.y = 0;
+        } else if (object instanceof Sprite && ((Sprite) object).type == Sprite.Type.halfmassive) {
+            if (velocity.y < 0 && position.y > object.position.y + object.colRect.height) {
+                grounded = true;
+                velocity.y = 0;
                 return true;
-			}
-		}
+            }
+        }
         return false;
-	}
+    }
 
-	public abstract float maxVelocity();
+    public abstract float maxVelocity();
 }

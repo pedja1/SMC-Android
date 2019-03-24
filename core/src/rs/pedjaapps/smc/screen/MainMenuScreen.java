@@ -33,9 +33,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.assets.FontAwesome;
+import rs.pedjaapps.smc.assets.TextureKey;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -55,7 +55,6 @@ import rs.pedjaapps.smc.view.MusicButton;
 public class MainMenuScreen extends AbstractScreen {
     public static final float DURATION_TRANSITION = .5f;
     private static boolean firstStartDone;
-    public MaryoGame game;
     private OrthographicCamera drawCam, hudCam;
     private SpriteBatch batch;
     private Background background;
@@ -66,7 +65,6 @@ public class MainMenuScreen extends AbstractScreen {
     private int screenHeight = Gdx.graphics.getHeight();
     private Music music;
     private Sound audioOn;
-    private World world;
     private ParticleEffect cloudsPEffect;
     private ChoseLevelView choseLevelView;
     private Viewport viewPort;
@@ -77,9 +75,7 @@ public class MainMenuScreen extends AbstractScreen {
     private TextButton playButton;
     private TextButton exitButton;
 
-    public MainMenuScreen(MaryoGame game) {
-        super(game);
-        this.game = game;
+    public MainMenuScreen() {
         batch = new SpriteBatch();
         drawCam = new OrthographicCamera();
         viewPort = new FitViewport(Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT);
@@ -96,15 +92,14 @@ public class MainMenuScreen extends AbstractScreen {
         debugFont = new BitmapFont();
         debugFont.setColor(Color.RED);
         debugFont.getData().setScale(1.3f);
-        world = new World(this);
 
         if (GameSave.getLifes() <= 0)
             GameSave.resetGameOver();
-        GameSave.loadFromCloudIfApplicable(game);
+        GameSave.loadFromCloudIfApplicable();
     }
 
-    public static Image createLogoImage(MaryoGame game) {
-        Image imGameLogo = new Image(game.assets.manager.get(Assets.SKIN_HUD, Skin.class), Assets.LOGO_GAME);
+    public static Image createLogoImage() {
+        Image imGameLogo = new Image(MaryoGame.game.assets.get(Assets.SKIN_HUD, Skin.class), Assets.LOGO_GAME);
         imGameLogo.setSize(imGameLogo.getWidth() * .9f, imGameLogo.getHeight() * .9f);
         return imGameLogo;
     }
@@ -114,8 +109,8 @@ public class MainMenuScreen extends AbstractScreen {
         Gdx.input.setCatchBackKey(true);
         Gdx.input.setCatchMenuKey(true);
         Gdx.input.setInputProcessor(stage);
-        game.controllerMappings.setInputProcessor(stage);
-        music = world.screen.game.assets.manager.get(loader.level.music.first());
+        MaryoGame.game.controllerMappings.setInputProcessor(stage);
+        music = MaryoGame.game.assets.get(loader.level.music.first());
         music.setLooping(true);
         MusicManager.play(music);
     }
@@ -153,8 +148,8 @@ public class MainMenuScreen extends AbstractScreen {
         //for (GameObject gameObject : loader.level.gameObjects)
         {
             GameObject gameObject = loader.level.gameObjects.get(i);
-            gameObject._update(deltaTime);
-            gameObject._render(batch);
+            gameObject.update(deltaTime);
+            gameObject.render(batch);
         }
     }
 
@@ -186,8 +181,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
         Gdx.input.setInputProcessor(null);
-        game.controllerMappings.setInputProcessor(null);
-        game.assets.dispose();
+        MaryoGame.game.controllerMappings.setInputProcessor(null);
         background.dispose();
         backgroundColor.dispose();
         batch.dispose();
@@ -197,10 +191,10 @@ public class MainMenuScreen extends AbstractScreen {
     @Override
     public void loadAssets() {
         loader.parseLevel(world);
-        game.assets.manager.load(Assets.ATLAS_STATIC, TextureAtlas.class);
-        game.assets.manager.load(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
-        game.assets.manager.load("data/game/background/more_hills.png", Texture.class, game.assets.textureParameter);
-        game.assets.manager.load(Assets.SOUND_AUDIO_ON, Sound.class);
+        MaryoGame.game.assets.load(Assets.ATLAS_STATIC, TextureAtlas.class);
+        MaryoGame.game.assets.load(Assets.ATLAS_DYNAMIC, TextureAtlas.class);
+        MaryoGame.game.assets.load("data/game/background/more_hills.png", Texture.class, Assets.TEXTURE_PARAMETER);
+        MaryoGame.game.assets.load(Assets.SOUND_AUDIO_ON, Sound.class);
         cloudsPEffect = new ParticleEffect();
         cloudsPEffect.loadEmitters(Gdx.files.internal("data/animation/particles/clouds_emitter.p"));
     }
@@ -210,9 +204,9 @@ public class MainMenuScreen extends AbstractScreen {
         background = new Background(new Vector2(0, 0), new Vector2(), "data/game/background/more_hills.png",
                 Constants.MENU_CAMERA_WIDTH, Constants.MENU_CAMERA_HEIGHT, Constants.MENU_CAMERA_WIDTH * 2, Constants
                 .MENU_CAMERA_HEIGHT, Background.BG_IMG_BOTTOM);
-        background.onAssetsLoaded(drawCam, game.assets);
+        background.onAssetsLoaded(drawCam);
 
-        cloudsPEffect.loadEmitterImages(game.assets.manager.get(Assets.ATLAS_STATIC, TextureAtlas.class),
+        cloudsPEffect.loadEmitterImages(MaryoGame.game.assets.get(Assets.ATLAS_STATIC, TextureAtlas.class),
                 "clouds_default_1_");
         cloudsPEffect.setPosition(Constants.MENU_CAMERA_WIDTH / 2, Constants.MENU_CAMERA_HEIGHT);
         cloudsPEffect.start();
@@ -224,14 +218,14 @@ public class MainMenuScreen extends AbstractScreen {
 
         world.level = loader.level;
 
-        TextureAtlas dynAtlas = game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+        TextureAtlas dynAtlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
 
-        audioOn = game.assets.manager.get(Assets.SOUND_AUDIO_ON, Sound.class);
+        audioOn = MaryoGame.game.assets.get(Assets.SOUND_AUDIO_ON, Sound.class);
 
         for (GameObject go : loader.level.gameObjects)
             go.initAssets();
 
-        skin = game.assets.manager.get(Assets.SKIN_HUD, Skin.class);
+        skin = MaryoGame.game.assets.get(Assets.SKIN_HUD, Skin.class);
         choseLevelView = new ChoseLevelView(this, skin) {
             @Override
             protected void goBack() {
@@ -245,7 +239,7 @@ public class MainMenuScreen extends AbstractScreen {
         choseLevelView.inflateWidgets(dynAtlas, stage.getFocussableActors());
 
         maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getPersistentMaryoState().toString()
-                + "_" + GameObject.TKey.stand_right.toString()));
+                + "_" + TextureKey.stand_right.toString()));
         maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
         maryo.setPosition(100, 378);
         stage.addActor(maryo);
@@ -256,8 +250,8 @@ public class MainMenuScreen extends AbstractScreen {
                 && !Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)
                 && !firstStartDone
                 && Controllers.getControllers().size >= 1
-                && !game.controllerMappings.loadedSavedSettings)
-            new GamepadMappingDialog(skin, Controllers.getControllers().get(0), game.controllerMappings).show(stage);
+                && !MaryoGame.game.controllerMappings.loadedSavedSettings)
+            new GamepadMappingDialog(skin, Controllers.getControllers().get(0), MaryoGame.game.controllerMappings).show(stage);
 
         firstStartDone = true;
     }
@@ -311,7 +305,7 @@ public class MainMenuScreen extends AbstractScreen {
         startMenu.addActor(soundButton);
         stage.addFocussableActor(soundButton);
 
-        Image imGameLogo = createLogoImage(game);
+        Image imGameLogo = createLogoImage();
         imGameLogo.setPosition(startMenu.getWidth() / 2, (startMenu.getHeight() + playButton.getY() + playButton
                 .getHeight()) /
                 2, Align.center);
@@ -349,7 +343,7 @@ public class MainMenuScreen extends AbstractScreen {
         gamePadSettings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                new GamepadSettingsDialog(skin, game.controllerMappings, game.isRunningOn).show(stage);
+                new GamepadSettingsDialog(skin, MaryoGame.game.controllerMappings, MaryoGame.game.isRunningOn).show(stage);
             }
         });
         startMenu.addActor(gamePadSettings);
@@ -357,14 +351,14 @@ public class MainMenuScreen extends AbstractScreen {
 
         soundButton.setPosition(gamePadSettings.getX(), gamePadSettings.getY() + gamePadSettings.getHeight() + 20);
 
-        if (game.gpgsClient != null) {
+        if (MaryoGame.game.gpgsClient != null) {
             TextButton gpgsLogin = new ColorableTextButton(FontAwesome.NET_CLOUDSAVE, skin, Assets.BUTTON_FA) {
                 private boolean isConnected = true;
 
                 @Override
                 public void act(float delta) {
                     super.act(delta);
-                    if (game.gpgsClient.isSessionActive() != isConnected) {
+                    if (MaryoGame.game.gpgsClient.isSessionActive() != isConnected) {
                         isConnected = !isConnected;
                         getLabel().setColor(isConnected ? Color.WHITE : Color.SALMON);
                     }
@@ -373,7 +367,7 @@ public class MainMenuScreen extends AbstractScreen {
             gpgsLogin.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    new GpgsDialog(skin, game).show(stage);
+                    new GpgsDialog(skin).show(stage);
                 }
             });
             gpgsLogin.setPosition(10, 10, Align.bottomLeft);
@@ -421,7 +415,7 @@ public class MainMenuScreen extends AbstractScreen {
 
             @Override
             protected void result(Object object) {
-                game.setScreen(new LoadingScreen(new MainMenuScreen(game), false));
+                MaryoGame.game.changeScreen(new LoadingScreen(new MainMenuScreen(), false));
             }
         };
 

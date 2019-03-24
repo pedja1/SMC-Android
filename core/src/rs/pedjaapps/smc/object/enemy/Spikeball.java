@@ -9,10 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.object.GameObject;
 import rs.pedjaapps.smc.object.Sprite;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
@@ -36,8 +36,7 @@ import rs.pedjaapps.smc.utility.Utility;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class Spikeball extends Enemy
-{
+public class Spikeball extends Enemy {
     private static final float VELOCITY_NORMAL = 0.83f;
     private static final float VELOCITY_RUNNING = 2f;
     private static final float POS_Z = 0.09f;
@@ -59,9 +58,8 @@ public class Spikeball extends Enemy
     private float stayCounter, walkCounter, runCounter;
     private boolean stayDirectionSet;
 
-    public Spikeball(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+    public Spikeball(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         mKillPoints = 400;
         mFireResistant = 1;
         mIceResistance = 1f;
@@ -72,9 +70,8 @@ public class Spikeball extends Enemy
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
         Array<TextureRegion> walkFrames = new Array<>();
 
         for (int i = 1; i < 9; i++) {
@@ -87,37 +84,30 @@ public class Spikeball extends Enemy
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         walkAnimation = null;
         tTurn = null;
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
-    {
-        if (!stayDirectionSet && state == STATE_STAYING)
-        {
-            Utility.draw(spriteBatch, tTurn, mDrawRect.x, mDrawRect.y, mDrawRect.height);
-        }
-        else
-        {
+    public void _render(SpriteBatch spriteBatch) {
+        if (!stayDirectionSet && state == STATE_STAYING) {
+            Utility.draw(spriteBatch, tTurn, drawRect.x, drawRect.y, drawRect.height);
+        } else {
             TextureRegion frame = turn ? tTurn : walkAnimation.getKeyFrame(stateTime, true);
             frame.flip(direction == Direction.left, false);
-            Utility.draw(spriteBatch, frame, mDrawRect.x, mDrawRect.y, mDrawRect.height);
+            Utility.draw(spriteBatch, frame, drawRect.x, drawRect.y, drawRect.height);
             frame.flip(direction == Direction.left, false);
         }
     }
 
     @Override
-    public boolean canBeKilledByJumpingOnTop()
-    {
+    public boolean canBeKilledByJumpingOnTop() {
         return false;
     }
 
     @Override
-    public void update(float deltaTime)
-    {
+    public void _update(float deltaTime) {
         stateTime += deltaTime;
 
         // Setting initial vertical acceleration
@@ -131,56 +121,45 @@ public class Spikeball extends Enemy
 
         checkCollisionWithBlocks(deltaTime, !deadByBullet, !deadByBullet);
 
-        if (stateTime - turnStartTime > 0.15f)
-        {
+        if (stateTime - turnStartTime > 0.15f) {
             turnStartTime = 0;
             turn = false;
         }
 
         float currentVelocity;
-        if (state == STATE_STAYING)
-        {
+        if (state == STATE_STAYING) {
             currentVelocity = 0;
             stayCounter += deltaTime;
-            if (stayCounter >= 1.3f && stayDirectionSet)
-            {
+            if (stayCounter >= 1.3f && stayDirectionSet) {
                 stayDirectionSet = true;
                 boolean rand = MathUtils.randomBoolean();
                 setDirection(rand ? Direction.left : Direction.right);
             }
-            if (stayCounter >= MAX_STAY_TIME)
-            {
+            if (stayCounter >= MAX_STAY_TIME) {
                 state = STATE_RUNNING;
                 stayCounter = 0;
                 stayDirectionSet = false;
             }
-        }
-        else if (state == STATE_WALKING)
-        {
+        } else if (state == STATE_WALKING) {
             currentVelocity = VELOCITY_NORMAL;
             walkCounter += deltaTime;
-            if (walkCounter >= MAX_WALK_TIME)
-            {
+            if (walkCounter >= MAX_WALK_TIME) {
                 state = STATE_STAYING;
                 walkCounter = 0;
             }
-        }
-        else //if(state == STATE_RUNNING)
+        } else //if(state == STATE_RUNNING)
         {
             currentVelocity = VELOCITY_RUNNING;
             runCounter += deltaTime;
-            if (runCounter >= MAX_RUN_TIME)
-            {
+            if (runCounter >= MAX_RUN_TIME) {
                 state = STATE_WALKING;
                 walkCounter = MathUtils.random(0, 2.6f);
                 runCounter = 0;
             }
         }
 
-        if (!deadByBullet)
-        {
-            switch (direction)
-            {
+        if (!deadByBullet) {
+            switch (direction) {
                 case right:
                     velocity.x = -(turn ? currentVelocity * 0.5f : currentVelocity);
                     break;
@@ -193,17 +172,14 @@ public class Spikeball extends Enemy
     }
 
     @Override
-    protected boolean handleCollision(GameObject object, boolean vertical)
-    {
+    protected boolean handleCollision(GameObject object, boolean vertical) {
         super.handleCollision(object, vertical);
-        if (!vertical)
-        {
+        if (!vertical) {
             if (((object instanceof Sprite && ((Sprite) object).type == Sprite.Type.massive
-                    && object.mColRect.y + object.mColRect.height > mColRect.y + 0.1f)
+                    && object.colRect.y + object.colRect.height > colRect.y + 0.1f)
                     || object instanceof EnemyStopper
                     || (object instanceof Enemy && this != object && !(object instanceof Flyon)))
-                    && !turned)
-            {
+                    && !turned) {
                 //CollisionManager.resolve_objects(this, object, true);
                 handleCollision(ContactType.stopper);
             }
@@ -212,10 +188,8 @@ public class Spikeball extends Enemy
     }
 
     @Override
-    public void handleCollision(ContactType contactType)
-    {
-        switch (contactType)
-        {
+    public void handleCollision(ContactType contactType) {
+        switch (contactType) {
             case stopper:
                 turn();
                 break;
@@ -223,14 +197,12 @@ public class Spikeball extends Enemy
     }
 
     @Override
-    public int hitByPlayer(Maryo maryo, boolean vertical)
-    {
+    public int hitByPlayer(Maryo maryo, boolean vertical) {
         return HIT_RESOLUTION_PLAYER_DIED;
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
+    protected TextureRegion getDeadTextureRegion() {
         return tTurn;
     }
 }

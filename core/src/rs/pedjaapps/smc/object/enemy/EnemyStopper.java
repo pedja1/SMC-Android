@@ -3,37 +3,32 @@ package rs.pedjaapps.smc.object.enemy;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
 import rs.pedjaapps.smc.object.GameObject;
-import rs.pedjaapps.smc.object.World;
 
-public class EnemyStopper extends GameObject
-{
-	public EnemyStopper(World world, Vector2 size, Vector3 position)
-    {
-        super(world, size, position);
+public class EnemyStopper extends GameObject {
+
+    public EnemyStopper(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
     }
 
     @Override
-	public void _render(SpriteBatch spriteBatch)
-	{
-		// this object is invisible
-	}
+    public void render(SpriteBatch spriteBatch) {
+        // this object is invisible
+    }
 
     @Override
-    public void _update(float delta)
-    {
+    public void update(float delta) {
 
     }
 
     @Override
-	public void initAssets()
-	{
+    public void initAssets() {
 
-	}
+    }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
 
     }
 

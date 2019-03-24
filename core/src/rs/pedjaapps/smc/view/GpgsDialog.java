@@ -25,14 +25,12 @@ import rs.pedjaapps.smc.utility.GameSave;
 public class GpgsDialog extends ControllerMenuDialog implements IGameServiceListener {
     private final ColorableTextButton loginButton;
     private final ColorableTextButton saveNowButton;
-    protected MaryoGame game;
     boolean alreadySaved;
     private float timeSinceRefresh;
 
-    public GpgsDialog(Skin skin, MaryoGame game) {
+    public GpgsDialog(Skin skin) {
         super("", skin, Assets.WINDOW_SMALL);
 
-        this.game = game;
 
         getButtonTable().defaults().pad(20, 40, 0, 40);
         ColorableTextButton closeButton = new ColorableTextButton("Close", skin, Assets.BUTTON_SMALL);
@@ -99,8 +97,8 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
     }
 
     private void refreshState() {
-        if (game.gpgsClient.isSessionActive()) {
-            String playerDisplayName = game.gpgsClient.getPlayerDisplayName();
+        if (MaryoGame.game.gpgsClient.isSessionActive()) {
+            String playerDisplayName = MaryoGame.game.gpgsClient.getPlayerDisplayName();
 
             if (GameSave.isLoadingFromCloud())
                 loginButton.setText("Loading gamestate... Click to cancel");
@@ -108,32 +106,32 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
                 loginButton.setText("Sign out to deactivate cloud save" +
                         (playerDisplayName == null ? "" : "\n" + playerDisplayName));
 
-        } else if (game.gpgsClient.isConnectionPending())
+        } else if (MaryoGame.game.gpgsClient.isConnectionPending())
             loginButton.setText("Signing in, please wait...");
         else
             loginButton.setText("Sign in and activate cloud save");
 
-        saveNowButton.setVisible(game.gpgsClient.isSessionActive());
+        saveNowButton.setVisible(MaryoGame.game.gpgsClient.isSessionActive());
 
         timeSinceRefresh = 0;
     }
 
     private void logInOurOut() {
-        if (game.gpgsClient.isConnectionPending())
+        if (MaryoGame.game.gpgsClient.isConnectionPending())
             return;
 
-        if (!game.gpgsClient.isSessionActive())
-            game.gpgsClient.logIn();
+        if (!MaryoGame.game.gpgsClient.isSessionActive())
+            MaryoGame.game.gpgsClient.logIn();
         else {
             GameSave.resetLoadedFromCloud();
-            game.gpgsClient.logOff();
+            MaryoGame.game.gpgsClient.logOff();
         }
     }
 
     @Override
     public void gsOnSessionActive() {
         refreshState();
-        GameSave.loadFromCloudIfApplicable(game);
+        GameSave.loadFromCloudIfApplicable();
     }
 
     @Override
@@ -154,13 +152,13 @@ public class GpgsDialog extends ControllerMenuDialog implements IGameServiceList
 
     @Override
     public Dialog show(Stage stage, Action action) {
-        game.gpgsClient.setListener(new GameServiceRenderThreadListener(this));
+        MaryoGame.game.gpgsClient.setListener(new GameServiceRenderThreadListener(this));
         return super.show(stage, action);
     }
 
     @Override
     public boolean remove() {
-        game.gpgsClient.setListener(game);
+        MaryoGame.game.gpgsClient.setListener(MaryoGame.game);
         return super.remove();
     }
 }

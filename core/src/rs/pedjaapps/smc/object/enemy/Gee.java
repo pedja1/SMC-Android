@@ -2,7 +2,6 @@ package rs.pedjaapps.smc.object.enemy;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
@@ -14,19 +13,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
-import rs.pedjaapps.smc.object.World;
 import rs.pedjaapps.smc.object.maryo.Maryo;
-import rs.pedjaapps.smc.screen.GameScreen;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.Utility;
 
 /**
  * Created by pedja on 18.5.14..
  */
-public class Gee extends Enemy
-{
+public class Gee extends Enemy {
     public static final float POSITION_Z = 0.088f;
     public String direction;
     public float flyDistance, flySpeed;
@@ -42,16 +39,14 @@ public class Gee extends Enemy
     private Animation<TextureRegion> animation;
     private TextureRegion deadRegion;
 
-    public Gee(World world, Vector2 size, Vector3 position, float flyDistance, String color, String direction, float waitTime)
-    {
-        super(world, size, position);
+    public Gee(float x, float y, float z, float width, float height, float flyDistance, String color, String direction, float waitTime) {
+        super(x, y, z, width, height);
         this.direction = direction;
         colorString = color;
         mOriginPosition = new Vector3(position);
         this.flyDistance = flyDistance;
         this.waitTime = waitTime;
-        switch (color)
-        {
+        switch (color) {
             case "yellow":
                 this.color = new Color(1, 0.960784314f, 0.039215686f, 1);
                 flySpeed = 2.881f;
@@ -72,57 +67,46 @@ public class Gee extends Enemy
                 break;
         }
         position.z = POSITION_Z;
-        if("vertical".equals(direction))
-        {
-            world.screen.game.assets.manager.load("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
+        if ("vertical".equals(direction)) {
+            MaryoGame.game.assets.load("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        } else {
+            MaryoGame.game.assets.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
         }
-        else
-        {
-            world.screen.game.assets.manager.load("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
-        }
-        world.screen.game.assets.manager.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, world.screen.game.assets.particleEffectParameter);
-        world.screen.game.assets.manager.load(Assets.SOUND_ENEMY_DIE_GEE, Sound.class);
+        MaryoGame.game.assets.load("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class, Assets.PARTICLE_EFFECT_PARAMETER);
+        MaryoGame.game.assets.load(Assets.SOUND_ENEMY_DIE_GEE, Sound.class);
         ppEnabled = false;
     }
 
     @Override
-    protected TextureRegion getDeadTextureRegion()
-    {
+    protected TextureRegion getDeadTextureRegion() {
         return deadRegion;
     }
 
     @Override
-    public void initAssets()
-    {
-        TextureAtlas atlas = world.screen.game.assets.manager.get(Assets.ATLAS_DYNAMIC);
+    public void initAssets() {
+        TextureAtlas atlas = MaryoGame.game.assets.get(Assets.ATLAS_DYNAMIC);
         Array<TextureAtlas.AtlasRegion> frames = new Array<>(10);
         for (int i = 1; i <= 10; i++)
             frames.add(atlas.findRegion("enemy_gee_" + colorString + "_" + String.valueOf(i)));
 
         deadRegion = frames.get(4);
         animation = new Animation<TextureRegion>(0.14f, frames);
-        if("vertical".equals(direction))
-        {
-            effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
+        if ("vertical".equals(direction)) {
+            effect = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/gee_vertical_emitter.p", ParticleEffect.class));
+        } else {
+            effect = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class));
         }
-        else
-        {
-            effect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_horizontal_emitter.p", ParticleEffect.class));
-        }
-        deadEffect = new ParticleEffect(world.screen.game.assets.manager.get("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class));
-        for(ParticleEmitter pe : effect.getEmitters())
-        {
+        deadEffect = new ParticleEffect(MaryoGame.game.assets.get("data/animation/particles/gee_dead_emitter.p", ParticleEffect.class));
+        for (ParticleEmitter pe : effect.getEmitters()) {
             pe.getTint().setColors(new float[]{color.r, color.g, color.b});
         }
-        for(ParticleEmitter pe : deadEffect.getEmitters())
-        {
+        for (ParticleEmitter pe : deadEffect.getEmitters()) {
             pe.getTint().setColors(new float[]{color.r, color.g, color.b});
         }
     }
 
     @Override
-    public void dispose()
-    {
+    public void dispose() {
         animation = null;
         effect.dispose();
         deadEffect.dispose();
@@ -131,36 +115,29 @@ public class Gee extends Enemy
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch)
-    {
-        if(!dying)
-        {
-            effect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
-            if(canStartParticle)effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
+    public void _render(SpriteBatch spriteBatch) {
+        if (!dying) {
+            effect.setPosition(position.x + drawRect.width / 2, position.y + drawRect.height / 2);
+            if (canStartParticle) effect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
 
             TextureRegion frame = animation.getKeyFrame(stateTime, true);
-            float width = Utility.getWidth(frame, mDrawRect.height);
+            float width = Utility.getWidth(frame, drawRect.height);
             frame.flip(flipx, false);//flip
-            spriteBatch.draw(frame, mDrawRect.x, mDrawRect.y, width, mDrawRect.height);
+            spriteBatch.draw(frame, drawRect.x, drawRect.y, width, drawRect.height);
             frame.flip(flipx, false);//return
-        }
-        else
-        {
-            deadEffect.setPosition(position.x + mDrawRect.width / 2, position.y + mDrawRect.height / 2);
+        } else {
+            deadEffect.setPosition(position.x + drawRect.width / 2, position.y + drawRect.height / 2);
             deadEffect.draw(spriteBatch/*, Gdx.graphics.getDeltaTime()*/);
         }
     }
 
     @Override
-    public boolean canBeKilledByJumpingOnTop()
-    {
+    public boolean canBeKilledByJumpingOnTop() {
         return true;
     }
 
-    public void update(float deltaTime)
-    {
-        if (deadByBullet)
-        {
+    public void _update(float deltaTime) {
+        if (deadByBullet) {
             // Setting initial vertical acceleration
             acceleration.y = Constants.GRAVITY;
 
@@ -177,169 +154,120 @@ public class Gee extends Enemy
 
         stateTime += deltaTime;
 
-        if(dying)
-        {
+        if (dying) {
             deadEffect.update(deltaTime);
-            if(effect.isComplete())
-            {
-                world.trashObjects.add(this);
-                ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+            if (effect.isComplete()) {
+                MaryoGame.game.trashObject(this);
+                MaryoGame.game.addKillPoints(mKillPoints, position.x, position.y + drawRect.height);
             }
             return;
         }
 
         effect.update(deltaTime);
 
-        if (staying)
-        {
+        if (staying) {
             currWaitTime += deltaTime;
-            if (currWaitTime >= waitTime)
-            {
+            if (currWaitTime >= waitTime) {
                 effect.start();
                 canStartParticle = true;
                 staying = false;
                 currWaitTime = 0;
-                if(forward)
-                {
+                if (forward) {
                     forward = false;
-                }
-                else
-                {
+                } else {
                     forward = true;
                     dirForward = MathUtils.randomBoolean();
                 }
             }
-        }
-        else if ("horizontal".equals(direction))
-        {
+        } else if ("horizontal".equals(direction)) {
             if (dirForward)//right
             {
                 float remainingDistance = (mOriginPosition.x + flyDistance) - position.x;
-                if (forward)
-                {
+                if (forward) {
                     flipx = true;
-                    if(remainingDistance <= 0)
-                    {
+                    if (remainingDistance <= 0) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.x = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.x = flySpeed;
                     }
 
-                }
-                else
-                {
+                } else {
                     flipx = false;
-                    if (remainingDistance >= flyDistance)
-                    {
+                    if (remainingDistance >= flyDistance) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.x = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.x = -flySpeed;
                     }
                 }
-            }
-            else//left
+            } else//left
             {
                 float remainingDistance = position.x - (mOriginPosition.x - flyDistance);
-                if (forward)
-                {
+                if (forward) {
                     flipx = false;
-                    if(remainingDistance <= 0)
-                    {
+                    if (remainingDistance <= 0) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.x = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.x = -flySpeed;
                     }
-                }
-                else
-                {
+                } else {
                     flipx = true;
-                    if (remainingDistance >= flyDistance)
-                    {
+                    if (remainingDistance >= flyDistance) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.x = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.x = flySpeed;
                     }
                 }
             }
-        }
-        else if ("vertical".equals(direction))
-        {
+        } else if ("vertical".equals(direction)) {
             if (dirForward)//up
             {
                 float remainingDistance = mOriginPosition.y + flyDistance - position.y;
-                if (forward)
-                {
+                if (forward) {
                     flipx = true;
-                    if(remainingDistance <= 0)
-                    {
+                    if (remainingDistance <= 0) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.y = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.y = flySpeed;
                     }
-                }
-                else
-                {
+                } else {
                     flipx = false;
-                    if (remainingDistance >= flyDistance)
-                    {
+                    if (remainingDistance >= flyDistance) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.y = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.y = -flySpeed;
                     }
                 }
-            }
-            else//down
+            } else//down
             {
                 float remainingDistance = flyDistance - (mOriginPosition.y - position.y);
-                if (forward)
-                {
+                if (forward) {
                     flipx = false;
-                    if(remainingDistance <= 0)
-                    {
+                    if (remainingDistance <= 0) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.y = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.y = -flySpeed;
                     }
-                }
-                else
-                {
+                } else {
                     flipx = true;
-                    if (remainingDistance >= flyDistance)
-                    {
+                    if (remainingDistance >= flyDistance) {
                         staying = true;
                         effect.allowCompletion();
                         velocity.y = 0;
-                    }
-                    else
-                    {
+                    } else {
                         velocity.y = flySpeed;
                     }
                 }
@@ -350,28 +278,24 @@ public class Gee extends Enemy
     }
 
     @Override
-    public int hitByPlayer(Maryo maryo, boolean vertical)
-    {
-        if (maryo.velocity.y < velocity.y && vertical && maryo.mColRect.y >= mColRect.y)//enemy death from above
+    public int hitByPlayer(Maryo maryo, boolean vertical) {
+        if (maryo.velocity.y < velocity.y && vertical && maryo.colRect.y >= colRect.y)//enemy death from above
         {
-            ((GameScreen)world.screen).killPointsTextHandler.add(mKillPoints, position.x, position.y + mDrawRect.height);
+            MaryoGame.game.addKillPoints(mKillPoints, position.x, position.y + drawRect.height);
             dying = true;
             deadEffect.start();
             stateTime = 0;
             handleCollision = false;
-            Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ENEMY_DIE_GEE);
+            Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ENEMY_DIE_GEE);
             SoundManager.play(sound);
             return HIT_RESOLUTION_ENEMY_DIED;
-        }
-        else
-        {
+        } else {
             return HIT_RESOLUTION_PLAYER_DIED;
         }
     }
 
     @Override
-    protected String getDeadSound()
-    {
+    protected String getDeadSound() {
         return Assets.SOUND_ENEMY_DIE_GEE;
     }
 }

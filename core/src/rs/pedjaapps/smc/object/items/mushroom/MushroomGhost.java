@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import rs.pedjaapps.smc.MaryoGame;
 import rs.pedjaapps.smc.assets.Assets;
 import rs.pedjaapps.smc.audio.SoundManager;
 import rs.pedjaapps.smc.object.World;
@@ -14,8 +15,8 @@ import rs.pedjaapps.smc.utility.GameSave;
  */
 
 public class MushroomGhost extends Mushroom {
-    public MushroomGhost(World world, Vector2 size, Vector3 position) {
-        super(world, size, position);
+    public MushroomGhost(float x, float y, float z, float width, float height) {
+        super(x, y, z, width, height);
         textureName = "game_items_mushroom_ghost";
         mPickPoints = 800;
     }
@@ -28,10 +29,10 @@ public class MushroomGhost extends Mushroom {
     @Override
     protected void performCollisionAction() {
         playerHit = true;
-        world.maryo.enableGhostMode();
-        Sound sound = world.screen.game.assets.manager.get(Assets.SOUND_ITEM_MUSHROOM_GHOST);
+        MaryoGame.game.currentScreen.world.maryo.enableGhostMode();
+        Sound sound = MaryoGame.game.assets.get(Assets.SOUND_ITEM_MUSHROOM_GHOST);
         SoundManager.play(sound);
-        world.trashObjects.add(this);
+        trashThisObject();
         GameSave.addScore(mPickPoints);
     }
 }
