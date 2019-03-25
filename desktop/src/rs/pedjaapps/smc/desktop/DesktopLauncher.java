@@ -14,8 +14,8 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         //BasicConfigurator.configure();
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = MaryoGame.NATIVE_WIDTH;
-        config.height = MaryoGame.NATIVE_HEIGHT;
+        config.width = 1024;
+        config.height = 472;//576//472
         //config.resizable = false;
         //config.allowSoftwareMode = false;
         config.vSyncEnabled = false;

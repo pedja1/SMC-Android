@@ -36,6 +36,7 @@ import rs.pedjaapps.smc.assets.FontAwesome;
 import rs.pedjaapps.smc.assets.TextureKey;
 import rs.pedjaapps.smc.audio.MusicManager;
 import rs.pedjaapps.smc.object.GameObject;
+import rs.pedjaapps.smc.object.maryo.Maryo;
 import rs.pedjaapps.smc.utility.Constants;
 import rs.pedjaapps.smc.utility.GameSave;
 import rs.pedjaapps.smc.utility.LevelLoader;
@@ -100,7 +101,7 @@ public class MainMenuScreen extends AbstractScreen {
 
     public static Image createLogoImage() {
         Image imGameLogo = new Image(MaryoGame.game.assets.get(Assets.SKIN_HUD, Skin.class), Assets.LOGO_GAME);
-        imGameLogo.setSize(imGameLogo.getWidth() * .9f, imGameLogo.getHeight() * .9f);
+        imGameLogo.setSize(imGameLogo.getWidth() * .8f, imGameLogo.getHeight() * .8f);
         return imGameLogo;
     }
 
@@ -134,6 +135,8 @@ public class MainMenuScreen extends AbstractScreen {
         cloudsPEffect.draw(batch, delta);
 
         drawObjects(delta);
+
+        maryo.draw(batch, 1);
 
         batch.end();
 
@@ -240,9 +243,8 @@ public class MainMenuScreen extends AbstractScreen {
 
         maryo = new Image(dynAtlas.findRegion("maryo_" + GameSave.getPersistentMaryoState().toString()
                 + "_" + TextureKey.stand_right.toString()));
-        maryo.setSize(maryo.getPrefWidth() * .55f, maryo.getPrefHeight() * .55f);
-        maryo.setPosition(100, 378);
-        stage.addActor(maryo);
+        maryo.setSize(Maryo.DEFAULT_SIZE, Maryo.DEFAULT_SIZE);
+        maryo.setPosition(1.8f, 4.609375f);
 
         // für FireTV: falls direkt bei Start schon Controller da, dann gleich in Konfig springen
         if (Gdx.app.getType() == Application.ApplicationType.Android &&
@@ -250,8 +252,9 @@ public class MainMenuScreen extends AbstractScreen {
                 && !Gdx.input.isPeripheralAvailable(Input.Peripheral.HardwareKeyboard)
                 && !firstStartDone
                 && Controllers.getControllers().size >= 1
-                && !MaryoGame.game.controllerMappings.loadedSavedSettings)
+                && !MaryoGame.game.controllerMappings.loadedSavedSettings) {
             new GamepadMappingDialog(skin, Controllers.getControllers().get(0), MaryoGame.game.controllerMappings).show(stage);
+        }
 
         firstStartDone = true;
     }
@@ -309,7 +312,7 @@ public class MainMenuScreen extends AbstractScreen {
         imGameLogo.setPosition(startMenu.getWidth() / 2, (startMenu.getHeight() + playButton.getY() + playButton
                 .getHeight()) /
                 2, Align.center);
-        startMenu.addActor(imGameLogo);
+        //startMenu.addActor(imGameLogo);
 
         Label gameVersion = new Label("v" + MaryoGame.GAME_VERSION + " by Benjamin Schulte", skin, Assets
                 .LABEL_BORDER25);

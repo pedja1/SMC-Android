@@ -46,6 +46,8 @@ import static rs.pedjaapps.smc.object.Sprite.GROUND_ICE;
 
 public class Maryo extends DynamicObject {
 
+    public static final float DEFAULT_SIZE = 0.9f;
+
     private enum Keys {
         LEFT, RIGHT, UP, DOWN, JUMP, FIRE
     }

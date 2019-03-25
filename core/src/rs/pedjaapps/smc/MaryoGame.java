@@ -34,8 +34,8 @@ import rs.pedjaapps.smc.utility.MyControllerMapping;
 import rs.pedjaapps.smc.utility.PrefsManager;
 
 public class MaryoGame extends Game implements IGameServiceListener {
-    public static final int NATIVE_WIDTH = 1024;
-    public static final int NATIVE_HEIGHT = 576;
+    public static int NATIVE_WIDTH;
+    public static int NATIVE_HEIGHT;
 
     public static final String GAME_VERSION = "2.0.0";
     public static final boolean GAME_DEVMODE = true;
@@ -120,6 +120,8 @@ public class MaryoGame extends Game implements IGameServiceListener {
 
     @Override
     public void create() {
+        NATIVE_WIDTH = Gdx.graphics.getWidth();
+        NATIVE_HEIGHT = Gdx.graphics.getHeight();
         game = this;
         if (!GAME_DEVMODE)
             Gdx.app.setLogLevel(Application.LOG_ERROR);

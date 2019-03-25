@@ -212,7 +212,7 @@ public class LevelLoader {
 
     private void parsePlayer(JsonValue jPlayer, World world) {
         if (levelParsed) return;
-        Maryo maryo = new Maryo(jPlayer.getFloat("posx"), jPlayer.getFloat("posy"), Maryo.POSITION_Z, 0.9f, 0.9f);
+        Maryo maryo = new Maryo(jPlayer.getFloat("posx"), jPlayer.getFloat("posy"), Maryo.POSITION_Z, Maryo.DEFAULT_SIZE, Maryo.DEFAULT_SIZE);
         world.maryo = maryo;
         level.gameObjects.add(maryo);
     }

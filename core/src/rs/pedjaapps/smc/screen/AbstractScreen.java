@@ -14,7 +14,7 @@ public abstract class AbstractScreen implements Screen {
     protected MenuStage stage;
     public World world;
 
-    public AbstractScreen() {
+    AbstractScreen() {
         stage = new MenuStage(new FitViewport(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT));
         world = new World();
     }
