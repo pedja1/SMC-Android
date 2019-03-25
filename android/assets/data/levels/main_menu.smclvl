@@ -4,8 +4,8 @@
             "height": 2,
             "massive_type": "passive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_big_plant_2",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_jungle_1_big_plant_2",
+            "texture_atlas": "data/static.atlas",
             "posy": 1.015625,
             "width": 1,
             "posx": 11.078125
@@ -14,8 +14,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_left",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_left",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 0
@@ -24,8 +24,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 1
@@ -34,8 +34,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 2
@@ -44,8 +44,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 3
@@ -54,8 +54,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 4
@@ -64,8 +64,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 5
@@ -74,8 +74,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 6
@@ -84,8 +84,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 7
@@ -94,8 +94,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 8
@@ -104,8 +104,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 9
@@ -114,8 +114,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 10
@@ -124,8 +124,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 11
@@ -134,8 +134,8 @@
             "height": 1,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_3_ground_top_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_3_ground_top_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 0,
             "width": 1,
             "posx": 12
@@ -144,8 +144,8 @@
             "height": 4,
             "massive_type": "passive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_big_plant_1",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_jungle_1_big_plant_1",
+            "texture_atlas": "data/static.atlas",
             "posy": 1,
             "width": 4,
             "posx": 0.5
@@ -154,8 +154,8 @@
             "height": 0.5,
             "massive_type": "passive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_grass_2",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_jungle_1_grass_2",
+            "texture_atlas": "data/static.atlas",
             "posy": 1,
             "width": 1,
             "posx": 3.875
@@ -164,8 +164,8 @@
             "height": 0.5,
             "massive_type": "passive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_grass_2",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_jungle_1_grass_2",
+            "texture_atlas": "data/static.atlas",
             "posy": 1,
             "width": 1,
             "posx": 8.234375
@@ -175,30 +175,30 @@
             "posy": 1,
             "width": 1.5625,
             "posx": 9.6875,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:pipes_orange_ver"
+            "texture_name": "data/static.atlas:pipes_orange_ver"
         },
         {
             "height": 0.78125,
             "posy": 1.78125,
             "width": 1.5625,
             "posx": 9.6875,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:pipes_orange_ver"
+            "texture_name": "data/static.atlas:pipes_orange_ver"
         },
         {
             "height": 0.78125,
             "posy": 2.5625,
             "width": 1.5625,
             "posx": 9.6875,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:pipes_orange_up"
+            "texture_name": "data/static.atlas:pipes_orange_up"
         },
         {
             "height": 0.703125,
@@ -223,8 +223,8 @@
             "height": 0.5,
             "massive_type": "passive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_grass_3",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_jungle_1_grass_3",
+            "texture_atlas": "data/static.atlas",
             "posy": 1,
             "width": 0.5,
             "posx": 6.515625
@@ -234,40 +234,40 @@
             "posy": 4.265625,
             "width": 0.34375,
             "posx": 1.40625,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_slider_1_green_left"
+            "texture_name": "data/static.atlas:ground_jungle_1_slider_1_green_left"
         },
         {
             "height": 0.34375,
             "posy": 4.265625,
             "width": 0.34375,
             "posx": 1.75,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_slider_1_green_middle"
+            "texture_name": "data/static.atlas:ground_jungle_1_slider_1_green_middle"
         },
         {
             "height": 0.34375,
             "posy": 4.265625,
             "width": 0.34375,
             "posx": 2.09375,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_slider_1_green_middle"
+            "texture_name": "data/static.atlas:ground_jungle_1_slider_1_green_middle"
         },
         {
             "height": 0.34375,
             "posy": 4.265625,
             "width": 0.34375,
             "posx": 2.4375,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_jungle_1_slider_1_green_middle"
+            "texture_name": "data/static.atlas:ground_jungle_1_slider_1_green_middle"
         },
         {
             "flip_data": {
@@ -278,18 +278,18 @@
             "posy": 4.265625,
             "width": 0.34375,
             "posx": 2.78125,
-            "texture_atlas": "data/static.pack",
+            "texture_atlas": "data/static.atlas",
             "massive_type": "massive",
             "obj_class": "sprite",
             "rotationY": 180,
-            "texture_name": "data/static.pack:ground_jungle_1_slider_1_green_left"
+            "texture_name": "data/static.atlas:ground_jungle_1_slider_1_green_left"
         },
         {
             "height": 0.375,
             "massive_type": "massive",
             "obj_class": "sprite",
-            "texture_name": "data/static.pack:ground_green_1_hedges_wild_medium",
-            "texture_atlas": "data/static.pack",
+            "texture_name": "data/static.atlas:ground_green_1_hedges_wild_medium",
+            "texture_atlas": "data/static.atlas",
             "posy": 3.015625,
             "width": 1.5,
             "posx": 9.75

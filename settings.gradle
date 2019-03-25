@@ -1,2 +1,2 @@
-include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser', ':level_editor'
+include 'desktop', 'android', 'ios', 'html', 'core', 'smc-level-parser'
 

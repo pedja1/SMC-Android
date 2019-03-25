@@ -342,7 +342,7 @@ public class SAXXMLHandler extends DefaultHandler
 
             File f = new File(Const.UNPACKED_PATH + "/static/" + nameInAtlas);
             if (f.exists() && !f.isDirectory()) {
-                tmpPlatform.texture_atlas = "data/static.pack";
+                tmpPlatform.texture_atlas = "data/static.atlas";
                 tmpPlatform.image_top_left = nameInAtlas.substring(0, nameInAtlas.lastIndexOf("."));
                 nameInAtlas = getNameInAtlas(tmpPlatform.image_top_middle);
                 tmpPlatform.image_top_middle = nameInAtlas.substring(0, nameInAtlas.lastIndexOf("."));
@@ -760,7 +760,7 @@ public class SAXXMLHandler extends DefaultHandler
 
             File f = new File(Const.UNPACKED_PATH + "/static/" + nameInAtlas);
             if (f.exists() && !f.isDirectory()) {
-                sprite.texture_atlas = "data/static.pack";
+                sprite.texture_atlas = "data/static.atlas";
                 sprite.texture_name = sprite.texture_atlas + ":" + nameInAtlas.substring(0, nameInAtlas.lastIndexOf("."));
             } else {
                 System.out.println("Not in atlas: " + nameInAtlas);

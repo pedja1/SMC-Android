@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+import com.badlogic.gdx.graphics.Texture
+
+task packTextures {
+    TexturePacker.Settings settings = new TexturePacker.Settings()
+    settings.alias = true
+    settings.alphaThreshold = 0
+    settings.debug = false
+    settings.duplicatePadding = true
+    settings.edgePadding = true
+    settings.fast = false
+    settings.filterMag = Texture.TextureFilter.Linear
+    settings.filterMin = Texture.TextureFilter.Linear
+    settings.ignoreBlankImages = true
+    settings.maxHeight = 2048
+    settings.maxWidth = 2048
+    settings.minHeight = 16
+    settings.minWidth = 16
+    settings.paddingX = 2
+    settings.paddingY = 2
+    settings.pot = true
+    settings.rotation = false
+    settings.stripWhitespaceX = false
+    settings.stripWhitespaceY = false
+    settings.wrapX = Texture.TextureWrap.ClampToEdge
+    settings.wrapY = Texture.TextureWrap.ClampToEdge
+    settings.premultiplyAlpha = false
+    settings.grid = false
+    settings.square = false
+    settings.bleed = true
+    settings.limitMemory = true
+    settings.useIndexes = false
+
+    TexturePacker.process(settings, "drafts/unpacked/static", "android/assets/data", "static")
+    TexturePacker.process(settings, "drafts/unpacked/dynamic", "android/assets/data", "dynamic")
+    TexturePacker.process(settings, "drafts/skin/smc_data", "android/assets/data/hud", "smcskin")
+}
+
+tasks.compileJava.dependsOn(packTextures)

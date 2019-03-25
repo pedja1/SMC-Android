@@ -4,102 +4,207 @@ size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-blocks_brick_2_1
+blocks_brick_1_black
   rotate: false
-  xy: 1931, 503
+  xy: 1681, 51
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-blocks_extra_blue_x
-  rotate: false
-  xy: 1933, 173
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_ice_3
-  rotate: false
-  xy: 1943, 7
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_green
-  rotate: false
-  xy: 1877, 45
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_grey
-  rotate: false
-  xy: 1931, 1229
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_red
-  rotate: false
-  xy: 1931, 569
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_blue
-  rotate: false
-  xy: 1931, 1361
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_green
-  rotate: false
-  xy: 1931, 371
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_grey
-  rotate: false
-  xy: 1931, 1097
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_red
-  rotate: false
-  xy: 1931, 965
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_green_middle
-  rotate: false
-  xy: 1541, 1275
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_sand_1
+blocks_brick_1_blue
   rotate: false
   xy: 1929, 1461
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-blocks_screw_1
+blocks_brick_1_green
+  rotate: false
+  xy: 1877, 45
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_1_grey
+  rotate: false
+  xy: 1931, 1361
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_1_red
+  rotate: false
+  xy: 1931, 1295
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_1_white
+  rotate: false
+  xy: 1931, 1229
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_1_yellow
+  rotate: false
+  xy: 1931, 1163
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_2_1
+  rotate: false
+  xy: 1931, 1097
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_brick_2_2
+  rotate: false
+  xy: 1931, 1031
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_cloud_1
+  rotate: false
+  xy: 1931, 965
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_extra_blue_x
   rotate: false
   xy: 1931, 899
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
+blocks_extra_corded
+  rotate: false
+  xy: 1931, 833
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_extra_mushroom
+  rotate: false
+  xy: 1931, 767
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_ice_1
+  rotate: false
+  xy: 1931, 701
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_ice_2
+  rotate: false
+  xy: 1931, 635
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_ice_3
+  rotate: false
+  xy: 1931, 569
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_blue
+  rotate: false
+  xy: 1931, 503
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_green
+  rotate: false
+  xy: 1931, 437
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_grey
+  rotate: false
+  xy: 1931, 371
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_red
+  rotate: false
+  xy: 1933, 305
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_stone_2_black
+  rotate: false
+  xy: 1933, 239
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_stone_2_blue
+  rotate: false
+  xy: 1933, 173
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_stone_2_green
+  rotate: false
+  xy: 1943, 73
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_stone_2_grey
+  rotate: false
+  xy: 1943, 7
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_metal_1_grey_middle
+  rotate: false
+  xy: 1799, 1401
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_blue_middle
+  rotate: false
+  xy: 1541, 1275
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 clouds_cloudy_1_middle
   rotate: false
-  xy: 1421, 51
+  xy: 775, 53
   size: 128, 64
   orig: 128, 64
+  offset: 0, 0
+  index: -1
+clouds_default_1_1_left
+  rotate: false
+  xy: 1029, 117
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_default_1_1_middle
+  rotate: false
+  xy: 1287, 117
+  size: 256, 128
+  orig: 256, 128
   offset: 0, 0
   index: -1
 clouds_default_1_2
@@ -107,6 +212,13 @@ clouds_default_1_2
   xy: 1, 119
   size: 512, 128
   orig: 512, 128
+  offset: 0, 0
+  index: -1
+clouds_grey_1_small
+  rotate: false
+  xy: 1421, 51
+  size: 128, 64
+  orig: 128, 64
   offset: 0, 0
   index: -1
 clouds_light_yellow_1_1
@@ -123,37 +235,23 @@ clouds_light_yellow_1_4
   orig: 512, 128
   offset: 0, 0
   index: -1
-clouds_lightblue_1_middle
+clouds_light_yellow_1_9
   rotate: false
-  xy: 1931, 833
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_bonus_3
-  rotate: false
-  xy: 1933, 305
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_power_2
-  rotate: false
-  xy: 1681, 51
-  size: 64, 64
-  orig: 64, 64
+  xy: 1, 507
+  size: 512, 512
+  orig: 512, 512
   offset: 0, 0
   index: -1
 game_level_door_red_1
   rotate: false
-  xy: 1929, 1657
+  xy: 1929, 1917
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 game_level_door_wood_1
   rotate: false
-  xy: 1801, 885
+  xy: 1799, 1789
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -165,70 +263,56 @@ game_level_door_yellow_1
   orig: 64, 128
   offset: 0, 0
   index: -1
-ground_castle_1_ground_bottom_left
-  rotate: false
-  xy: 1931, 437
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_middle_left_bottom
-  rotate: false
-  xy: 1931, 767
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_middle_left_top
-  rotate: false
-  xy: 1931, 701
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_statue_objects_eato
-  rotate: false
-  xy: 1943, 73
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 ground_ghost_1_joist_1
   rotate: false
-  xy: 1929, 1917
+  xy: 1929, 1657
   size: 64, 128
   orig: 64, 128
   offset: 0, 0
   index: -1
 ground_ghost_1_stone_1
   rotate: false
-  xy: 785, 19
+  xy: 389, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ground_ghost_1_way_1_left
   rotate: false
-  xy: 1421, 17
+  xy: 1995, 2013
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_ghost_1_way_1_middle
   rotate: false
-  xy: 1995, 1639
+  xy: 851, 19
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_ghost_1_way_1_right
   rotate: false
-  xy: 1251, 17
+  xy: 1995, 1979
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+ground_ghost_1_window_1
+  rotate: false
+  xy: 1799, 1531
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
 ground_green_1_hedges_big_1
+  rotate: false
+  xy: 1, 249
+  size: 512, 256
+  orig: 512, 256
+  offset: 0, 0
+  index: -1
+ground_green_1_hedges_big_2
   rotate: false
   xy: 1027, 1275
   size: 512, 256
@@ -237,7 +321,7 @@ ground_green_1_hedges_big_1
   index: -1
 ground_green_1_hedges_medium_1
   rotate: false
-  xy: 517, 53
+  xy: 1, 53
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -251,7 +335,7 @@ ground_green_1_hedges_medium_2
   index: -1
 ground_green_1_hedges_small_1
   rotate: false
-  xy: 1, 53
+  xy: 517, 53
   size: 256, 64
   orig: 256, 64
   offset: 0, 0
@@ -272,14 +356,14 @@ ground_green_1_hedges_wild_medium
   index: -1
 ground_green_1_plant_m
   rotate: false
-  xy: 521, 19
+  xy: 1929, 1427
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ground_green_1_plant_r
   rotate: false
-  xy: 851, 19
+  xy: 1149, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -293,82 +377,82 @@ ground_green_1_slider_1_brown_left
   index: -1
 ground_green_1_slider_1_brown_middle
   rotate: false
-  xy: 1995, 1741
+  xy: 1183, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_green_1_slider_1_brown_right
   rotate: false
-  xy: 1995, 2013
+  xy: 1995, 1911
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_green_2_gras_middle
   rotate: false
-  xy: 1995, 1673
+  xy: 1217, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_green_2_hedges_cactus_3
   rotate: false
-  xy: 1803, 111
+  xy: 1801, 1143
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
 ground_green_2_hedges_cactus_4
   rotate: false
-  xy: 1799, 1531
+  xy: 1801, 885
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
   index: -1
-ground_green_2_hedges_small_2
+ground_green_2_hedges_small_3
   rotate: false
-  xy: 1931, 1031
-  size: 64, 64
-  orig: 64, 64
+  xy: 1551, 51
+  size: 128, 64
+  orig: 128, 64
   offset: 0, 0
   index: -1
 ground_green_2_hedges_small_4
   rotate: false
-  xy: 1933, 139
+  xy: 455, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
-ground_green_2_trees_balloon_tree_middle
+ground_jungle_1_beanstalk
   rotate: false
-  xy: 1287, 117
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-ground_green_2_trees_balloon_tree_trunk_node
-  rotate: false
-  xy: 1933, 239
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_jungle_1_beanstalk_2
-  rotate: false
-  xy: 1543, 247
+  xy: 1541, 1533
   size: 256, 512
   orig: 256, 512
   offset: 0, 0
   index: -1
-ground_jungle_1_bridge_frame_back
+ground_jungle_1_beanstalk_2
   rotate: false
-  xy: 1, 249
-  size: 512, 256
-  orig: 512, 256
+  xy: 1543, 761
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
-ground_jungle_1_bridge_frame_front
+ground_jungle_1_big_plant_1
+  rotate: false
+  xy: 1027, 1533
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+ground_jungle_1_big_plant_2
+  rotate: false
+  xy: 1801, 627
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+ground_jungle_1_bridge_frame_back
   rotate: false
   xy: 515, 249
   size: 512, 256
@@ -382,9 +466,9 @@ ground_jungle_1_bridge_plank
   orig: 64, 16
   offset: 0, 0
   index: -1
-ground_jungle_1_grass_2
+ground_jungle_1_grass_1
   rotate: false
-  xy: 1551, 51
+  xy: 1747, 45
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
@@ -396,51 +480,44 @@ ground_jungle_1_grass_4
   orig: 64, 128
   offset: 0, 0
   index: -1
-ground_jungle_1_kplant_head
-  rotate: false
-  xy: 1931, 1295
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 ground_jungle_1_slider_1_blue_left
   rotate: false
-  xy: 1995, 1707
+  xy: 1995, 1877
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_1_blue_middle
   rotate: false
-  xy: 1455, 17
+  xy: 1251, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_1_brown_left
   rotate: false
-  xy: 1387, 17
+  xy: 1995, 1843
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_1_brown_middle
   rotate: false
-  xy: 1149, 17
+  xy: 1285, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_1_green_left
   rotate: false
-  xy: 1183, 17
+  xy: 1995, 1809
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_1_green_middle
   rotate: false
-  xy: 1217, 17
+  xy: 1319, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -454,56 +531,56 @@ ground_jungle_1_slider_2_blue_left
   index: -1
 ground_jungle_1_slider_2_blue_middle
   rotate: false
-  xy: 1285, 17
+  xy: 1353, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_blue_right
   rotate: false
-  xy: 1353, 17
+  xy: 1995, 1741
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_brown_left
   rotate: false
-  xy: 1995, 1911
+  xy: 1387, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_brown_middle
   rotate: false
-  xy: 1995, 1877
+  xy: 1995, 1707
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_brown_right
   rotate: false
-  xy: 1995, 1843
+  xy: 1421, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_green_left
   rotate: false
-  xy: 1995, 1809
+  xy: 1995, 1673
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_green_middle
   rotate: false
-  xy: 1995, 1979
+  xy: 1455, 17
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ground_jungle_1_slider_2_green_right
   rotate: false
-  xy: 1319, 17
+  xy: 1995, 1639
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -517,30 +594,16 @@ ground_jungle_1_tree_1
   index: -1
 ground_jungle_1_tree_1_front
   rotate: false
-  xy: 1, 507
+  xy: 1029, 761
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
 ground_jungle_1_tree_2
   rotate: false
-  xy: 1543, 761
+  xy: 1543, 247
   size: 256, 512
   orig: 256, 512
-  offset: 0, 0
-  index: -1
-ground_jungle_1_tree_2_front
-  rotate: false
-  xy: 1541, 1533
-  size: 256, 512
-  orig: 256, 512
-  offset: 0, 0
-  index: -1
-ground_jungle_2_hedge_1_red
-  rotate: false
-  xy: 1747, 45
-  size: 128, 64
-  orig: 128, 64
   offset: 0, 0
   index: -1
 ground_jungle_2_rope_1_hor
@@ -550,25 +613,11 @@ ground_jungle_2_rope_1_hor
   orig: 32, 16
   offset: 0, 0
   index: -1
-ground_mushroom_1_platform_blue_middle_2
+ground_sand_1_vase
   rotate: false
-  xy: 1799, 1401
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_sand_1_ground_left_up
-  rotate: false
-  xy: 1931, 1163
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_sand_1_ground_middle
-  rotate: false
-  xy: 1931, 635
-  size: 64, 64
-  orig: 64, 64
+  xy: 1801, 369
+  size: 128, 256
+  orig: 128, 256
   offset: 0, 0
   index: -1
 ground_snow_1_hills_big_1_top
@@ -578,23 +627,9 @@ ground_snow_1_hills_big_1_top
   orig: 1024, 1024
   offset: 0, 0
   index: -1
-ground_snow_1_trees_balloon_top
+ground_snow_1_trees_fir_1_green_1_lights
   rotate: false
-  xy: 1029, 117
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_trees_fir_1_green_1_normal
-  rotate: false
-  xy: 1027, 1533
-  size: 512, 512
-  orig: 512, 512
-  offset: 0, 0
-  index: -1
-ground_snow_1_trees_fir_1_green_1_snow
-  rotate: false
-  xy: 1029, 761
+  xy: 1029, 247
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
@@ -622,14 +657,14 @@ ground_underground_rope
   index: -1
 ground_underground_rope_end
   rotate: false
-  xy: 2029, 1995
+  xy: 101, 1
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 hills_blue_1_1_big
   rotate: false
-  xy: 1801, 627
+  xy: 1803, 111
   size: 128, 256
   orig: 128, 256
   offset: 0, 0
@@ -641,13 +676,6 @@ hills_green_1_head
   orig: 256, 64
   offset: 0, 0
   index: -1
-hills_green_2_medium_1
-  rotate: false
-  xy: 1029, 247
-  size: 512, 512
-  orig: 512, 512
-  offset: 0, 0
-  index: -1
 hills_light_blue_1_head
   rotate: false
   xy: 1163, 51
@@ -655,102 +683,74 @@ hills_light_blue_1_head
   orig: 256, 64
   offset: 0, 0
   index: -1
-hills_very_light_blue_1_1_big
-  rotate: false
-  xy: 1799, 1789
-  size: 128, 256
-  orig: 128, 256
-  offset: 0, 0
-  index: -1
-hills_very_light_blue_1_1_medium
-  rotate: false
-  xy: 1801, 369
-  size: 128, 256
-  orig: 128, 256
-  offset: 0, 0
-  index: -1
 pipes_blue_small_up
   rotate: false
-  xy: 587, 19
+  xy: 1933, 139
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_blue_small_ver
   rotate: false
-  xy: 1929, 1427
+  xy: 521, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_green_small_up
   rotate: false
-  xy: 653, 19
+  xy: 587, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_green_small_ver
   rotate: false
-  xy: 951, 17
+  xy: 653, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_grey_small_up
   rotate: false
-  xy: 455, 19
+  xy: 719, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_grey_small_ver
   rotate: false
-  xy: 885, 17
+  xy: 785, 19
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_orange_small_up
   rotate: false
-  xy: 1083, 17
+  xy: 885, 17
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_orange_small_ver
   rotate: false
-  xy: 1017, 17
+  xy: 951, 17
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_yellow_small_up
   rotate: false
-  xy: 389, 19
+  xy: 1017, 17
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 pipes_yellow_small_ver
   rotate: false
-  xy: 719, 19
+  xy: 1083, 17
   size: 64, 32
   orig: 64, 32
-  offset: 0, 0
-  index: -1
-pipes_yellow_ver
-  rotate: false
-  xy: 775, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-windows_castle_2
-  rotate: false
-  xy: 1801, 1143
-  size: 128, 256
-  orig: 128, 256
   offset: 0, 0
   index: -1
 
@@ -759,333 +759,424 @@ size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-blocks_brick_1_black
-  rotate: false
-  xy: 1933, 1123
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_brick_1_blue
-  rotate: false
-  xy: 1933, 793
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_brick_1_grey
-  rotate: false
-  xy: 1935, 661
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_brick_1_white
-  rotate: false
-  xy: 1805, 493
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_extra_mushroom
-  rotate: false
-  xy: 1933, 727
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_ice_2
-  rotate: false
-  xy: 1937, 529
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_violet
-  rotate: false
-  xy: 1931, 1387
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_yellow
-  rotate: false
-  xy: 1933, 991
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_blue_up
-  rotate: false
-  xy: 1287, 629
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_green_right_up
-  rotate: false
-  xy: 1545, 689
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_green_up
-  rotate: false
-  xy: 515, 249
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_orange_middle
-  rotate: false
-  xy: 1545, 947
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_orange_right_up
-  rotate: false
-  xy: 1289, 371
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_sand_3
-  rotate: false
-  xy: 1937, 397
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_sand_4
-  rotate: false
-  xy: 1929, 1849
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_wood_2
-  rotate: false
-  xy: 1945, 331
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-clouds_default_1_1_left
-  rotate: false
-  xy: 1543, 1205
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_default_1_1_middle
-  rotate: false
-  xy: 1041, 47
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_grey_1_small
-  rotate: false
-  xy: 1429, 45
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_10
-  rotate: false
-  xy: 1033, 177
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_2
-  rotate: false
-  xy: 1549, 301
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_3
-  rotate: false
-  xy: 1027, 1145
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_5
-  rotate: false
-  xy: 1, 119
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_6
-  rotate: false
-  xy: 1557, 171
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_7
-  rotate: false
-  xy: 1285, 1145
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_8
-  rotate: false
-  xy: 775, 119
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-clouds_light_yellow_1_9
-  rotate: false
-  xy: 1027, 1533
-  size: 512, 512
-  orig: 512, 512
-  offset: 0, 0
-  index: -1
-clouds_lightblue_1_left
-  rotate: false
-  xy: 1931, 1651
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-clouds_lightblue_1_right
-  rotate: false
-  xy: 1929, 1717
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_white1_1
-  rotate: false
-  xy: 1931, 1453
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_bonus_5
-  rotate: false
-  xy: 1817, 37
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_default
-  rotate: false
-  xy: 1947, 199
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_power_1
-  rotate: false
-  xy: 1929, 1783
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_power_3
-  rotate: false
-  xy: 1947, 133
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_power_4
-  rotate: false
-  xy: 1937, 463
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_spin_1
-  rotate: false
-  xy: 1945, 265
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_level_door_castle_1
-  rotate: false
-  xy: 773, 249
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_bottom_1
-  rotate: false
-  xy: 1933, 859
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_middle_1
-  rotate: false
-  xy: 1931, 1255
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_middle_left
-  rotate: false
-  xy: 1933, 1189
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_castle_1_ground_top_left
+blocks_metal_stone_2_red
   rotate: false
   xy: 1929, 1981
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-ground_castle_1_statue_objects_mushroom
+blocks_metal_stone_2_violet
+  rotate: false
+  xy: 1929, 1915
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_stone_2_yellow
+  rotate: false
+  xy: 1929, 1849
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_metal_yellow
+  rotate: false
+  xy: 1929, 1783
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_blue_right_up
+  rotate: false
+  xy: 515, 249
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_blue_up
+  rotate: false
+  xy: 773, 249
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_green_middle
+  rotate: false
+  xy: 1027, 1275
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_green_right_up
+  rotate: false
+  xy: 1285, 1275
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_green_up
+  rotate: false
+  xy: 1541, 1789
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_orange_middle
+  rotate: false
+  xy: 1031, 307
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_orange_right_up
+  rotate: false
+  xy: 1287, 887
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_orange_up
+  rotate: false
+  xy: 1543, 1335
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_red_middle
+  rotate: false
+  xy: 1287, 629
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_red_right_up
+  rotate: false
+  xy: 1289, 371
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_pipe_connection_plastic_1_red_up
+  rotate: false
+  xy: 1545, 947
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+blocks_sand_1
+  rotate: false
+  xy: 1929, 1717
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_sand_2
+  rotate: false
+  xy: 1805, 493
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_sand_3
+  rotate: false
+  xy: 1871, 493
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_sand_4
+  rotate: false
+  xy: 1817, 37
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_screw_1
   rotate: false
   xy: 1883, 37
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-ground_desert_1_ground_top_right
+blocks_slime_1
   rotate: false
-  xy: 1801, 1271
-  size: 128, 128
-  orig: 128, 128
+  xy: 1931, 1651
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_ghost_1_lamp_1
+blocks_stone_1
+  rotate: false
+  xy: 1931, 1585
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_stone_2
+  rotate: false
+  xy: 1931, 1519
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_wood_1
+  rotate: false
+  xy: 1931, 1453
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+blocks_wood_2
+  rotate: false
+  xy: 1931, 1387
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_10
+  rotate: false
+  xy: 1541, 1659
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_2
+  rotate: false
+  xy: 1, 119
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_3
+  rotate: false
+  xy: 259, 119
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_5
+  rotate: false
+  xy: 517, 119
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_6
+  rotate: false
+  xy: 775, 119
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_7
+  rotate: false
+  xy: 1027, 1145
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_light_yellow_1_8
+  rotate: false
+  xy: 1285, 1145
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+clouds_lightblue_1_left
+  rotate: false
+  xy: 1931, 1321
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+clouds_lightblue_1_middle
+  rotate: false
+  xy: 1931, 1255
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+clouds_lightblue_1_right
+  rotate: false
+  xy: 1933, 1189
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+disabled
+  rotate: false
+  xy: 1933, 1123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_brown1_1
+  rotate: false
+  xy: 1933, 1057
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_white1_1
+  rotate: false
+  xy: 1933, 991
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_1
+  rotate: false
+  xy: 1933, 925
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_2
+  rotate: false
+  xy: 1933, 859
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_3
+  rotate: false
+  xy: 1933, 793
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_4
+  rotate: false
+  xy: 1933, 727
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_5
+  rotate: false
+  xy: 1935, 661
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_bonus_6
   rotate: false
   xy: 1935, 595
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-ground_ghost_1_window_1
+game_box_yellow_default
   rotate: false
-  xy: 1801, 1401
-  size: 128, 256
-  orig: 128, 256
-  offset: 0, 0
-  index: -1
-ground_green_1_hedges_big_2
-  rotate: false
-  xy: 1, 249
-  size: 512, 256
-  orig: 512, 256
-  offset: 0, 0
-  index: -1
-ground_green_2_apple_green
-  rotate: false
-  xy: 1931, 1585
+  xy: 1937, 529
   size: 64, 64
   orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_power_1
+  rotate: false
+  xy: 1937, 463
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_power_2
+  rotate: false
+  xy: 1937, 397
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_power_3
+  rotate: false
+  xy: 1945, 331
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_power_4
+  rotate: false
+  xy: 1945, 265
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_spin_1
+  rotate: false
+  xy: 1947, 199
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_spin_2
+  rotate: false
+  xy: 1947, 133
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_spin_3
+  rotate: false
+  xy: 1949, 67
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_box_yellow_spin_4
+  rotate: false
+  xy: 1949, 1
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+game_level_door_castle_1
+  rotate: false
+  xy: 1545, 689
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_fireplant
+  rotate: false
+  xy: 1799, 1659
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_furball
+  rotate: false
+  xy: 1801, 1271
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_moon
+  rotate: false
+  xy: 1805, 559
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_shell
+  rotate: false
+  xy: 1807, 363
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_small_maryo
+  rotate: false
+  xy: 1815, 233
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_castle_1_statue_objects_spika
+  rotate: false
+  xy: 1817, 103
+  size: 128, 128
+  orig: 128, 128
   offset: 0, 0
   index: -1
 ground_green_2_hedges_big_1
@@ -1095,109 +1186,46 @@ ground_green_2_hedges_big_1
   orig: 256, 256
   offset: 0, 0
   index: -1
-ground_green_2_hedges_big_2
+ground_green_2_trees_balloon_tree_bottom
   rotate: false
-  xy: 1543, 1335
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-ground_green_2_hedges_big_3
-  rotate: false
-  xy: 1027, 1275
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-ground_green_2_hedges_small_1
-  rotate: false
-  xy: 1931, 1519
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_hedges_small_3
-  rotate: false
-  xy: 1299, 45
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_tendril
-  rotate: false
-  xy: 1931, 1321
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_tendril_top
-  rotate: false
-  xy: 1933, 1057
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_trees_balloon_tree_top
-  rotate: false
-  xy: 1541, 1659
+  xy: 1033, 177
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
-ground_green_2_trees_balloon_tree_trunk
+ground_green_2_trees_balloon_tree_middle
   rotate: false
-  xy: 1929, 1915
-  size: 64, 64
-  orig: 64, 64
+  xy: 1041, 47
+  size: 256, 128
+  orig: 256, 128
   offset: 0, 0
   index: -1
-ground_jungle_1_beanstalk
+ground_green_2_trees_balloon_tree_top
   rotate: false
-  xy: 1029, 565
-  size: 256, 512
-  orig: 256, 512
+  xy: 1543, 1205
+  size: 256, 128
+  orig: 256, 128
   offset: 0, 0
   index: -1
-ground_jungle_1_big_plant_1
+ground_jungle_1_bridge_frame_front
   rotate: false
-  xy: 515, 507
-  size: 512, 512
-  orig: 512, 512
+  xy: 1, 249
+  size: 512, 256
+  orig: 512, 256
   offset: 0, 0
   index: -1
-ground_jungle_1_big_plant_2
+ground_jungle_1_grass_2
   rotate: false
-  xy: 1799, 1789
-  size: 128, 256
-  orig: 128, 256
-  offset: 0, 0
-  index: -1
-ground_jungle_1_grass_1
-  rotate: false
-  xy: 391, 53
+  xy: 1, 53
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
-ground_jungle_1_ground_halfmassive_top_1
+ground_jungle_1_tree_2_front
   rotate: false
-  xy: 1799, 1659
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_kplant
-  rotate: false
-  xy: 1871, 493
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_jungle_1_vine_bottom
-  rotate: false
-  xy: 1805, 559
-  size: 128, 128
-  orig: 128, 128
+  xy: 1029, 565
+  size: 256, 512
+  orig: 256, 512
   offset: 0, 0
   index: -1
 ground_jungle_2_hedge_1_blue
@@ -1209,79 +1237,30 @@ ground_jungle_2_hedge_1_blue
   index: -1
 ground_jungle_2_hedge_1_green
   rotate: false
-  xy: 1671, 1593
+  xy: 261, 53
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_2_hedge_1_red
+  rotate: false
+  xy: 391, 53
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
 ground_jungle_2_hedge_1_yellow
   rotate: false
-  xy: 1801, 1205
+  xy: 521, 53
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
-ground_mushroom_1_platform_green_right
-  rotate: false
-  xy: 1817, 103
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft_double_riffle
-  rotate: false
-  xy: 1815, 233
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_sand_1_ground_up
-  rotate: false
-  xy: 1949, 1
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
 ground_sand_1_sphinx_medium
   rotate: false
-  xy: 1559, 41
+  xy: 1291, 241
   size: 256, 128
   orig: 256, 128
-  offset: 0, 0
-  index: -1
-ground_sand_1_tendril
-  rotate: false
-  xy: 1933, 925
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_sand_1_tendril_top
-  rotate: false
-  xy: 1949, 67
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_sand_1_vase
-  rotate: false
-  xy: 1803, 689
-  size: 128, 256
-  orig: 128, 256
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_plain_top_1
-  rotate: false
-  xy: 1807, 363
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_snowman_1
-  rotate: false
-  xy: 1541, 1789
-  size: 256, 256
-  orig: 256, 256
   offset: 0, 0
   index: -1
 ground_snow_1_trees_balloon_bottom
@@ -1293,37 +1272,37 @@ ground_snow_1_trees_balloon_bottom
   index: -1
 ground_snow_1_trees_balloon_middle
   rotate: false
-  xy: 259, 119
+  xy: 1549, 301
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
-ground_snow_1_trees_fir_1_green_1_lights
+ground_snow_1_trees_balloon_top
+  rotate: false
+  xy: 1557, 171
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_trees_fir_1_green_1_normal
   rotate: false
   xy: 1, 507
   size: 512, 512
   orig: 512, 512
   offset: 0, 0
   index: -1
-ground_snow_1_windows_medium_1
+ground_snow_1_trees_fir_1_green_1_snow
   rotate: false
-  xy: 1287, 887
-  size: 256, 256
-  orig: 256, 256
+  xy: 515, 507
+  size: 512, 512
+  orig: 512, 512
   offset: 0, 0
   index: -1
 hills_blue_1_1_medium
   rotate: false
-  xy: 1803, 947
+  xy: 1799, 1789
   size: 128, 256
   orig: 128, 256
-  offset: 0, 0
-  index: -1
-hills_green_1_middle
-  rotate: false
-  xy: 1285, 1275
-  size: 256, 256
-  orig: 256, 256
   offset: 0, 0
   index: -1
 hills_green_2_big_1
@@ -1333,88 +1312,109 @@ hills_green_2_big_1
   orig: 1024, 1024
   offset: 0, 0
   index: -1
-hills_light_blue_1_middle
+hills_green_2_medium_1
   rotate: false
-  xy: 1031, 307
-  size: 256, 256
-  orig: 256, 256
+  xy: 1027, 1533
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+hills_very_light_blue_1_1_big
+  rotate: false
+  xy: 1801, 1401
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+hills_very_light_blue_1_1_medium
+  rotate: false
+  xy: 1803, 947
+  size: 128, 256
+  orig: 128, 256
   offset: 0, 0
   index: -1
 pipes_blue_up
-  rotate: false
-  xy: 1157, 1079
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_blue_ver
-  rotate: false
-  xy: 521, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_green_up
-  rotate: false
-  xy: 261, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_green_ver
-  rotate: false
-  xy: 781, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_grey_up
-  rotate: false
-  xy: 911, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_grey_ver
-  rotate: false
-  xy: 1027, 1079
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_orange_up
-  rotate: false
-  xy: 1541, 1593
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_orange_ver
-  rotate: false
-  xy: 1, 53
-  size: 128, 64
-  orig: 128, 64
-  offset: 0, 0
-  index: -1
-pipes_yellow_up
   rotate: false
   xy: 651, 53
   size: 128, 64
   orig: 128, 64
   offset: 0, 0
   index: -1
+pipes_blue_ver
+  rotate: false
+  xy: 781, 53
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_green_up
+  rotate: false
+  xy: 911, 53
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_green_ver
+  rotate: false
+  xy: 1027, 1079
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_grey_up
+  rotate: false
+  xy: 1157, 1079
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_grey_ver
+  rotate: false
+  xy: 1541, 1593
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_orange_up
+  rotate: false
+  xy: 1671, 1593
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_orange_ver
+  rotate: false
+  xy: 1299, 45
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_yellow_up
+  rotate: false
+  xy: 1429, 45
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
+pipes_yellow_ver
+  rotate: false
+  xy: 1801, 1205
+  size: 128, 64
+  orig: 128, 64
+  offset: 0, 0
+  index: -1
 signs_default_1_1_danger
   rotate: false
-  xy: 1291, 241
+  xy: 1559, 41
   size: 256, 128
   orig: 256, 128
   offset: 0, 0
   index: -1
-signs_default_1_1_ending_big
+windows_castle_2
   rotate: false
-  xy: 517, 119
-  size: 256, 128
-  orig: 256, 128
+  xy: 1803, 689
+  size: 128, 256
+  orig: 128, 256
   offset: 0, 0
   index: -1
 
@@ -1423,296 +1423,100 @@ size: 2048,2048
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-blocks_brick_1_green
-  rotate: false
-  xy: 1041, 187
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_brick_1_red
+game_box_yellow_spin_5
   rotate: false
   xy: 1945, 1943
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-blocks_brick_1_yellow
+ground_castle_1_ground_bottom_1
   rotate: false
-  xy: 519, 1165
+  xy: 775, 1813
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-blocks_brick_2_2
-  rotate: false
-  xy: 1237, 383
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_cloud_1
-  rotate: false
-  xy: 1821, 1163
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_extra_corded
-  rotate: false
-  xy: 1561, 837
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_ice_1
-  rotate: false
-  xy: 1431, 643
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_blue
-  rotate: false
-  xy: 1627, 771
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_stone_2_black
-  rotate: false
-  xy: 1691, 1033
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_metal_yellow
-  rotate: false
-  xy: 133, 1
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_metal_1_grey_middle
-  rotate: false
-  xy: 1041, 449
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_blue_middle
-  rotate: false
-  xy: 1, 1751
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_blue_right_up
-  rotate: false
-  xy: 259, 1751
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_orange_up
-  rotate: false
-  xy: 1, 1493
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_red_middle
-  rotate: false
-  xy: 1, 1235
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_red_right_up
-  rotate: false
-  xy: 1, 977
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_pipe_connection_plastic_1_red_up
-  rotate: false
-  xy: 517, 1751
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-blocks_sand_2
-  rotate: false
-  xy: 1561, 771
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_slime_1
-  rotate: false
-  xy: 1107, 253
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_stone_1
-  rotate: false
-  xy: 1561, 903
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_stone_2
-  rotate: false
-  xy: 1757, 1033
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-blocks_wood_1
-  rotate: false
-  xy: 1041, 253
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-disabled
-  rotate: false
-  xy: 1497, 643
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_brown1_1
+ground_castle_1_ground_bottom_left
   rotate: false
   xy: 1, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_box_yellow_bonus_1
+ground_castle_1_ground_middle_1
   rotate: false
-  xy: 521, 59
+  xy: 517, 1425
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_box_yellow_bonus_2
+ground_castle_1_ground_middle_left
   rotate: false
-  xy: 849, 123
+  xy: 67, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_box_yellow_bonus_4
+ground_castle_1_ground_middle_left_bottom
   rotate: false
-  xy: 1627, 837
+  xy: 519, 1165
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-game_box_yellow_bonus_6
+ground_castle_1_ground_middle_left_top
   rotate: false
-  xy: 1627, 903
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_spin_2
-  rotate: false
-  xy: 981, 121
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_spin_3
-  rotate: false
-  xy: 1629, 705
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_spin_4
-  rotate: false
-  xy: 1563, 705
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-game_box_yellow_spin_5
-  rotate: false
-  xy: 783, 123
+  xy: 133, 1
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ground_castle_1_ground_top_1
   rotate: false
-  xy: 1367, 513
+  xy: 1561, 903
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-ground_castle_1_statue_objects_fireplant
+ground_castle_1_ground_top_left
   rotate: false
-  xy: 1431, 709
-  size: 128, 128
-  orig: 128, 128
+  xy: 1691, 1033
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_castle_1_statue_objects_furball
+ground_castle_1_statue_objects_eato
   rotate: false
-  xy: 1299, 1359
-  size: 128, 128
-  orig: 128, 128
+  xy: 1821, 1163
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_castle_1_statue_objects_moon
+ground_castle_1_statue_objects_mushroom
   rotate: false
-  xy: 1039, 1359
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_castle_1_statue_objects_shell
-  rotate: false
-  xy: 1037, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_castle_1_statue_objects_small_maryo
-  rotate: false
-  xy: 521, 1035
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_castle_1_statue_objects_spika
-  rotate: false
-  xy: 521, 515
-  size: 128, 128
-  orig: 128, 128
+  xy: 1041, 253
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
 ground_castle_1_statue_objects_spikeball
   rotate: false
-  xy: 647, 1621
+  xy: 517, 1621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_castle_1_statue_plinth_1
   rotate: false
-  xy: 1687, 1619
+  xy: 775, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_bones_rackabones_back
   rotate: false
-  xy: 915, 123
+  xy: 1171, 383
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -1726,954 +1530,1129 @@ ground_desert_1_bones_rackabones_front
   index: -1
 ground_desert_1_bones_rackabones_middle
   rotate: false
-  xy: 1171, 383
+  xy: 1431, 643
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 ground_desert_1_ground_middle_1
   rotate: false
-  xy: 781, 319
+  xy: 1, 847
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_middle_2
   rotate: false
-  xy: 1561, 1099
+  xy: 259, 1233
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_middle_left
   rotate: false
-  xy: 1171, 709
+  xy: 517, 1491
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_middle_right
   rotate: false
-  xy: 1167, 1619
+  xy: 905, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_top_1
   rotate: false
-  xy: 1041, 709
+  xy: 1, 717
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_top_2
   rotate: false
-  xy: 1689, 1359
+  xy: 259, 1103
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_desert_1_ground_top_left
   rotate: false
-  xy: 519, 1231
+  xy: 1035, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_green_1_chest_closed
-  rotate: false
-  xy: 1819, 1359
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_1_chest_open_1
-  rotate: false
-  xy: 1, 67
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_1_chest_open_2
-  rotate: false
-  xy: 1037, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_1_kplant
-  rotate: false
-  xy: 1113, 121
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_1_kplant_head
-  rotate: false
-  xy: 67, 1
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_hedges_cactus_1
-  rotate: false
-  xy: 1887, 1163
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_green_2_hedges_cactus_2
-  rotate: false
-  xy: 651, 709
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_2_trees_balloon_tree_bottom
-  rotate: false
-  xy: 259, 1363
-  size: 256, 128
-  orig: 256, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_bottom_1
-  rotate: false
-  xy: 1557, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_bottom_left
-  rotate: false
-  xy: 261, 453
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_middle_1
-  rotate: false
-  xy: 1427, 1619
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_middle_left
-  rotate: false
-  xy: 907, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_middle_left_bottom
-  rotate: false
-  xy: 779, 1359
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_middle_left_top
-  rotate: false
-  xy: 1165, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_top_1
-  rotate: false
-  xy: 911, 579
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_green_3_ground_top_left
-  rotate: false
-  xy: 261, 583
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_berry_1
-  rotate: false
-  xy: 1047, 121
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_jungle_1_berry_2
-  rotate: false
-  xy: 717, 123
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_jungle_1_bridge_rope_back
-  rotate: false
-  xy: 521, 905
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_bridge_rope_front
-  rotate: false
-  xy: 911, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_grass_3
-  rotate: false
-  xy: 651, 123
-  size: 64, 64
-  orig: 64, 64
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_bottom_1
-  rotate: false
-  xy: 779, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_bottom_2
-  rotate: false
-  xy: 391, 713
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_bottom_left
-  rotate: false
-  xy: 1815, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_bottom_right
-  rotate: false
-  xy: 781, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_halfmassive_middle_left
-  rotate: false
-  xy: 1301, 709
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_halfmassive_middle_right
-  rotate: false
-  xy: 391, 323
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_halfmassive_top_2
-  rotate: false
-  xy: 521, 125
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_halfmassive_top_left
-  rotate: false
-  xy: 521, 385
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_halfmassive_top_right
-  rotate: false
-  xy: 1041, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_1
-  rotate: false
-  xy: 1171, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_2
-  rotate: false
-  xy: 261, 973
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_left
-  rotate: false
-  xy: 1, 847
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_left_bottom
-  rotate: false
-  xy: 517, 1491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_left_top
-  rotate: false
-  xy: 261, 323
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_right
-  rotate: false
-  xy: 781, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_right_bottom
-  rotate: false
-  xy: 131, 67
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_middle_right_top
-  rotate: false
-  xy: 1817, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_left
-  rotate: false
-  xy: 259, 1103
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_left_bottom
-  rotate: false
-  xy: 1041, 579
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_left_top
-  rotate: false
-  xy: 1431, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_right
-  rotate: false
-  xy: 1167, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_right_bottom
-  rotate: false
-  xy: 1, 717
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_middle_right_top
-  rotate: false
-  xy: 911, 709
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_top_1
-  rotate: false
-  xy: 1, 197
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_top_2
-  rotate: false
-  xy: 1431, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_top_left
-  rotate: false
-  xy: 651, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_plain_top_right
-  rotate: false
-  xy: 391, 453
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_top_1
-  rotate: false
-  xy: 1039, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_top_2
-  rotate: false
-  xy: 1171, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_top_left
-  rotate: false
-  xy: 777, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_ground_top_right
-  rotate: false
-  xy: 911, 319
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_vine_middle
-  rotate: false
-  xy: 649, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_jungle_1_vine_top
-  rotate: false
-  xy: 907, 1619
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_blue_left
-  rotate: false
-  xy: 1559, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_blue_middle_1
-  rotate: false
-  xy: 651, 449
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_blue_right
-  rotate: false
-  xy: 1425, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_gold_left
-  rotate: false
-  xy: 1817, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_gold_middle_1
-  rotate: false
-  xy: 1687, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_gold_middle_2
-  rotate: false
-  xy: 389, 1103
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_gold_right
-  rotate: false
-  xy: 131, 197
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_green_left
-  rotate: false
-  xy: 521, 775
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_green_middle_1
-  rotate: false
-  xy: 391, 583
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_green_middle_2
-  rotate: false
-  xy: 391, 63
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_red_left
-  rotate: false
-  xy: 1687, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_red_middle_1
-  rotate: false
-  xy: 1301, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_red_middle_2
-  rotate: false
-  xy: 1561, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_red_right
-  rotate: false
-  xy: 131, 847
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft
-  rotate: false
-  xy: 651, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft_bottom
-  rotate: false
-  xy: 1431, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft_riffle
-  rotate: false
-  xy: 1691, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft_riffle_top
-  rotate: false
-  xy: 391, 973
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_mushroom_1_platform_shaft_top
-  rotate: false
-  xy: 389, 1233
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_down
-  rotate: false
-  xy: 261, 843
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_left_up
-  rotate: false
-  xy: 1427, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_middle
-  rotate: false
-  xy: 261, 713
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_right_down
-  rotate: false
-  xy: 651, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_right_up
-  rotate: false
-  xy: 1819, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_blue_up
-  rotate: false
-  xy: 1169, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_down
-  rotate: false
-  xy: 1037, 1619
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_left_up
-  rotate: false
-  xy: 1301, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_middle
-  rotate: false
-  xy: 1041, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_right_down
-  rotate: false
-  xy: 521, 255
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_right_up
-  rotate: false
-  xy: 651, 579
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_green_up
-  rotate: false
-  xy: 907, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_down
-  rotate: false
-  xy: 1685, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_left_up
-  rotate: false
-  xy: 1301, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_middle
-  rotate: false
-  xy: 909, 1359
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_right_down
-  rotate: false
-  xy: 131, 457
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_right_up
-  rotate: false
-  xy: 261, 63
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_grey_up
-  rotate: false
-  xy: 651, 319
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_red_down
-  rotate: false
-  xy: 1041, 319
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_red_left_up
+ground_desert_1_ground_top_right
   rotate: false
   xy: 1, 587
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_plastic_1_screw_block_red_middle
+ground_ghost_1_lamp_1
   rotate: false
-  xy: 131, 587
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_red_right_down
-  rotate: false
-  xy: 911, 1099
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_red_right_up
-  rotate: false
-  xy: 1171, 839
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_plastic_1_screw_block_red_up
-  rotate: false
-  xy: 781, 579
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_sand_1_vase_broken
-  rotate: false
-  xy: 1107, 187
+  xy: 1561, 837
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-ground_snow_1_ground_bottom_1
+ground_green_1_chest_closed
   rotate: false
-  xy: 1171, 579
+  xy: 1165, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_ground_bottom_2
+ground_green_1_chest_open_1
   rotate: false
-  xy: 131, 717
+  xy: 1, 457
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_ground_bottom_left
-  rotate: false
-  xy: 775, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_bottom_right
-  rotate: false
-  xy: 905, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_middle_left
-  rotate: false
-  xy: 1035, 1879
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_middle_right
-  rotate: false
-  xy: 1297, 1489
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_top_1
-  rotate: false
-  xy: 1689, 1229
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_top_2
-  rotate: false
-  xy: 261, 193
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_top_left
-  rotate: false
-  xy: 911, 969
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_halfmassive_top_right
-  rotate: false
-  xy: 1169, 1359
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_middle_1
-  rotate: false
-  xy: 1297, 1749
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_middle_2
+ground_green_1_chest_open_2
   rotate: false
   xy: 1295, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_ground_middle_left_top
+ground_green_1_kplant
   rotate: false
-  xy: 911, 449
-  size: 128, 128
-  orig: 128, 128
+  xy: 1561, 771
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_snow_1_ground_middle_right_top
+ground_green_1_kplant_head
   rotate: false
-  xy: 1297, 1619
-  size: 128, 128
-  orig: 128, 128
+  xy: 1947, 1683
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_middle_left
+ground_green_2_apple_green
   rotate: false
-  xy: 909, 1229
-  size: 128, 128
-  orig: 128, 128
+  xy: 1947, 1617
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_middle_left_bottom
+ground_green_2_hedges_big_2
   rotate: false
-  xy: 1299, 1229
-  size: 128, 128
-  orig: 128, 128
+  xy: 1, 1751
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_middle_left_top
+ground_green_2_hedges_big_3
   rotate: false
-  xy: 517, 1621
-  size: 128, 128
-  orig: 128, 128
+  xy: 1, 1493
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_middle_right
+ground_green_2_hedges_cactus_1
   rotate: false
-  xy: 519, 1361
-  size: 128, 128
-  orig: 128, 128
+  xy: 1947, 1551
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_middle_right_bottom
-  rotate: false
-  xy: 647, 1491
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_plain_middle_right_top
-  rotate: false
-  xy: 781, 449
-  size: 128, 128
-  orig: 128, 128
-  offset: 0, 0
-  index: -1
-ground_snow_1_ground_plain_top_2
+ground_green_2_hedges_cactus_2
   rotate: false
   xy: 1, 327
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_top_left
+ground_green_2_hedges_small_1
   rotate: false
-  xy: 1171, 449
+  xy: 1949, 1293
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_2_hedges_small_2
+  rotate: false
+  xy: 651, 123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_2_tendril
+  rotate: false
+  xy: 717, 123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_2_tendril_top
+  rotate: false
+  xy: 783, 123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_2_trees_balloon_tree_trunk
+  rotate: false
+  xy: 849, 123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_2_trees_balloon_tree_trunk_node
+  rotate: false
+  xy: 915, 123
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_green_3_ground_bottom_1
+  rotate: false
+  xy: 1425, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_ground_plain_top_right
+ground_green_3_ground_bottom_left
+  rotate: false
+  xy: 1, 197
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_green_3_ground_middle_1
   rotate: false
   xy: 1555, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_lattice_white_1_left_down
+ground_green_3_ground_middle_left
   rotate: false
-  xy: 911, 189
+  xy: 1, 67
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_lattice_white_1_middle
+ground_green_3_ground_middle_left_bottom
   rotate: false
-  xy: 777, 1489
+  xy: 1685, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_lattice_white_1_punch_in
+ground_green_3_ground_middle_left_top
   rotate: false
-  xy: 1167, 1489
+  xy: 1815, 1879
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_platform_left
+ground_green_3_ground_top_1
   rotate: false
-  xy: 1559, 1359
+  xy: 647, 1621
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-ground_snow_1_platform_middle_1
+ground_green_3_ground_top_left
+  rotate: false
+  xy: 647, 1491
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_berry_1
+  rotate: false
+  xy: 1627, 903
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_1_berry_2
+  rotate: false
+  xy: 1627, 837
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_1_bridge_rope_back
+  rotate: false
+  xy: 131, 847
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_bridge_rope_front
+  rotate: false
+  xy: 131, 717
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_grass_3
+  rotate: false
+  xy: 1627, 771
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_bottom_1
+  rotate: false
+  xy: 131, 587
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_bottom_2
+  rotate: false
+  xy: 131, 457
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_bottom_left
+  rotate: false
+  xy: 131, 327
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_bottom_right
+  rotate: false
+  xy: 131, 197
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_middle_left
+  rotate: false
+  xy: 131, 67
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_middle_right
+  rotate: false
+  xy: 389, 1233
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_top_1
+  rotate: false
+  xy: 389, 1103
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_top_2
+  rotate: false
+  xy: 261, 973
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_top_left
+  rotate: false
+  xy: 261, 843
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_halfmassive_top_right
+  rotate: false
+  xy: 261, 713
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_1
+  rotate: false
+  xy: 261, 583
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_2
+  rotate: false
+  xy: 261, 453
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_left
+  rotate: false
+  xy: 261, 323
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_left_bottom
+  rotate: false
+  xy: 261, 193
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_left_top
+  rotate: false
+  xy: 391, 973
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_right
+  rotate: false
+  xy: 391, 843
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_right_bottom
+  rotate: false
+  xy: 391, 713
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_middle_right_top
+  rotate: false
+  xy: 391, 583
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_left
+  rotate: false
+  xy: 391, 453
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_left_bottom
+  rotate: false
+  xy: 391, 323
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_left_top
+  rotate: false
+  xy: 391, 193
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_right
+  rotate: false
+  xy: 261, 63
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_right_bottom
+  rotate: false
+  xy: 391, 63
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_middle_right_top
+  rotate: false
+  xy: 841, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_top_1
+  rotate: false
+  xy: 971, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_top_2
+  rotate: false
+  xy: 1101, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_top_left
+  rotate: false
+  xy: 1231, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_plain_top_right
+  rotate: false
+  xy: 1361, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_top_1
+  rotate: false
+  xy: 1491, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_top_2
+  rotate: false
+  xy: 1621, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_top_left
+  rotate: false
+  xy: 1751, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_ground_top_right
+  rotate: false
+  xy: 777, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_kplant
+  rotate: false
+  xy: 1757, 1033
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_1_kplant_head
+  rotate: false
+  xy: 1041, 187
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_jungle_1_vine_bottom
+  rotate: false
+  xy: 907, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_vine_middle
+  rotate: false
+  xy: 1037, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_jungle_1_vine_top
+  rotate: false
+  xy: 1167, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_blue_left
+  rotate: false
+  xy: 1297, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_blue_middle_1
+  rotate: false
+  xy: 1427, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_blue_middle_2
   rotate: false
   xy: 1557, 1619
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+ground_mushroom_1_platform_blue_right
+  rotate: false
+  xy: 1687, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_gold_left
+  rotate: false
+  xy: 777, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_gold_middle_1
+  rotate: false
+  xy: 907, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_gold_middle_2
+  rotate: false
+  xy: 1037, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_gold_right
+  rotate: false
+  xy: 1167, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_green_left
+  rotate: false
+  xy: 1297, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_green_middle_1
+  rotate: false
+  xy: 1427, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_green_middle_2
+  rotate: false
+  xy: 1557, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_green_right
+  rotate: false
+  xy: 1687, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_red_left
+  rotate: false
+  xy: 1881, 1749
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_red_middle_1
+  rotate: false
+  xy: 1817, 1619
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_red_middle_2
+  rotate: false
+  xy: 1817, 1489
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_red_right
+  rotate: false
+  xy: 583, 1361
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft
+  rotate: false
+  xy: 519, 1231
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft_bottom
+  rotate: false
+  xy: 713, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft_double_riffle
+  rotate: false
+  xy: 843, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft_riffle
+  rotate: false
+  xy: 973, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft_riffle_top
+  rotate: false
+  xy: 1103, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_mushroom_1_platform_shaft_top
+  rotate: false
+  xy: 1233, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_down
+  rotate: false
+  xy: 1363, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_left_up
+  rotate: false
+  xy: 1493, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_middle
+  rotate: false
+  xy: 1623, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_right_down
+  rotate: false
+  xy: 1753, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_right_up
+  rotate: false
+  xy: 649, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_blue_up
+  rotate: false
+  xy: 779, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_down
+  rotate: false
+  xy: 909, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_left_up
+  rotate: false
+  xy: 1039, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_middle
+  rotate: false
+  xy: 1169, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_right_down
+  rotate: false
+  xy: 1299, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_right_up
+  rotate: false
+  xy: 1429, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_green_up
+  rotate: false
+  xy: 1559, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_down
+  rotate: false
+  xy: 1689, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_left_up
+  rotate: false
+  xy: 1883, 1359
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_middle
+  rotate: false
+  xy: 1819, 1229
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_right_down
+  rotate: false
+  xy: 521, 1035
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_right_up
+  rotate: false
+  xy: 521, 905
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_grey_up
+  rotate: false
+  xy: 521, 775
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_down
+  rotate: false
+  xy: 521, 645
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_left_up
+  rotate: false
+  xy: 521, 515
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_middle
+  rotate: false
+  xy: 521, 385
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_right_down
+  rotate: false
+  xy: 521, 255
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_right_up
+  rotate: false
+  xy: 521, 125
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_plastic_1_screw_block_red_up
+  rotate: false
+  xy: 651, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_sand_1_ground_left_up
+  rotate: false
+  xy: 1107, 253
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_sand_1_ground_middle
+  rotate: false
+  xy: 1107, 187
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_sand_1_ground_up
+  rotate: false
+  xy: 1237, 383
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_sand_1_tendril
+  rotate: false
+  xy: 1367, 513
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_sand_1_tendril_top
+  rotate: false
+  xy: 1497, 643
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_sand_1_vase_broken
+  rotate: false
+  xy: 1949, 1227
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_bottom_1
+  rotate: false
+  xy: 651, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_bottom_2
+  rotate: false
+  xy: 781, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_bottom_left
+  rotate: false
+  xy: 651, 839
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_bottom_right
+  rotate: false
+  xy: 781, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_middle_left
+  rotate: false
+  xy: 911, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_middle_right
+  rotate: false
+  xy: 651, 709
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_top_1
+  rotate: false
+  xy: 781, 839
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_top_2
+  rotate: false
+  xy: 911, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_top_left
+  rotate: false
+  xy: 1041, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_halfmassive_top_right
+  rotate: false
+  xy: 651, 579
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_middle_1
+  rotate: false
+  xy: 781, 709
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_middle_2
+  rotate: false
+  xy: 911, 839
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_middle_left_top
+  rotate: false
+  xy: 1041, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_middle_right_top
+  rotate: false
+  xy: 1171, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_left
+  rotate: false
+  xy: 651, 449
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_left_bottom
+  rotate: false
+  xy: 781, 579
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_left_top
+  rotate: false
+  xy: 911, 709
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_right
+  rotate: false
+  xy: 1041, 839
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_right_bottom
+  rotate: false
+  xy: 1171, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_middle_right_top
+  rotate: false
+  xy: 1301, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_top_1
+  rotate: false
+  xy: 651, 319
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_top_2
+  rotate: false
+  xy: 781, 449
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_top_left
+  rotate: false
+  xy: 911, 579
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_ground_plain_top_right
+  rotate: false
+  xy: 1041, 709
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_lattice_white_1_left_down
+  rotate: false
+  xy: 1171, 839
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_lattice_white_1_middle
+  rotate: false
+  xy: 1301, 969
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_lattice_white_1_punch_in
+  rotate: false
+  xy: 1431, 1099
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_platform_left
+  rotate: false
+  xy: 651, 189
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_platform_middle_1
+  rotate: false
+  xy: 781, 319
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
 ground_snow_1_platform_middle_2
   rotate: false
-  xy: 781, 189
+  xy: 911, 449
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_snow_1_platform_right
   rotate: false
-  xy: 259, 1233
+  xy: 1041, 579
   size: 128, 128
   orig: 128, 128
+  offset: 0, 0
+  index: -1
+ground_snow_1_snowman_1
+  rotate: false
+  xy: 259, 1751
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+ground_snow_1_windows_medium_1
+  rotate: false
+  xy: 1, 1235
+  size: 256, 256
+  orig: 256, 256
   offset: 0, 0
   index: -1
 ground_snow_1_windows_medium_2
@@ -2685,119 +2664,140 @@ ground_snow_1_windows_medium_2
   index: -1
 ground_underground_ground_bottom_1
   rotate: false
-  xy: 1301, 579
+  xy: 1171, 709
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_bottom_left
   rotate: false
-  xy: 391, 843
+  xy: 1301, 839
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_bottom_right
   rotate: false
-  xy: 651, 189
+  xy: 1431, 969
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_1
   rotate: false
-  xy: 1427, 1489
+  xy: 1561, 1099
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_left
   rotate: false
-  xy: 781, 1099
+  xy: 781, 189
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_left_bottom
   rotate: false
-  xy: 649, 1359
+  xy: 911, 319
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_left_top
   rotate: false
-  xy: 781, 709
+  xy: 1041, 449
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_right
   rotate: false
-  xy: 777, 1619
+  xy: 1171, 579
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_right_bottom
   rotate: false
-  xy: 1041, 1099
+  xy: 1301, 709
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_middle_right_top
   rotate: false
-  xy: 1, 457
+  xy: 1431, 839
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_top_1
   rotate: false
-  xy: 1429, 1229
+  xy: 1561, 969
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_top_left
   rotate: false
-  xy: 521, 645
+  xy: 1691, 1099
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 ground_underground_ground_top_right
   rotate: false
-  xy: 131, 327
+  xy: 911, 189
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+hills_green_1_middle
+  rotate: false
+  xy: 517, 1751
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+hills_light_blue_1_middle
+  rotate: false
+  xy: 1, 977
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
 signs_default_1_1_danger_2
   rotate: false
-  xy: 1429, 1359
+  xy: 1041, 319
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 signs_default_1_1_ending
   rotate: false
-  xy: 391, 193
+  xy: 1171, 449
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
+signs_default_1_1_ending_big
+  rotate: false
+  xy: 259, 1363
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
 signs_default_1_1_ending_right_up
   rotate: false
-  xy: 1557, 1749
+  xy: 1301, 579
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
 windows_castle_1
   rotate: false
-  xy: 1817, 1619
+  xy: 1431, 709
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

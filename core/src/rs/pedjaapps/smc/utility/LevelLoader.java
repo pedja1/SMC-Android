@@ -61,7 +61,7 @@ import static rs.pedjaapps.smc.view.Background.BG_IMG_TOP;
  * This class loads level from json
  */
 public class LevelLoader {
-    public static final Pattern TXT_NAME_IN_ATLAS = Pattern.compile(".+\\.pack:.+");
+    public static final Pattern TXT_NAME_IN_ATLAS = Pattern.compile(".+\\.atlas:.+");
     public Level level;
     private boolean levelParsed = false;
 

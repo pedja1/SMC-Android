@@ -89,8 +89,8 @@ public class Assets {
     public static final String MUSIC_COURSECLEAR = "data/music/game/courseclear.ogg";
     public static final String MUSIC_INVINCIBLE = "data/music/game/star.ogg";
 
-    public static final String ATLAS_STATIC = "data/static.pack";
-    public static final String ATLAS_DYNAMIC = "data/dynamic.pack";
+    public static final String ATLAS_STATIC = "data/static.atlas";
+    public static final String ATLAS_DYNAMIC = "data/dynamic.atlas";
 
     private AssetManager manager;
     public static TextureLoader.TextureParameter TEXTURE_PARAMETER;
