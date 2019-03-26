@@ -52,11 +52,5 @@ public class DesktopLauncher {
             }
         };
         new LwjglApplication(listener, config);
-
-        //Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        //config.setWindowedMode(MaryoGame.NATIVE_WIDTH, MaryoGame.NATIVE_HEIGHT);
-        //config.setResizable(false);
-        //config.useVsync(false);
-        //new Lwjgl3Application(new MaryoGame(null), config);
     }
 }

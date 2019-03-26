@@ -40,7 +40,7 @@ button_round
   rotate: false
   xy: 360, 74
   size: 88, 86
-  split: 43, 43, 42, 42
+  split: 43, 43, 6, 8
   pad: 16, 18, 6, 8
   orig: 88, 86
   offset: 0, 0

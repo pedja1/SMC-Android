@@ -286,8 +286,12 @@ public class MainMenuScreen extends AbstractScreen {
 //            }
         };
         stage.setEmphColor(skin.getColor(Assets.COLOR_EMPH2));
-        playButton.getLabel().setFontScale(.8f);
-        playButton.setSize(playButton.getPrefWidth() * 1.2f, playButton.getPrefHeight());
+        //playButton.getLabel().setFontScale(.8f);
+
+        float playButtonHeight = stage.getHeight() * 0.2f;
+        float playButtonWidht = playButtonHeight * 2.3154547f;
+
+        playButton.setSize(playButtonWidht, playButtonHeight);
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

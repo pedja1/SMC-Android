@@ -28,7 +28,8 @@ public class Krush extends Enemy {
 
     private boolean isSmall;
 
-    private Animation<TextureRegion> aBig, aSmall;
+    private Animation<TextureRegion> aBig;
+    private Animation<TextureRegion> aSmall;
     private TextureRegion tDead;
 
     public Krush(float x, float y, float z, float width, float height) {
@@ -50,8 +51,8 @@ public class Krush extends Enemy {
         for (int i = 1; i <= 4; i++)
             smallFrames.add(atlas.findRegion("enemy_krush_small_" + String.valueOf(i)));
 
-        aSmall = new Animation(0.07f, smallFrames);
-        aBig = new Animation(0.12f, bigFrames);
+        aSmall = new Animation<>(0.07f, smallFrames);
+        aBig = new Animation<>(0.12f, bigFrames);
 
         tDead = atlas.findRegion("enemy_krush_small_1");
     }
